@@ -4,14 +4,19 @@ import { IAppRouterProps } from './types'
 import { Router, Switch, Redirect } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
+import { ArtworksPage } from 'pages'
 
 export const history = createBrowserHistory()
 
 const MainNavigation = () => {
   const appRoutes: IAppRouterProps[] = [
     {
-      path: routes.home,
-      component: <div>HOME</div>,
+      path: routes.artworks,
+      component: <ArtworksPage />,
+    },
+    {
+      path: routes.blog,
+      component: <div>blog</div>,
     },
   ]
 
@@ -19,7 +24,7 @@ const MainNavigation = () => {
     <Router history={history}>
       <Switch>
         <RouteHOC exact path="/">
-          <Redirect to={routes.home} />
+          <Redirect to={routes.artworks} />
         </RouteHOC>
 
         {appRoutes.map(({ path, component }) => (

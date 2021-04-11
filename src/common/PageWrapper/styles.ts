@@ -3,12 +3,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      minWidth: '600px',
-      color: theme.palette.text.primary,
-      height: '100vh',
-      overflow: 'auto',
+      padding: theme.spacing(4, 10),
       display: 'flex',
       flexDirection: 'column',
+      flex: '1 1 auto',
+      overflow: 'auto',
     },
   })
 )

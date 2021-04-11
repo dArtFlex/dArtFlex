@@ -1,0 +1,6 @@
+export { ReactComponent as CurrentDownIcon } from './caret_down.svg'
+export { ReactComponent as LogoIcon } from './logo.svg'
+export { ReactComponent as CoolIcon } from './coolicon.svg'
+export { ReactComponent as ShareIcon } from './share.svg'
+export { ReactComponent as ExternalLinkIcon } from './external_link.svg'
+export { ReactComponent as ArrowExpandIcon } from './arrow_expand.svg'
