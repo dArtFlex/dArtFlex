@@ -7,6 +7,7 @@ const palette = {
   grey5: '#E0E0E0',
   accent: '#323232',
   accentOpacity: 'rgba(50,50,50, 0.1)',
+  spanishGray: '#979797',
 } as const
 
 type ICustomPalette = typeof palette
@@ -27,18 +28,38 @@ const TextPrimary = '#222A2C'
 const PrimaryMain = '#5239AE'
 const PrimaryLight = '#7F82F5'
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: PrimaryMain,
-      light: PrimaryLight,
-    },
-    secondary: {
-      main: palette.grey3,
-    },
-    text: { primary: TextPrimary },
-    ...palette,
+const lightPalette = {
+  type: 'light',
+  primary: {
+    main: PrimaryMain,
+    light: PrimaryLight,
   },
+  secondary: {
+    main: palette.grey3,
+  },
+  text: { primary: TextPrimary, secondary: palette.grey3 },
+  background: {
+    default: '#fff',
+    paper: '#fff',
+  },
+  ...palette,
+}
+
+const DarkPalette = {
+  type: 'dark',
+  primary: {
+    main: PrimaryMain,
+    light: PrimaryLight,
+  },
+  text: { primary: '#fff', secondary: '#e7e7e7' },
+  background: {
+    default: TextPrimary,
+    paper: TextPrimary,
+  },
+  ...palette,
+}
+
+const theme = {
   spacing: 4,
   typography: {
     htmlFontSize: 16,
@@ -65,7 +86,6 @@ const theme = createMuiTheme({
         fontSize: 14,
         fontWeight: 600,
         lineHeight: 1.25,
-        color: palette.grey3,
       },
     },
     MuiToolbar: {
@@ -152,6 +172,6 @@ const theme = createMuiTheme({
       },
     },
   },
-})
+}
 
-export default theme
+export { theme, lightPalette, DarkPalette }

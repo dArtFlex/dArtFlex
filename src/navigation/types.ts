@@ -16,4 +16,5 @@ export interface ISecureRouteParams {
   component?: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>
   exact?: boolean
   path?: string | string[]
+  toggleTheme: () => void
 }

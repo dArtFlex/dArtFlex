@@ -9,6 +9,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       overflow: 'auto',
       display: 'flex',
       flexDirection: 'column',
+      backgroundColor: theme.palette.background.default,
+      [theme.breakpoints.down('md')]: {
+        height: 'auto',
+      },
+    },
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: '1 1 auto',
+      overflow: 'auto',
     },
   })
 )

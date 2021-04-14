@@ -1,17 +1,30 @@
-import React from 'react'
-import { MuiThemeProvider } from '@material-ui/core/styles'
+import React, { useState } from 'react'
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Provider as StoreProvider } from 'react-redux'
-import theme from './theme'
+import { theme, lightPalette, DarkPalette } from './theme'
 import configureStore from './stores'
 import MainNavigation from './navigation'
 
 const store = configureStore()
 
+const LIGHT = 'light'
+const DARK = 'dark'
+
 function App() {
+  const [themeType, setTheme] = useState(LIGHT)
+  const toggleTheme = () => {
+    setTheme(themeType === LIGHT ? DARK : LIGHT)
+  }
   return (
     <StoreProvider store={store}>
-      <MuiThemeProvider theme={theme}>
-        <MainNavigation />
+      <MuiThemeProvider
+        theme={createMuiTheme({
+          /*@ts-ignore*/
+          palette: themeType === LIGHT ? lightPalette : DarkPalette,
+          ...theme,
+        })}
+      >
+        <MainNavigation toggleTheme={toggleTheme} />
       </MuiThemeProvider>
     </StoreProvider>
   )

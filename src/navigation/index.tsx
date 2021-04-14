@@ -8,7 +8,7 @@ import { ArtworksPage } from 'pages'
 
 export const history = createBrowserHistory()
 
-const MainNavigation = () => {
+const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
   const appRoutes: IAppRouterProps[] = [
     {
       path: routes.artworks,
@@ -23,12 +23,12 @@ const MainNavigation = () => {
   return (
     <Router history={history}>
       <Switch>
-        <RouteHOC exact path="/">
+        <RouteHOC exact path="/" toggleTheme={toggleTheme}>
           <Redirect to={routes.artworks} />
         </RouteHOC>
 
         {appRoutes.map(({ path, component }) => (
-          <RouteHOC exact path={path} key={path}>
+          <RouteHOC exact path={path} key={path} toggleTheme={toggleTheme}>
             {component}
           </RouteHOC>
         ))}

@@ -5,8 +5,9 @@ import { useStyles } from './styles'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { HeaderType } from './types'
 
-export default function Header() {
+export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
   const { pathname } = useLocation()
 
@@ -38,7 +39,7 @@ export default function Header() {
           <Button variant={'contained'} color={'primary'} disableElevation>
             Connect wallet
           </Button>
-          <ButtonBase>
+          <ButtonBase onClick={toggleTheme}>
             <CoolIcon />
           </ButtonBase>
         </Box>

@@ -9,6 +9,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateRows: 'minmax(100%, auto)',
       gridGap: theme.spacing(10),
       alignItems: 'start',
+      [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
+      },
     },
     previewContainer: {
       position: 'relative',
@@ -43,6 +47,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     infoTitle: {
       marginBottom: theme.spacing(2),
+      color: theme.palette.text.secondary,
     },
     avatar: {
       display: 'inline-flex',
