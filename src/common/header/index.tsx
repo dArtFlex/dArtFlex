@@ -24,9 +24,9 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   return (
     <AppBar position="static" elevation={0}>
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         <LogoIcon className={classes.logo} />
-        <Tabs aria-label="navigation" value={pathname === routes.artworks ? 0 : 1} className={classes.navTabsContainer}>
+        <Tabs aria-label="navigation" value={pathname !== routes.blog ? 0 : 1} className={classes.navTabsContainer}>
           {MenuItems.map(({ title, to }) => (
             //@ts-ignore: unreachable error
             <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />

@@ -1,3 +1,4 @@
-import ArtworksPage from './ArtworksPage'
+import ArtworkDetails from './ArtworkDetails'
+import Artworks from './Artworks'
 
-export { ArtworksPage }
+export { ArtworkDetails, Artworks }

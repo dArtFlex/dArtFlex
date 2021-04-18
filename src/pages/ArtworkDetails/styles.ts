@@ -22,6 +22,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.ghostWhite,
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>img': {
+        maxWidth: '100%',
+        maxHeight: '100%',
+        objectFit: 'contain',
+      },
+    },
+    borderdIconButton: {
+      border: `1px solid ${theme.palette.greyPale}`,
     },
     expandBtb: {
       position: 'absolute',

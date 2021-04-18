@@ -3,6 +3,8 @@ import { PageWrapper } from 'common'
 import { ShareIcon, ExternalLinkIcon, ArrowExpandIcon } from 'common/icons'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab } from '@material-ui/core'
 import { useStyles } from './styles'
+import { imgExUrl } from 'config/consts'
+import clsx from 'clsx'
 
 const tabsItems = [
   {
@@ -16,7 +18,7 @@ const tabsItems = [
   },
 ]
 
-export default function ArtworksPage() {
+export default function ArtworkDetails() {
   const classes = useStyles()
   const [tab, setTab] = useState(0)
 
@@ -24,8 +26,8 @@ export default function ArtworksPage() {
     <PageWrapper>
       <Box className={classes.root}>
         <Box className={classes.previewContainer}>
-          <img src={'/'} />
-          <IconButton className={classes.expandBtb}>
+          <img src={imgExUrl} />
+          <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
             <ArrowExpandIcon />
           </IconButton>
         </Box>
@@ -33,10 +35,10 @@ export default function ArtworksPage() {
           <Box className={classes.title}>
             <Typography variant={'h2'}>Over Indulgence 2</Typography>
             <Box className={classes.titleBtnCotainer}>
-              <IconButton>
+              <IconButton className={classes.borderdIconButton}>
                 <ShareIcon />
               </IconButton>
-              <IconButton>
+              <IconButton className={classes.borderdIconButton}>
                 <ExternalLinkIcon />
               </IconButton>
             </Box>

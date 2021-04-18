@@ -9,7 +9,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginTop: theme.spacing(5),
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap',
         padding: theme.spacing(0, 2),

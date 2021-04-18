@@ -12,6 +12,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       [theme.breakpoints.down('md')]: {
         height: 'auto',
+        minHeight: '100vh',
       },
     },
     wrapper: {

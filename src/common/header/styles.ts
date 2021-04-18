@@ -6,9 +6,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(16),
     },
     toolbar: {
-      display: 'flex',
-      alignItems: 'center',
-      flex: '1 0 auto',
+      backgroundColor: theme.palette.white,
+      borderBottom: `1px solid ${theme.palette.greyLight}`,
     },
     navTabs: {
       padding: theme.spacing(5, 0),
