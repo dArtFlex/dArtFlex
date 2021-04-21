@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { stateType } from 'stores/reducers'
+import { createSelector } from 'reselect'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
-import { connectMetaMaskRequest } from 'stores/reducers/wallet'
+
 import { Modal, WalletConnect } from 'common'
-import { CurrentDownIcon, LogoIcon, CoolIcon } from 'common/icons'
+import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 
+const selectWallet = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ wallet: { wallet } }: stateType) => ({ wallet })
+  )
+
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
-  const dispatch = useDispatch()
   const { pathname } = useLocation()
+  const { wallet } = useSelector(selectWallet())
+
   const [open, setOpen] = useState<boolean>(false)
 
   const MenuItems = [
@@ -42,24 +51,34 @@ export default function Header({ toggleTheme }: HeaderType) {
             <Button variant={'outlined'} color={'primary'} disableElevation endIcon={<CurrentDownIcon />}>
               Create
             </Button>
-            <Button
-              onClick={() => {
-                setOpen(true)
-                // dispatch(connectMetaMaskRequest())
-              }}
-              variant={'contained'}
-              color={'primary'}
-              disableElevation
-            >
-              Connect wallet
-            </Button>
+            {wallet === null ? (
+              <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
+                Connect wallet
+              </Button>
+            ) : (
+              <Button
+                className={classes.buttonWallet}
+                variant={'outlined'}
+                color={'primary'}
+                disableElevation
+                startIcon={<SmileyFaceIcon />}
+                endIcon={<CurrentDownIcon />}
+              >
+                {`${wallet.balance} ${wallet.meta.coinAbbr}`}
+              </Button>
+            )}
             <ButtonBase onClick={toggleTheme}>
               <CoolIcon />
             </ButtonBase>
           </Box>
         </Toolbar>
       </AppBar>
-      <Modal open={open} onClose={() => setOpen(false)} body={<WalletConnect />} withAside />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        body={<WalletConnect onClose={() => setOpen(false)} />}
+        withAside
+      />
     </>
   )
 }

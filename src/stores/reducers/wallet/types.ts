@@ -7,9 +7,7 @@ export interface WalletsStateType {
 export interface IWallet {
   accounts: string[]
   balance: number
-  coin: string
   meta: {
-    customName: string
-    name: string
+    coinAbbr: string
   }
 }

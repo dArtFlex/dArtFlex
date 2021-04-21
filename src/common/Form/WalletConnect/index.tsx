@@ -1,10 +1,18 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Box, Typography, Link, Button } from '@material-ui/core'
 import { MetaMaskIcon } from 'common/icons'
+import { connectMetaMaskRequest } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
 
-export default function WalletConnect() {
+interface IWalletConnectProps {
+  onClose: () => void
+}
+
+export default function WalletConnect(props: IWalletConnectProps) {
+  const { onClose } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
 
   return (
     <Box className={classes.walletConnect}>
@@ -20,7 +28,17 @@ export default function WalletConnect() {
         </Link>
       </Typography>
 
-      <Button variant={'contained'} color={'primary'} fullWidth disableElevation className={classes.connectBtn}>
+      <Button
+        onClick={() => {
+          dispatch(connectMetaMaskRequest())
+          onClose()
+        }}
+        variant={'contained'}
+        color={'primary'}
+        fullWidth
+        disableElevation
+        className={classes.connectBtn}
+      >
         <MetaMaskIcon className={classes.relatedConnectBtnIcon} />
         MetaMask
       </Button>
