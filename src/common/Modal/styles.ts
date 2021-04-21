@@ -1,0 +1,45 @@
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+
+export const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      position: 'relative',
+      display: 'flex',
+      width: 628,
+      minHeight: 424,
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: theme.spacing(3),
+    },
+    aside: {
+      height: 424,
+      width: 132,
+      display: 'flex',
+      alignItems: 'center',
+      overflow: 'hidden',
+      borderTopLeftRadius: theme.spacing(3),
+      borderBottomLeftRadius: theme.spacing(3),
+      '&>img': {
+        maxWidth: 'auto',
+        maxHeight: '100%',
+        objectFit: 'contain',
+      },
+    },
+    modalBtnClose: {
+      position: 'absolute',
+      top: theme.spacing(4),
+      right: theme.spacing(4),
+      minWidth: 40,
+      height: 40,
+      padding: 13,
+      '& svg': {
+        width: 14,
+        height: 14,
+      },
+    },
+  })
+)
