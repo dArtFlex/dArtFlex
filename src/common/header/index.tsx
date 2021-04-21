@@ -1,14 +1,18 @@
 import React from 'react'
-import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
-import { CurrentDownIcon, LogoIcon, CoolIcon } from 'common/icons'
-import { useStyles } from './styles'
+import { useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
+import { connectMetaMaskRequest } from 'stores/reducers/wallet'
+import { getAssetsRequest } from 'stores/reducers/assets'
+import { CurrentDownIcon, LogoIcon, CoolIcon } from 'common/icons'
 import { HeaderType } from './types'
+import { useStyles } from './styles'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
 
   const MenuItems = [
@@ -36,7 +40,14 @@ export default function Header({ toggleTheme }: HeaderType) {
           <Button variant={'outlined'} color={'primary'} disableElevation endIcon={<CurrentDownIcon />}>
             Create
           </Button>
-          <Button variant={'contained'} color={'primary'} disableElevation>
+          <Button
+            onClick={() => {
+              dispatch(connectMetaMaskRequest())
+            }}
+            variant={'contained'}
+            color={'primary'}
+            disableElevation
+          >
             Connect wallet
           </Button>
           <ButtonBase onClick={toggleTheme}>

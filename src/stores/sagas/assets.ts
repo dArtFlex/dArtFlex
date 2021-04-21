@@ -1,29 +1,18 @@
 //@ts-nocheck
-import * as Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
 import { put } from 'redux-saga/effects'
 import { IApi } from '../../services/types'
+import Contract from 'web3-eth-contract'
+import { ABI } from 'core'
 
 export function* getAssetsData(api: IApi) {
-  if (window.ethereum) {
-    web3 = new Web3(window.ethereum)
-    const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
+  const wallet = new WalletService()
+  yield wallet.connect()
 
-    const seaport = new OpenSeaPort(provider, {
-      networkName: Network.Main,
-    })
-    console.log('provider', provider)
-    console.log('seaport', seaport)
-    try {
-      yield window.ethereum.enable()
-      const account = yield window.web3.eth.getAccounts()
-      const balance = yield window.web3.eth.getBalance(account[0])
-      //@todo add to store
-      alert(` your account is ${account} \n your balance is ${balance}`)
-    } catch (e) {
-      // User has denied account access to DApp...
-    }
-  } else {
-    alert(`add MetaMask ext`)
-  }
+  Contract.setProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
+  const contract = new Contract(ABI, '0xC79BCBfF64A05e9cE790CEe3cC441b2E44035655')
+
+  const tokenId = yield contract.methods.tokenByIndex(0).call()
+  const item = yield contract.methods.tokenURI(tokenId).call()
+  console.log(item)
 }
