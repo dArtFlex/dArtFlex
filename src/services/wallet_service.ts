@@ -19,7 +19,7 @@ export default class WalletService extends Web3Service {
   }
 
   getEthBalance(): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.web3.eth.getCoinbase((err, account) => {
         this.web3.eth.getBalance(account, (err, balance) => {
           resolve(BigNumber(balance).dividedBy(10e17).toNumber())

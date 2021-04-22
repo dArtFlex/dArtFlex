@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { stateType } from 'stores/reducers'
+import { createSelector } from 'reselect'
 import { PageWrapper } from 'common'
 import { ShareIcon, ExternalLinkIcon, ArrowExpandIcon } from 'common/icons'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab } from '@material-ui/core'
 import { useStyles } from './styles'
-import { imgExUrl } from 'config/consts'
 import clsx from 'clsx'
 
 const tabsItems = [
@@ -18,22 +21,30 @@ const tabsItems = [
   },
 ]
 
+const selectWallet = (id: string) =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.token_id === id) })
+  )
+
 export default function ArtworkDetails() {
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const { id } = useParams<{ id: string }>()
+  const { asset } = useSelector(selectWallet(id))
 
   return (
     <PageWrapper>
       <Box className={classes.root}>
         <Box className={classes.previewContainer}>
-          <img src={imgExUrl} />
+          <img src={asset?.image} />
           <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
             <ArrowExpandIcon />
           </IconButton>
         </Box>
         <Box pt={14}>
           <Box className={classes.title}>
-            <Typography variant={'h2'}>Over Indulgence 2</Typography>
+            <Typography variant={'h2'}>{asset?.name}</Typography>
             <Box className={classes.titleBtnCotainer}>
               <IconButton className={classes.borderdIconButton}>
                 <ShareIcon />
@@ -94,19 +105,7 @@ export default function ArtworkDetails() {
           </Tabs>
           {tab === 0 && (
             <div className={classes.tabContant}>
-              <p>
-                On your way to deliver your shipment, you see this sleeping bird blocking your way. What would you do?
-              </p>
-              <p>
-                However, reviewers tend to be distracted by comprehensible content, say, a random text copied from a
-                newspaper or the internet. The are likely to focus on the text, disregarding the layout and its
-                elements.
-              </p>
-              <p>
-                Besides, random text risks to be unintendedly humorous or offensive, an unacceptable risk in corporate
-                environments. Lorem ipsum and its many variants have been employed since the early 1960ies, and quite
-                likely since the sixteenth century. -- 1600×1200 px 5 sec at 24 fps
-              </p>
+              <p>{asset?.description}</p>
             </div>
           )}
           {tab === 1 && <p>History</p>}

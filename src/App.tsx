@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Provider as StoreProvider } from 'react-redux'
 import { theme, lightPalette, DarkPalette } from './theme'
+import { AssetsProvider } from 'core'
 import configureStore from './stores'
 import MainNavigation from './navigation'
 
@@ -24,7 +25,9 @@ function App() {
           ...theme,
         })}
       >
-        <MainNavigation toggleTheme={toggleTheme} />
+        <AssetsProvider>
+          <MainNavigation toggleTheme={toggleTheme} />
+        </AssetsProvider>
       </MuiThemeProvider>
     </StoreProvider>
   )

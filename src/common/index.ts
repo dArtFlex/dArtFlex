@@ -4,5 +4,6 @@ import Footer from './footer'
 import StyledCheckedMenuItem from './StyledCheckedMenuItem'
 import Modal from './Modal'
 import { WalletConnect } from './Form'
+import CircularProgressLoader from './Loaders'
 
-export { Header, PageWrapper, Footer, StyledCheckedMenuItem, Modal, WalletConnect }
+export { Header, PageWrapper, Footer, StyledCheckedMenuItem, Modal, WalletConnect, CircularProgressLoader }

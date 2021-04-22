@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { AssetsStateType } from './types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AssetsStateType, Asset } from './types'
 
 const initialState: AssetsStateType = {
   fetching: false,
   error: '',
-  assets: [],
+  assets: null,
 }
 
 const assetsSlice = createSlice({
@@ -13,11 +13,18 @@ const assetsSlice = createSlice({
   reducers: {
     getAssetsRequest: (state) => {
       state.fetching = true
-      state.error = ''
+    },
+    getAssetsSuccess: (state, { payload }: PayloadAction<Asset[]>) => {
+      state.assets = payload
+      state.fetching = false
+    },
+    getAssetsFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
     },
   },
 })
 
-export const { getAssetsRequest } = assetsSlice.actions
+export const { getAssetsRequest, getAssetsSuccess, getAssetsFailure } = assetsSlice.actions
 
 export const { reducer } = assetsSlice

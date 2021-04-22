@@ -21,6 +21,7 @@ module.exports = {
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^i' }],
+    'react/prop-types': 'off',
   },
   settings: {
     react: {
