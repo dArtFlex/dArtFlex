@@ -1,32 +1,64 @@
 //@ts-nocheck
-import { put, call, all } from 'redux-saga/effects'
-import Web3Service from 'services/web3_service'
+import { put, delay } from 'redux-saga/effects'
+import { web3Service } from 'services/web3_service'
+import { walletService } from 'services/wallet_service'
+import { bc } from 'services/blockchain_service'
+import { OpenSeaPort, Network } from 'opensea-js'
 import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
-import Contract from 'web3-eth-contract'
-import { ABI } from 'core'
+
+import { TOKEN_ADDRESS } from 'core'
 
 export function* getAssetsData(api: IApi) {
-  new Web3Service()
-
   try {
-    Contract.setProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
-    const contract = new Contract(ABI, '0xC79BCBfF64A05e9cE790CEe3cC441b2E44035655')
+    const contract = bc.newContract()
 
-    // todo: shoul be recheck as that cause error 429
+    const web3Provider = web3Service.getWeb3Provider()
+    // Network.Rinkeby for test
+    const seaport = new OpenSeaPort(web3Provider, {
+      networkName: Network.Rinkeby,
+    })
+
     const assets = []
     let i = 0
     while (i < 10) {
-      const token_id = yield contract.methods.tokenByIndex(i).call()
-      const url = yield contract.methods.tokenURI(token_id).call()
+      const tokenId = yield bc.getTokenId(i)
 
-      const data = yield call(api, { method: 'GET', url })
-      assets.push({ token_id, ...data })
+      const asset: OpenSeaAsset = yield seaport.api.getAsset({
+        tokenAddress: TOKEN_ADDRESS,
+        tokenId,
+      })
+      yield delay(500)
+
+      const startAmount = 0 // The minimum amount to sell for, in normal units (e.g. ETH)
+      const expirationTime = Math.round(Date.now() + (1000 + 60 * 60 * 24))
+      const walletAddress = yield walletService.getMetaMaskAccount()
+      const paymentTokenAddress = '0xDf032Bc4B9dC2782Bb09352007D4C57B75160B15'
+
+      // const auction = yield seaport.createSellOrder({
+      //   asset: {
+      //     tokenId,
+      //     tokenAddress: asset.tokenAddress,
+      //   },
+      //   accountAddress: asset.owner.address,
+      //   startAmount,
+      //   expirationTime,
+      //   paymentTokenAddress,
+      //   waitForHighestBid: true,
+      // })
+
+      assets.push({
+        name: asset.name,
+        image: asset.imageUrl,
+        tokenId,
+        description: asset.description,
+        ...asset,
+      })
       i++
     }
 
     yield put(getAssetsSuccess(assets))
-  } catch ({ message }) {
-    yield put(getAssetsFailure(message))
+  } catch (e) {
+    yield put(getAssetsFailure(e.message || e))
   }
 }

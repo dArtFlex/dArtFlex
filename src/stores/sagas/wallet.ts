@@ -1,20 +1,19 @@
 //@ts-nocheck
 import { put } from 'redux-saga/effects'
 import detectEthereumProvider from '@metamask/detect-provider'
-import WalletService from 'services/wallet_service'
+import { web3Service } from 'services/web3_service'
+import { walletService } from 'services/wallet_service'
 import { connectMetaMaskSuccess, connectMetaMaskFailure } from '../reducers/wallet'
 import { storageActiveWallet, createWalletInstance } from 'utils'
 import APP_CONFIG from 'config'
 
 export function* connectMetaMask(api: IApi) {
   try {
-    const wallet = new WalletService()
-
     const provider = yield detectEthereumProvider()
-    wallet.setWeb3Provider(provider)
+    web3Service.setWeb3Provider(provider)
 
-    const accounts = yield wallet.getMetaMaskAccount()
-    const balance = yield wallet.getEthBalance(accounts)
+    const accounts = yield walletService.getMetaMaskAccount()
+    const balance = yield walletService.getEthBalance(accounts)
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
