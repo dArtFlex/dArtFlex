@@ -1,17 +1,12 @@
 //@ts-nocheck
-import Web3 from 'web3'
-import Web3Service from 'services/web3_service'
 import BigNumber from 'bignumber.js'
 
-export default class WalletService extends Web3Service {
-  setWeb3Provider(provider): void {
-    window.web3 = new Web3(provider)
-    this.web3 = window.web3
-    this.provider = provider
-  }
-
-  getWeb3Provider(): unknown {
-    return this.provider
+class WalletService {
+  constructor() {
+    if (window.web3?.currentProvider) {
+      this.web3 = window.web3
+      this.provider = window.web3.currentProvider
+    }
   }
 
   getMetaMaskAccount(): Promise<any> {
@@ -28,3 +23,5 @@ export default class WalletService extends Web3Service {
     })
   }
 }
+
+export const walletService = new WalletService()

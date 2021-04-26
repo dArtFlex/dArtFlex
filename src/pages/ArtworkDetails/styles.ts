@@ -67,5 +67,45 @@ export const useStyles = makeStyles((theme: Theme) =>
     tabContant: {
       overflow: 'auto',
     },
+    infoRowIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(2),
+      color: theme.palette.text.secondary,
+      '& svg': {
+        marginLeft: theme.spacing(1.5),
+      },
+    },
+    externalLinkMenu: {
+      paddingTop: theme.spacing(6),
+      paddingBottom: theme.spacing(3),
+    },
+    externalLinkMenuItem: {
+      paddingLeft: theme.spacing(8),
+      paddingRight: theme.spacing(8),
+    },
+    linkTitle: {
+      color: theme.palette.text.secondary,
+    },
+    btnTitle: {
+      padding: theme.spacing(3, 8),
+      minWidth: 'auto',
+      justifyContent: 'flex-start',
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: theme.palette.text.primary,
+      borderRadius: 'unset',
+    },
+    warningBox: {
+      padding: theme.spacing(3, 6),
+      marginBottom: theme.spacing(4),
+      background: theme.palette.yellowLight,
+      borderRadius: theme.spacing(2),
+    },
+    warningText: {
+      fontSize: 16,
+      fontWeight: 400,
+      color: theme.palette.text.primary,
+    },
   })
 )

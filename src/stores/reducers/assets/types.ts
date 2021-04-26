@@ -9,8 +9,13 @@ export interface AssetsStateType {
 export interface Asset {
   name: string
   image: string
+  tokenId: string
   description: string | null
   external_link: string | null
   animation_url: string | null
-  token_id: string
+  auctionStatus: 'Reserve price' | 'Current bid'
+  currenBid: number
+  creator: string
+  ownedBy: string
+  asset: {}
 }

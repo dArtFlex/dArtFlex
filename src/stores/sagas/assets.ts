@@ -1,32 +1,46 @@
 //@ts-nocheck
-import { put, call, all } from 'redux-saga/effects'
-import Web3Service from 'services/web3_service'
+import Web3 from 'web3'
+import { put, delay } from 'redux-saga/effects'
+import { bc } from 'services/blockchain_service'
+import { OpenSeaPort, Network } from 'opensea-js'
 import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
-import Contract from 'web3-eth-contract'
-import { ABI } from 'core'
+
+import { TOKEN_ADDRESS } from 'core'
 
 export function* getAssetsData(api: IApi) {
-  new Web3Service()
-
   try {
-    Contract.setProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
-    const contract = new Contract(ABI, '0xC79BCBfF64A05e9cE790CEe3cC441b2E44035655')
+    bc.newContract()
+    const provider = new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
 
-    // todo: shoul be recheck as that cause error 429
+    // Network.Rinkeby for test
+    const seaport = new OpenSeaPort(provider, {
+      networkName: Network.Rinkeby,
+    })
+
     const assets = []
     let i = 0
     while (i < 10) {
-      const token_id = yield contract.methods.tokenByIndex(i).call()
-      const url = yield contract.methods.tokenURI(token_id).call()
+      const tokenId = yield bc.getTokenId(i)
 
-      const data = yield call(api, { method: 'GET', url })
-      assets.push({ token_id, ...data })
+      const asset: OpenSeaAsset = yield seaport.api.getAsset({
+        tokenAddress: TOKEN_ADDRESS,
+        tokenId,
+      })
+      yield delay(500)
+
+      assets.push({
+        name: asset.name,
+        image: asset.imageUrl,
+        tokenId,
+        description: asset.description,
+        ...asset,
+      })
       i++
     }
 
     yield put(getAssetsSuccess(assets))
-  } catch ({ message }) {
-    yield put(getAssetsFailure(message))
+  } catch (e) {
+    yield put(getAssetsFailure(e.message || e))
   }
 }
