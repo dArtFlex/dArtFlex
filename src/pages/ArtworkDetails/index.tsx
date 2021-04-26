@@ -2,12 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab } from '@material-ui/core'
+import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { createSelector } from 'reselect'
 import { stateType } from 'stores/reducers'
-import { PageWrapper } from 'common'
+import { PageWrapper, Popover } from 'common'
 import { useTimer } from 'hooks'
-import { ShareIcon, ExternalLinkIcon, ArrowExpandIcon, InfoIcon } from 'common/icons'
+import {
+  ShareIcon,
+  ExternalLinkIcon,
+  ArrowExpandIcon,
+  InfoIcon,
+  EtherscanIcon,
+  OpenseaIcon,
+  IpfsIcon,
+} from 'common/icons'
 import { createBidRequest } from 'stores/reducers/auction'
 import { useStyles } from './styles'
 
@@ -43,6 +51,8 @@ export default function ArtworkDetails() {
   const bid = 0.1
   const { timer } = useTimer(auctionEndTime)
 
+  const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+
   return (
     <PageWrapper>
       <Box className={classes.root}>
@@ -59,7 +69,13 @@ export default function ArtworkDetails() {
               <IconButton className={classes.borderdIconButton}>
                 <ShareIcon />
               </IconButton>
-              <IconButton className={classes.borderdIconButton}>
+              <IconButton
+                onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                  const target = event.currentTarget as HTMLElement
+                  setAnchorElExtLink(target)
+                }}
+                className={classes.borderdIconButton}
+              >
                 <ExternalLinkIcon />
               </IconButton>
             </Box>
@@ -130,6 +146,50 @@ export default function ArtworkDetails() {
           {tab === 1 && <p>History</p>}
           {tab === 2 && <p>Info</p>}
         </Box>
+
+        <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
+          <Box className={classes.externalLinkMenu}>
+            <Typography
+              variant="body1"
+              className={clsx(classes.externalLinkMenuItem, classes.linkTitle)}
+              color="textPrimary"
+            >
+              View on
+            </Typography>
+            <Grid container direction="column">
+              <Button
+                onClick={() => console.log('todo')}
+                variant={'text'}
+                color={'primary'}
+                disableElevation
+                className={classes.btnTitle}
+                startIcon={<EtherscanIcon />}
+              >
+                Ethescan
+              </Button>
+              <Button
+                onClick={() => console.log('todo')}
+                variant={'text'}
+                color={'primary'}
+                disableElevation
+                className={classes.btnTitle}
+                startIcon={<OpenseaIcon />}
+              >
+                Opensea
+              </Button>
+              <Button
+                onClick={() => console.log('todo')}
+                variant={'text'}
+                color={'primary'}
+                disableElevation
+                className={classes.btnTitle}
+                startIcon={<IpfsIcon />}
+              >
+                IPFS
+              </Button>
+            </Grid>
+          </Box>
+        </Popover>
       </Box>
     </PageWrapper>
   )

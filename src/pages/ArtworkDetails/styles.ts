@@ -76,5 +76,25 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginLeft: theme.spacing(1.5),
       },
     },
+    externalLinkMenu: {
+      paddingTop: theme.spacing(6),
+      paddingBottom: theme.spacing(3),
+    },
+    externalLinkMenuItem: {
+      paddingLeft: theme.spacing(8),
+      paddingRight: theme.spacing(8),
+    },
+    linkTitle: {
+      color: theme.palette.text.secondary,
+    },
+    btnTitle: {
+      padding: theme.spacing(3, 8),
+      minWidth: 'auto',
+      justifyContent: 'flex-start',
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: theme.palette.text.primary,
+      borderRadius: 'unset',
+    },
   })
 )
