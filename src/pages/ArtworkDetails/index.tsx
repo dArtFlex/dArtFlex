@@ -6,7 +6,7 @@ import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@m
 import { createSelector } from 'reselect'
 import { stateType } from 'stores/reducers'
 import { PageWrapper, Popover } from 'common'
-import History from './History'
+import { History, About } from './components'
 import { useTimer } from 'hooks'
 import {
   ShareIcon,
@@ -157,7 +157,7 @@ export default function ArtworkDetails() {
             </div>
           )}
           {tab === 1 && <History />}
-          {tab === 2 && <p>Info</p>}
+          {tab === 2 && <About />}
         </Box>
 
         <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>

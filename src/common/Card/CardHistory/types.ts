@@ -1,11 +1,13 @@
-export interface ICardHistory {
+export interface ICardHistoryProps {
   user?: string
   title: string
   expDate?: string
   src: string
-  cancelBid?: () => void
-  status?: 'owend' | 'transferred' | 'sold' | 'minted' | 'logged' | 'listed' | 'canceled'
+  action?: () => void
+  status: HistoryStatusType
 }
+
+type HistoryStatusType = 'owend' | 'transferred' | 'sold' | 'minted' | 'logged' | 'listed' | 'canceled'
 
 export interface ICardContainerProps {
   avatar: JSX.Element

@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core'
 import { ExternalLinkIcon } from 'common/icons'
 import { useStyles } from './styles'
-import { ICardHistory, ICardContainerProps } from './types'
+import { ICardHistoryProps, ICardContainerProps } from './types'
 
-export default function CardHistory(props: ICardHistory) {
-  const { status, title, user, expDate, src, cancelBid } = props
+export default function CardHistory(props: ICardHistoryProps) {
+  const { status, title, user, expDate, src, action } = props
   const classes = useStyles()
 
   switch (status) {
@@ -67,7 +67,7 @@ export default function CardHistory(props: ICardHistory) {
             <Divider />
             <Box className={classes.footerBox}>
               <Typography className={classes.footerText}>Exp. Date: {expDate}</Typography>
-              {cancelBid && (
+              {action && (
                 <Button classes={{ root: classes.cardBtn }} disableRipple>
                   Cancel Bid
                 </Button>
