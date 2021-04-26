@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { PageWrapper, StyledCheckedMenuItem } from 'common'
+import { useSelector } from 'react-redux'
+import { stateType } from 'stores/reducers'
+import { createSelector } from 'reselect'
+import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem } from 'common'
 import { CloseIcon, TimeIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import {
   Box,
@@ -19,7 +22,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton'
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
 import { useStyles } from './styles'
 import { useHistory } from 'react-router-dom'
-import appConst, { imgExUrl } from 'config/consts'
+import appConst from 'config/consts'
 import clsx from 'clsx'
 import routes from 'routes'
 
@@ -72,9 +75,16 @@ const filterItems = [
 
 const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
+const selectAssets = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
+  )
+
 export default function Artworks() {
   const classes = useStyles()
   const history = useHistory()
+  const { assets, fetching } = useSelector(selectAssets())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
   const [filter, setFilter] = useState(LIVE_AUCTION)
@@ -188,40 +198,44 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((a, i) => (
-            <Card key={a} elevation={1}>
-              <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/1`)}>
-                <img src={imgExUrl} />
-              </Box>
-              <Box className={classes.artInfoContainer}>
-                <Box display={'flex'} mb={4} alignItems={'center'}>
-                  <Avatar className={classes.avatar} alt="Avatar" />
-                  <Typography variant={'h4'}>@gianapress</Typography>
+          {fetching ? (
+            <CircularProgressLoader />
+          ) : (
+            assets?.map((a, i) => (
+              <Card key={a.tokenId} elevation={1}>
+                <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${a.tokenId}`)}>
+                  <img src={a.image} />
                 </Box>
-                <Typography variant={'h4'}>Why Does Love Always Fade Away</Typography>
-              </Box>
-              <Box className={classes.cardAction}>
-                <Box>
-                  <span>Sold for</span>
-                  <Typography color={'inherit'} variant={'h3'}>
-                    0.1 ETH
-                  </Typography>
+                <Box className={classes.artInfoContainer}>
+                  <Box display={'flex'} mb={4} alignItems={'center'}>
+                    <Avatar className={classes.avatar} alt="Avatar" />
+                    <Typography variant={'h4'}>@gianapress</Typography>
+                  </Box>
+                  <Typography variant={'h4'}>{a.name}</Typography>
                 </Box>
-                {Boolean(i === 1) && (
-                  <ButtonBase className={classes.actionBtn}>
-                    <TimeIcon className={classes.actionBtnIcon} />
-                    00:59:59
-                  </ButtonBase>
-                )}
-                {Boolean(i === 2) && (
-                  <ButtonBase className={clsx(classes.actionBtn, classes.actionBtnBurn)}>
-                    <BurnIcon className={classes.actionBtnIcon} />
-                    00:59:59
-                  </ButtonBase>
-                )}
-              </Box>
-            </Card>
-          ))}
+                <Box className={classes.cardAction}>
+                  <Box>
+                    <span>Sold for</span>
+                    <Typography color={'inherit'} variant={'h3'}>
+                      0.1 ETH
+                    </Typography>
+                  </Box>
+                  {Boolean(i === 1) && (
+                    <ButtonBase className={classes.actionBtn}>
+                      <TimeIcon className={classes.actionBtnIcon} />
+                      00:59:59
+                    </ButtonBase>
+                  )}
+                  {Boolean(i === 2) && (
+                    <ButtonBase className={clsx(classes.actionBtn, classes.actionBtnBurn)}>
+                      <BurnIcon className={classes.actionBtnIcon} />
+                      00:59:59
+                    </ButtonBase>
+                  )}
+                </Box>
+              </Card>
+            ))
+          )}
         </Box>
       </Box>
     </PageWrapper>

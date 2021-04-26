@@ -24,5 +24,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginLeft: theme.spacing(4),
       },
     },
+    buttonWallet: {
+      borderColor: theme.palette.greyLight,
+    },
   })
 )

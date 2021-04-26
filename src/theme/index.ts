@@ -7,10 +7,12 @@ const palette = {
   grey3: '#828282',
   grey5: '#E0E0E0',
   greyPale: '#F8F8F9', // artworks grid bg, iconButton border,
+  graySoft: '#F2F4F5', // artworks search input bg,
   greyMid: '#BDC1C6', //hashtag botton border, price input adorment
   greyDark: '#7E8387', //text secondary, select dd title
   accent: '#323232',
   spanishGray: '#979797',
+  yellowLight: '#FFF6DB',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
