@@ -13,5 +13,9 @@ export interface Asset {
   description: string | null
   external_link: string | null
   animation_url: string | null
+  auctionStatus: 'Reserve price' | 'Current bid'
+  currenBid: number
+  creator: string
+  ownedBy: string
   asset: {}
 }

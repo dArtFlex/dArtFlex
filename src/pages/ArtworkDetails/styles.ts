@@ -67,5 +67,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     tabContant: {
       overflow: 'auto',
     },
+    infoRowIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(2),
+      color: theme.palette.text.secondary,
+      '& svg': {
+        marginLeft: theme.spacing(1.5),
+      },
+    },
   })
 )
