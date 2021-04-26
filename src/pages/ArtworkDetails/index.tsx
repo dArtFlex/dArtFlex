@@ -6,6 +6,7 @@ import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@m
 import { createSelector } from 'reselect'
 import { stateType } from 'stores/reducers'
 import { PageWrapper, Popover } from 'common'
+import History from './History'
 import { useTimer } from 'hooks'
 import {
   ShareIcon,
@@ -47,8 +48,10 @@ export default function ArtworkDetails() {
   const { id } = useParams<{ id: string }>()
   const { asset } = useSelector(selectWallet(id))
 
-  // if asset was bidded
-  const bid = 0.1
+  // constants should be removed when logic will be provided
+  const ifAuction = true
+  const ifAuctionEnds = false
+
   const { timer } = useTimer(auctionEndTime)
 
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
@@ -90,15 +93,17 @@ export default function ArtworkDetails() {
                 <span>@gianapress</span>
               </Box>
             </Box>
-            <Box>
-              <Typography variant={'body1'} className={classes.infoTitle}>
-                Owned by
-              </Typography>
+            {!ifAuction && (
               <Box>
-                <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
-                <span>@gianapress</span>
+                <Typography variant={'body1'} className={classes.infoTitle}>
+                  Owned by
+                </Typography>
+                <Box>
+                  <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
+                  <span>@gianapress</span>
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
           <Box className={classes.infoRow} mb={6}>
             <Box>
@@ -117,15 +122,23 @@ export default function ArtworkDetails() {
               <Typography variant={'h2'}>{timer}</Typography>
             </Box>
           </Box>
+          {ifAuctionEnds && (
+            <Box className={classes.warningBox}>
+              <Typography component="span" className={classes.warningText}>
+                This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
+                would result in an error.
+              </Typography>
+            </Box>
+          )}
           <Button
             onClick={() => dispatch(createBidRequest({ tokenId: id, asset }))}
-            variant={'contained'}
+            variant={ifAuctionEnds ? 'outlined' : 'contained'}
             color={'primary'}
             fullWidth
             disableElevation
             className={classes.bitBtn}
           >
-            Place a Bid
+            {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
           </Button>
           <Tabs
             aria-label="info"
@@ -143,7 +156,7 @@ export default function ArtworkDetails() {
               <p>{asset?.description}</p>
             </div>
           )}
-          {tab === 1 && <p>History</p>}
+          {tab === 1 && <History />}
           {tab === 2 && <p>Info</p>}
         </Box>
 

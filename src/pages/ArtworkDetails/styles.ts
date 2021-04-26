@@ -96,5 +96,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       borderRadius: 'unset',
     },
+    warningBox: {
+      padding: theme.spacing(3, 6),
+      marginBottom: theme.spacing(4),
+      background: theme.palette.yellowLight,
+      borderRadius: theme.spacing(2),
+    },
+    warningText: {
+      fontSize: 16,
+      fontWeight: 400,
+      color: theme.palette.text.primary,
+    },
   })
 )

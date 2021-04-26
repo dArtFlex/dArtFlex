@@ -6,5 +6,16 @@ import Modal from './Modal'
 import Popover from './Popover'
 import { WalletConnect } from './Form'
 import CircularProgressLoader from './Loaders'
+import { CardHistory } from './Card'
 
-export { Header, PageWrapper, Footer, StyledCheckedMenuItem, Modal, Popover, WalletConnect, CircularProgressLoader }
+export {
+  Header,
+  PageWrapper,
+  Footer,
+  StyledCheckedMenuItem,
+  Modal,
+  Popover,
+  WalletConnect,
+  CircularProgressLoader,
+  CardHistory,
+}
