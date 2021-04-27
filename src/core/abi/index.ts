@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-export const TOKEN_ADDRESS = '0xC79BCBfF64A05e9cE790CEe3cC441b2E44035655'
+export const NFT_CONTRACT_ADDRESS = '0xC79BCBfF64A05e9cE790CEe3cC441b2E44035655'
 
 export const ABI: AbiItem[] = [
   {
