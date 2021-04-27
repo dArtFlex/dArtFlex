@@ -13,9 +13,16 @@ const auctionSlice = createSlice({
     createBidRequest: (state, { payload }: PayloadAction<{ tokenId: string; asset: any }>) => {
       state.fetching = true
     },
+    createBidSuccess: (state) => {
+      state.fetching = false
+    },
+    createBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
-export const { createBidRequest } = auctionSlice.actions
+export const { createBidRequest, createBidSuccess, createBidFailure } = auctionSlice.actions
 
 export const { reducer } = auctionSlice
