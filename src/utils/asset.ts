@@ -11,7 +11,7 @@ export function createDummyAssetData(index: number) {
         _status: 'auction',
         _priceReserve: 0.1,
         _currentBit: 0.2,
-        _expPeriod: currentDate + plus30,
+        _expPeriod: currentDate + plus1n15,
       }
     case 1:
       return {
