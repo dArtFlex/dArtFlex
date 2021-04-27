@@ -107,5 +107,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 400,
       color: theme.palette.text.primary,
     },
+    outerContainer: {
+      position: 'sticky',
+      top: theme.spacing(4),
+    },
   })
 )

@@ -5,8 +5,8 @@ import { bc } from 'services/blockchain_service'
 import { OpenSeaPort, Network } from 'opensea-js'
 import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
-
-import { TOKEN_ADDRESS } from 'core'
+import { createDummyAssetData } from 'utils'
+import { NFT_CONTRACT_ADDRESS } from 'core'
 
 export function* getAssetsData(api: IApi) {
   try {
@@ -24,7 +24,7 @@ export function* getAssetsData(api: IApi) {
       const tokenId = yield bc.getTokenId(i)
 
       const asset: OpenSeaAsset = yield seaport.api.getAsset({
-        tokenAddress: TOKEN_ADDRESS,
+        tokenAddress: NFT_CONTRACT_ADDRESS,
         tokenId,
       })
       yield delay(500)
@@ -35,6 +35,7 @@ export function* getAssetsData(api: IApi) {
         tokenId,
         description: asset.description,
         ...asset,
+        ...createDummyAssetData(i),
       })
       i++
     }

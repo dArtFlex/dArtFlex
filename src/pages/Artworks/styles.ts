@@ -94,6 +94,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.accentGradient,
       color: theme.palette.white,
     },
+    cardActionSold: {
+      background: theme.palette.greyDark,
+    },
     actionBtn: {
       padding: theme.spacing(2, 3),
       backgroundColor: theme.palette.white,

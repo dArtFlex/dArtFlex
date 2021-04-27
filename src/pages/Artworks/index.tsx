@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { stateType } from 'stores/reducers'
@@ -25,6 +26,8 @@ import { useHistory } from 'react-router-dom'
 import appConst from 'config/consts'
 import clsx from 'clsx'
 import routes from 'routes'
+import { useTimer } from 'hooks'
+import { getPriceLable } from 'utils'
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -83,7 +86,6 @@ const selectAssets = () =>
 
 export default function Artworks() {
   const classes = useStyles()
-  const history = useHistory()
   const { assets, fetching } = useSelector(selectAssets())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
@@ -198,46 +200,59 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {fetching ? (
-            <CircularProgressLoader />
-          ) : (
-            assets?.map((a, i) => (
-              <Card key={a.tokenId} elevation={1}>
-                <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${a.tokenId}`)}>
-                  <img src={a.image} />
-                </Box>
-                <Box className={classes.artInfoContainer}>
-                  <Box display={'flex'} mb={4} alignItems={'center'}>
-                    <Avatar className={classes.avatar} alt="Avatar" />
-                    <Typography variant={'h4'}>@gianapress</Typography>
-                  </Box>
-                  <Typography variant={'h4'}>{a.name}</Typography>
-                </Box>
-                <Box className={classes.cardAction}>
-                  <Box>
-                    <span>Sold for</span>
-                    <Typography color={'inherit'} variant={'h3'}>
-                      0.1 ETH
-                    </Typography>
-                  </Box>
-                  {Boolean(i === 1) && (
-                    <ButtonBase className={classes.actionBtn}>
-                      <TimeIcon className={classes.actionBtnIcon} />
-                      00:59:59
-                    </ButtonBase>
-                  )}
-                  {Boolean(i === 2) && (
-                    <ButtonBase className={clsx(classes.actionBtn, classes.actionBtnBurn)}>
-                      <BurnIcon className={classes.actionBtnIcon} />
-                      00:59:59
-                    </ButtonBase>
-                  )}
-                </Box>
-              </Card>
-            ))
-          )}
+          {fetching ? <CircularProgressLoader /> : assets?.map((asset, i) => <AssetCard key={i} asset={asset} />)}
         </Box>
       </Box>
     </PageWrapper>
+  )
+}
+
+const AssetCard = (props: any) => {
+  const { asset } = props
+  const classes = useStyles()
+  const history = useHistory()
+  const { timer } = useTimer(asset._expPeriod)
+
+  return (
+    <Card key={asset.tokenId} elevation={1}>
+      <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.tokenId}`)}>
+        <img src={asset.image} />
+      </Box>
+      <Box className={classes.artInfoContainer}>
+        <Box display={'flex'} mb={4} alignItems={'center'}>
+          <Avatar className={classes.avatar} alt="Avatar" />
+          <Typography variant={'h4'}>
+            {asset?.owner?.user?.username ? `@${asset.owner.user.username}` : '@you'}
+          </Typography>
+        </Box>
+        <Typography variant={'h4'}>{asset.name}</Typography>
+      </Box>
+      <Box className={clsx(classes.cardAction, asset._status === 'sold' && classes.cardActionSold)}>
+        <Box>
+          {asset._status === 'auction' && <span>{asset._currentBit ? 'Current Bid' : 'Reserve Price'}</span>}
+          {asset._status === 'buy_now' && <span>Buy Now</span>}
+          {asset._status === 'reserve_price' && <span>Reserve Price</span>}
+          {asset._status === 'sold' && <span>Sold for</span>}
+          <Typography color={'inherit'} variant={'h3'}>
+            {asset._status === 'auction' && `${asset._priceReserve || asset._currentBit} ETH`}
+            {asset._status === 'buy_now' && `${asset._price} ETH`}
+            {asset._status === 'reserve_price' ? (asset._priceReserve ? `${asset._priceReserve} ETH` : '-') : ''}
+            {asset._status === 'sold' && `${asset._sold} ETH`}
+          </Typography>
+        </Box>
+        {asset._status === 'auction' && (
+          <ButtonBase
+            className={clsx(classes.actionBtn, asset._expPeriod < new Date().getTime() && classes.actionBtnBurn)}
+          >
+            {asset._expPeriod < new Date().getTime() ? (
+              <BurnIcon className={classes.actionBtnIcon} />
+            ) : (
+              <TimeIcon className={classes.actionBtnIcon} />
+            )}
+            {timer}
+          </ButtonBase>
+        )}
+      </Box>
+    </Card>
   )
 }

@@ -6,7 +6,7 @@ import { CircularProgressLoaderProps } from './types'
 
 export default function CircularProgressLoader(props: CircularProgressLoaderProps) {
   let { height = 'auto' } = props
-  const { size = 24 } = props
+  const { size = 48, color = 'primary' } = props
 
   if (height === 'fullScreen') {
     height = `100vh`
@@ -21,7 +21,7 @@ export default function CircularProgressLoader(props: CircularProgressLoaderProp
 
   return (
     <div style={style}>
-      <CircularProgress size={size} color="secondary" />
+      <CircularProgress size={size} color={color} />
     </div>
   )
 }
