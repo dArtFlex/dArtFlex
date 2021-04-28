@@ -1,33 +1,25 @@
 //@ts-nocheck
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { stateType } from 'stores/reducers'
-import { createSelector } from 'reselect'
-import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem } from 'common'
-import { CloseIcon, TimeIcon, BurnIcon, RefreshIcon } from 'common/icons'
+import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem, CardAsset } from 'common'
+import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import {
   Box,
   Typography,
   FormControl,
   Select,
   Button,
-  ButtonBase,
   Divider,
   TextField,
-  Card,
-  Avatar,
   FormControlLabel,
   Checkbox,
 } from '@material-ui/core'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { useStyles } from './styles'
-import { useHistory } from 'react-router-dom'
+
 import appConst from 'config/consts'
+import { selectAssets, selectWallet } from 'stores/selectors'
 import clsx from 'clsx'
-import routes from 'routes'
-import { useTimer } from 'hooks'
-import { getPriceLable } from 'utils'
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -78,15 +70,10 @@ const filterItems = [
 
 const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
-const selectAssets = () =>
-  createSelector(
-    (store: stateType) => store,
-    ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
-  )
-
 export default function Artworks() {
   const classes = useStyles()
   const { assets, fetching } = useSelector(selectAssets())
+  const { wallet } = useSelector(selectWallet())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
   const [filter, setFilter] = useState(LIVE_AUCTION)
@@ -123,11 +110,17 @@ export default function Artworks() {
               if (value) setFilter(value)
             }}
           >
-            {filterItems.map(({ label, value }) => (
-              <ToggleButton key={value} value={value} selected={filter === value}>
-                {label}
-              </ToggleButton>
-            ))}
+            {filterItems.map(({ label, value }) => {
+              return wallet !== null ? (
+                <ToggleButton key={value} value={value} selected={filter === value}>
+                  {label}
+                </ToggleButton>
+              ) : value === LIVE_AUCTION || value === RESERVE_NOT_MET ? (
+                <ToggleButton key={value} value={value} selected={filter === value}>
+                  {label}
+                </ToggleButton>
+              ) : null
+            })}
           </ToggleButtonGroup>
           <Button
             onClick={() => setShowCustomFilters(!showCustomFilters)}
@@ -200,59 +193,20 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {fetching ? <CircularProgressLoader /> : assets?.map((asset, i) => <AssetCard key={i} asset={asset} />)}
+          {fetching ? (
+            <CircularProgressLoader />
+          ) : (
+            assets
+              ?.filter((el) => {
+                if (filter === FEATURED_ARTWORKS) {
+                  return true
+                }
+                return el._status === filter
+              })
+              .map((asset, i) => <CardAsset key={i} asset={asset} />)
+          )}
         </Box>
       </Box>
     </PageWrapper>
-  )
-}
-
-const AssetCard = (props: any) => {
-  const { asset } = props
-  const classes = useStyles()
-  const history = useHistory()
-  const { timer } = useTimer(asset._expPeriod)
-
-  return (
-    <Card key={asset.tokenId} elevation={1}>
-      <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.tokenId}`)}>
-        <img src={asset.image} />
-      </Box>
-      <Box className={classes.artInfoContainer}>
-        <Box display={'flex'} mb={4} alignItems={'center'}>
-          <Avatar className={classes.avatar} alt="Avatar" />
-          <Typography variant={'h4'}>
-            {asset?.owner?.user?.username ? `@${asset.owner.user.username}` : '@you'}
-          </Typography>
-        </Box>
-        <Typography variant={'h4'}>{asset.name}</Typography>
-      </Box>
-      <Box className={clsx(classes.cardAction, asset._status === 'sold' && classes.cardActionSold)}>
-        <Box>
-          {asset._status === 'auction' && <span>{asset._currentBit ? 'Current Bid' : 'Reserve Price'}</span>}
-          {asset._status === 'buy_now' && <span>Buy Now</span>}
-          {asset._status === 'reserve_price' && <span>Reserve Price</span>}
-          {asset._status === 'sold' && <span>Sold for</span>}
-          <Typography color={'inherit'} variant={'h3'}>
-            {asset._status === 'auction' && `${asset._priceReserve || asset._currentBit} ETH`}
-            {asset._status === 'buy_now' && `${asset._price} ETH`}
-            {asset._status === 'reserve_price' ? (asset._priceReserve ? `${asset._priceReserve} ETH` : '-') : ''}
-            {asset._status === 'sold' && `${asset._sold} ETH`}
-          </Typography>
-        </Box>
-        {asset._status === 'auction' && (
-          <ButtonBase
-            className={clsx(classes.actionBtn, asset._expPeriod < new Date().getTime() && classes.actionBtnBurn)}
-          >
-            {asset._expPeriod < new Date().getTime() ? (
-              <BurnIcon className={classes.actionBtnIcon} />
-            ) : (
-              <TimeIcon className={classes.actionBtnIcon} />
-            )}
-            {timer}
-          </ButtonBase>
-        )}
-      </Box>
-    </Card>
   )
 }

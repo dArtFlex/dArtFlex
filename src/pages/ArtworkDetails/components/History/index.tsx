@@ -46,7 +46,7 @@ const history = [
   },
 ]
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     showMoreBtn: {
       fontSize: 16,

@@ -1,3 +1,4 @@
 import CardHistory from './CardHistory'
+import CardAsset from './CardAsset'
 
-export { CardHistory }
+export { CardHistory, CardAsset }

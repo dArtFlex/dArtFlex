@@ -10,7 +10,7 @@ const auctionSlice = createSlice({
   name: 'auction',
   initialState,
   reducers: {
-    createBidRequest: (state, { payload }: PayloadAction<{ tokenId: string; asset: any }>) => {
+    createBidRequest: (state, { payload }: PayloadAction<{ tokenId: string }>) => {
       state.fetching = true
     },
     createBidSuccess: (state) => {
