@@ -6,7 +6,7 @@ import Modal from './Modal'
 import Popover from './Popover'
 import { WalletConnect } from './Form'
 import CircularProgressLoader from './Loaders'
-import { CardHistory } from './Card'
+import { CardHistory, CardAsset } from './Card'
 
 export {
   Header,
@@ -18,4 +18,5 @@ export {
   WalletConnect,
   CircularProgressLoader,
   CardHistory,
+  CardAsset,
 }

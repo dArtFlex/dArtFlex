@@ -1,18 +1,6 @@
 import React from 'react'
-import clsx from 'clsx'
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Avatar,
-  IconButton,
-  Typography,
-  Box,
-  Link,
-  Divider,
-  Button,
-} from '@material-ui/core'
-import { SmileyFaceIcon } from 'common/icons'
+import { Card, CardHeader, CardContent, Avatar, Typography } from '@material-ui/core'
+
 import { useStyles } from './styles'
 
 export default function About() {

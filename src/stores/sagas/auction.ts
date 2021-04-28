@@ -9,9 +9,18 @@ import { IApi } from '../../services/types'
 import { createBidSuccess, createBidFailure } from 'stores/reducers/auction'
 import { NFT_CONTRACT_ADDRESS } from 'core'
 
-export function* createBid(api: IApi, { payload: { tokenId, asset } }: PayloadActio<{ tokenId: string; asset: any }>) {
+export function* createBid(api: IApi, { payload: { tokenId } }: PayloadActio<{ tokenId: string }>) {
+  try {
+    yield put(createBidSuccess(tokenId))
+  } catch (e) {
+    yield put(createBidFailure(e))
+  }
+}
+
+export function* createSellOrder(api: IApi, { payload: { tokenId } }: PayloadActio<{ tokenId: string }>) {
   try {
     const providerEngine = new Web3ProviderEngine()
+
     // const provider = new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
     // Network.Rinkeby for test
     const seaport = new OpenSeaPort(providerEngine, {
@@ -23,7 +32,7 @@ export function* createBid(api: IApi, { payload: { tokenId, asset } }: PayloadAc
     const OWNER_ASSET_ADDRESS = yield walletService.getMetaMaskAccount()
     const paymentTokenAddress = '0xc778417e063141139fce010982780140aa0cd5ab'
 
-    const auction = yield seaport.createSellOrder({
+    yield seaport.createSellOrder({
       asset: {
         tokenAddress: NFT_CONTRACT_ADDRESS,
         tokenId,
@@ -34,8 +43,9 @@ export function* createBid(api: IApi, { payload: { tokenId, asset } }: PayloadAc
       paymentTokenAddress,
       waitForHighestBid: true,
     })
-    yield put(createBidSuccess(auction))
+
+    console.log('createSellOrderSuccess')
   } catch (e) {
-    yield put(createBidFailure(e))
+    console.log('createSellOrderFailure', e)
   }
 }
