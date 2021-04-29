@@ -122,5 +122,23 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.greyDark,
       fontWeight: 'bold',
     },
+    externalLink: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      cursor: 'pointer',
+    },
+    externalLinkText: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: theme.palette.text.primary,
+      paddingLeft: theme.spacing(2),
+    },
+    bitViewBtn: {
+      border: `2px solid ${theme.palette.text.primary}`,
+      '&:hover': {
+        border: `2px solid ${theme.palette.text.primary}`,
+      },
+    },
   })
 )
