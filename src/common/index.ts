@@ -7,6 +7,7 @@ import Popover from './Popover'
 import { WalletConnect } from './Form'
 import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset } from './Card'
+import { Chip } from './Chip'
 
 export {
   Header,
@@ -19,4 +20,5 @@ export {
   CircularProgressLoader,
   CardHistory,
   CardAsset,
+  Chip,
 }

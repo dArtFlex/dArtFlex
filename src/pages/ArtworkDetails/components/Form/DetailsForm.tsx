@@ -36,14 +36,14 @@ const ifAuction = true
 const ifAuctionEnds = false
 
 interface IDetailsFormProps {
+  tokenId: string
   onSubmit: () => void
 }
 
 export default function DetailsForm(props: IDetailsFormProps) {
-  const { onSubmit } = props
+  const { onSubmit, tokenId } = props
   const classes = useStyles()
-  const { id } = useParams<{ id: string }>()
-  const { asset } = useSelector(selectAsset(id))
+  const { asset } = useSelector(selectAsset(tokenId))
   const { wallet } = useSelector(selectWallet())
   const { timer } = useTimer(auctionEndTime)
 

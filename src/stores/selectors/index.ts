@@ -27,3 +27,10 @@ export const selectWallet = () =>
     (store: stateType) => store,
     ({ wallet: { wallet } }: stateType) => ({ wallet })
   )
+
+// Auction
+export const selectAuction = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ auction }: stateType) => ({ auction })
+  )
