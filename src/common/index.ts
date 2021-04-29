@@ -4,7 +4,7 @@ import Footer from './footer'
 import StyledCheckedMenuItem from './StyledCheckedMenuItem'
 import Modal from './Modal'
 import Popover from './Popover'
-import { WalletConnect } from './Form'
+import { WalletConnect, WalletError } from './Form'
 import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset } from './Card'
 import { Chip } from './Chip'
@@ -17,6 +17,7 @@ export {
   Modal,
   Popover,
   WalletConnect,
+  WalletError,
   CircularProgressLoader,
   CardHistory,
   CardAsset,

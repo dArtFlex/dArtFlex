@@ -7,7 +7,6 @@ export const selectAssets = () =>
     (store: stateType) => store,
     ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
   )
-
 export const selectAsset = (id: string) =>
   createSelector(
     (store: stateType) => store,
@@ -26,6 +25,11 @@ export const selectWallet = () =>
   createSelector(
     (store: stateType) => store,
     ({ wallet: { wallet } }: stateType) => ({ wallet })
+  )
+export const selectWalletError = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ wallet: { error } }: stateType) => ({ error })
   )
 
 // Auction
