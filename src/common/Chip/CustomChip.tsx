@@ -6,6 +6,13 @@ import { useStyles } from './styles'
 export default function CustomChip(props: ICustomChipProps) {
   const { avatar, children, startIcon = false, endIcon = false, classNames = {} } = props
   const classes = useStyles()
+
+  const Component = (
+    <Avatar classes={{ root: classNames.avatarRoot }} className={classes.avatar}>
+      {avatar}
+    </Avatar>
+  )
+
   return (
     <Button
       classes={{
@@ -15,20 +22,8 @@ export default function CustomChip(props: ICustomChipProps) {
       variant={'text'}
       color={'primary'}
       disableElevation
-      startIcon={
-        startIcon && (
-          <Avatar classes={{ root: classNames.avatarRoot }} className={classes.avatar}>
-            {avatar}
-          </Avatar>
-        )
-      }
-      endIcon={
-        endIcon && (
-          <Avatar classes={{ root: classNames.avatarRoot }} className={classes.avatar}>
-            {avatar}
-          </Avatar>
-        )
-      }
+      startIcon={startIcon && Component}
+      endIcon={endIcon && Component}
     >
       {children}
     </Button>
