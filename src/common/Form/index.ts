@@ -1,3 +1,4 @@
 import WalletConnect from './WalletConnect'
+import WalletError from './WalletError'
 
-export { WalletConnect }
+export { WalletConnect, WalletError }

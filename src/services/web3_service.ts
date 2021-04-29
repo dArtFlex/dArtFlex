@@ -23,6 +23,7 @@ class Web3Service {
     window.web3 = new Web3(provider)
     this.web3 = window.web3
     this.provider = provider
+    this.ethereum = ethereum
   }
 
   getWeb3Provider(): any {

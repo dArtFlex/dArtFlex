@@ -22,9 +22,17 @@ const walletSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+    closeWarningModal: (state) => {
+      state.error = ''
+    },
   },
 })
 
-export const { connectMetaMaskRequest, connectMetaMaskSuccess, connectMetaMaskFailure } = walletSlice.actions
+export const {
+  connectMetaMaskRequest,
+  connectMetaMaskSuccess,
+  connectMetaMaskFailure,
+  closeWarningModal,
+} = walletSlice.actions
 
 export const { reducer } = walletSlice

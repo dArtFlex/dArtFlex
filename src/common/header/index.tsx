@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
+import { closeWarningModal } from 'stores/reducers/wallet'
 import { selectWallet, selectAuction } from 'stores/selectors'
 import SearchField from './SearchField'
 import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon } from 'common/icons'
@@ -13,6 +14,7 @@ import { useStyles } from './styles'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
   const {
@@ -77,7 +79,10 @@ export default function Header({ toggleTheme }: HeaderType) {
       </AppBar>
       <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          dispatch(closeWarningModal())
+          setOpen(false)
+        }}
         body={<WalletConnect onClose={() => setOpen(false)} />}
         withAside
       />
