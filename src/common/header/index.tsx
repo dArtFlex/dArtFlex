@@ -1,28 +1,23 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { stateType } from 'stores/reducers'
-import { createSelector } from 'reselect'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
-
-import { Modal, WalletConnect } from 'common'
+import { Modal, WalletConnect, Chip } from 'common'
+import { selectWallet, selectAuction } from 'stores/selectors'
 import SearchField from './SearchField'
 import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 
-const selectWallet = () =>
-  createSelector(
-    (store: stateType) => store,
-    ({ wallet: { wallet } }: stateType) => ({ wallet })
-  )
-
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
+  const {
+    auction: { bids },
+  } = useSelector(selectAuction())
 
   const [open, setOpen] = useState<boolean>(false)
 
@@ -49,6 +44,11 @@ export default function Header({ toggleTheme }: HeaderType) {
             ))}
           </Tabs>
           <Box className={classes.buttonContainer}>
+            {Boolean(bids.length) && (
+              <Chip avatar={`${bids.length}`} endIcon>
+                Bits
+              </Chip>
+            )}
             <SearchField />
             <Button variant={'outlined'} color={'primary'} disableElevation endIcon={<CurrentDownIcon />}>
               Create

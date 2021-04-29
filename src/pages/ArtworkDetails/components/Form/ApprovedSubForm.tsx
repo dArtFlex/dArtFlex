@@ -1,12 +1,27 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx'
 import { Box, Typography, TextField, FormControlLabel, Checkbox, Link, Button } from '@material-ui/core'
 import { InfoIcon } from 'common/icons'
+import { createBidRequest } from 'stores/reducers/auction'
+import { selectAsset } from 'stores/selectors'
+import appConst from 'config/consts'
 import { useStyles } from './styles'
 
-export default function ApprovedSubForm() {
+interface IApprovedSubFormProps {
+  tokenId: string
+}
+
+const {
+  FILTER_VALUES: { LIVE_AUCTION, RESERVE_NOT_MET },
+} = appConst
+
+export default function ApprovedSubForm(props: IApprovedSubFormProps) {
+  const { tokenId } = props
+  const { asset } = useSelector(selectAsset(tokenId))
+  const dispatch = useDispatch()
   const classes = useStyles()
-  const disabled = true
+  const disabled = false
 
   return (
     <Box className={classes.formContainer}>
@@ -65,8 +80,12 @@ export default function ApprovedSubForm() {
             }
           />
         </Box>
-
         <Button
+          onClick={() => {
+            if (asset?._status === LIVE_AUCTION || asset?._status === RESERVE_NOT_MET) {
+              dispatch(createBidRequest({ tokenId }))
+            }
+          }}
           variant={'contained'}
           color={'primary'}
           fullWidth

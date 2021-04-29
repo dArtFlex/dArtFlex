@@ -35,7 +35,11 @@ export default function ArtworkDetails() {
           )}
         </Box>
 
-        {openSubForm ? <ApprovedSubForm /> : <DetailsForm onSubmit={() => setOpenSubForm(true)} />}
+        {openSubForm ? (
+          <ApprovedSubForm tokenId={id} />
+        ) : (
+          <DetailsForm tokenId={id} onSubmit={() => setOpenSubForm(true)} />
+        )}
       </Box>
     </PageWrapper>
   )
