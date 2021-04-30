@@ -115,7 +115,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       />
       <PopoverLinks
         anchor={anchorElCreateLink}
-        setAnchor={setAnchorElProfileLink}
+        setAnchor={setAnchorElCreateLink}
         links={[
           {
             lable: 'My Images',

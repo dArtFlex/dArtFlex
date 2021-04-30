@@ -2,7 +2,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    walletConnect: {
+    walletError: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'flex-start',
@@ -10,7 +10,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       flexDirection: 'column',
     },
-    walletConnectDesc: {
+    walletErrorDesc: {
       fontSize: 16,
       marginTop: theme.spacing(4),
       fontWeight: 'normal',
@@ -25,19 +25,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         background: theme.palette.text.primary,
       },
-    },
-    relatedConnectBtnIcon: {
-      position: 'absolute',
-      top: '50%',
-      left: 36,
-      transform: 'translate(-50%, -50%)',
-    },
-    walletTermLink: {
-      fontWeight: 700,
-    },
-    walletLearnMoreLink: {
-      fontSize: 16,
-      fontWeight: 700,
     },
   })
 )
