@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 import { Footer, Header, Modal, WalletError } from 'common'
 import { selectWalletError } from 'stores/selectors'
 import { useStyles } from './styles'
-import { web3Service } from 'services/web3_service'
 import { Box } from '@material-ui/core'
 import routes from '../routes'
 

@@ -1,13 +1,12 @@
 //@ts-nocheck
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { History, About } from '../../components'
 import { useTimer } from 'hooks'
-import { ShareIcon, ExternalLinkIcon, InfoIcon, EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
+import { ShareIcon, ExternalLinkIcon, InfoIcon, EtherscanIcon, OpenseaIcon, IpfsIcon, BurnIcon } from 'common/icons'
 import { selectAsset, selectWallet } from 'stores/selectors'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
@@ -29,8 +28,6 @@ const tabsItems = [
 ]
 
 // constants should be removed when logic will be provided
-const plus30 = 1000 * 60 * 60 * 0.5
-const auctionEndTime = new Date().getTime() + plus30
 const ethRate = 2511
 const ifAuction = true
 const ifAuctionEnds = false
@@ -45,7 +42,8 @@ export default function DetailsForm(props: IDetailsFormProps) {
   const classes = useStyles()
   const { asset } = useSelector(selectAsset(tokenId))
   const { wallet } = useSelector(selectWallet())
-  const { timer } = useTimer(auctionEndTime)
+  const { timer } = useTimer(asset?._expPeriod || 0)
+  const burnTime = new Date().getTime() + 1000 * 60 * 60
 
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
@@ -125,8 +123,12 @@ export default function DetailsForm(props: IDetailsFormProps) {
                 <Typography variant={'body1'}>Auction Ending In </Typography>
                 <InfoIcon />
               </Box>
-
-              <Typography variant={'h2'}>{timer}</Typography>
+              <Box className={clsx(classes.timerBox, asset._expPeriod < burnTime && classes.timerBoxBurn)}>
+                {asset._expPeriod < burnTime && <BurnIcon className={classes.actionBtnIcon} />}
+                <Typography className={asset._expPeriod < burnTime && classes.actionBtnBurn} variant={'h2'}>
+                  {timer}
+                </Typography>
+              </Box>
             </Box>
           )}
         </Box>
@@ -146,22 +148,42 @@ export default function DetailsForm(props: IDetailsFormProps) {
             </Typography>
           </Box>
         )}
-        <Button
-          onClick={() => {
-            if (wallet) {
-              onSubmit()
-            } else {
-              setOpen(true)
-            }
-          }}
-          variant={ifAuctionEnds ? 'outlined' : 'contained'}
-          color={'primary'}
-          fullWidth
-          disableElevation
-          className={classes.bitBtn}
-        >
-          {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
-        </Button>
+        {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={ifAuctionEnds ? 'outlined' : 'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+          >
+            {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
+          </Button>
+        )}
+        {asset?._status === BUY_NOW && (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={ifAuctionEnds ? 'outlined' : 'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+          >
+            Buy Now for 0.1 ETH
+          </Button>
+        )}
         <Tabs
           aria-label="info"
           value={tab}

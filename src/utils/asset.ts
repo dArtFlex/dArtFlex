@@ -5,8 +5,8 @@ const {
 } = appConst
 
 export function createDummyAssetData(index: number) {
-  const plus1n15 = 1000 * 60 * 60 * 1.15
-  const plus30 = 1000 * 60 * 60 * 0.5
+  const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
+  const plus30m = 1000 * 60 * 60 * 0.5
   const currentDate = new Date().getTime()
 
   switch (index) {
@@ -15,36 +15,36 @@ export function createDummyAssetData(index: number) {
         _status: LIVE_AUCTION,
         _priceReserve: 0.1,
         _currentBit: 0.2,
-        _expPeriod: currentDate + plus1n15,
+        _expPeriod: currentDate + plus1h1m,
       }
     case 1:
       return {
         _status: BUY_NOW,
         _price: 0.5,
-        _expPeriod: currentDate + plus1n15,
+        _expPeriod: currentDate + plus1h1m,
       }
     case 2:
       return {
         _status: RESERVE_NOT_MET,
         _priceReserve: 0.1,
-        _expPeriod: currentDate + plus30,
+        _expPeriod: currentDate + plus30m,
       }
     case 3:
       return {
         _status: RESERVE_NOT_MET,
-        _expPeriod: currentDate + plus30,
+        _expPeriod: currentDate + plus30m,
       }
     case 4:
       return {
         _status: SOLD,
         _sold: 1,
         _price: 0.5,
-        _expPeriod: currentDate + plus30,
+        _expPeriod: currentDate + plus30m,
       }
     default:
       return {
         _status: RESERVE_NOT_MET,
-        _expPeriod: currentDate + plus1n15,
+        _expPeriod: currentDate + plus1h1m,
       }
   }
 }
