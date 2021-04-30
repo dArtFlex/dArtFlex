@@ -5,19 +5,19 @@ import { ReloadIcon } from 'common/icons'
 import { closeWarningModal } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
 
-interface IWalletConnectProps {
+interface IWalletErrorProps {
   onClose?: () => void
 }
 
-export default function WalletConnect(props: IWalletConnectProps) {
+export default function WalletError(props: IWalletErrorProps) {
   const { onClose } = props
   const classes = useStyles()
   const dispatch = useDispatch()
 
   return (
-    <Box className={classes.walletConnect}>
+    <Box className={classes.walletError}>
       <Typography variant="h2">Wrong network!</Typography>
-      <Typography className={classes.walletConnectDesc}>
+      <Typography className={classes.walletErrorDesc}>
         Your wallet is connected to the wrong network Please change your network to one of mainnet
       </Typography>
 
