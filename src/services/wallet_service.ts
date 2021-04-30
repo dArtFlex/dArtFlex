@@ -22,6 +22,10 @@ class WalletService {
       })
     })
   }
+
+  getChainId(): any {
+    return ethereum.request({ method: 'eth_chainId' })
+  }
 }
 
 export const walletService = new WalletService()

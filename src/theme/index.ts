@@ -13,6 +13,7 @@ const palette = {
   accent: '#323232',
   spanishGray: '#979797',
   yellowLight: '#FFF6DB',
+  redMiddle: '#EB5757', //disconnect
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
