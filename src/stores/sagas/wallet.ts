@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { eventChannel, END } from 'redux-saga'
+import { eventChannel } from 'redux-saga'
 import { put, call, take } from 'redux-saga/effects'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { web3Service } from 'services/web3_service'

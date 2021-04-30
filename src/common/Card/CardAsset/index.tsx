@@ -21,6 +21,7 @@ export default function CardAsset(props: ICardAssetProps) {
   const history = useHistory()
 
   const { timer } = useTimer(asset?._expPeriod || 0)
+  const burnTime = new Date().getTime() + 1000 * 60 * 60
 
   return (
     <Card key={asset.tokenId} elevation={1}>
@@ -50,10 +51,8 @@ export default function CardAsset(props: ICardAssetProps) {
           </Typography>
         </Box>
         {asset._status === LIVE_AUCTION && (
-          <ButtonBase
-            className={clsx(classes.actionBtn, asset._expPeriod < new Date().getTime() && classes.actionBtnBurn)}
-          >
-            {asset._expPeriod < new Date().getTime() ? (
+          <ButtonBase className={clsx(classes.actionBtn, asset._expPeriod < burnTime && classes.actionBtnBurn)}>
+            {asset._expPeriod < burnTime ? (
               <BurnIcon className={classes.actionBtnIcon} />
             ) : (
               <TimeIcon className={classes.actionBtnIcon} />

@@ -140,5 +140,25 @@ export const useStyles = makeStyles((theme: Theme) =>
         border: `2px solid ${theme.palette.text.primary}`,
       },
     },
+    timerBox: {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.palette.text.primary,
+    },
+    timerBoxBurn: {
+      color: theme.palette.warning.main,
+    },
+    actionBtnIcon: {
+      width: 20,
+      height: 20,
+      marginLeft: 0,
+      marginRight: theme.spacing(2.5),
+    },
+    warningSubText: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
   })
 )
