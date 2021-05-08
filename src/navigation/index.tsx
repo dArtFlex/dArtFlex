@@ -21,6 +21,7 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.artworkDetails,
       component: <ArtworkDetails />,
+      hiddenFooter: true,
     },
     {
       path: routes.blog,
@@ -35,8 +36,8 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
           <Redirect to={routes.artworks} />
         </RouteHOC>
 
-        {appRoutes.map(({ path, component }) => (
-          <RouteHOC exact path={path} key={path} toggleTheme={toggleTheme}>
+        {appRoutes.map(({ path, component, ...rest }) => (
+          <RouteHOC exact path={path} key={path} toggleTheme={toggleTheme} {...rest}>
             {component}
           </RouteHOC>
         ))}
