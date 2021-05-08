@@ -8,6 +8,7 @@ import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
 import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset } from './Card'
 import { Chip } from './Chip'
+import { ButtonStartIcon } from './Button'
 
 export {
   Header,
@@ -26,4 +27,5 @@ export {
   CardHistory,
   CardAsset,
   Chip,
+  ButtonStartIcon,
 }

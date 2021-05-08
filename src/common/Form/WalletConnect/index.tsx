@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, Typography, Link, Button } from '@material-ui/core'
+import { ButtonStartIcon } from 'common'
 import { MetaMaskIcon } from 'common/icons'
 import { connectMetaMaskRequest } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
@@ -28,7 +29,7 @@ export default function WalletConnect(props: IWalletConnectProps) {
         </Link>
       </Typography>
 
-      <Button
+      <ButtonStartIcon
         onClick={() => {
           dispatch(connectMetaMaskRequest())
           onClose()
@@ -37,11 +38,11 @@ export default function WalletConnect(props: IWalletConnectProps) {
         color={'primary'}
         fullWidth
         disableElevation
-        className={classes.connectBtn}
+        classNames={classes.connectBtn}
+        icon={<MetaMaskIcon />}
       >
-        <MetaMaskIcon className={classes.relatedConnectBtnIcon} />
         MetaMask
-      </Button>
+      </ButtonStartIcon>
 
       <Typography className={classes.walletConnectDesc}>New to Ethereum?</Typography>
       <Link href="#" underline="none" className={classes.walletLearnMoreLink}>

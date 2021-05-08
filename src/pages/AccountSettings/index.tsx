@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 import { PageWrapper, Form, Field, InputAdornment } from 'common'
 import { IAccountSettingsProps } from './types'
@@ -14,6 +14,7 @@ import {
   LinkIcon,
   VerificationIcon,
 } from 'common/icons'
+import VerificationTwitter from './components/VerificationTwitter'
 import { useStyles } from './styles'
 
 const data = {
@@ -37,6 +38,8 @@ const data = {
 
 export default function AccountSettings(props: IAccountSettingsProps) {
   const classes = useStyles()
+  const [open, setOpen] = useState<boolean>(false)
+
   return (
     <PageWrapper className={classes.container}>
       <Form data={data} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
@@ -178,13 +181,20 @@ export default function AccountSettings(props: IAccountSettingsProps) {
               Procceed with verification proccess to get more visibility and gain trust on dArtflex Marketplace. Please
               allow up to several weeks for the process.
             </Typography>
-            <Button variant="outlined" className={classes.verifyBtn} startIcon={<TwitterIcon />}>
+            <Button
+              variant="outlined"
+              className={classes.verifyBtn}
+              startIcon={<TwitterIcon />}
+              onClick={() => setOpen(true)}
+            >
               Verify via Twitter
             </Button>
           </Box>
           <Button variant={'contained'} color={'primary'} fullWidth>
             Save Changes
           </Button>
+
+          <VerificationTwitter open={open} setOpen={() => setOpen(false)} />
         </Box>
       </Form>
     </PageWrapper>

@@ -16,16 +16,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'normal',
     },
     connectBtn: {
-      position: 'relative',
-      height: 50,
       marginTop: theme.spacing(10),
       marginBottom: theme.spacing(10),
-    },
-    relatedConnectBtnIcon: {
-      position: 'absolute',
-      top: '50%',
-      left: 36,
-      transform: 'translate(-50%, -50%)',
     },
     walletTermLink: {
       fontWeight: 700,
