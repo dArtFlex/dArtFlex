@@ -8,11 +8,11 @@ export interface IAppRouterProps {
   path?: string
   component: JSX.Element
   rest?: Record<string, unknown>
+  hiddenFooter?: boolean
 }
 
-export interface ISecureRouteParams {
+export interface ISecureRouteParams extends Omit<IAppRouterProps, 'component' | 'path'> {
   children: JSX.Element
-  rest?: Record<string, unknown>
   component?: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>
   exact?: boolean
   path?: string | string[]

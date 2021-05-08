@@ -8,18 +8,9 @@ import { Modal, WalletConnect, Chip, PopoverLinks } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
 import { selectWallet, selectAuction } from 'stores/selectors'
 import SearchField from './SearchField'
-import {
-  CurrentDownIcon,
-  LogoIcon,
-  CoolIcon,
-  SmileyFaceIcon,
-  ManIcon,
-  ListIcon,
-  BidsIcon,
-  SellIcon,
-  SettingsIcon,
-  DisconnectIcon,
-} from 'common/icons'
+import CreateActionMenu from './CreateActionMenu'
+import ProfileActionMenu from './ProfileActionMenu'
+import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 
@@ -55,7 +46,6 @@ export default function Header({ toggleTheme }: HeaderType) {
           <LogoIcon className={classes.logo} />
           <Tabs aria-label="navigation" value={pathname !== routes.blog ? 0 : 1} className={classes.navTabsContainer}>
             {MenuItems.map(({ title, to }) => (
-              //@ts-ignore: unreachable error
               <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
             ))}
           </Tabs>
@@ -104,6 +94,7 @@ export default function Header({ toggleTheme }: HeaderType) {
           </Box>
         </Toolbar>
       </AppBar>
+
       <Modal
         open={open}
         onClose={() => {
@@ -113,66 +104,8 @@ export default function Header({ toggleTheme }: HeaderType) {
         body={<WalletConnect onClose={() => setOpen(false)} />}
         withAside
       />
-      <PopoverLinks
-        anchor={anchorElCreateLink}
-        setAnchor={setAnchorElCreateLink}
-        links={[
-          {
-            lable: 'My Images',
-            onClick: () => console.log('My Images'),
-          },
-          {
-            lable: 'Constructor',
-            onClick: () => console.log('Constructor'),
-          },
-          {
-            lable: 'Create NFT',
-            onClick: () => console.log('Create NFT'),
-          },
-          {
-            lable: 'Submit NFTs',
-            onClick: () => console.log('Submit NFTs'),
-          },
-        ]}
-      />
-      <PopoverLinks
-        anchor={anchorElProfileLink}
-        setAnchor={setAnchorElProfileLink}
-        links={[
-          {
-            lable: 'Dashboard',
-            icon: <ManIcon />,
-            onClick: () => console.log('Dashboard'),
-          },
-          {
-            lable: 'Trading History',
-            icon: <ListIcon />,
-            onClick: () => console.log('Trading History'),
-          },
-          {
-            lable: 'Bids',
-            icon: <BidsIcon />,
-            onClick: () => console.log('Bids'),
-          },
-          {
-            lable: 'Sell',
-            icon: <SellIcon />,
-            onClick: () => console.log('Sell'),
-          },
-          {
-            lable: 'Account Settings',
-            icon: <SettingsIcon />,
-            onClick: () => console.log('Account Settings'),
-          },
-        ]}
-        subLinks={[
-          {
-            lable: 'Disconnect',
-            icon: <DisconnectIcon />,
-            onClick: () => console.log('Disconnect'),
-          },
-        ]}
-      />
+      <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
+      <ProfileActionMenu anchor={anchorElProfileLink} setAnchor={setAnchorElProfileLink} />
     </>
   )
 }
