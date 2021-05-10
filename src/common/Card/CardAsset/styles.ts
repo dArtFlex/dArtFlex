@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     artContainer: {
+      position: 'relative',
       padding: theme.spacing(1),
       height: '242px',
       display: 'flex',
@@ -49,6 +50,42 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     actionBtnIcon: {
       margin: theme.spacing(0, 2, 0, 1),
+    },
+    actionBtnBox: {
+      padding: theme.spacing(6),
+    },
+    listBtn: {
+      background: theme.palette.text.primary,
+      color: theme.palette.background.default,
+      '&:hover': {
+        background: theme.palette.text.primary,
+      },
+    },
+    badgeBox: {
+      position: 'absolute',
+      right: 12,
+      top: 12,
+      display: 'flex',
+      gap: theme.spacing(3.5),
+      alignItems: 'center',
+      padding: theme.spacing(3),
+      background: theme.palette.background.default,
+      borderRadius: '50% / 100%',
+    },
+    badgeIcon: {
+      width: 11,
+      height: 11,
+      borderRadius: '50%',
+      background: theme.palette.text.primary,
+    },
+    yellow: {
+      background: theme.palette.yellow,
+    },
+    green: {
+      background: theme.palette.green,
+    },
+    red: {
+      background: theme.palette.warning.main,
     },
   })
 )

@@ -14,42 +14,39 @@ import {
 } from 'common/icons'
 import { selectAssets, selectWallet } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
+import { Aside } from './components'
 import appConst from 'config/consts'
-import { ILinks } from './types'
 import { useStyles } from './styles'
 
 const {
-  SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, FEATURED_ARTWORKS },
+  FILTER_VALUES: { IN_AUCTION, CREATED, COLLECTED, SOLD },
 } = appConst
 
 const filterItems = [
   {
-    label: 'Live Auction',
-    value: LIVE_AUCTION,
+    label: 'In Wallet',
+    value: IN_AUCTION,
   },
   {
-    label: 'Buy Now',
-    value: BUY_NOW,
+    label: 'Created',
+    value: CREATED,
   },
   {
-    label: 'Reserve not met',
-    value: RESERVE_NOT_MET,
+    label: 'Collected',
+    value: COLLECTED,
   },
   {
     label: 'Sold',
     value: SOLD,
   },
-  {
-    label: 'Featured artworks',
-    value: FEATURED_ARTWORKS,
-  },
 ]
 
 export default function Dashboard() {
   const classes = useStyles()
+  const [filter, setFilter] = useState(IN_AUCTION)
+  const { assets, fetching } = useSelector(selectAssets())
 
-  const links: ILinks[] = [
+  const links = [
     {
       link: 'instagram.com/tianadias',
       icon: <InstagramOutlinedIcon className={classes.linkIcon} />,
@@ -72,58 +69,49 @@ export default function Dashboard() {
       <ProfileLayout
         coverURL={'https://picsum.photos/1500/500'}
         aside={
-          <Card className={classes.card}>
-            <Badge
-              classes={{ badge: classes.badge, root: classes.badgeRoot }}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              badgeContent={<VerificationIcon />}
-            >
-              <Avatar src={'https://picsum.photos/200/300'} className={classes.avatar} />
-            </Badge>
-            <Typography className={classes.name}>Tiana Dias</Typography>
-            <Typography className={classes.userName}>@tianadias</Typography>
-            <Box className={classes.wallet}>
-              <Typography className={classes.text}>0x683a67...11d1e1334</Typography>
-              <Button color={'primary'}>Copy</Button>
-            </Box>
-            <Box pb={11}>
-              <Typography variant={'body1'} color={'textSecondary'}>
-                Tiana is the Co-founder and Creative Director at Toast. She is a 3D artist that specializes in creating
-                content.
-              </Typography>
-            </Box>
-            {links.map(({ link, icon, href }) => (
-              <Box key={link} className={classes.linkBox}>
-                {icon}
-                <Link
-                  className={classes.link}
-                  href={href}
-                  onClick={() => console.log('instagram.com/tianadias')}
-                  underline="none"
-                >
-                  {link}
-                </Link>
-              </Box>
-            ))}
-            <Box className={classes.shareBtnCotainer}>
-              <IconButton className={classes.borderdIconButton}>
-                <ShareIcon />
-              </IconButton>
-              <IconButton className={classes.borderdIconButton}>
-                <ExternalLinkIcon />
-              </IconButton>
-            </Box>
-            <Typography variant={'body1'} color={'textSecondary'} align={'center'}>
-              Joined April, 2021
-            </Typography>
-          </Card>
+          <Aside
+            avatar={'https://picsum.photos/200/300'}
+            name={'Tiana Dias'}
+            userName={'tianadias'}
+            walletAddress={'0x683a67...11d1e1334'}
+            content={
+              'Tiana is the Co-founder and Creative Director at Toast. She is a 3D artist that specializes in creating content.'
+            }
+            links={links}
+            joinedToArtworks={'Joined April, 2021'}
+          />
         }
       >
-        <Box>
-          <Typography variant={'h1'}>Artworks</Typography>
+        <Box className={classes.container}>
+          <ToggleButtonGroup
+            classes={{ root: classes.toggleGroup }}
+            exclusive
+            onChange={(_, value) => {
+              if (value) setFilter(value)
+            }}
+          >
+            {filterItems.map(({ label, value }) => {
+              return (
+                <ToggleButton key={value} value={value} selected={filter === value}>
+                  {label}
+                </ToggleButton>
+              )
+            })}
+          </ToggleButtonGroup>
+          <Box className={classes.grid} mt={2}>
+            {fetching ? (
+              <CircularProgressLoader />
+            ) : (
+              assets
+                ?.filter((el) => {
+                  if (filter === IN_AUCTION) {
+                    return true
+                  }
+                  return el._status === filter
+                })
+                .map((asset, i) => <CardAsset key={i} asset={asset} withLabel />)
+            )}
+          </Box>
         </Box>
       </ProfileLayout>
     </PageWrapper>

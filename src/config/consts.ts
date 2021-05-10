@@ -6,11 +6,16 @@ const appConst = {
     PRICE_HIGH_LOW: 'price_high_low',
   },
   FILTER_VALUES: {
-    LIVE_AUCTION: 'live_auction',
-    BUY_NOW: 'buy_now',
+    MINTED: 'minted',
+    LIVE_AUCTION: 'live_auction', // That does it means the asset is LISTED on an Artwork
+    BUY_NOW: 'buy_now', // That does it means the asset is LISTED on an Artwork
     RESERVE_NOT_MET: 'reserve_not_met',
     SOLD: 'sold',
     FEATURED_ARTWORKS: 'featured_artworks',
+    IN_AUCTION: 'in_wallet',
+    CREATED: 'created',
+    COLLECTED: 'collected',
+    UNLISTED: 'unlisted',
   },
 }
 
