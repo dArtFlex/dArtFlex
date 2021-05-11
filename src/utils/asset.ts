@@ -1,7 +1,7 @@
 import { Asset } from 'stores/reducers/assets/types'
 import appConst from 'config/consts'
 const {
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD },
+  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, MINTED, COLLECTED, CREATED, UNLISTED },
 } = appConst
 
 export function createDummyAssetData(index: number) {
@@ -36,10 +36,27 @@ export function createDummyAssetData(index: number) {
       }
     case 4:
       return {
+        _status: MINTED,
+      }
+    case 5:
+      return {
         _status: SOLD,
         _sold: 1,
         _price: 0.5,
         _expPeriod: currentDate + plus30m,
+      }
+    case 6:
+      return {
+        _status: COLLECTED,
+      }
+    case 7:
+      return {
+        _status: CREATED,
+        _priceReserve: 0.1,
+      }
+    case 8:
+      return {
+        _status: UNLISTED,
       }
     default:
       return {

@@ -4,10 +4,11 @@ import Footer from './footer'
 import StyledCheckedMenuItem from './StyledCheckedMenuItem'
 import Modal from './Modal'
 import { Popover, PopoverLinks } from './Popover'
-import { WalletConnect, WalletError } from './Form'
+import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
 import CircularProgressLoader from './Loaders'
-import { CardHistory, CardAsset } from './Card'
+import { CardHistory, CardAsset, CardUploadNew } from './Card'
 import { Chip } from './Chip'
+import { ButtonStartIcon } from './Button'
 
 export {
   Header,
@@ -19,8 +20,13 @@ export {
   PopoverLinks,
   WalletConnect,
   WalletError,
+  Form,
+  Field,
+  InputAdornment,
   CircularProgressLoader,
   CardHistory,
   CardAsset,
+  CardUploadNew,
   Chip,
+  ButtonStartIcon,
 }

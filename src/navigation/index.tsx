@@ -4,7 +4,7 @@ import { IAppRouterProps } from './types'
 import { Router, Switch, Redirect } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
-import { ArtworkDetails, Artworks } from 'pages'
+import { ArtworkDetails, Artworks, AccountSettings, Dashboard } from 'pages'
 
 export const history = createBrowserHistory()
 
@@ -15,8 +15,17 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
       component: <Artworks />,
     },
     {
+      path: routes.artworkAccountSettings,
+      component: <AccountSettings />,
+    },
+    {
+      path: routes.dashboard,
+      component: <Dashboard />,
+    },
+    {
       path: routes.artworkDetails,
       component: <ArtworkDetails />,
+      hiddenFooter: true,
     },
     {
       path: routes.blog,
@@ -31,8 +40,8 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
           <Redirect to={routes.artworks} />
         </RouteHOC>
 
-        {appRoutes.map(({ path, component }) => (
-          <RouteHOC exact path={path} key={path} toggleTheme={toggleTheme}>
+        {appRoutes.map(({ path, component, ...rest }) => (
+          <RouteHOC exact path={path} key={path} toggleTheme={toggleTheme} {...rest}>
             {component}
           </RouteHOC>
         ))}

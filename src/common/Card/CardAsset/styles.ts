@@ -1,8 +1,10 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { repeat } from 'lodash'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     artContainer: {
+      position: 'relative',
       padding: theme.spacing(1),
       height: '242px',
       display: 'flex',
@@ -32,6 +34,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.accentGradient,
       color: theme.palette.white,
     },
+    cardActionNotMet: {
+      background: 'transparent',
+      color: theme.palette.text.secondary,
+    },
     cardActionSold: {
       background: theme.palette.greyDark,
     },
@@ -49,6 +55,53 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     actionBtnIcon: {
       margin: theme.spacing(0, 2, 0, 1),
+    },
+    actionBtnBox: {
+      padding: theme.spacing(6),
+    },
+    listBtn: {
+      background: theme.palette.text.primary,
+      color: theme.palette.background.default,
+      '&:hover': {
+        background: theme.palette.text.primary,
+      },
+    },
+    collectedBoxBtn: {
+      display: 'grid',
+      gridGap: theme.spacing(6),
+      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+    },
+    collectedBtn: {
+      border: `2px solid ${theme.palette.text.primary}`,
+    },
+    badgeBox: {
+      position: 'absolute',
+      right: 12,
+      top: 12,
+      display: 'flex',
+      gap: theme.spacing(3.5),
+      alignItems: 'center',
+      padding: theme.spacing(3),
+      background: theme.palette.background.default,
+      borderRadius: '50% / 100%',
+    },
+    badgeIcon: {
+      width: 11,
+      height: 11,
+      borderRadius: '50%',
+      background: theme.palette.text.primary,
+    },
+    yellow: {
+      background: theme.palette.yellow,
+    },
+    green: {
+      background: theme.palette.green,
+    },
+    red: {
+      background: theme.palette.warning.main,
+    },
+    borderdIconButton: {
+      border: `1px solid ${theme.palette.secondary.main}`,
     },
   })
 )
