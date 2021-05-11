@@ -148,7 +148,9 @@ export default function AccountSettings(props: IAccountSettingsProps) {
               variant="outlined"
               placeholder={'Channel URL'}
               InputProps={{
-                startAdornment: <InputAdornment position="start" icon={<YouTubeIcon />} />,
+                startAdornment: (
+                  <InputAdornment position="start" icon={<YouTubeIcon className={classes.socialsIcon} />} />
+                ),
               }}
             />
             <Field
@@ -168,7 +170,7 @@ export default function AccountSettings(props: IAccountSettingsProps) {
               variant="outlined"
               placeholder={'URL'}
               InputProps={{
-                startAdornment: <InputAdornment position="start" icon={<LinkIcon />} />,
+                startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
               }}
             />
           </Box>

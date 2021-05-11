@@ -20,7 +20,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Dashboard',
           icon: <ManIcon />,
-          onClick: () => console.log('Dashboard'),
+          onClick: () => history.push(routes.dashboard),
         },
         {
           lable: 'Trading History',

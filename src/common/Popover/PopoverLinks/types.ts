@@ -3,6 +3,8 @@ export interface IPopoverLinksProps {
   setAnchor: (target: null) => void
   links: ILinks[]
   subLinks?: ILinks[]
+  title?: JSX.Element | null
+  subTitle?: JSX.Element | null
 }
 
 export interface ILinks {
