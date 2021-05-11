@@ -68,5 +68,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,
     },
+    icon: {
+      fill: theme.palette.text.primary,
+    },
+    linksTitle: {
+      padding: theme.spacing(5, 8, 0, 8),
+      fontSize: 14,
+      fontWeight: 700,
+      color: theme.palette.text.secondary,
+    },
   })
 )

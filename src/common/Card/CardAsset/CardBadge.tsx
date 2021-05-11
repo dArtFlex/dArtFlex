@@ -32,7 +32,7 @@ export default function CardBadge(props: ICardBadgeProps) {
     case UNLISTED:
       return (
         <Box className={classes.badgeBox}>
-          <Icon className={clsx(classes.badgeIcon, classes.green)}></Icon>
+          <Icon className={clsx(classes.badgeIcon, classes.red)}></Icon>
           <Typography variant={'body1'}>Unlisted</Typography>
         </Box>
       )

@@ -51,16 +51,29 @@ export default function CardActions(props: ICardActionsProps) {
       )
     case SOLD:
       return (
-        <Box className={classes.cardAction}>
+        <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
           <Section text={'Sold for'} value={`${sold} ETH`} />
         </Box>
       )
     case COLLECTED:
-      return <Box className={classes.cardAction}></Box>
+      return (
+        <Box className={clsx(classes.actionBtnBox, classes.collectedBoxBtn)}>
+          <Button variant={'outlined'} className={classes.collectedBtn}>
+            Sell
+          </Button>
+          <Button variant={'outlined'} className={classes.collectedBtn}>
+            View Artwork
+          </Button>
+        </Box>
+      )
     case CREATED:
-      return <Box className={classes.cardAction}></Box>
+      return (
+        <Box className={clsx(classes.cardAction, classes.cardActionNotMet)}>
+          <Section text={'Reserve Not Met'} value={`${priceReserve} ETH`} />
+        </Box>
+      )
     case UNLISTED:
-      return <Box className={classes.cardAction}></Box>
+      return <Box></Box>
     default:
       return null
   }

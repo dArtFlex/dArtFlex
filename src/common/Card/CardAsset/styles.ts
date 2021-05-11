@@ -1,4 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { repeat } from 'lodash'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +34,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.accentGradient,
       color: theme.palette.white,
     },
+    cardActionNotMet: {
+      background: 'transparent',
+      color: theme.palette.text.secondary,
+    },
     cardActionSold: {
       background: theme.palette.greyDark,
     },
@@ -61,6 +66,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.text.primary,
       },
     },
+    collectedBoxBtn: {
+      display: 'grid',
+      gridGap: theme.spacing(6),
+      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+    },
+    collectedBtn: {
+      border: `2px solid ${theme.palette.text.primary}`,
+    },
     badgeBox: {
       position: 'absolute',
       right: 12,
@@ -86,6 +99,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     red: {
       background: theme.palette.warning.main,
+    },
+    borderdIconButton: {
+      border: `1px solid ${theme.palette.secondary.main}`,
     },
   })
 )

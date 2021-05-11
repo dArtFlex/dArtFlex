@@ -20,5 +20,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     toggleGroup: {
       margin: theme.spacing(8, 0, 7),
     },
+    inlineFlex: {
+      display: 'inline-flex',
+      flexDirection: 'column',
+    },
   })
 )

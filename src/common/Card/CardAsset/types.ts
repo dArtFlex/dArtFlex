@@ -7,6 +7,7 @@ const {
 export interface ICardAssetProps {
   asset: any
   withLabel?: boolean
+  withAction?: boolean
 }
 
 type UserResponse =

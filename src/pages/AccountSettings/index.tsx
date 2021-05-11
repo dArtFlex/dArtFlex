@@ -170,7 +170,7 @@ export default function AccountSettings(props: IAccountSettingsProps) {
               variant="outlined"
               placeholder={'URL'}
               InputProps={{
-                startAdornment: <InputAdornment position="start" icon={<LinkIcon />} />,
+                startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
               }}
             />
           </Box>

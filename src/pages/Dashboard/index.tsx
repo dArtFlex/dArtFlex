@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import { useSelector } from 'react-redux'
-import { Box, Typography, Card, Avatar, Badge, Button, Link, IconButton } from '@material-ui/core'
+import { Box, Typography, Grid } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem, CardAsset } from 'common'
+import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
 import {
   VerificationIcon,
   InstagramOutlinedIcon,
@@ -14,7 +14,7 @@ import {
 } from 'common/icons'
 import { selectAssets, selectWallet } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
-import { Aside } from './components'
+import { Aside, ValuesInfo, Empty } from './components'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 
@@ -98,18 +98,38 @@ export default function Dashboard() {
               )
             })}
           </ToggleButtonGroup>
+
+          {filter === SOLD && (
+            <Box className={classes.container}>
+              <Box className={classes.inlineFlex}>
+                <ValuesInfo />
+              </Box>
+            </Box>
+          )}
+
           <Box className={classes.grid} mt={2}>
             {fetching ? (
               <CircularProgressLoader />
             ) : (
-              assets
-                ?.filter((el) => {
-                  if (filter === IN_AUCTION) {
-                    return true
-                  }
-                  return el._status === filter
-                })
-                .map((asset, i) => <CardAsset key={i} asset={asset} withLabel />)
+              <>
+                {filter === CREATED && <CardUploadNew />}
+                {assets
+                  ?.filter((el) => {
+                    if (filter === IN_AUCTION) {
+                      return true
+                    }
+                    return el._status === filter
+                  })
+                  .map((asset, i) => (
+                    <CardAsset
+                      key={i}
+                      asset={asset}
+                      withLabel
+                      withAction={Boolean(asset._currentBit || asset._priceReserve)}
+                    />
+                  ))}
+                {!assets?.length && <Empty />}
+              </>
             )}
           </Box>
         </Box>
