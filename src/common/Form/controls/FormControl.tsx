@@ -8,6 +8,7 @@ interface IFormControlProps extends Pick<FormControlProps, 'error' | 'className'
   errorText?: string
   helperText?: React.ReactNode
   gap?: boolean
+  fullWidth?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,12 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function FormControl(props: IFormControlProps) {
   const classes = useStyles()
-  const { children, className, error, errorText, helperText, gap = true } = props
+  const { children, className, error, errorText, helperText, gap = true, fullWidth = true } = props
 
   const showHelperText = gap || error || helperText
 
   return (
-    <MUIFormControl margin="none" error={error} fullWidth className={clsx(classes.root, className)}>
+    <MUIFormControl margin="none" error={error} fullWidth={fullWidth} className={clsx(classes.root, className)}>
       {children}
       {showHelperText && (
         <FormHelperText className={classes.helperText}>{error ? errorText : helperText}</FormHelperText>
