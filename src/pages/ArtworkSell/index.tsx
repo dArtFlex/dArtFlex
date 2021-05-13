@@ -25,17 +25,19 @@ const formVariant = [
   },
 ]
 
-const DEFAULT_DATA = {
-  price: 0.1,
-  minimumBid: 0.1,
-  reservePrice: 0.1,
-  endingPrice: false,
-  futureTime: false,
-  futureDate: '',
-  privacy: false,
+const initialData = {
+  price: 0.01,
+  minimumBid: 0.01,
+  reservePrice: 1,
+  startingPrice: 0.01,
+  endingPrice: 0.01,
+  refferalBounty: 2.5,
+  futureTime: '',
   buyerAddress: '',
   startDate: '',
-  refferalBounty: null,
+  isEndingPrice: false,
+  isFutureTime: false,
+  isPrivacy: false,
 }
 
 export default function SellArtwork() {
@@ -43,8 +45,8 @@ export default function SellArtwork() {
   const [form, setForm] = useState(BUY_NOW)
 
   return (
-    <Form data={DEFAULT_DATA} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
-      <DucolLayout aside={<Aside />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
+    <Form data={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+      <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
         <Box>
           <Typography variant={'h1'} className={classes.formTitle}>
             Sell Artwork

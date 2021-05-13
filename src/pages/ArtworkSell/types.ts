@@ -3,12 +3,14 @@ export interface ISellArtworkProps {}
 export interface ISellArtwork {
   price: number
   minimumBid: number
+  endingPrice: number
+  startingPrice: number
   reservePrice: number
-  refferalBounty: null | number
-  futureDate: string
+  refferalBounty: number
+  futureTime: string
   startDate: string
   buyerAddress: string
-  endingPrice: boolean
-  futureTime: boolean
-  privacy: boolean
+  isEndingPrice: boolean
+  isFutureTime: boolean
+  isPrivacy: boolean
 }
