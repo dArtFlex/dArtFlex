@@ -4,6 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     rootControl: {
       alignItems: 'flex-start',
+      marginLeft: theme.spacing(0),
+      marginRight: theme.spacing(-3),
     },
     label: {
       wordBreak: 'break-word',

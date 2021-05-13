@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import DucolLayout from 'layouts/DucolLayout'
-import { Box, Typography, Divider } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
-import { Form, Field, InputAdornment } from 'common'
+import { Form } from 'common'
 import { Aside } from './components'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
+import { SetPriceForm, AuctionForm } from './components'
 
 const {
   FILTER_VALUES: { IN_AUCTION, BUY_NOW },
@@ -24,23 +25,37 @@ const formVariant = [
   },
 ]
 
-const data = {
+const DEFAULT_DATA = {
   price: 0.1,
+  minimumBid: 0.1,
+  reservePrice: 0.1,
   endingPrice: false,
+  futureTime: false,
+  futureDate: '',
+  privacy: false,
+  buyerAddress: '',
+  startDate: '',
+  refferalBounty: null,
 }
 
 export default function SellArtwork() {
   const classes = useStyles()
-  const [filter, setFilter] = useState(BUY_NOW)
+  const [form, setForm] = useState(BUY_NOW)
 
   return (
-    <Form data={data} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+    <Form data={DEFAULT_DATA} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
       <DucolLayout aside={<Aside />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
         <Box>
           <Typography variant={'h1'} className={classes.formTitle}>
             Sell Artwork
           </Typography>
-          <ToggleButtonGroup classes={{ root: classes.toggleGroup }} exclusive onChange={() => console.log('object')}>
+          <ToggleButtonGroup
+            classes={{ root: classes.toggleGroup }}
+            exclusive
+            onChange={(_, value) => {
+              if (value) setForm(value)
+            }}
+          >
             {formVariant.map(({ label, value, desc }) => {
               return (
                 <ToggleButton
@@ -50,7 +65,7 @@ export default function SellArtwork() {
                   }}
                   key={value}
                   value={value}
-                  selected={filter === value}
+                  selected={form === value}
                 >
                   <Box>
                     <Typography className={classes.toggleBtnLabel}>{label}</Typography>
@@ -62,36 +77,8 @@ export default function SellArtwork() {
               )
             })}
           </ToggleButtonGroup>
-          <Typography className={classes.sectionTitle}>Price</Typography>
-          <Box pb={6.5}>
-            <Typography variant={'body1'} color={'textSecondary'}>
-              Will be on sale until you transfer this item or cancel it.
-            </Typography>
-          </Box>
-          <Field
-            type="input"
-            name="price"
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment
-                  position="start"
-                  icon={
-                    <Typography className={classes.mainText} color={'textSecondary'}>
-                      ETH
-                    </Typography>
-                  }
-                />
-              ),
-            }}
-          />
-          <Divider className={classes.divider} />
-          <Box className={classes.flexColumn}>
-            <Field type="switch" name="endingPrice" fullWidth={false} className={classes.field} />
-            <Typography className={classes.mainText} color={'textPrimary'}>
-              Schedule for a future time
-            </Typography>
-          </Box>
+
+          {form === BUY_NOW ? <SetPriceForm /> : <AuctionForm />}
         </Box>
       </DucolLayout>
     </Form>

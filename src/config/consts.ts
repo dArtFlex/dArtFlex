@@ -17,6 +17,14 @@ const appConst = {
     COLLECTED: 'collected',
     UNLISTED: 'unlisted',
   },
+  SCHEDULE: {
+    DAYS3: '3days',
+    DAYS5: '5days',
+    WEEK: 'week',
+    MONTH: 'month',
+    SPECIFIC: 'specific',
+    NEVER: 'never',
+  },
 }
 
 export default appConst

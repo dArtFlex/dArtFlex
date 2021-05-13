@@ -24,6 +24,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
     shrink,
     InputProps,
     description,
+    fullWidth,
     className,
     ...rest
   } = props
@@ -31,7 +32,13 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
   const { multiline } = rest
 
   return (
-    <FormControl error={hasError} errorText={errorText} helperText={helperText} className={className}>
+    <FormControl
+      error={hasError}
+      errorText={errorText}
+      helperText={helperText}
+      className={className}
+      fullWidth={fullWidth}
+    >
       {label && (
         <Typography className={clsx(classes.label, required && classes.star)} component="span">
           {label}

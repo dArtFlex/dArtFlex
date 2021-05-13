@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import clsx from 'clsx'
+import { useFormikContext } from 'formik'
 import { Box, Typography, Card, Button, Divider, Link } from '@material-ui/core'
 import { EditIcon, ArrowRightIcon } from 'common/icons'
 import Slider from '../Slider'
+import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
 import { useStyles } from './styles'
 
 export default function Aside(props: IAsideProps) {
   const classes = useStyles()
   const [showSlider, setShowSlider] = useState<boolean>(false)
+  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
 
   return (
     <Box>
@@ -39,7 +41,15 @@ export default function Aside(props: IAsideProps) {
           <>
             <Box className={classes.flexColumn} pb={3}>
               <Typography className={classes.mainText}>Refferal Bounty</Typography>
-              <Button variant={'text'} color={'primary'} startIcon={<EditIcon />} onClick={() => setShowSlider(true)}>
+              <Button
+                variant={'text'}
+                color={'primary'}
+                startIcon={<EditIcon />}
+                onClick={() => {
+                  setShowSlider(true)
+                  setFieldValue('refferalBounty', 0)
+                }}
+              >
                 Edit
               </Button>
             </Box>
@@ -75,7 +85,13 @@ export default function Aside(props: IAsideProps) {
         <Divider className={classes.divider} />
         <Typography className={classes.sectionTitle}>Listing</Typography>
         <Box pb={5}>
-          <Typography className={classes.textListing}>Your item will be listed for 0.01 ETH</Typography>
+          {values.futureTime ? (
+            <Typography className={classes.textListing}>
+              Your item will be listed for 0.01 ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.
+            </Typography>
+          ) : (
+            <Typography className={classes.textListing}>Your item will be listed for 0.01 ETH</Typography>
+          )}
         </Box>
         <Button variant={'contained'} color={'primary'} endIcon={<ArrowRightIcon />} fullWidth>
           Post Your Listing
