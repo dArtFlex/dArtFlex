@@ -4,7 +4,7 @@ import { IAppRouterProps } from './types'
 import { Router, Switch, Redirect } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
-import { ArtworkDetails, Artworks, AccountSettings, Dashboard } from 'pages'
+import { ArtworkDetails, Artworks, AccountSettings, Dashboard, ArtworkSell } from 'pages'
 
 export const history = createBrowserHistory()
 
@@ -21,6 +21,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.dashboard,
       component: <Dashboard />,
+    },
+    {
+      path: routes.artworkSell,
+      component: <ArtworkSell />,
     },
     {
       path: routes.artworkDetails,

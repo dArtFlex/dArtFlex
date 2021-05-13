@@ -9,6 +9,7 @@ import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset, CardUploadNew } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
+import Tooltip from './Tooltip'
 
 export {
   Header,
@@ -29,4 +30,5 @@ export {
   CardUploadNew,
   Chip,
   ButtonStartIcon,
+  Tooltip,
 }

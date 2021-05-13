@@ -85,24 +85,26 @@ export default function Artworks() {
       <Box>
         <Typography variant={'h1'}>Artworks</Typography>
         <Box mt={4} mb={6} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-          <FormControl variant="outlined" color={'primary'}>
-            <Select
-              style={{ minWidth: '148px' }}
-              value={sortValue}
-              onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
-                setSortValue(target.value as string)
-              }}
-            >
-              <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
-                Sort by:
-              </Typography>
-              {sortItems.map(({ label, value }) => (
-                <StyledCheckedMenuItem key={value} value={value}>
-                  {label}
-                </StyledCheckedMenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Box style={{ minWidth: '180px' }}>
+            <FormControl variant="outlined" color={'primary'}>
+              <Select
+                style={{ minWidth: '148px' }}
+                value={sortValue}
+                onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
+                  setSortValue(target.value as string)
+                }}
+              >
+                <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
+                  Sort by:
+                </Typography>
+                {sortItems.map(({ label, value }) => (
+                  <StyledCheckedMenuItem key={value} value={value}>
+                    {label}
+                  </StyledCheckedMenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
 
           <ToggleButtonGroup
             exclusive
