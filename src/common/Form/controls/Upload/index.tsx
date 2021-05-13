@@ -9,11 +9,17 @@ export type IFormUploadInputProps = Omit<TextFieldProps, 'variant'> & IUploadInp
 
 export default function FormUploadInput(props: IFormUploadInputProps & FieldRenderProps<string>) {
   const classes = useStyles()
-  const { form, field, helperText, label, description, cover, className, ...rest } = props
+  const { form, field, helperText, label, description, cover, className, fullWidth, ...rest } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
 
   return (
-    <FormControl error={hasError} errorText={errorText} helperText={helperText} className={className}>
+    <FormControl
+      error={hasError}
+      errorText={errorText}
+      helperText={helperText}
+      className={className}
+      fullWidth={fullWidth}
+    >
       <Typography className={classes.label}>{label}</Typography>
       <Box className={classes.box}>
         {cover ? (

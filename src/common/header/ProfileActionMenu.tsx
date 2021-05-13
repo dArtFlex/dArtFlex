@@ -35,7 +35,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Sell',
           icon: <SellIcon />,
-          onClick: () => console.log('Sell'),
+          onClick: () => history.push(routes.artworkSell),
         },
         {
           lable: 'Account Settings',
