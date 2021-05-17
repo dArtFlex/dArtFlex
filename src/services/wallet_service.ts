@@ -1,7 +1,7 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
 
-class WalletService {
+export class WalletService {
   constructor() {
     if (window.web3?.currentProvider) {
       this.web3 = window.web3

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { PopoverLinks } from 'common'
+import routes from '../../routes'
 
 interface ICreateActionMenuProps {
   anchor: null | HTMLElement
@@ -9,26 +10,23 @@ interface ICreateActionMenuProps {
 
 export default function CreateActionMenu(props: ICreateActionMenuProps) {
   const { anchor, setAnchor } = props
+  const history = useHistory()
   return (
     <PopoverLinks
       anchor={anchor}
       setAnchor={setAnchor}
       links={[
         {
-          lable: 'My Images',
-          onClick: () => console.log('My Images'),
-        },
-        {
           lable: 'Constructor',
           onClick: () => console.log('Constructor'),
         },
         {
-          lable: 'Create NFT',
-          onClick: () => console.log('Create NFT'),
+          lable: 'My Album',
+          onClick: () => console.log('My Album'),
         },
         {
-          lable: 'Submit NFTs',
-          onClick: () => console.log('Submit NFTs'),
+          lable: 'Create NFT - mint',
+          onClick: () => history.push(routes.createNFT),
         },
       ]}
     />

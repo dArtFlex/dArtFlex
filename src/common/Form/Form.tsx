@@ -7,7 +7,7 @@ interface IFormProps {
   validationSchema?: SchemaOf<any>
   onCancel: () => void
   onSubmit: () => void
-  children: React.ReactChild
+  children: JSX.Element
 }
 
 export default function Form(props: IFormProps) {

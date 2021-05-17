@@ -3,3 +3,7 @@ export interface CircularProgressLoaderProps {
   size?: number
   color?: 'primary' | 'secondary' | 'inherit'
 }
+
+export type StylesConfig = {
+  height?: 'fullScreen' | string
+}
