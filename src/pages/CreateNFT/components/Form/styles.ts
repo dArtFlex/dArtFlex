@@ -29,6 +29,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         objectFit: 'cover',
         borderRadius: theme.spacing(3),
       },
+      '&:hover': {
+        cursor: 'zoom-in',
+      },
     },
     cardContent: {
       padding: theme.spacing(6),

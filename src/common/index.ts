@@ -13,6 +13,7 @@ import Tooltip from './Tooltip'
 import Stepper from './Stepper'
 import DropZone from './DropZone'
 import Image from './Image'
+import ImageViewer from './ImageViewer'
 
 export {
   Header,
@@ -37,4 +38,5 @@ export {
   Stepper,
   DropZone,
   Image,
+  ImageViewer,
 }

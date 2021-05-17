@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useFormikContext } from 'formik'
 import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
 import { Grid } from 'layouts'
-import { Image } from 'common'
+import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { mintingRequest } from 'stores/reducers/minting'
 import MintingForm from './MintingForm'
@@ -17,6 +17,7 @@ export default function Form() {
   const history = useHistory()
   const dispatch = useDispatch()
   const { values } = useFormikContext<ICreateNFT>()
+  const [openViewImage, setOpenViewImage] = useState<boolean>(false)
 
   const handleMinting = () => {
     dispatch(mintingRequest({ name: values.name, description: values.description }))
@@ -30,9 +31,15 @@ export default function Form() {
     <Grid columns={2}>
       <Box className={classes.flexBox}>
         <Card className={classes.card}>
-          <Box className={classes.cardImageContainer}>
+          <Box className={classes.cardImageContainer} onClick={() => setOpenViewImage(true)}>
             <Image classNames={classes.cardImage} file={values.file as File} />
           </Box>
+          <ImageViewer
+            open={openViewImage}
+            onClose={() => setOpenViewImage(false)}
+            images={[values.file as File]}
+            asFiles
+          />
 
           <Box className={classes.cardContent}>
             <Box className={classes.cardInfo}>
