@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@material-ui/core'
-import { PageWrapper, Form, Stepper } from 'common'
-import { DropZone, StepHolder, Uploading, Form as FormCreateNFT } from './components'
+import { PageWrapper, Form } from 'common'
+import { DropZone, StepHolder, Uploading, Form as FormCreateNFT, Stepper } from './components'
 import { ICreateNFT, IStepNFT } from './types'
 import { useStyles } from './styles'
 
@@ -29,11 +29,10 @@ export default function CreateNFT() {
     <PageWrapper className={classes.container}>
       <Form data={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
         <Box>
-          <Stepper />
-
           <StepHolder>
             {({ step }: { step: IStepNFT }) => (
               <>
+                <Stepper step={step} />
                 {step === STEPS_NFT.UPLOAD_FILE && <DropZone />}
                 {step === STEPS_NFT.UPLOADING && <Uploading />}
                 {step === STEPS_NFT.FILL_FORM && <FormCreateNFT />}

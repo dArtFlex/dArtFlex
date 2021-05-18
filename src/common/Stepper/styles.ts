@@ -2,16 +2,34 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    paper: {
+      background: 'transparent',
+      '& .MuiStepLabel-horizontal': {
+        flexDirection: 'column',
+        textAlign: 'center',
+        gap: theme.spacing(2),
+      },
+    },
     root: {
-      width: '100%',
-      backgroundColor: 'transparent',
+      color: theme.palette.greyMid,
+      display: 'flex',
+      height: 22,
+      alignItems: 'center',
+      zIndex: 1,
     },
-    backButton: {
-      marginRight: theme.spacing(1),
+    active: {
+      color: theme.palette.violet,
     },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+    circle: {
+      width: 20,
+      height: 20,
+      borderRadius: '50%',
+      backgroundColor: 'currentColor',
+    },
+    completed: {
+      color: theme.palette.violet,
+      fontSize: 18,
+      background: theme.palette.background.default,
     },
   })
 )

@@ -49,10 +49,9 @@ export function* minting(
     const tokenUri = 'http://3.11.202.153:8888/api/metadata/get/' + tokenId
 
     // Todo: Shold be fixed from BE first
-    // bc.newContract()
-    // const minting = yield bc.mintNFT(tokenUri)
+    bc.newContract()
+    const minting = yield bc.mintNFT(tokenUri)
 
-    delay(300)
     yield put(mintingSuccess())
   } catch ({ message = '' }) {
     yield put(mintingFailure(message))

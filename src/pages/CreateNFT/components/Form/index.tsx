@@ -31,7 +31,7 @@ export default function Form() {
     <Grid columns={2}>
       <Box className={classes.flexBox}>
         <Card className={classes.card}>
-          <Box className={classes.cardImageContainer} onClick={() => setOpenViewImage(true)}>
+          <Box className={classes.cardImageContainer}>
             <Image classNames={classes.cardImage} file={values.file as File} />
           </Box>
           <ImageViewer
@@ -55,7 +55,7 @@ export default function Form() {
                 <Box className={classes.empyName}></Box>
               )}
             </Box>
-            <Button variant={'outlined'} startIcon={<EyeIcon />} fullWidth>
+            <Button variant={'outlined'} startIcon={<EyeIcon />} fullWidth onClick={() => setOpenViewImage(true)}>
               Preview
             </Button>
           </Box>

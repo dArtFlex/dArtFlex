@@ -25,8 +25,6 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     cardImage: {
       padding: theme.spacing(21),
-      height: '100vh',
-      width: '100%',
       '& img': {
         width: '100%',
         height: '100%',
