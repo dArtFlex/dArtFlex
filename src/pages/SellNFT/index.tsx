@@ -40,12 +40,12 @@ const initialData = {
   isPrivacy: false,
 }
 
-export default function SellArtwork() {
+export default function SellNFT() {
   const classes = useStyles()
   const [form, setForm] = useState(BUY_NOW)
 
   return (
-    <Form data={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+    <Form initialValues={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
       <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
         <Box>
           <Typography variant={'h1'} className={classes.formTitle}>

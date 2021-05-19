@@ -23,7 +23,7 @@ export default function Form() {
     dispatch(mintingRequest({ name: values.name, description: values.description }))
   }
 
-  const handleList = () => history.push(routes.artworkSell)
+  const handleList = () => history.push(routes.sellNFT)
 
   const handleViewArtwork = () => history.push(routes.home)
 

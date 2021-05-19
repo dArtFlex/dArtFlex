@@ -10,7 +10,7 @@ const initialState: MintingStateType = {
     name: '',
     image: '',
     image_data: '',
-    attribute: 'unknown',
+    attribute: '', // unnecessary field
     description: '',
   },
 }

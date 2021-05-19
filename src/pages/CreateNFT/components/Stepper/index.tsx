@@ -9,14 +9,22 @@ import { IStepperProps } from 'common/Stepper/types'
 export default function CreateNFTStepper(props: ICreateNFTStepper) {
   const { step } = props
   const { values } = useFormikContext<ICreateNFT>()
+
   const [steps, setSteps] = useState<IStepperProps['steps']>(STEPS)
   const [activeStep, setActiveStep] = useState<IAvailableSteps>(0)
 
+  // 0 - upload_file
+  // 1 - uploading
+  // 2 - filing_form
+  // 3 - minting
   useEffect(() => {
     if (step === 'uploading') {
       setActiveStep(1)
     }
-    if (step === 'filled_form') {
+    if (
+      step === 'filled_form' &&
+      (Boolean(values.name.length) === false || Boolean(values.description.length) === false)
+    ) {
       setActiveStep(2)
       setSteps((state) =>
         state.map((step) => {
@@ -25,17 +33,26 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
       )
     }
     if (step === 'minting') {
-      setActiveStep(3)
+      setActiveStep(4)
     }
-  }, [step])
+  }, [step, activeStep])
 
   useEffect(() => {
-    if (Boolean(values.name.length) && Boolean(values.description.length)) {
+    if (step === 'filled_form' && Boolean(values.name.length) && Boolean(values.description.length)) {
       setActiveStep(3)
-    } else {
+    } else if (
+      activeStep === 3 &&
+      (Boolean(values.name.length) === false || Boolean(values.description.length) === false)
+    ) {
       setActiveStep(2)
     }
   }, [values.name, values.description])
+
+  useEffect(() => {
+    if (values.file === null) {
+      setActiveStep(0)
+    }
+  }, [values.file])
 
   return <Stepper steps={steps} activeStep={activeStep} />
 }

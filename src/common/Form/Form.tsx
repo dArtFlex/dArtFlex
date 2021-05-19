@@ -1,20 +1,23 @@
 import React from 'react'
+import { FormikConfig, FormikErrors } from 'formik/dist/types'
 import { Formik } from 'formik'
 import { SchemaOf } from 'yup'
 
-interface IFormProps {
-  data: any
+interface FormControlsProps<T> {
   validationSchema?: SchemaOf<any>
-  onCancel: () => void
-  onSubmit: () => void
+  onCancel?: () => void
+  onSubmit?: FormikConfig<T>['onSubmit']
   children: JSX.Element
+  errors?: FormikErrors<T>
 }
 
-export default function Form(props: IFormProps) {
-  const { data, validationSchema, onCancel, onSubmit, children } = props
+export type FormProps<T> = Omit<FormikConfig<T>, 'component' | 'render'> & FormControlsProps<T> & {}
+
+export default function Form<T>(props: FormProps<T>) {
+  const { validationSchema, onCancel, onSubmit, children, ...rest } = props
 
   return (
-    <Formik initialValues={data} validationSchema={validationSchema} onReset={onCancel} onSubmit={onSubmit}>
+    <Formik {...rest} validationSchema={validationSchema} onReset={onCancel} onSubmit={onSubmit}>
       {children}
     </Formik>
   )

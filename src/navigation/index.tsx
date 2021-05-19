@@ -4,7 +4,7 @@ import { IAppRouterProps } from './types'
 import { Router, Switch, Redirect } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
-import { ArtworkDetails, Artworks, AccountSettings, Dashboard, ArtworkSell, CreateNFT } from 'pages'
+import { ArtworkDetails, Artworks, AccountSettings, Dashboard, SellNFT, CreateNFT } from 'pages'
 
 export const history = createBrowserHistory()
 
@@ -23,8 +23,8 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
       component: <Dashboard />,
     },
     {
-      path: routes.artworkSell,
-      component: <ArtworkSell />,
+      path: routes.sellNFT,
+      component: <SellNFT />,
     },
     {
       path: routes.createNFT,

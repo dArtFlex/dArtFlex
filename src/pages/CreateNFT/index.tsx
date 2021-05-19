@@ -4,6 +4,7 @@ import { PageWrapper, Form } from 'common'
 import { DropZone, StepHolder, Uploading, Form as FormCreateNFT, Stepper } from './components'
 import { ICreateNFT, IStepNFT } from './types'
 import { useStyles } from './styles'
+import { useValidationSchema } from './lib'
 
 export const STEPS_NFT = {
   UPLOAD_FILE: 'upload_file',
@@ -27,7 +28,12 @@ export default function CreateNFT() {
 
   return (
     <PageWrapper className={classes.container}>
-      <Form data={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+      <Form
+        initialValues={initialData}
+        onCancel={() => console.log('x')}
+        onSubmit={(state: ICreateNFT) => console.log('y', state)}
+        validationSchema={useValidationSchema()}
+      >
         <Box>
           <StepHolder>
             {({ step }: { step: IStepNFT }) => (

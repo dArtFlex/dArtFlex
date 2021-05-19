@@ -1,5 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useFormikContext } from 'formik'
+import { ICreateNFT } from '../../types'
 import { selectMinting } from 'stores/selectors'
 import { Box, Card, Button, Typography } from '@material-ui/core'
 import { CircularProgressLoader, Field } from 'common'
@@ -16,6 +18,8 @@ export default function MintingForm(props: IMintingForm) {
   const { onMinting, onList, onViewArtwork } = props
   const classes = useStyles()
 
+  const { setFieldValue } = useFormikContext<ICreateNFT>()
+
   const {
     minting: { minting },
   } = useSelector(selectMinting())
@@ -26,7 +30,7 @@ export default function MintingForm(props: IMintingForm) {
       return (
         <Box className={classes.flexBox} justifyContent={'flex-start'}>
           <Card className={classes.cardForm}>
-            <Button variant={'text'} startIcon={<ArrowLeftIcon />}>
+            <Button variant={'text'} startIcon={<ArrowLeftIcon />} onClick={() => setFieldValue('file', null)}>
               Back
             </Button>
             <Box pb={4}>

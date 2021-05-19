@@ -13,7 +13,6 @@ interface IStepHolderProps {
 
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
-  const { UPLOAD_FILE, UPLOADING, FILL_FORM, MINTED, LISTED } = STEPS_NFT
   const {
     minting: { uploading, minting, data },
   } = useSelector(selectMinting())
@@ -23,10 +22,10 @@ export default function StepHolder(props: IStepHolderProps) {
 
   useEffect(() => {
     if (uploading) {
-      return setStep(UPLOADING)
+      return setStep(STEPS_NFT.UPLOADING)
     }
     if (!uploading && Boolean(data.image.length)) {
-      return setStep(FILL_FORM)
+      return setStep(STEPS_NFT.FILL_FORM)
     }
   }, [uploading])
 
@@ -35,6 +34,12 @@ export default function StepHolder(props: IStepHolderProps) {
       setStep(values.step)
     }
   }, [values.step])
+
+  useEffect(() => {
+    if (values.file === null) {
+      setStep(STEPS_NFT.UPLOAD_FILE)
+    }
+  }, [values.file])
 
   return <Box className={className}>{children({ step })}</Box>
 }

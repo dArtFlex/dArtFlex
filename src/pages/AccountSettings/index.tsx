@@ -42,7 +42,7 @@ export default function AccountSettings(props: IAccountSettingsProps) {
 
   return (
     <PageWrapper className={classes.container}>
-      <Form data={data} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+      <Form initialValues={data} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
         <Box className={classes.form}>
           <Typography component="h1">Account Settings</Typography>
           <Box className={classes.section}>
