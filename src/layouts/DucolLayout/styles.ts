@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'grid',
-      alignItems: 'baseline',
+      alignItems: 'flex-start',
       gridTemplateColumns: ({ containerSize, asideSize }: StylesConfig) => {
         return containerSize ? `${containerSize} ${asideSize}` : `1fr ${asideSize}`
       },

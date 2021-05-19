@@ -6,8 +6,14 @@ import Slider from '../Slider'
 import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
 import { useStyles } from './styles'
+import appConst from 'config/consts'
+
+const {
+  FILTER_VALUES: { IN_AUCTION },
+} = appConst
 
 export default function Aside(props: IAsideProps) {
+  const { form } = props
   const classes = useStyles()
   const [showSlider, setShowSlider] = useState<boolean>(false)
   const { values, setFieldValue } = useFormikContext<ISellArtwork>()
@@ -84,15 +90,24 @@ export default function Aside(props: IAsideProps) {
 
         <Divider className={classes.divider} />
         <Typography className={classes.sectionTitle}>Listing</Typography>
-        <Box pb={5}>
-          {values.futureTime ? (
+        {form === IN_AUCTION ? (
+          <Box pb={5}>
             <Typography className={classes.textListing}>
-              Your item will be listed for 0.01 ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.
+              Your item will be auctioned. The highest bidder will win it on Mon, May 10, 2021 11:18 AM, as long as
+              their bid is at least Ξ1.
             </Typography>
-          ) : (
-            <Typography className={classes.textListing}>Your item will be listed for 0.01 ETH</Typography>
-          )}
-        </Box>
+          </Box>
+        ) : (
+          <Box pb={5}>
+            {values.futureTime ? (
+              <Typography className={classes.textListing}>
+                Your item will be listed for 0.01 ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.
+              </Typography>
+            ) : (
+              <Typography className={classes.textListing}>Your item will be listed for 0.01 ETH</Typography>
+            )}
+          </Box>
+        )}
         <Button variant={'contained'} color={'primary'} endIcon={<ArrowRightIcon />} fullWidth>
           Post Your Listing
         </Button>

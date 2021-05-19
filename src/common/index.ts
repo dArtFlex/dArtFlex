@@ -10,6 +10,10 @@ import { CardHistory, CardAsset, CardUploadNew } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
 import Tooltip from './Tooltip'
+import Stepper from './Stepper'
+import DropZone from './DropZone'
+import Image from './Image'
+import ImageViewer from './ImageViewer'
 
 export {
   Header,
@@ -31,4 +35,8 @@ export {
   Chip,
   ButtonStartIcon,
   Tooltip,
+  Stepper,
+  DropZone,
+  Image,
+  ImageViewer,
 }

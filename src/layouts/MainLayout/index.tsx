@@ -12,7 +12,7 @@ interface IMainLayoutProps {
   hiddenFooter?: boolean
 }
 
-export const MainLayout = ({ toggleTheme, hiddenFooter, children }: IMainLayoutProps): JSX.Element => {
+export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMainLayoutProps): JSX.Element {
   const classes = useStyles()
   const { error } = useSelector(selectWalletError())
 

@@ -35,7 +35,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Sell',
           icon: <SellIcon />,
-          onClick: () => history.push(routes.artworkSell),
+          onClick: () => history.push(routes.sellNFT),
         },
         {
           lable: 'Account Settings',

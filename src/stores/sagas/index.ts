@@ -4,10 +4,12 @@ import { getUserDataRequest } from '../reducers/user'
 import { getAssetsRequest } from '../reducers/assets'
 import { connectMetaMaskRequest } from '../reducers/wallet'
 import { createBidRequest } from '../reducers/auction'
+import { mintingRequest, loadImageRequest } from '../reducers/minting'
 import { getUserData } from '../sagas/user'
 import { getAssetsData } from '../sagas/assets'
 import { connectMetaMask } from '../sagas/wallet'
 import { createBid } from '../sagas/auction'
+import { minting, loadImage } from '../sagas/minting'
 
 export default function* root() {
   yield all([
@@ -18,5 +20,8 @@ export default function* root() {
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     /** Auction **/
     debounce(500, createBidRequest.type, createBid, apiMiddleware),
+    /** Minting **/
+    takeLatest(mintingRequest.type, minting, apiMiddleware),
+    takeLatest(loadImageRequest.type, loadImage, apiMiddleware),
   ])
 }

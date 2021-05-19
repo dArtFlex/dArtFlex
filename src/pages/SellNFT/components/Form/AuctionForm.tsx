@@ -32,6 +32,10 @@ const schedule = [
     value: SPECIFIC,
     label: 'Set a specific day',
   },
+  {
+    value: NEVER,
+    label: 'never',
+  },
 ]
 
 export default function AuctionForm() {
