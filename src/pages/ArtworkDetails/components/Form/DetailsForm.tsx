@@ -161,7 +161,8 @@ export default function DetailsForm(props: IDetailsFormProps) {
             color={'primary'}
             fullWidth
             disableElevation
-            className={classes.bitBtn}
+            disabled={!Boolean(wallet)}
+            className={clsx(classes.bitBtn, !Boolean(wallet) && classes.bitBtnDisabled)}
           >
             {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
           </Button>

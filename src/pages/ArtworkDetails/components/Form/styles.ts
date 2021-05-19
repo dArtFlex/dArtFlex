@@ -38,6 +38,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     bitBtnDisabled: {
       background: theme.palette.greyMid,
+      '&.Mui-disabled': {
+        color: theme.palette.white,
+      },
     },
     bitBtnDisabledText: {
       color: theme.palette.white,
