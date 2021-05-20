@@ -36,7 +36,7 @@ class Blockchain {
       `[{ "inputs": [ { "components": [ { "internalType": "uint256", "name": "tokenId", "type": "uint256" }, { "internalType": "string", "name": "uri", "type": "string" }, { "internalType": "address[]", "name": "creators", "type": "address[]" }, { "components": [ { "internalType": "address payable", "name": "account", "type": "address" }, { "internalType": "uint256", "name": "value", "type": "uint256" } ], "internalType": "struct LibPart.Part[]", "name": "royalties", "type": "tuple[]" }, { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" } ], "internalType": "struct LibERC721LazyMint.Mint721Data", "name": "data", "type": "tuple" }, { "internalType": "address", "name": "to", "type": "address" } ], "name": "mintAndTransfer", "outputs": [], "stateMutability": "nonpayable", "type": "function" }]`
     )
     const contract = new web3.eth.Contract(contractAbi, '0x25646B08D9796CedA5FB8CE0105a51820740C049')
-    const nonce = accounts[0] + web3.utils.randomHex(6).slice(2)
+    const nonce = accounts[0] + web3.utils.randomHex(12).slice(2)
 
     return await contract.methods
       .mintAndTransfer(
