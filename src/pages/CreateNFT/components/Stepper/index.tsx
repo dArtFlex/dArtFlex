@@ -51,6 +51,7 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
   useEffect(() => {
     if (values.file === null) {
       setActiveStep(0)
+      setSteps(STEPS)
     }
   }, [values.file])
 

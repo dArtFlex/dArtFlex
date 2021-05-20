@@ -10,7 +10,7 @@ import { selectWallet, selectAuction } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
-import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon } from 'common/icons'
+import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 
@@ -73,20 +73,26 @@ export default function Header({ toggleTheme }: HeaderType) {
                 Connect wallet
               </Button>
             ) : (
-              <Button
-                onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                  const target = event.currentTarget as HTMLElement
-                  setAnchorElProfileLink(target)
-                }}
-                className={classes.buttonWallet}
-                variant={'outlined'}
-                color={'primary'}
-                disableElevation
-                startIcon={<SmileyFaceIcon />}
-                endIcon={<CurrentDownIcon />}
-              >
-                {`${wallet.balance} ${wallet.meta.coinAbbr}`}
-              </Button>
+              <>
+                <Box className={classes.notification}>
+                  <BellIcon />
+                </Box>
+
+                <Button
+                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    const target = event.currentTarget as HTMLElement
+                    setAnchorElProfileLink(target)
+                  }}
+                  className={classes.buttonWallet}
+                  variant={'outlined'}
+                  color={'primary'}
+                  disableElevation
+                  startIcon={<SmileyFaceIcon />}
+                  endIcon={<CurrentDownIcon />}
+                >
+                  {`${wallet.balance} ${wallet.meta.coinAbbr}`}
+                </Button>
+              </>
             )}
             <ButtonBase onClick={toggleTheme}>
               <CoolIcon />

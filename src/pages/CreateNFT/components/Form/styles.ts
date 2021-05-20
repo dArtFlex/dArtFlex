@@ -85,5 +85,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     btnView: {
       border: `2px solid ${theme.palette.text.primary}`,
     },
+    btnMint: {
+      '&:disabled': {
+        color: theme.palette.background.default,
+        background: theme.palette.greyMid,
+      },
+    },
   })
 )
