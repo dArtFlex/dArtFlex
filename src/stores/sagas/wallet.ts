@@ -2,7 +2,12 @@
 import { eventChannel } from 'redux-saga'
 import { put, call, take } from 'redux-saga/effects'
 import { walletService } from 'services/wallet_service'
-import { connectMetaMaskSuccess, connectMetaMaskFailure } from '../reducers/wallet'
+import {
+  connectMetaMaskSuccess,
+  connectMetaMaskFailure,
+  connectTrustSuccess,
+  connectTrustFailure,
+} from '../reducers/wallet'
 import { storageActiveWallet, createWalletInstance } from 'utils'
 import APP_CONFIG from 'config'
 
@@ -27,6 +32,30 @@ export function* connectMetaMask(api: IApi) {
   } catch (e) {
     const error = e?.message || e
     yield put(connectMetaMaskFailure(error))
+  }
+}
+
+export function* connectTrust(api: IApi) {
+  try {
+    const { accounts, balance, chainId } = yield walletService.getTrustAccount()
+
+    if (chainId !== '0x1' && chainId !== '0x4') {
+      return yield put(connectTrustFailure('Not supported network'))
+    }
+
+    const walletInstance = createWalletInstance(accounts, balance, 'ETH')
+
+    storageActiveWallet(walletInstance, APP_CONFIG.walletConnectTrustStorage)
+    yield put(connectTrustSuccess(walletInstance))
+
+    const chainChannel = yield call(chainChangedChannel)
+    while (true) {
+      const data = yield take(chainChannel)
+      yield put(connectTrustFailure(data ? '' : 'Not supported network'))
+    }
+  } catch (e) {
+    const error = e?.message || e
+    yield put(connectTrustFailure(error))
   }
 }
 

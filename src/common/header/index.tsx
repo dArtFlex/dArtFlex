@@ -52,7 +52,7 @@ export default function Header({ toggleTheme }: HeaderType) {
           <Box className={classes.buttonContainer}>
             {Boolean(bids.length) && (
               <Chip avatar={`${bids.length}`} endIcon>
-                Bits
+                Bids
               </Chip>
             )}
             <SearchField />

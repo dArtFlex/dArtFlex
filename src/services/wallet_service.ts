@@ -15,6 +15,18 @@ class WalletService {
     return this
   }
 
+  async getTrustAccount() {
+    const web3 = await web3Service.setWeb3TrustProvider()
+    this.accounts = await web3.currentProvider.accounts
+    this.balance = await new Promise((resolve) => {
+      web3.eth.getBalance(this.accounts[0], (err, balance = 0) => {
+        resolve(BigNumber(balance).dividedBy(10e17).toNumber())
+      })
+    })
+    this.chainId = '0x1'
+    return this
+  }
+
   getChainId(): any {
     return this.chainId
   }

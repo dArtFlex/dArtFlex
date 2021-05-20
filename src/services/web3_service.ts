@@ -1,6 +1,7 @@
 //@ts-nocheck
 import Web3 from 'web3'
 import detectEthereumProvider from '@metamask/detect-provider'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 import appConfig from 'config'
 
 declare global {
@@ -29,6 +30,19 @@ class Web3Service {
 
   async setWeb3EthProvider() {
     const provider = await detectEthereumProvider()
+    const web3 = new Web3(provider)
+    this.web3 = web3
+    return web3
+  }
+
+  async setWeb3TrustProvider() {
+    const provider = new WalletConnectProvider({
+      rpc: {
+        1: appConfig.baseURL,
+        2: appConfig.localURL,
+      },
+    })
+    await provider.enable()
     const web3 = new Web3(provider)
     this.web3 = web3
     return web3
