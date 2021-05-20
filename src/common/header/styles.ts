@@ -18,6 +18,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     buttonContainer: {
+      display: 'flex',
+      alignItems: 'center',
       marginLeft: 'auto',
       padding: theme.spacing(3, 0),
       '&>button+button': {
@@ -26,6 +28,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     buttonWallet: {
       borderColor: theme.palette.greyLight,
+    },
+    notification: {
+      padding: theme.spacing(0, 6),
     },
   })
 )

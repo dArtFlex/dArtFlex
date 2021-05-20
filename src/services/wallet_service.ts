@@ -18,6 +18,10 @@ class WalletService {
   getChainId(): any {
     return this.chainId
   }
+
+  getAccoutns() {
+    return this.accounts
+  }
 }
 
 export const walletService = new WalletService()

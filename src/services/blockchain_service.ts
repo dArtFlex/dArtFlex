@@ -2,6 +2,7 @@
 import Contract from 'web3-eth-contract'
 import { ABI, NFT_CONTRACT_ADDRESS } from 'core'
 import { OpenSeaPort, Network } from 'opensea-js'
+import { walletService } from 'services/wallet_service'
 
 class Blockchain {
   newContract() {
@@ -14,10 +15,10 @@ class Blockchain {
     return await this.contract.methods.tokenByIndex(i).call()
   }
 
-  async mintNFT(tokenUri: string) {
-    const accounts = await this.getMetaMaskAccount()
-    return await this.contract.methods.mint(accounts[0], tokenUri, accounts[0]).call()
-  }
+  // async mintNFT(tokenUri: string) {
+  //   const { accounts } = await walletService.getMetaMaskAccount()
+  //   return await this.contract.methods.mint(accounts[0], tokenUri, accounts[0]).call()
+  // }
 
   setSeaport(provider) {
     const seaport = new OpenSeaPort(provider, {

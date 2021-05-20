@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import { ICreateNFT } from '../../types'
-import { selectMinting } from 'stores/selectors'
+import { selectMinting, selectWallet } from 'stores/selectors'
 import { Box, Card, Button, Typography } from '@material-ui/core'
-import { CircularProgressLoader, Field } from 'common'
+import { CircularProgressLoader, Field, Modal, WalletConnect } from 'common'
 import { ArrowLeftIcon } from 'common/icons'
 import { useStyles } from './styles'
 
@@ -18,11 +18,14 @@ export default function MintingForm(props: IMintingForm) {
   const { onMinting, onList, onViewArtwork } = props
   const classes = useStyles()
 
-  const { setFieldValue } = useFormikContext<ICreateNFT>()
+  const { values, setFieldValue } = useFormikContext<ICreateNFT>()
+  const [open, setOpen] = useState<boolean>(false)
 
   const {
     minting: { minting },
   } = useSelector(selectMinting())
+
+  const { wallet } = useSelector(selectWallet())
 
   switch (minting) {
     case 'none':
@@ -30,7 +33,15 @@ export default function MintingForm(props: IMintingForm) {
       return (
         <Box className={classes.flexBox} justifyContent={'flex-start'}>
           <Card className={classes.cardForm}>
-            <Button variant={'text'} startIcon={<ArrowLeftIcon />} onClick={() => setFieldValue('file', null)}>
+            <Button
+              variant={'text'}
+              startIcon={<ArrowLeftIcon />}
+              onClick={() => {
+                setFieldValue('file', null)
+                setFieldValue('name', '')
+                setFieldValue('description', '')
+              }}
+            >
               Back
             </Button>
             <Box pb={4}>
@@ -44,10 +55,29 @@ export default function MintingForm(props: IMintingForm) {
             </Box>
             <Field type="input" name="name" variant={'outlined'} label="Title" />
             <Field type="input" name="description" variant={'outlined'} label="Description" multiline rows={4} />
-            <Button variant={'contained'} color={'primary'} fullWidth onClick={onMinting}>
+            <Button
+              variant={'contained'}
+              color={'primary'}
+              fullWidth
+              onClick={() => {
+                if (!wallet) {
+                  return setOpen(true)
+                }
+                onMinting()
+              }}
+              className={classes.btnMint}
+              disabled={Boolean(values.name.length) === false || Boolean(values.description.length) === false}
+            >
               Mint NFT
             </Button>
           </Card>
+
+          <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            body={<WalletConnect onClose={() => setOpen(false)} />}
+            withAside
+          />
         </Box>
       )
     case 'in progress':
