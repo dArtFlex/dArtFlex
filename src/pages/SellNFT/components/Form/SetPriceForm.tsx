@@ -43,7 +43,7 @@ const schedulePlus = [
 
 export default function SetPriceForm() {
   const classes = useStyles()
-  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
+  const { values } = useFormikContext<ISellArtwork>()
 
   return (
     <>

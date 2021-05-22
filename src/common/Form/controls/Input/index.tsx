@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Box, TextField, TextFieldProps, Typography } from '@material-ui/core'
+import { TextField, TextFieldProps, Typography } from '@material-ui/core'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
 import { FieldRenderProps, ITextInput } from '../../types'

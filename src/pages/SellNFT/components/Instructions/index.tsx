@@ -7,7 +7,8 @@ export default function Instructions() {
   const classes = useStyles()
   const [expanded, setExpanded] = useState<boolean>(false)
 
-  const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChange = () => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
     setExpanded(newExpanded ? true : false)
   }
 
@@ -15,7 +16,7 @@ export default function Instructions() {
     <Accordion
       square
       expanded={expanded}
-      onChange={handleChange('panel1')}
+      onChange={handleChange()}
       classes={{ root: classes.rootAccordion, expanded: classes.expandedAccordion }}
     >
       <AccordionSummary

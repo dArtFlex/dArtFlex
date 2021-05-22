@@ -4,19 +4,21 @@ import { Field as FormikField } from 'formik'
 import FormUpload from './controls/Upload'
 import FormTextInput from './controls/Input'
 import FormSwitch from './controls/Switch'
+import FormCheckbox from './controls/Checkbox'
 import FormSelect, { IFormSelectProps } from './controls/Select'
 import FormDatePicker from './controls/DatePicker'
 import { IFormDatePickerProps } from './controls/DatePicker/types'
-import { FieldRenderProps, ITextInput, IUploadInput, IFormSwitchProps } from './types'
+import { FieldRenderProps, ITextInput, IUploadInput, IFormSwitchProps, IFormCheckboxProps } from './types'
 import { FieldInputProps } from 'formik/dist/types'
 
-export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker'
+export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker' | 'checkbox'
 
 export type IFieldProps = IFormSelectProps &
   ITextInput &
   IUploadInput &
   TextFieldProps &
   IFormSwitchProps &
+  IFormCheckboxProps &
   IFormDatePickerProps & {
     name: string
     type: FieldType
@@ -38,11 +40,14 @@ export default function Field(props: IFieldProps) {
           case 'switch': {
             return <FormSwitch form={form} field={field as FieldInputProps<boolean>} name={name} {...rest} />
           }
+          case 'checkbox': {
+            return <FormCheckbox form={form} field={field as FieldInputProps<boolean>} name={name} {...rest} />
+          }
           case 'select': {
             return <FormSelect form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           case 'picker': {
-            return <FormDatePicker form={form} field={field as FieldInputProps<any>} name={name} {...rest} />
+            return <FormDatePicker form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           default: {
             return null

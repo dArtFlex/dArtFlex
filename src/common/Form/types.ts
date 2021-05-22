@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { FieldInputProps, FormikProps } from 'formik/dist/types'
 import { CheckboxProps, FormControlLabelProps } from '@material-ui/core'
 
@@ -17,9 +17,9 @@ export interface IUploadInput extends ITextInput {
 }
 
 export type IFormCheckboxProps = Omit<CheckboxProps, 'form'> & {
-  label?: FormControlLabelProps['label']
+  label?: FormControlLabelProps | string
   asSwitch?: boolean
-  helperText?: ReactNode
+  helperText?: React.ReactNode
   fullWidth?: boolean
 }
 

@@ -1,10 +1,8 @@
 import React from 'react'
-import { useFormikContext } from 'formik'
 import { Box, Typography, Divider } from '@material-ui/core'
 import { Field, InputAdornment, Tooltip } from 'common'
 import { Instructions } from '../../components'
 import appConst from 'config/consts'
-import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
 
 const {
@@ -40,7 +38,6 @@ const schedule = [
 
 export default function AuctionForm() {
   const classes = useStyles()
-  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
 
   return (
     <>

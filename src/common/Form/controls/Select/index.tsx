@@ -14,7 +14,7 @@ export interface IOptionsType {
 export type IFormSelectProps = SelectProps & {
   shrink?: boolean
   helperText?: React.ReactNode
-  options?: any[]
+  options?: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
   extractId?: (option: IOptionsType) => number | string
   extractValue?: (option: IOptionsType) => number | string
   extractLabel?: (item: IOptionsType) => string
@@ -31,7 +31,7 @@ export default function FormSelect(props: IFormSelectProps & FieldRenderProps<st
     extractLabel = (item) => item.label,
     options = [],
     variant = 'outlined',
-    required,
+    required, // eslint-disable-line @typescript-eslint/no-unused-vars
     label,
     shrink,
     fullWidth,
@@ -44,7 +44,7 @@ export default function FormSelect(props: IFormSelectProps & FieldRenderProps<st
   const [labelWidth, setLabelWidth] = useState(0)
 
   useEffect(() => {
-    setLabelWidth(inputLabel.current!.offsetWidth)
+    setLabelWidth(inputLabel.current!.offsetWidth) // eslint-disable-line @typescript-eslint/no-non-null-assertion
   }, [])
 
   const renderValue = (selected: unknown) =>

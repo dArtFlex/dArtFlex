@@ -54,6 +54,8 @@ export default function MintingForm(props: IMintingForm) {
               </Typography>
             </Box>
             <Field type="input" name="name" variant={'outlined'} label="Title" />
+            {/* Royalty - type number - max 100 */}
+            <Field type="input" name="royalties" variant={'outlined'} label="Royalties" helperText={'Suggested: 10%'} />
             <Field type="input" name="description" variant={'outlined'} label="Description" multiline rows={4} />
             <Button
               variant={'contained'}

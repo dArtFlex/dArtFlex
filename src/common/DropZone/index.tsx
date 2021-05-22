@@ -81,13 +81,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-declare let Blob: {
-  prototype: Blob
-  new (): Blob
-  // eslint-disable-next-line
-  new (request: any, type: any): Blob
-}
-
 interface FileInputProps {
   name?: string
   title?: string

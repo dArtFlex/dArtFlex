@@ -15,6 +15,7 @@ export type IStepNFT =
 export interface ICreateNFT {
   file: MintingStateType['file']
   name: MintingStateType['data']['name']
+  royalties: MintingStateType['data']['royalties']
   description: MintingStateType['data']['description']
   step: IStepNFT
 }

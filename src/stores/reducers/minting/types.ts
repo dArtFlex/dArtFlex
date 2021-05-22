@@ -10,6 +10,7 @@ export interface MintingStateType {
     image_data: string
     attribute: string
     description: string
+    royalties: number
   }
 }
 

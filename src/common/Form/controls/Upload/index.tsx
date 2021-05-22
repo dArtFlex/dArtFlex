@@ -2,14 +2,14 @@ import React from 'react'
 import { Box, Button, TextFieldProps, Typography, Avatar, CardMedia } from '@material-ui/core'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
-import { FieldRenderProps, ITextInput, IUploadInput } from '../../types'
+import { FieldRenderProps, IUploadInput } from '../../types'
 import { useStyles } from './styles'
 
-export type IFormUploadInputProps = Omit<TextFieldProps, 'variant'> & IUploadInput & {}
+export type IFormUploadInputProps = Omit<TextFieldProps, 'variant'> & IUploadInput
 
 export default function FormUploadInput(props: IFormUploadInputProps & FieldRenderProps<string>) {
   const classes = useStyles()
-  const { form, field, helperText, label, description, cover, className, fullWidth, ...rest } = props
+  const { form, field, helperText, label, description, cover, className, fullWidth } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
 
   return (

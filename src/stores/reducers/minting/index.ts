@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { MintingStateType, IProcess } from './types'
+import { MintingStateType } from './types'
 
 const initialState: MintingStateType = {
   fetching: false,
@@ -10,6 +10,7 @@ const initialState: MintingStateType = {
     name: '',
     image: '',
     image_data: '',
+    royalties: 0,
     attribute: '', // unnecessary field
     description: '',
   },

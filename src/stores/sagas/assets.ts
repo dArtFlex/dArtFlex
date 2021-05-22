@@ -7,6 +7,7 @@ import { IApi } from '../../services/types'
 import { createDummyAssetData } from 'utils'
 import { NFT_CONTRACT_ADDRESS } from 'core'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* getAssetsData(api: IApi) {
   try {
     // Network.Rinkeby for test

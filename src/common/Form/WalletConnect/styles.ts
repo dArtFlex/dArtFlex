@@ -15,9 +15,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(4),
       fontWeight: 'normal',
     },
-    connectBtn: {
+    connectBtnContainer: {
+      width: '100%',
       marginTop: theme.spacing(10),
       marginBottom: theme.spacing(10),
+      '& button': {
+        marginBottom: theme.spacing(4),
+      },
+      '& button:last-child': {
+        marginBottom: 0,
+      },
     },
     walletTermLink: {
       fontWeight: 700,

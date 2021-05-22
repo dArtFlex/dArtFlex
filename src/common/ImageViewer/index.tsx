@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Modal, Box, Button } from '@material-ui/core'
+import React from 'react'
+import { Modal, Button } from '@material-ui/core'
 import { Image } from 'common'
 import { CloseIcon } from 'common/icons'
 import { IImageViewer } from './types'

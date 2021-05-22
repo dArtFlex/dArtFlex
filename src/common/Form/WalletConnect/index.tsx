@@ -1,9 +1,9 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Box, Typography, Link, Button } from '@material-ui/core'
+import { Box, Typography, Link } from '@material-ui/core'
 import { ButtonStartIcon } from 'common'
-import { MetaMaskIcon } from 'common/icons'
-import { connectMetaMaskRequest } from 'stores/reducers/wallet'
+import { MetaMaskIcon, TrustWalletIcon } from 'common/icons'
+import { connectMetaMaskRequest, connnectTrustRequest } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
 
 interface IWalletConnectProps {
@@ -29,20 +29,34 @@ export default function WalletConnect(props: IWalletConnectProps) {
         </Link>
       </Typography>
 
-      <ButtonStartIcon
-        onClick={() => {
-          dispatch(connectMetaMaskRequest())
-          onClose()
-        }}
-        variant={'contained'}
-        color={'primary'}
-        fullWidth
-        disableElevation
-        classNames={classes.connectBtn}
-        icon={<MetaMaskIcon />}
-      >
-        MetaMask
-      </ButtonStartIcon>
+      <Box className={classes.connectBtnContainer}>
+        <ButtonStartIcon
+          onClick={() => {
+            dispatch(connectMetaMaskRequest())
+            onClose()
+          }}
+          variant={'contained'}
+          color={'primary'}
+          fullWidth
+          disableElevation
+          icon={<MetaMaskIcon />}
+        >
+          MetaMask
+        </ButtonStartIcon>
+        <ButtonStartIcon
+          onClick={() => {
+            dispatch(connnectTrustRequest())
+            onClose()
+          }}
+          variant={'contained'}
+          color={'primary'}
+          fullWidth
+          disableElevation
+          icon={<TrustWalletIcon />}
+        >
+          Trust Wallet
+        </ButtonStartIcon>
+      </Box>
 
       <Typography className={classes.walletConnectDesc}>New to Ethereum?</Typography>
       <Link href="#" underline="none" className={classes.walletLearnMoreLink}>

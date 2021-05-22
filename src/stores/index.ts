@@ -5,7 +5,7 @@ import rootReducer from './reducers'
 
 export default function configStore() {
   const sagaMiddleware = createSagaMiddleware()
-  const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
+  const middleware = [...getDefaultMiddleware({ thunk: false, serializableCheck: false }), sagaMiddleware]
 
   const store = configureStore({
     reducer: rootReducer,
