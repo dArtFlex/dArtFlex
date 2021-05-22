@@ -1,7 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { makeStyles, Theme, createStyles, withStyles } from '@material-ui/core/styles'
-import { Stepper as MUIStepper, StepIconProps, Step, StepConnector } from '@material-ui/core'
+import { Stepper as MUIStepper, StepIconProps, Step } from '@material-ui/core'
 import StepLabel from '@material-ui/core/StepLabel'
 import { CircleOutlinedIcon, CircleCheckIcon } from 'common/icons'
 import { IStepperProps, IStateStep } from './types'

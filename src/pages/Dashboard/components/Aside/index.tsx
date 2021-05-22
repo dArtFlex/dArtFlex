@@ -1,21 +1,7 @@
 import React, { useState } from 'react'
-import clsx from 'clsx'
-import { useSelector } from 'react-redux'
 import { Box, Typography, Card, Avatar, Badge, Button, Link, IconButton } from '@material-ui/core'
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem, PopoverLinks } from 'common'
-import {
-  VerificationIcon,
-  InstagramOutlinedIcon,
-  TwitterIcon,
-  YouTubeIcon,
-  LinkIcon,
-  ShareIcon,
-  ExternalLinkIcon,
-} from 'common/icons'
-import { selectAssets, selectWallet } from 'stores/selectors'
-import ProfileLayout from 'layouts/ProfileLayout'
-import appConst from 'config/consts'
+import { PopoverLinks } from 'common'
+import { VerificationIcon, TwitterIcon, LinkIcon, ShareIcon, ExternalLinkIcon } from 'common/icons'
 import { IAsideProps } from './types'
 import { useStyles } from './styles'
 

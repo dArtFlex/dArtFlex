@@ -5,8 +5,6 @@ import { call, put, select } from 'redux-saga/effects'
 import { loadImageSuccess, loadImageFailure, mintingSuccess, mintingFailure } from 'stores/reducers/minting'
 import { MintingStateType } from 'stores/reducers/minting/types'
 import { bc } from 'services/blockchain_service'
-import { walletService } from 'services/wallet_service'
-import { web3Service } from 'services/web3_service'
 
 export function* loadImage(api: IApi, { payload: { file } }: PayloadAction<{ file: MintingStateType['file'] }>) {
   try {

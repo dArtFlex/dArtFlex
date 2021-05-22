@@ -7,14 +7,14 @@ import { IStepNFT, ICreateNFT } from '../../types'
 import { STEPS_NFT } from '../../index'
 
 interface IStepHolderProps {
-  children: any
+  children: ({ step }: { step: IStepNFT }) => React.ReactChild
   className?: string
 }
 
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
   const {
-    minting: { uploading, minting, data },
+    minting: { uploading, data },
   } = useSelector(selectMinting())
 
   const { values } = useFormikContext<ICreateNFT>()

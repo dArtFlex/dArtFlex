@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, CardMedia, CardMediaProps } from '@material-ui/core'
+import { CardMedia, CardMediaProps } from '@material-ui/core'
 
 interface IImageProps extends Omit<CardMediaProps, 'classes'> {
   file?: File

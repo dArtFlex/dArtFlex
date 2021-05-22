@@ -11,6 +11,7 @@ const auctionSlice = createSlice({
   name: 'auction',
   initialState,
   reducers: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     createBidRequest: (state, { payload }: PayloadAction<{ tokenId: string }>) => {
       state.fetching = true
     },

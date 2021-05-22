@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Box, Typography, Link, Button } from '@material-ui/core'
+import { Box, Typography, Link } from '@material-ui/core'
 import { ButtonStartIcon } from 'common'
 import { MetaMaskIcon, TrustWalletIcon } from 'common/icons'
 import { connectMetaMaskRequest, connnectTrustRequest } from 'stores/reducers/wallet'

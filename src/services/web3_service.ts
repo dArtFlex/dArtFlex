@@ -1,6 +1,6 @@
 //@ts-nocheck
 import Web3 from 'web3'
-import detectEthereumProvider from '@metamask/detect-provider'
+// import detectEthereumProvider from '@metamask/detect-provider'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import appConfig from 'config'
 
@@ -13,8 +13,8 @@ class Web3Service {
   private web3!: Web3
 
   constructor() {
-    if (window.web3?.currentProvider) {
-      const web3Provider = window.web3.currentProvider
+    if (window?.ethereum) {
+      const web3Provider = window.ethereum
       window.web3 = new Web3(web3Provider)
       this.web3 = window.web3
     }
@@ -36,14 +36,14 @@ class Web3Service {
       }
       window.ethereum
         .send('eth_requestAccounts')
-        .then((res: any) => {
+        .then((res) => {
           const account = res.result[0]
           if (account) {
             // Todo: do smth with localStorage
           }
           resolve(res.result)
         })
-        .catch((error: any) => {
+        .catch((error) => {
           reject(error)
         })
     })
@@ -57,7 +57,7 @@ class Web3Service {
   }
 
   async setWeb3EthProvider() {
-    const provider = await detectEthereumProvider()
+    // const provider = await detectEthereumProvider()
     const web3 = new Web3(Web3.givenProvider)
     this.web3 = web3
     return web3

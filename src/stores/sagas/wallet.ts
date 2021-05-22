@@ -11,6 +11,7 @@ import {
 import { storageActiveWallet, createWalletInstance } from 'utils'
 import APP_CONFIG from 'config'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
   try {
     const { accounts, balance, chainId } = yield walletService.getMetaMaskAccount()
@@ -35,6 +36,7 @@ export function* connectMetaMask(api: IApi) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectTrust(api: IApi) {
   try {
     const { accounts, balance, chainId } = yield walletService.getTrustAccount()
@@ -61,7 +63,7 @@ export function* connectTrust(api: IApi) {
 
 function chainChangedChannel() {
   return eventChannel((emit) => {
-    ethereum.on('chainChanged', (chainId: any) => {
+    ethereum.on('chainChanged', (chainId) => {
       if (chainId !== '0x1' && chainId !== '0x4') {
         emit(false)
       } else {

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box, CircularProgress, makeStyles, Theme, createStyles } from '@material-ui/core'
+import { Box, CircularProgress, makeStyles, createStyles } from '@material-ui/core'
 import { CircularProgressLoaderProps, StylesConfig } from './types'
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     container: {
       display: 'grid',

@@ -125,7 +125,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
               </Box>
               <Box className={clsx(classes.timerBox, asset._expPeriod < burnTime && classes.timerBoxBurn)}>
                 {asset._expPeriod < burnTime && <BurnIcon className={classes.actionBtnIcon} />}
-                <Typography className={asset._expPeriod < burnTime && classes.actionBtnBurn} variant={'h2'}>
+                <Typography className={clsx(asset._expPeriod < burnTime && classes.actionBtnBurn)} variant={'h2'}>
                   {timer}
                 </Typography>
               </Box>
@@ -161,8 +161,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
             color={'primary'}
             fullWidth
             disableElevation
-            disabled={!Boolean(wallet)}
-            className={clsx(classes.bitBtn, !Boolean(wallet) && classes.bitBtnDisabled)}
+            className={classes.bitBtn}
           >
             {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
           </Button>

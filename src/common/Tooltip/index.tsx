@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Box, Typography, Divider, Tooltip as MUITooltip } from '@material-ui/core'
+import { Box, Typography, Tooltip as MUITooltip } from '@material-ui/core'
 import { InfoIcon } from 'common/icons'
 import { useStyles } from './styles'
 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 import { PageWrapper, Form, Field, InputAdornment } from 'common'
-import { IAccountSettingsProps } from './types'
 import {
   AtIcon,
   WorldIcon,
@@ -36,7 +35,7 @@ const data = {
   },
 }
 
-export default function AccountSettings(props: IAccountSettingsProps) {
+export default function AccountSettings() {
   const classes = useStyles()
   const [open, setOpen] = useState<boolean>(false)
 
