@@ -1,6 +1,8 @@
 import React from 'react'
-import { Box, Button, TextFieldProps, Typography, Avatar, CardMedia } from '@material-ui/core'
+import { TextFieldProps } from '@material-ui/core'
+import { useFormikContext } from 'formik'
 import FormControl from '../FormControl'
+import { UploadFile } from 'common'
 import { getFormikFieldError } from '../../lib'
 import { FieldRenderProps, IUploadInput } from '../../types'
 import { useStyles } from './styles'
@@ -9,8 +11,9 @@ export type IFormUploadInputProps = Omit<TextFieldProps, 'variant'> & IUploadInp
 
 export default function FormUploadInput(props: IFormUploadInputProps & FieldRenderProps<string>) {
   const classes = useStyles()
-  const { form, field, helperText, label, description, cover, className, fullWidth } = props
+  const { form, field, helperText, className, fullWidth } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
+  const { setFieldError, setFieldValue } = useFormikContext()
 
   return (
     <FormControl
@@ -20,26 +23,13 @@ export default function FormUploadInput(props: IFormUploadInputProps & FieldRend
       className={className}
       fullWidth={fullWidth}
     >
-      <Typography className={classes.label}>{label}</Typography>
-      <Box className={classes.box}>
-        {cover ? (
-          <Avatar src={'https://picsum.photos/200/300'} className={classes.avatar} />
-        ) : (
-          <CardMedia className={classes.cover} image="https://picsum.photos/200/300" />
-        )}
-
-        <Box>
-          <Typography className={classes.desctiption}>{description}</Typography>
-          <Box className={classes.actions}>
-            <Button variant="outlined" classes={{ root: classes.uploadBtn }}>
-              Upload...
-            </Button>
-            <Button variant="text" classes={{ root: classes.deleteBtn }}>
-              Delete
-            </Button>
-          </Box>
-        </Box>
-      </Box>
+      <UploadFile
+        {...field}
+        customeraction={{ setFieldValue, setFieldError }}
+        label="Upload..."
+        variant="outlined"
+        classNames={{ root: classes.uploadBtn }}
+      />
     </FormControl>
   )
 }

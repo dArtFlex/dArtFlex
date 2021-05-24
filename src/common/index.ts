@@ -1,7 +1,6 @@
-import Header from './header'
+import { Header, StyledCheckedItem } from './header'
 import PageWrapper from './PageWrapper'
 import Footer from './footer'
-import StyledCheckedMenuItem from './StyledCheckedMenuItem'
 import Modal from './Modal'
 import { Popover, PopoverLinks } from './Popover'
 import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
@@ -12,6 +11,7 @@ import { ButtonStartIcon } from './Button'
 import Tooltip from './Tooltip'
 import Stepper from './Stepper'
 import DropZone from './DropZone'
+import UploadFile from './UploadFile'
 import Image from './Image'
 import ImageViewer from './ImageViewer'
 
@@ -19,7 +19,7 @@ export {
   Header,
   PageWrapper,
   Footer,
-  StyledCheckedMenuItem,
+  StyledCheckedItem,
   Modal,
   Popover,
   PopoverLinks,
@@ -37,6 +37,7 @@ export {
   Tooltip,
   Stepper,
   DropZone,
+  UploadFile,
   Image,
   ImageViewer,
 }

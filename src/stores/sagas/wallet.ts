@@ -14,11 +14,11 @@ import APP_CONFIG from 'config'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
   try {
-    const { accounts, balance, chainId } = yield walletService.getMetaMaskAccount()
+    const { accounts, balance } = yield walletService.getMetaMaskAccount()
 
-    if (chainId !== '0x1' && chainId !== '0x4') {
-      return yield put(connectMetaMaskFailure('Not supported network'))
-    }
+    // if (chainId !== '0x1' && chainId !== '0x4') {
+    //   return yield put(connectMetaMaskFailure('Not supported network'))
+    // }
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 

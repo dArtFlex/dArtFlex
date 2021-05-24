@@ -14,6 +14,7 @@ import {
   LinkIcon,
   VerificationIcon,
 } from 'common/icons'
+import { UploadFileSection } from '../../components'
 import { useStyles } from './styles'
 
 interface IFormAccountSettings {
@@ -30,18 +31,16 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
       <Typography component="h1">Account Settings</Typography>
       <Box className={classes.section}>
         <Typography component="h3">Main Info</Typography>
-        <Field
-          type="upload"
+        <UploadFileSection
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
-          cover
         />
-        <Field
-          type="upload"
+        <UploadFileSection
           name="cover_image"
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
+          variant={'cover'}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" />
         <Field
