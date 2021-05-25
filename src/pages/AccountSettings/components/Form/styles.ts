@@ -42,5 +42,26 @@ export const useStyles = makeStyles((theme: Theme) =>
     socialsIcon: {
       fill: theme.palette.greyDark,
     },
+    btnSubmit: {
+      background: theme.palette.primary.main,
+      color: theme.palette.white,
+      '&:hover': {
+        background: theme.palette.primary.main,
+      },
+      '&:disabled': {
+        color: theme.palette.white,
+        background: theme.palette.greyMid,
+      },
+    },
+    successTextHelper: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      color: theme.palette.green,
+      gap: theme.spacing(1.5),
+    },
+    successIcon: {
+      fill: theme.palette.green,
+    },
   })
 )

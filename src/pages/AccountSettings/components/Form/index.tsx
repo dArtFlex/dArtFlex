@@ -13,8 +13,10 @@ import {
   TikTokIcon,
   LinkIcon,
   VerificationIcon,
+  SuccessIcon,
 } from 'common/icons'
 import { UploadFileSection } from '../../components'
+import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
 
 interface IFormAccountSettings {
@@ -24,7 +26,7 @@ interface IFormAccountSettings {
 export default function FormAccountSettings(props: IFormAccountSettings) {
   const classes = useStyles()
   const { setOpenVerification } = props
-  const { handleSubmit } = useFormikContext()
+  const { values, handleSubmit } = useFormikContext<IAccountSettings>()
 
   return (
     <Box className={classes.form}>
@@ -51,6 +53,14 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
+          helperText={
+            Boolean(values.userid.length) && (
+              <Box className={classes.successTextHelper}>
+                <SuccessIcon className={classes.successIcon} />
+                <Typography>Username is Valid</Typography>
+              </Box>
+            )
+          }
         />
         <Field
           type="input"
@@ -168,7 +178,13 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           Verify via Twitter
         </Button>
       </Box>
-      <Button variant={'contained'} onClick={() => handleSubmit()} color={'primary'} fullWidth>
+      <Button
+        disabled={!Boolean(values.userid.length)}
+        variant={'contained'}
+        onClick={() => handleSubmit()}
+        className={classes.btnSubmit}
+        fullWidth
+      >
         Save Changes
       </Button>
     </Box>
