@@ -38,3 +38,10 @@ export const selectAuction = () =>
     (store: stateType) => store,
     ({ auction }: stateType) => ({ auction })
   )
+
+// Minting
+export const selectMinting = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ minting }: stateType) => ({ minting })
+  )

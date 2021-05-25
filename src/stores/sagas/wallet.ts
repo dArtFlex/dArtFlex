@@ -1,25 +1,24 @@
 //@ts-nocheck
 import { eventChannel } from 'redux-saga'
 import { put, call, take } from 'redux-saga/effects'
-import detectEthereumProvider from '@metamask/detect-provider'
-import { web3Service } from 'services/web3_service'
 import { walletService } from 'services/wallet_service'
-import { connectMetaMaskSuccess, connectMetaMaskFailure } from '../reducers/wallet'
+import {
+  connectMetaMaskSuccess,
+  connectMetaMaskFailure,
+  connnectWalletConnectSuccess,
+  connnectWalletConnectFailure,
+} from '../reducers/wallet'
 import { storageActiveWallet, createWalletInstance } from 'utils'
 import APP_CONFIG from 'config'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
   try {
-    const provider = yield detectEthereumProvider()
-    web3Service.setWeb3Provider(provider)
+    const { accounts, balance } = yield walletService.getMetaMaskAccount()
 
-    const chainId = yield walletService.getChainId()
-    if (chainId !== '0x1' && chainId !== '0x4') {
-      return yield put(connectMetaMaskFailure('Not supported network'))
-    }
-
-    const accounts = yield walletService.getMetaMaskAccount()
-    const balance = yield walletService.getEthBalance(accounts)
+    // if (chainId !== '0x1' && chainId !== '0x4') {
+    //   return yield put(connectMetaMaskFailure('Not supported network'))
+    // }
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
@@ -37,9 +36,34 @@ export function* connectMetaMask(api: IApi) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function* connectWalletConnect(api: IApi) {
+  try {
+    const { accounts, balance } = yield walletService.getWalletConnectAccount()
+
+    // if (chainId !== '0x1' && chainId !== '0x4') {
+    //   return yield put(connectTrustFailure('Not supported network'))
+    // }
+
+    const walletInstance = createWalletInstance(accounts, balance, 'ETH')
+
+    storageActiveWallet(walletInstance, APP_CONFIG.walletConnectTrustStorage)
+    yield put(connnectWalletConnectSuccess(walletInstance))
+
+    const chainChannel = yield call(chainChangedChannel)
+    while (true) {
+      const data = yield take(chainChannel)
+      yield put(connnectWalletConnectFailure(data ? '' : 'Not supported network'))
+    }
+  } catch (e) {
+    const error = e?.message || e
+    yield put(connnectWalletConnectFailure(error))
+  }
+}
+
 function chainChangedChannel() {
   return eventChannel((emit) => {
-    ethereum.on('chainChanged', (chainId: any) => {
+    ethereum.on('chainChanged', (chainId) => {
       if (chainId !== '0x1' && chainId !== '0x4') {
         emit(false)
       } else {

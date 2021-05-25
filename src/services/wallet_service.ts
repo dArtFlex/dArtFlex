@@ -1,30 +1,46 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
+import { web3Service } from 'services/web3_service'
+import APP_CONFIG from 'config'
 
 class WalletService {
-  constructor() {
-    if (window.web3?.currentProvider) {
-      this.web3 = window.web3
-      this.provider = window.web3.currentProvider
-    }
-  }
-
-  getMetaMaskAccount(): Promise<any> {
-    return this.provider.request({ method: 'eth_requestAccounts' })
-  }
-
-  getEthBalance(): Promise<any> {
-    return new Promise((resolve) => {
-      this.web3.eth.getCoinbase((err, account) => {
-        this.web3.eth.getBalance(account, (err, balance) => {
-          resolve(BigNumber(balance).dividedBy(10e17).toNumber())
-        })
+  async getMetaMaskAccount() {
+    const web3 = await web3Service.setWeb3EthProvider()
+    this.accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    this.balance = await new Promise((resolve) => {
+      web3.eth.getBalance(this.accounts[0], (err, balance) => {
+        resolve(BigNumber(balance).dividedBy(10e17).toNumber())
       })
     })
+    this.chainId = await ethereum.request({ method: 'eth_chainId' })
+    return this
   }
 
-  getChainId(): any {
-    return ethereum.request({ method: 'eth_chainId' })
+  async getWalletConnectAccount() {
+    const web3 = await web3Service.setWeb3WalletConnectProvider()
+    const wallet = localStorage.getItem(APP_CONFIG.walletConnect)
+
+    if (wallet) {
+      this.accounts = JSON.parse(wallet as string).accounts
+    } else {
+      this.accounts = await window.ethereum.accounts
+    }
+
+    this.balance = await new Promise((resolve) => {
+      web3.eth.getBalance(this.accounts[0], (err, balance = 0) => {
+        resolve(BigNumber(balance).dividedBy(10e17).toNumber())
+      })
+    })
+    this.chainId = '0x1'
+    return this
+  }
+
+  getChainId() {
+    return this.chainId
+  }
+
+  getAccoutns() {
+    return this.accounts
   }
 }
 

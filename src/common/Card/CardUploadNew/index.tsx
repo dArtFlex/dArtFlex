@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Box, Typography } from '@material-ui/core'
+import { Card, Typography } from '@material-ui/core'
 import { PlusHugeIcon } from 'common/icons'
 import { useStyles } from './styles'
 

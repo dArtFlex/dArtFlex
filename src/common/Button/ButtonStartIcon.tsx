@@ -1,8 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Button, Box, ButtonProps, createStyles, makeStyles, Theme } from '@material-ui/core'
+import { Button, Box, ButtonProps, createStyles, makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     button: {
       position: 'relative',

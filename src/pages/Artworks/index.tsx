@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { CircularProgressLoader, PageWrapper, StyledCheckedMenuItem, CardAsset } from 'common'
+import { CircularProgressLoader, PageWrapper, StyledCheckedItem, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import {
   Box,
@@ -98,9 +98,9 @@ export default function Artworks() {
                   Sort by:
                 </Typography>
                 {sortItems.map(({ label, value }) => (
-                  <StyledCheckedMenuItem key={value} value={value}>
+                  <StyledCheckedItem key={value} value={value}>
                     {label}
-                  </StyledCheckedMenuItem>
+                  </StyledCheckedItem>
                 ))}
               </Select>
             </FormControl>

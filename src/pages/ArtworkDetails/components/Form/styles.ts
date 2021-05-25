@@ -38,6 +38,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     bitBtnDisabled: {
       background: theme.palette.greyMid,
+      '&.Mui-disabled': {
+        color: theme.palette.white,
+      },
     },
     bitBtnDisabledText: {
       color: theme.palette.white,
@@ -159,6 +162,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
+    },
+    checkbox: {
+      background: 'transparent',
+      margin: 0,
+      '& .MuiFormControlLabel-label': {
+        fontSize: 16,
+        fontWeight: 400,
+      },
     },
   })
 )

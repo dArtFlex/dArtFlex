@@ -1,22 +1,20 @@
 //@ts-nocheck
-import Web3 from 'web3'
 import { put, delay } from 'redux-saga/effects'
 import { bc } from 'services/blockchain_service'
-import { OpenSeaPort, Network } from 'opensea-js'
+import { web3Service } from 'services/web3_service'
 import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
 import { createDummyAssetData } from 'utils'
 import { NFT_CONTRACT_ADDRESS } from 'core'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* getAssetsData(api: IApi) {
   try {
-    bc.newContract()
-    const provider = new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
-
     // Network.Rinkeby for test
-    const seaport = new OpenSeaPort(provider, {
-      networkName: Network.Rinkeby,
-    })
+    const web3 = yield web3Service.setWeb3OpenSeaProvider()
+    const seaport = yield bc.setSeaport(web3.currentProvider)
+
+    bc.newContract()
 
     const assets = []
     let i = 0

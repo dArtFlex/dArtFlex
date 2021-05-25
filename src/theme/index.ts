@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createMuiTheme } from '@material-ui/core/styles'
 
 const palette = {
@@ -16,6 +17,7 @@ const palette = {
   yellowLight: '#FFF6DB',
   yellow: '#F2C94C',
   redMiddle: '#EB5757', //disconnect
+  violet: '#5F4EC2',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
@@ -31,7 +33,7 @@ declare module '@material-ui/core/styles/createPalette' {
 
 const md = '@media (min-width:960px)'
 const sm = '@media (min-width:600px)'
-const xl = '@media (min-width:1920px)'
+const xl = '@media (min-width:1920px)' // eslint-disable-line @typescript-eslint/no-unused-vars
 
 const TextPrimary = '#222A2C'
 const PrimaryMain = '#5239AE'
@@ -208,9 +210,9 @@ const theme = {
       input: {
         padding: '14.5px 14px',
       },
-      '&$focused $notchedOutline': {
-        borderRadius: '12px',
-      },
+      // '&$focused $notchedOutline': {
+      //   borderRadius: '12px',
+      // },
       notchedOutline: {
         borderColor: palette.greyLight,
       },

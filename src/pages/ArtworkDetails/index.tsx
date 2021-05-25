@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
 import { PageWrapper, CardAsset } from 'common'
-import { DetailsForm, ApprovedForm, ApprovedSubForm } from './components'
+import { FormContainer } from './components'
 import { ArrowExpandIcon } from 'common/icons'
 import { selectAsset } from 'stores/selectors'
 import { useStyles } from './styles'
@@ -33,23 +33,8 @@ export default function ArtworkDetails() {
             </Box>
           )}
         </Box>
-        <Form tokenId={id} formId={formId} setFormId={setFormId} />
+        <FormContainer tokenId={id} formId={formId} setFormId={setFormId} />
       </Box>
     </PageWrapper>
   )
-}
-
-const Form = (props) => {
-  const { tokenId, formId, setFormId }: { tokenId: number; formId: number; seFormId: (formId: number) => void } = props
-
-  switch (formId) {
-    case 1:
-      return <DetailsForm tokenId={tokenId} onSubmit={() => setFormId(formId + 1)} />
-    case 2:
-      return <ApprovedForm tokenId={tokenId} onSubmit={() => setFormId(formId + 1)} />
-    case 3:
-      return <ApprovedSubForm tokenId={tokenId} />
-    default:
-      return null
-  }
 }

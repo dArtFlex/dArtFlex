@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Box, TextField, TextFieldProps, Typography } from '@material-ui/core'
+import { TextField, TextFieldProps, Typography } from '@material-ui/core'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
 import { FieldRenderProps, ITextInput } from '../../types'
@@ -10,6 +10,7 @@ export type IFormTextInputProps = TextFieldProps &
   ITextInput & {
     shrink?: boolean
     helperText?: React.ReactNode
+    maxLength?: number
   }
 
 export default function FormTextInput(props: IFormTextInputProps & FieldRenderProps<string>) {
@@ -26,6 +27,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
     description,
     fullWidth,
     className,
+    maxLength = 200,
     ...rest
   } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
@@ -53,7 +55,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
         InputLabelProps={{ shrink, classes: { root: classes.label } }}
         error={hasError}
       />
-      {multiline && <Typography className={classes.counter}>0/200</Typography>}
+      {multiline && <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>}
     </FormControl>
   )
 }

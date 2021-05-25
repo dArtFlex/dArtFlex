@@ -1,18 +1,10 @@
 import React, { useState } from 'react'
-import clsx from 'clsx'
 import { useSelector } from 'react-redux'
-import { Box, Typography, Grid } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
-import {
-  VerificationIcon,
-  InstagramOutlinedIcon,
-  TwitterIcon,
-  YouTubeIcon,
-  ShareIcon,
-  ExternalLinkIcon,
-} from 'common/icons'
-import { selectAssets, selectWallet } from 'stores/selectors'
+import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
+import { selectAssets } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import appConst from 'config/consts'

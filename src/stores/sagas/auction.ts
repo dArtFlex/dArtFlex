@@ -9,7 +9,7 @@ import { IApi } from '../../services/types'
 import { createBidSuccess, createBidFailure } from 'stores/reducers/auction'
 import { NFT_CONTRACT_ADDRESS } from 'core'
 
-export function* createBid(api: IApi, { payload: { tokenId } }: PayloadActio<{ tokenId: string }>) {
+export function* createBid(api: IApi, { payload: { tokenId } }: PayloadAction<{ tokenId: string }>) {
   try {
     yield put(createBidSuccess(tokenId))
   } catch (e) {
@@ -17,7 +17,7 @@ export function* createBid(api: IApi, { payload: { tokenId } }: PayloadActio<{ t
   }
 }
 
-export function* createSellOrder(api: IApi, { payload: { tokenId } }: PayloadActio<{ tokenId: string }>) {
+export function* createSellOrder(api: IApi, { payload: { tokenId } }: PayloadAction<{ tokenId: string }>) {
   try {
     const providerEngine = new Web3ProviderEngine()
 

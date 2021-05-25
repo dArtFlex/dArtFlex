@@ -1,17 +1,15 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, TextField, FormControlLabel, Checkbox, Link, Button } from '@material-ui/core'
+import { Box, Typography, Link, Button } from '@material-ui/core'
+import { Field, InputAdornment } from 'common'
 import { InfoIcon } from 'common/icons'
 import { createBidRequest } from 'stores/reducers/auction'
 import { selectAsset } from 'stores/selectors'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-
-interface IApprovedFormProps {
-  tokenId: string
-  onSubmit: () => void
-}
+import { IApprovedFormProps, ApprovedFormState } from './types'
 
 const {
   FILTER_VALUES: { LIVE_AUCTION, RESERVE_NOT_MET },
@@ -22,7 +20,11 @@ export default function ApprovedForm(props: IApprovedFormProps) {
   const { asset } = useSelector(selectAsset(tokenId))
   const dispatch = useDispatch()
   const classes = useStyles()
+
+  const { values } = useFormikContext<ApprovedFormState>()
+
   const disabled = false
+  const disabledBid = Boolean(values.bid > 0) && Boolean(values.acknowledge) && Boolean(values.agreeTerms)
 
   return (
     <Box className={classes.formContainer}>
@@ -50,35 +52,48 @@ export default function ApprovedForm(props: IApprovedFormProps) {
           </Typography>
           <Typography className={classes.boldText}>2.435 ETH</Typography>
         </Box>
-        <TextField
-          variant={'outlined'}
-          fullWidth
+        <Field
+          type="input"
+          name="bid"
+          variant="outlined"
           InputProps={{
-            endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
+            endAdornment: (
+              <InputAdornment
+                position="start"
+                icon={
+                  <Typography className={classes.inputAdorment} color={'textSecondary'}>
+                    ETH
+                  </Typography>
+                }
+              />
+            ),
           }}
         />
+
         <Box mt={2}>
           <Typography className={classes.warningText}>$2185,68</Typography>
         </Box>
         <Box mt={6} mb={4}>
-          <FormControlLabel
-            control={<Checkbox name="burn" color={'primary'} />}
-            label={
-              <Typography className={classes.warningText}>
-                I acknowledge that this item has not been reviewed or approved by dArtflex
-              </Typography>
-            }
+          <Field
+            type="checkbox"
+            name="acknowledge"
+            label={'I acknowledge that this item has not been reviewed or approved by dArtflex'}
+            className={classes.checkbox}
           />
         </Box>
         <Box mb={6}>
-          <FormControlLabel
-            control={<Checkbox name="burn" color={'primary'} />}
+          <Field
+            type="checkbox"
+            name="agreeTerms"
+            // Todo: Need to fixed ts issue
+            // @ts-ignore
             label={
               <Typography className={classes.warningText}>
                 {`I agree with dArtflex's `}
                 <Link>Terms and Services</Link>
               </Typography>
             }
+            className={classes.checkbox}
           />
         </Box>
         <Button
@@ -92,8 +107,8 @@ export default function ApprovedForm(props: IApprovedFormProps) {
           color={'primary'}
           fullWidth
           disableElevation
-          className={clsx(classes.bitBtn, disabled && classes.bitBtnDisabled)}
-          disabled={disabled}
+          className={clsx(classes.bitBtn, !disabledBid && classes.bitBtnDisabled)}
+          disabled={!disabledBid}
         >
           {disabled ? (
             <Typography className={classes.bitBtnDisabledText}>You don’t have enough ETH</Typography>
