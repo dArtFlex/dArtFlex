@@ -23,14 +23,14 @@ const walletSlice = createSlice({
       state.fetching = false
     },
 
-    connnectTrustRequest: (state) => {
+    connnectWalletConnectRequest: (state) => {
       state.fetching = true
     },
-    connectTrustSuccess: (state, { payload }) => {
+    connnectWalletConnectSuccess: (state, { payload }) => {
       state.wallet = payload
       state.fetching = false
     },
-    connectTrustFailure: (state, { payload }) => {
+    connnectWalletConnectFailure: (state, { payload }) => {
       state.error = payload
       state.fetching = false
     },
@@ -46,9 +46,9 @@ export const {
   connectMetaMaskSuccess,
   connectMetaMaskFailure,
 
-  connnectTrustRequest,
-  connectTrustSuccess,
-  connectTrustFailure,
+  connnectWalletConnectRequest,
+  connnectWalletConnectSuccess,
+  connnectWalletConnectFailure,
 
   closeWarningModal,
 } = walletSlice.actions

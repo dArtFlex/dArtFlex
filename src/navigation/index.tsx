@@ -4,7 +4,12 @@ import { IAppRouterProps } from './types'
 import { Router, Switch, Redirect } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
-import { ArtworkDetails, Artworks, AccountSettings, Dashboard, SellNFT, CreateNFT } from 'pages'
+import ArtworkDetails from 'pages/ArtworkDetails'
+import Artworks from 'pages/Artworks'
+import AccountSettings from 'pages/AccountSettings'
+import Dashboard from 'pages/Dashboard'
+import SellNFT from 'pages/SellNFT'
+import CreateNFT from 'pages/CreateNFT'
 
 export const history = createBrowserHistory()
 

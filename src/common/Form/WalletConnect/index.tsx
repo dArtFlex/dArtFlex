@@ -2,8 +2,8 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, Typography, Link } from '@material-ui/core'
 import { ButtonStartIcon } from 'common'
-import { MetaMaskIcon, TrustWalletIcon } from 'common/icons'
-import { connectMetaMaskRequest, connnectTrustRequest } from 'stores/reducers/wallet'
+import { MetaMaskIcon } from 'common/icons'
+import { connectMetaMaskRequest, connnectWalletConnectRequest } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
 
 interface IWalletConnectProps {
@@ -45,16 +45,16 @@ export default function WalletConnect(props: IWalletConnectProps) {
         </ButtonStartIcon>
         <ButtonStartIcon
           onClick={() => {
-            dispatch(connnectTrustRequest())
+            dispatch(connnectWalletConnectRequest())
             onClose()
           }}
           variant={'contained'}
           color={'primary'}
           fullWidth
           disableElevation
-          icon={<TrustWalletIcon />}
+          icon={<div></div>}
         >
-          Trust Wallet
+          Wallet Connect
         </ButtonStartIcon>
       </Box>
 

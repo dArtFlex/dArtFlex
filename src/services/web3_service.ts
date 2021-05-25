@@ -63,7 +63,7 @@ class Web3Service {
     return web3
   }
 
-  async setWeb3TrustProvider() {
+  async setWeb3WalletConnectProvider() {
     const provider = new WalletConnectProvider({
       rpc: {
         1: appConfig.baseURL,

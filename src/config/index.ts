@@ -5,6 +5,7 @@ const APP_CONFIG = {
   activeWalletStorage: 'active.wallet',
   walletConnectMetaMaskStorage: 'metamask.connect',
   walletConnectTrustStorage: 'trust.connect',
+  walletConnect: 'walletconnect',
 
   baseURL: 'http://3.11.202.153/',
   localURL: 'http://localhost:3000/',

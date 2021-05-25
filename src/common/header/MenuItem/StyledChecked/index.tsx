@@ -1,9 +1,9 @@
 import React from 'react'
 import { MenuItem, MenuItemProps, Box } from '@material-ui/core'
-import { CheckedIcon } from '../icons'
+import { CheckedIcon } from 'common/icons'
 import { useStyles } from './styles'
 
-export default function StyledCheckedMenuItem(props: MenuItemProps) {
+export default function StyledCheckedItem(props: MenuItemProps) {
   const classes = useStyles()
   return (
     <MenuItem

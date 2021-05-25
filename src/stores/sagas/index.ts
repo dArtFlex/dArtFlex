@@ -1,13 +1,13 @@
 import { takeLatest, all, debounce } from 'redux-saga/effects'
 import apiMiddleware from '../../services/api_middleware'
-import { getUserDataRequest } from '../reducers/user'
+import { getUserDataRequest, createNewUserRequest } from '../reducers/user'
 import { getAssetsRequest } from '../reducers/assets'
-import { connectMetaMaskRequest, connnectTrustRequest } from '../reducers/wallet'
+import { connectMetaMaskRequest, connnectWalletConnectRequest } from '../reducers/wallet'
 import { createBidRequest } from '../reducers/auction'
 import { mintingRequest, loadImageRequest } from '../reducers/minting'
-import { getUserData } from '../sagas/user'
+import { getUserData, createNewUser } from '../sagas/user'
 import { getAssetsData } from '../sagas/assets'
-import { connectMetaMask, connectTrust } from '../sagas/wallet'
+import { connectMetaMask, connectWalletConnect } from '../sagas/wallet'
 import { createBid } from '../sagas/auction'
 import { minting, loadImage } from '../sagas/minting'
 
@@ -16,9 +16,10 @@ export default function* root() {
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
     takeLatest(getAssetsRequest.type, getAssetsData, apiMiddleware),
+    takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
-    takeLatest(connnectTrustRequest.type, connectTrust, apiMiddleware),
+    takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     /** Auction **/
     debounce(500, createBidRequest.type, createBid, apiMiddleware),
     /** Minting **/

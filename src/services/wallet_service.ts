@@ -1,6 +1,7 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
 import { web3Service } from 'services/web3_service'
+import APP_CONFIG from 'config'
 
 class WalletService {
   async getMetaMaskAccount() {
@@ -15,9 +16,16 @@ class WalletService {
     return this
   }
 
-  async getTrustAccount() {
-    const web3 = await web3Service.setWeb3TrustProvider()
-    this.accounts = await window.ethereum.accounts
+  async getWalletConnectAccount() {
+    const web3 = await web3Service.setWeb3WalletConnectProvider()
+    const wallet = localStorage.getItem(APP_CONFIG.walletConnect)
+
+    if (wallet) {
+      this.accounts = JSON.parse(wallet as string).accounts
+    } else {
+      this.accounts = await window.ethereum.accounts
+    }
+
     this.balance = await new Promise((resolve) => {
       web3.eth.getBalance(this.accounts[0], (err, balance = 0) => {
         resolve(BigNumber(balance).dividedBy(10e17).toNumber())

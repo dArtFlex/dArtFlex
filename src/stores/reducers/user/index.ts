@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserStateType } from './types'
+import { IAccountSettings } from 'pages/AccountSettings/types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
@@ -27,9 +28,35 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    createNewUserRequest: (
+      state,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      { payload }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
+    ) => {
+      state.fetching = true
+      state.error = ''
+    },
+    createNewUserSuccess: (state, { payload }: PayloadAction<string>) => {
+      state.fetching = false
+      state.user.profileId = payload
+    },
+    createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
-export const { toogleSideBar, getUserDataRequest, getUserDataSuccess, getUserDataFailure } = userSlice.actions
+export const {
+  toogleSideBar,
+  getUserDataRequest,
+  getUserDataSuccess,
+  getUserDataFailure,
+
+  createNewUserRequest,
+  createNewUserSuccess,
+  createNewUserFailure,
+} = userSlice.actions
 
 export const { reducer } = userSlice
