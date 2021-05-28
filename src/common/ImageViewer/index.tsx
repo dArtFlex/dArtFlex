@@ -21,9 +21,9 @@ export default function ImageViewer(props: IImageViewer) {
         </Button>
 
         {asFiles ? (
-          <Image file={images[0] as File} classNames={classes.cardImage} />
+          <Image file={images[0] as File} className={classes.cardImage} />
         ) : (
-          <Image src={images[0] as string} classNames={classes.cardImage} />
+          <Image src={images[0] as string} className={classes.cardImage} />
         )}
       </>
     </Modal>

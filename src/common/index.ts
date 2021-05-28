@@ -14,6 +14,7 @@ import DropZone from './DropZone'
 import UploadFile from './UploadFile'
 import Image from './Image'
 import ImageViewer from './ImageViewer'
+import HashTagsFilter from './HashTagsFilter'
 
 export {
   Header,
@@ -40,4 +41,5 @@ export {
   UploadFile,
   Image,
   ImageViewer,
+  HashTagsFilter,
 }
