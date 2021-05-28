@@ -32,7 +32,7 @@ export default function Form() {
       <Box className={classes.flexBox}>
         <Card className={classes.card}>
           <Box className={classes.cardImageContainer}>
-            <Image classNames={classes.cardImage} file={values.file as File} />
+            <Image className={classes.cardImage} file={values.file as File} />
           </Box>
           <ImageViewer
             open={openViewImage}

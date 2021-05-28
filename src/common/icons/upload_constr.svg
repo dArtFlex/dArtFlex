@@ -1,0 +1,57 @@
+<svg width="128" height="126" viewBox="0 0 128 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.5 29.0735C14.5 20.5131 21.4396 13.5735 30 13.5735L84.652 13.5735C86.0327 13.5735 87.152 12.4542 87.152 11.0735V10C87.152 4.7533 91.4053 0.5 96.652 0.5L117.304 0.5C122.551 0.5 126.804 4.75329 126.804 10V73.647C126.804 82.2075 119.864 89.1471 111.304 89.1471H30C21.4396 89.1471 14.5 82.2075 14.5 73.6471L14.5 29.0735Z" fill="url(#paint0_radial)" stroke="url(#paint1_radial)"/>
+<g filter="url(#filter0_d)">
+<rect x="42" y="46" width="57" height="8" rx="4" fill="#F9FD36"/>
+</g>
+<g filter="url(#filter1_b)">
+<circle cx="44.201" cy="81.5525" r="44.201" fill="#E3E0E6" fill-opacity="0.21"/>
+<circle cx="44.201" cy="81.5525" r="43.701" stroke="url(#paint2_radial)"/>
+</g>
+<g filter="url(#filter2_d)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M46.4328 62.3694C45.2354 60.7102 42.7649 60.7102 41.5675 62.3694L30.1117 78.243C28.6798 80.2271 30.0976 82.9986 32.5444 82.9986H39.0005V99.9985C39.0005 101.103 39.896 101.999 41.0005 101.999H47.0005C48.1051 101.999 49.0005 101.103 49.0005 99.9985V82.9986H55.456C57.9028 82.9986 59.3205 80.2271 57.8886 78.243L46.4328 62.3694Z" fill="url(#paint3_linear)"/>
+</g>
+<defs>
+<filter id="filter0_d" x="27" y="31" width="87" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="7.5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.982007 0 0 0 0 1 0 0 0 0 0.0958334 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<filter id="filter1_b" x="-29" y="8.35156" width="146.402" height="146.402" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImage" stdDeviation="14.5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape"/>
+</filter>
+<filter id="filter2_d" x="19.5391" y="55.125" width="48.9222" height="60.8735" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.265879 0 0 0 0 0.103767 0 0 0 0 0.579167 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(21.6168 6.30272) rotate(57.1402) scale(120.019 174.173)">
+<stop stop-color="#9597FF"/>
+<stop offset="1" stop-color="#5239AE"/>
+</radialGradient>
+<radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(42.6373 6.22549) rotate(57.1909) scale(132.672 141.695)">
+<stop stop-color="white" stop-opacity="0.74"/>
+<stop offset="1" stop-color="#1F1581" stop-opacity="0.54"/>
+</radialGradient>
+<radialGradient id="paint2_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(27.5 43.9985) rotate(69.2879) scale(107.444 68.3899)">
+<stop stop-color="white"/>
+<stop offset="0.0520833" stop-color="#F7F7FC" stop-opacity="0.981162"/>
+<stop offset="0.367775" stop-color="#D9D4EF" stop-opacity="0.904985"/>
+<stop offset="1" stop-color="#5742B7" stop-opacity="0.58"/>
+</radialGradient>
+<linearGradient id="paint3_linear" x1="36.9515" y1="61.143" x2="140.345" y2="165.639" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#BBB5F5"/>
+</linearGradient>
+</defs>
+</svg>

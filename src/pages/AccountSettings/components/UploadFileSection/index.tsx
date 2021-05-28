@@ -25,9 +25,9 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
       <Box className={classes.box}>
         <Box className={classes.image}>
           {variant === 'avatar' ? (
-            <Image file={values[name] as File} classNames={classes.avatar} />
+            <Image file={values[name] as File} className={classes.avatar} />
           ) : (
-            <Image file={values[name] as File} classNames={classes.cover} />
+            <Image file={values[name] as File} className={classes.cover} />
           )}
         </Box>
         <Box>

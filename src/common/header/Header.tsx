@@ -90,7 +90,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   startIcon={<SmileyFaceIcon />}
                   endIcon={<CurrentDownIcon />}
                 >
-                  {`${wallet.balance} ${wallet.meta.coinAbbr}`}
+                  {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
                 </Button>
               </>
             )}
