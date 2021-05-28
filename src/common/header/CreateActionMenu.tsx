@@ -18,7 +18,7 @@ export default function CreateActionMenu(props: ICreateActionMenuProps) {
       links={[
         {
           lable: 'Constructor',
-          onClick: () => console.log('Constructor'),
+          onClick: () => history.push(routes.constructor),
         },
         {
           lable: 'My Album',

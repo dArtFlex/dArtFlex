@@ -7,4 +7,5 @@ export default {
   dashboard: '/artworks/dashboard',
   sellNFT: '/artworks/sell',
   createNFT: '/artworks/create',
+  constructor: '/artworks/constructor',
 }
