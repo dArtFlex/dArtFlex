@@ -5,7 +5,7 @@ import { ISelectedPreview } from './types'
 import { useStyles } from './styles'
 
 export default function SelectedPreview(props: ISelectedPreview) {
-  const { file0, file1 } = props
+  const { file0, file1, onClick } = props
   const classes = useStyles()
   const selected = file0.length === 0 && file1.length === 0 ? '0/2' : '1/2'
   return (
@@ -31,6 +31,7 @@ export default function SelectedPreview(props: ISelectedPreview) {
         color={Boolean(!file0.length) && Boolean(!file1.length) ? 'secondary' : 'primary'}
         className={classes.btnSelected}
         disabled={Boolean(!file0.length) && Boolean(!file1.length)}
+        onClick={onClick}
       >
         <Typography className={classes.btnText}>
           {Boolean(file0.length) && Boolean(file1.length) ? 'Generate!' : `${selected} selected`}

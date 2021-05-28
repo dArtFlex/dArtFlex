@@ -9,6 +9,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       padding: theme.spacing(8),
     },
+    clear: {
+      background: 'transparent',
+      alignItems: 'flex-start',
+    },
     containerCardForm: {
       display: 'flex',
       flexWrap: 'wrap',

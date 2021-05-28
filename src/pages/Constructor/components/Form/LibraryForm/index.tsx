@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { Box, Typography } from '@material-ui/core'
 import { HashTagsFilter } from 'common'
-import { CardImage, SelectedPreview } from '../../components'
-import { IConstructor } from '../../types'
+import { CardImage, SelectedPreview } from '../../../components'
+import { IConstructor } from '../../../types'
 import { useStyles } from './styles'
 
 const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
-export default function Library() {
+export default function LibraryConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
   const { values, setFieldValue } = useFormikContext<IConstructor>()
 
@@ -55,7 +55,7 @@ export default function Library() {
         )}
       />
 
-      <SelectedPreview file0={values.file0} file1={values.file1} />
+      <SelectedPreview file0={values.file0} file1={values.file1} onClick={setFilesSource} />
     </Box>
   )
 }

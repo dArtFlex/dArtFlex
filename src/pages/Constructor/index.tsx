@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import clsx from 'clsx'
+import { v4 as uuidv4 } from 'uuid'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, Form } from 'common'
 import { LibraryConstrIcon, UploadConstrIcon } from 'common/icons'
-import { CardForm, Library, Uploader } from './components'
+import { CardForm, LibraryConstructorForm, UploaderConstructorForm, GeneratedConstructorForm } from './components'
 import { IConstructor, ConstructorSource, IGalleryImage } from './types'
 import { useStyles } from './styles'
 
 const CONSTRUCTOR_SOURCE = {
   LIBRARY: 'library',
   UPLOADER: 'uploader',
+  GENERATED: 'generated',
 }
 
 const GALLERY: IGalleryImage[] = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
@@ -30,29 +31,37 @@ const initialData: IConstructor = {
 export default function Constructor() {
   const classes = useStyles()
   const [data, setData] = useState<IConstructor>(initialData)
+  const [filesSource, setFilesSource] = useState<ConstructorSource | null>(null)
 
   useEffect(() => {
     setData((state) => ({ ...state, images: GALLERY }))
   }, [])
 
   return (
-    <PageWrapper className={classes.container}>
+    <PageWrapper className={clsx(classes.container, filesSource === 'generated' && classes.clear)}>
       <Form initialValues={data} onSubmit={(state: IConstructor) => console.log('y', state)} enableReinitialize>
-        <Components />
+        <Components filesSource={filesSource} setFilesSource={setFilesSource} />
       </Form>
     </PageWrapper>
   )
 }
 
-function Components() {
+function Components({
+  filesSource,
+  setFilesSource,
+}: {
+  filesSource: ConstructorSource | null
+  setFilesSource: (filesSource: ConstructorSource | null) => void
+}) {
   const classes = useStyles()
-  const [filesSource, setFilesSource] = useState<ConstructorSource | null>(null)
 
   switch (filesSource) {
     case 'library':
-      return <Library />
+      return <LibraryConstructorForm setFilesSource={() => setFilesSource('generated')} />
     case 'uploader':
-      return <Uploader />
+      return <UploaderConstructorForm setFilesSource={() => setFilesSource('generated')} />
+    case 'generated':
+      return <GeneratedConstructorForm />
     default:
       return (
         <Box pb={18}>
