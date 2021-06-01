@@ -11,6 +11,7 @@ import Dashboard from 'pages/Dashboard'
 import SellNFT from 'pages/SellNFT'
 import CreateNFT from 'pages/CreateNFT'
 import Constructor from 'pages/Constructor'
+import TradingHistory from 'pages/TradingHistory'
 
 export const history = createBrowserHistory()
 
@@ -39,6 +40,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.constructor,
       component: <Constructor />,
+    },
+    {
+      path: routes.tradingHistory,
+      component: <TradingHistory />,
     },
     {
       path: routes.artworkDetails,

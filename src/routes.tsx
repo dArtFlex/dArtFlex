@@ -8,4 +8,5 @@ export default {
   sellNFT: '/artworks/sell',
   createNFT: '/artworks/create',
   constructor: '/artworks/constructor',
+  tradingHistory: '/artworks/trading-history',
 }

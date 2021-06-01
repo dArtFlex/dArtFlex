@@ -25,7 +25,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Trading History',
           icon: <ListIcon />,
-          onClick: () => console.log('Trading History'),
+          onClick: () => history.push(routes.tradingHistory),
         },
         {
           lable: 'Bids',

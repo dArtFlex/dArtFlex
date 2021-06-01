@@ -1,4 +1,4 @@
-import { Header, StyledCheckedItem } from './header'
+import { Header } from './header'
 import PageWrapper from './PageWrapper'
 import Footer from './footer'
 import Modal from './Modal'
@@ -15,12 +15,12 @@ import UploadFile from './UploadFile'
 import Image from './Image'
 import ImageViewer from './ImageViewer'
 import HashTagsFilter from './HashTagsFilter'
+import Select from './Select'
 
 export {
   Header,
   PageWrapper,
   Footer,
-  StyledCheckedItem,
   Modal,
   Popover,
   PopoverLinks,
@@ -42,4 +42,5 @@ export {
   Image,
   ImageViewer,
   HashTagsFilter,
+  Select,
 }

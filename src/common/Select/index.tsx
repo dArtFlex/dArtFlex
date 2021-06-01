@@ -3,7 +3,7 @@ import { MenuItem, MenuItemProps, Box } from '@material-ui/core'
 import { CheckedIcon } from 'common/icons'
 import { useStyles } from './styles'
 
-export default function StyledCheckedItem(props: MenuItemProps) {
+export default function Select(props: MenuItemProps) {
   const classes = useStyles()
   return (
     <MenuItem
