@@ -16,6 +16,8 @@ const appConst = {
     CREATED: 'created',
     COLLECTED: 'collected',
     UNLISTED: 'unlisted',
+    ON_SALE: 'on_sale',
+    PURCHASED: 'purchased',
   },
   SCHEDULE: {
     DAYS3: '3days',
