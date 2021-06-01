@@ -1,0 +1,57 @@
+<svg width="127" height="127" viewBox="0 0 127 127" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="-4.31699" y="40.6986" width="90.0345" height="90.0345" rx="15.5" transform="rotate(-30 -4.31699 40.6986)" fill="url(#paint0_radial)" stroke="url(#paint1_radial)"/>
+<g filter="url(#filter0_b)">
+<rect x="36" y="36" width="91" height="91" rx="16" fill="#E3E0E6" fill-opacity="0.21"/>
+<rect x="36.5" y="36.5" width="90" height="90" rx="15.5" stroke="url(#paint2_radial)"/>
+</g>
+<g filter="url(#filter1_d)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M71.9004 68.5C72.8316 68.5 73.7243 68.871 74.3812 69.531L91.2333 86.4634L98.6803 78.981C99.3391 78.3191 100.235 77.9479 101.169 77.95C102.103 77.9521 102.997 78.3273 103.653 78.9922L113.492 88.9672C114.849 90.3434 114.834 92.5594 113.458 93.9168C112.082 95.2742 109.866 95.259 108.508 93.8828L101.15 86.4228L93.7141 93.894C93.0572 94.554 92.1645 94.925 91.2333 94.925C90.3022 94.925 89.4095 94.554 88.7526 93.894L71.9004 76.9616L53.4807 95.469C52.1172 96.8391 49.9011 96.8443 48.531 95.4807C47.1609 94.1172 47.1557 91.9011 48.5193 90.531L69.4197 69.531C70.0765 68.871 70.9693 68.5 71.9004 68.5Z" fill="url(#paint3_linear)"/>
+</g>
+<g filter="url(#filter2_d)">
+<circle cx="57" cy="57" r="7" fill="#F9FD36"/>
+</g>
+<defs>
+<filter id="filter0_b" x="7" y="7" width="149" height="149" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImage" stdDeviation="14.5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape"/>
+</filter>
+<filter id="filter1_d" x="37.5" y="62.5" width="87" height="48" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.265879 0 0 0 0 0.103767 0 0 0 0 0.579167 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<filter id="filter2_d" x="35" y="35" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="7.5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.982007 0 0 0 0 1 0 0 0 0 0.0958334 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1.11976 46.9159) rotate(62.9299) scale(114.972 148.344)">
+<stop stop-color="#9597FF"/>
+<stop offset="1" stop-color="#5239AE"/>
+</radialGradient>
+<radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-0.225071 45.9004) rotate(56.3525) scale(137.149)">
+<stop stop-color="white" stop-opacity="0.47"/>
+<stop offset="1" stop-color="#1F1581" stop-opacity="0.54"/>
+</radialGradient>
+<radialGradient id="paint2_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(43 40.5) rotate(45.4709) scale(129.051)">
+<stop stop-color="white"/>
+<stop offset="0.329499" stop-color="#8D7ECE" stop-opacity="0.408223"/>
+<stop offset="0.542347" stop-color="#6B58BF" stop-opacity="0.231069"/>
+<stop offset="1" stop-color="#5742B7" stop-opacity="0.58"/>
+</radialGradient>
+<linearGradient id="paint3_linear" x1="63.5" y1="48" x2="107" y2="187" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#BBB5F5"/>
+</linearGradient>
+</defs>
+</svg>

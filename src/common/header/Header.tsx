@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase } from '@material-ui/core'
+import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
 import { selectWallet, selectAuction } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
+import NotificationActionMenu from './NotificationActionMenu'
 import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
@@ -25,6 +26,7 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
+  const [anchorElNotification, setAnchorElNotification] = useState<null | HTMLElement>(null)
 
   const [open, setOpen] = useState<boolean>(false)
 
@@ -74,9 +76,23 @@ export default function Header({ toggleTheme }: HeaderType) {
               </Button>
             ) : (
               <>
-                <Box className={classes.notification}>
-                  <BellIcon />
-                </Box>
+                <IconButton
+                  aria-label="notification"
+                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    const target = event.currentTarget as HTMLElement
+                    setAnchorElNotification(target)
+                  }}
+                >
+                  <Badge
+                    color={'primary'}
+                    variant="dot"
+                    invisible={false}
+                    className={classes.notification}
+                    classes={{ badge: classes.notificationBadge }}
+                  >
+                    <BellIcon className={classes.notificationIcon} />
+                  </Badge>
+                </IconButton>
 
                 <Button
                   onClick={(event: React.SyntheticEvent<EventTarget>) => {
@@ -90,7 +106,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   startIcon={<SmileyFaceIcon />}
                   endIcon={<CurrentDownIcon />}
                 >
-                  {`${wallet.balance} ${wallet.meta.coinAbbr}`}
+                  {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
                 </Button>
               </>
             )}
@@ -112,6 +128,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       />
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
       <ProfileActionMenu anchor={anchorElProfileLink} setAnchor={setAnchorElProfileLink} />
+      <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )
 }
