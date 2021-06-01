@@ -16,6 +16,7 @@ import Image from './Image'
 import ImageViewer from './ImageViewer'
 import HashTagsFilter from './HashTagsFilter'
 import Select from './Select'
+import Table from './Table'
 
 export {
   Header,
@@ -43,4 +44,5 @@ export {
   ImageViewer,
   HashTagsFilter,
   Select,
+  Table,
 }
