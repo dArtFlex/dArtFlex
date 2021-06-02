@@ -1,13 +1,13 @@
 //@ts-nocheck
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { CircularProgressLoader, PageWrapper, StyledCheckedItem, CardAsset } from 'common'
+import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import {
   Box,
   Typography,
   FormControl,
-  Select,
+  Select as MUISelect,
   Button,
   Divider,
   TextField,
@@ -87,7 +87,7 @@ export default function Artworks() {
         <Box mt={4} mb={6} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
           <Box style={{ minWidth: '180px' }}>
             <FormControl variant="outlined" color={'primary'}>
-              <Select
+              <MUISelect
                 style={{ minWidth: '148px' }}
                 value={sortValue}
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
@@ -98,11 +98,11 @@ export default function Artworks() {
                   Sort by:
                 </Typography>
                 {sortItems.map(({ label, value }) => (
-                  <StyledCheckedItem key={value} value={value}>
+                  <Select key={value} value={value}>
                     {label}
-                  </StyledCheckedItem>
+                  </Select>
                 ))}
-              </Select>
+              </MUISelect>
             </FormControl>
           </Box>
 
