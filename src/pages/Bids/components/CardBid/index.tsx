@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import { useHistory } from 'react-router-dom'
 import { Card, Box, Typography, Button } from '@material-ui/core'
 import { Image, AvatarUser, Timer } from 'common'
 import { CupIcon, ExclamationCircleIcon } from 'common/icons'
@@ -7,6 +8,7 @@ import { Informer } from '../../components'
 import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
 import appConsts from 'config/consts'
+import routes from '../../../../routes'
 
 const {
   FILTER_VALUES: { LIVE_AUCTION, PLACED_BID, OWNED },
@@ -16,6 +18,7 @@ export default function CardBid(props: ICardBidProps) {
   const { bid } = props
   const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status } = bid
   const classes = useStyles()
+  const history = useHistory()
 
   return (
     <Card classes={{ root: classes.cardBid }}>
@@ -68,7 +71,11 @@ export default function CardBid(props: ICardBidProps) {
           </Button>
         )}
         {status === OWNED && (
-          <Button className={clsx(classes.btnAction, classes.btnClaneNFT)} variant={'contained'}>
+          <Button
+            className={clsx(classes.btnAction, classes.btnClaneNFT)}
+            variant={'contained'}
+            onClick={() => history.push(routes.bids + '/1009')}
+          >
             Claim your NFT
           </Button>
         )}

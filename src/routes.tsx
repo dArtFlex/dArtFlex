@@ -10,5 +10,6 @@ export default {
   constructor: '/artworks/constructor',
   tradingHistory: '/artworks/trading-history',
   bids: '/artworks/my-bids',
+  bidDetails: '/artworks/my-bids/:id',
   sales: '/artworks/my-sales',
 }

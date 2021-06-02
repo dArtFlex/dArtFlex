@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper } from 'common'
 import { CardBid } from './components'
+import BidDetails from './BidDetails'
 import { useStyles } from './styles'
 import appConsts from 'config/consts'
 import { IBids } from './types'
@@ -77,3 +78,5 @@ export default function TradingHistory() {
     </PageWrapper>
   )
 }
+
+export { BidDetails }
