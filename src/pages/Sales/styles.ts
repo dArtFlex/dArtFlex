@@ -11,5 +11,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       outline: 'none',
       pointerEvents: 'none',
     },
+    grid: {
+      display: 'grid',
+      gridGap: theme.spacing(6),
+      gridTemplateColumns: '325px',
+    },
   })
 )
