@@ -7,6 +7,7 @@ const appConst = {
   },
   FILTER_VALUES: {
     MINTED: 'minted',
+    LISTED: 'listed',
     LIVE_AUCTION: 'live_auction', // That does it means the asset is LISTED on an Artwork
     BUY_NOW: 'buy_now', // That does it means the asset is LISTED on an Artwork
     RESERVE_NOT_MET: 'reserve_not_met',
@@ -18,6 +19,10 @@ const appConst = {
     UNLISTED: 'unlisted',
     ON_SALE: 'on_sale',
     PURCHASED: 'purchased',
+    TRANSFERRED: 'transferred',
+    CANCELED_BID: 'canceled_bid',
+    BID_PLACED: 'bid_placed',
+    OWNED: 'owned',
   },
   SCHEDULE: {
     DAYS3: '3days',
