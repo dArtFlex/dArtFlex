@@ -7,6 +7,7 @@ interface IPopoverProps {
   children: React.ReactNode
   anchorOrigin?: PopoverOrigin
   transformOrigin?: PopoverOrigin
+  className?: string
 }
 
 export default function Popover(props: IPopoverProps) {
@@ -22,6 +23,7 @@ export default function Popover(props: IPopoverProps) {
       vertical: 'top',
       horizontal: 'right',
     },
+    className = '',
   } = props
 
   return (
@@ -33,6 +35,7 @@ export default function Popover(props: IPopoverProps) {
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
       onClose={onClose}
+      className={className}
     >
       {children}
     </MUIPopover>
