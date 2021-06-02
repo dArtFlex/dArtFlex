@@ -1,7 +1,7 @@
 import appConst from 'config/consts'
 
 const {
-  FILTER_VALUES: { OWNED, SOLD, TRANSFERRED, CANCELED_BID, BID_PLACED, LISTED, MINTED },
+  FILTER_VALUES: { OWNED, SOLD, TRANSFERRED, CANCELED_BID, PLACED_BID, LISTED, MINTED },
 } = appConst
 
 export type IActionType =
@@ -9,7 +9,7 @@ export type IActionType =
   | typeof SOLD
   | typeof TRANSFERRED
   | typeof CANCELED_BID
-  | typeof BID_PLACED
+  | typeof PLACED_BID
   | typeof LISTED
   | typeof MINTED
 

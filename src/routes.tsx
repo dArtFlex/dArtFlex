@@ -9,4 +9,6 @@ export default {
   createNFT: '/artworks/create',
   constructor: '/artworks/constructor',
   tradingHistory: '/artworks/trading-history',
+  bids: '/artworks/my-bids',
+  sales: '/artworks/my-sales',
 }

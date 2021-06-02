@@ -10,6 +10,7 @@ const appConst = {
     LISTED: 'listed',
     LIVE_AUCTION: 'live_auction', // That does it means the asset is LISTED on an Artwork
     BUY_NOW: 'buy_now', // That does it means the asset is LISTED on an Artwork
+    PLACED_BID: 'placed_bid',
     RESERVE_NOT_MET: 'reserve_not_met',
     SOLD: 'sold',
     FEATURED_ARTWORKS: 'featured_artworks',
@@ -21,7 +22,6 @@ const appConst = {
     PURCHASED: 'purchased',
     TRANSFERRED: 'transferred',
     CANCELED_BID: 'canceled_bid',
-    BID_PLACED: 'bid_placed',
     OWNED: 'owned',
   },
   SCHEDULE: {

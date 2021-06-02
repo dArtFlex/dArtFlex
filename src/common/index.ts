@@ -17,6 +17,8 @@ import ImageViewer from './ImageViewer'
 import HashTagsFilter from './HashTagsFilter'
 import Select from './Select'
 import Table from './Table'
+import AvatarUser from './AvatarUser'
+import Timer from './Timer'
 
 export {
   Header,
@@ -45,4 +47,6 @@ export {
   HashTagsFilter,
   Select,
   Table,
+  AvatarUser,
+  Timer,
 }

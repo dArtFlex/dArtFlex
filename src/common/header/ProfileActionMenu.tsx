@@ -28,14 +28,14 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
           onClick: () => history.push(routes.tradingHistory),
         },
         {
-          lable: 'Bids',
+          lable: 'My Bids',
           icon: <BidsIcon />,
-          onClick: () => console.log('Bids'),
+          onClick: () => history.push(routes.bids),
         },
         {
-          lable: 'Sell',
+          lable: 'My Sales',
           icon: <SellIcon />,
-          onClick: () => history.push(routes.sellNFT),
+          onClick: () => history.push(routes.sales),
         },
         {
           lable: 'Account Settings',
