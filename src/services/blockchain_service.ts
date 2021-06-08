@@ -8,8 +8,9 @@ import { web3Service } from './web3_service'
 class Blockchain {
   newContract() {
     Contract.setProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
-    const contract = new Contract(ABI, NFT_CONTRACT_ADDRESS)
+    const contract = new Contract(ABI, '0x6ede7f3c26975aad32a475e1021d8f6f39c89d82')
     this.contract = contract
+    return contract
   }
 
   async getTokenId(i: number) {
