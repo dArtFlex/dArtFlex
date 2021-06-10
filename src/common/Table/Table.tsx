@@ -57,37 +57,39 @@ export default function Table(props: ITableProps) {
           <TableBody>
             {loading
               ? null
-              : data.map((
-                  row: any // eslint-disable-line @typescript-eslint/no-explicit-any
-                ) => (
-                  <TableRow
-                    classes={{ root: classes.tableRowRoot }}
-                    hover
-                    role="checkbox"
-                    aria-checked={row._id}
-                    key={row._id}
-                    tabIndex={-1}
-                    onClick={() => {
-                      handleSelect !== undefined && handleSelect(row._id, row)
-                      handleClick !== undefined && handleClick(row._id, row)
-                    }}
-                  >
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      columns.map((cell: any) => {
-                        return (
-                          <TableCell
-                            className={classes.tableCell}
-                            key={cell.accessor + '-' + row._id}
-                            style={cell.style}
-                          >
-                            {typeof cell.render === 'function' ? cell.render(row) : row[cell.accessor]}
-                          </TableCell>
-                        )
-                      })
-                    }
-                  </TableRow>
-                ))}
+              : data.map(
+                  (
+                    row: any // eslint-disable-line @typescript-eslint/no-explicit-any
+                  ) => (
+                    <TableRow
+                      classes={{ root: classes.tableRowRoot }}
+                      hover
+                      role="checkbox"
+                      aria-checked={row._id}
+                      key={row._id}
+                      tabIndex={-1}
+                      onClick={() => {
+                        handleSelect !== undefined && handleSelect(row._id, row)
+                        handleClick !== undefined && handleClick(row._id, row)
+                      }}
+                    >
+                      {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        columns.map((cell: any) => {
+                          return (
+                            <TableCell
+                              className={classes.tableCell}
+                              key={cell.accessor + '-' + row._id}
+                              style={cell.style}
+                            >
+                              {typeof cell.render === 'function' ? cell.render(row) : row[cell.accessor]}
+                            </TableCell>
+                          )
+                        })
+                      }
+                    </TableRow>
+                  )
+                )}
           </TableBody>
         </MUITable>
       </TableContainer>

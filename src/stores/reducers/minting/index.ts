@@ -63,13 +63,7 @@ const userSlice = createSlice({
   },
 })
 
-export const {
-  loadImageRequest,
-  loadImageSuccess,
-  loadImageFailure,
-  mintingRequest,
-  mintingSuccess,
-  mintingFailure,
-} = userSlice.actions
+export const { loadImageRequest, loadImageSuccess, loadImageFailure, mintingRequest, mintingSuccess, mintingFailure } =
+  userSlice.actions
 
 export const { reducer } = userSlice

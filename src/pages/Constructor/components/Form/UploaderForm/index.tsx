@@ -17,7 +17,7 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
       <Box className={classes.dropZones}>
         {values.file0 ? (
           <Box className={classes.previewCard}>
-            <ImagePreview file={(values.file0 as unknown) as File} />
+            <ImagePreview file={values.file0 as unknown as File} />
             <Button color={'secondary'} variant={'outlined'} className={classes.btnClose}>
               <CloseIcon />
             </Button>
@@ -27,7 +27,7 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
         )}
         {values.file1 ? (
           <Box className={classes.previewCard}>
-            <ImagePreview file={(values.file1 as unknown) as File} />
+            <ImagePreview file={values.file1 as unknown as File} />
             <Button color={'secondary'} variant={'outlined'} className={classes.btnClose}>
               <CloseIcon />
             </Button>
