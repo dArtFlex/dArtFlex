@@ -11,12 +11,13 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
   const { values } = useFormikContext<ICreateNFT>()
 
   const [steps, setSteps] = useState<IStepperProps['steps']>(STEPS)
-  const [activeStep, setActiveStep] = useState<IAvailableSteps>(0)
+  const [activeStep, setActiveStep] = useState<IAvailableSteps>(4)
 
-  // 0 - upload_file
-  // 1 - uploading
-  // 2 - filing_form
-  // 3 - minting
+  // 1 - upload_file
+  // 2 - uploading
+  // 3 - filing_form
+  // 4 - minting | minted
+
   useEffect(() => {
     if (step === 'uploading') {
       setActiveStep(1)
@@ -34,6 +35,14 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
     }
     if (step === 'minting') {
       setActiveStep(4)
+    }
+    if (step === 'minted') {
+      setActiveStep(4)
+      setSteps((state) =>
+        state.map((step) => {
+          return step.label === 'Minting' ? { ...step, state: 'done' } : step
+        })
+      )
     }
   }, [step, activeStep])
 
