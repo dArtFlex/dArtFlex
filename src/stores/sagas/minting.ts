@@ -8,6 +8,10 @@ import { lazyMintService } from 'services/lazymint_service'
 import { walletService } from 'services/wallet_service'
 import { ILazyMintData } from 'types'
 
+function getIdFromString(v) {
+  return +v.match(/\d/g).join('')
+}
+
 export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ file: MintingStateType['file'] }>) {
   try {
     const formData = new FormData()
@@ -23,10 +27,6 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
   } catch ({ message = '' }) {
     yield put(uploadImageFailure(message))
   }
-}
-
-function getIdFromString(v) {
-  return +v.match(/\d/g).join('')
 }
 
 export function* minting(

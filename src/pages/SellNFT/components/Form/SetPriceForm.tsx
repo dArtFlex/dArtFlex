@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Divider } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
@@ -6,6 +6,7 @@ import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
+import { daysInMonth } from 'utils'
 
 const {
   SCHEDULE: { DAYS5, DAYS3, WEEK, MONTH, SPECIFIC, NEVER },
@@ -43,7 +44,21 @@ const schedulePlus = [
 
 export default function SetPriceForm() {
   const classes = useStyles()
-  const { values } = useFormikContext<ISellArtwork>()
+  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
+  const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
+
+  useEffect(() => {
+    switch (values.futureTime) {
+      case '5days':
+        return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 5))
+      case '3days':
+        return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 3))
+      case 'week':
+        return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
+      case 'month':
+        return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
+    }
+  }, [values.futureTime])
 
   return (
     <>

@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
 import { InfoIcon } from 'common/icons'
-import { createBidRequest } from 'stores/reducers/auction'
+// import { createBidRequest } from 'stores/reducers/auction'
 import { selectAsset } from 'stores/selectors'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
@@ -99,7 +99,7 @@ export default function ApprovedForm(props: IApprovedFormProps) {
         <Button
           onClick={() => {
             if (asset?._status === LIVE_AUCTION || asset?._status === RESERVE_NOT_MET) {
-              dispatch(createBidRequest({ tokenId }))
+              // dispatch(createBidRequest({ tokenId }))
             }
             onSubmit()
           }}

@@ -107,6 +107,7 @@ class LazyMintService {
       tokenId: tokenId,
       uri: uri,
       creators: [{ account: creator, value: '10000' }],
+      // Todo: Should be checked rayalty
       royalties: [],
     }
 

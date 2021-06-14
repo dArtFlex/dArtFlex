@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AssetsStateType, Asset } from './types'
+import { AssetsStateType } from './types'
 
 const initialState: AssetsStateType = {
   fetching: false,
@@ -14,7 +14,7 @@ const assetsSlice = createSlice({
     getAssetsRequest: (state) => {
       state.fetching = true
     },
-    getAssetsSuccess: (state, { payload }: PayloadAction<Asset[]>) => {
+    getAssetsSuccess: (state, { payload }: PayloadAction<AssetsStateType['assets']>) => {
       state.assets = payload
       state.fetching = false
     },

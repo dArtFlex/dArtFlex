@@ -1,6 +1,6 @@
 //@ts-nocheck
 import Contract from 'web3-eth-contract'
-import { ABI, NFT_CONTRACT_ADDRESS } from 'core'
+import { ABI } from 'core'
 import { OpenSeaPort, Network } from 'opensea-js'
 
 class Blockchain {

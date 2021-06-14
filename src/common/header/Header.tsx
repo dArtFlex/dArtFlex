@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
-import { selectWallet, selectAuction } from 'stores/selectors'
+import { selectWallet } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -20,9 +20,8 @@ export default function Header({ toggleTheme }: HeaderType) {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
-  const {
-    auction: { bids },
-  } = useSelector(selectAuction())
+
+  const bids = ['0x']
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)

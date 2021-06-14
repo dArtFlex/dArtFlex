@@ -1,5 +1,4 @@
 //@ts-nocheck
-import HttpStatusCodes from 'http-status-codes'
 import { web3Service } from 'services/web3_service'
 import { signTypedData_v4 } from 'eth-sig-util'
 

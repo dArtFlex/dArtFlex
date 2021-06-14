@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import DucolLayout from 'layouts/DucolLayout'
 import { Box, Typography } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
-import { Form } from 'common'
+import { Form, PageWrapper } from 'common'
 import { Aside } from './components'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
@@ -31,11 +31,13 @@ const formVariant = [
 const initialData = {
   price: 0.01,
   minimumBid: 0.01,
-  reservePrice: 1,
-  startingPrice: 0.01,
-  refferalBounty: 2.5,
+  reservePrice: '1',
+  startingPrice: '0.01',
+  fee: '2.5',
   futureTime: '',
+  expirationTime: '',
   startDate: '',
+  endDate: '',
   isEndingPrice: false,
   isFutureTime: false,
 }
@@ -46,48 +48,62 @@ export default function SellNFT() {
   const dispatch = useDispatch()
 
   const onSubmit = (state: ISellArtwork) => {
-    dispatch(listingRequest())
+    const type = form === 'buy_now' ? 'instant_buy' : 'auction'
+    dispatch(
+      listingRequest({
+        data: {
+          type,
+          startPrice: state.startingPrice,
+          endPrice: state.reservePrice,
+          startTime: state.startDate,
+          endTime: state.endDate,
+          platfromFee: state.fee,
+        },
+      })
+    )
   }
 
   return (
-    <Form initialValues={initialData} onSubmit={onSubmit}>
-      <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
-        <Box>
-          <Typography variant={'h1'} className={classes.formTitle}>
-            Sell Artwork
-          </Typography>
-          <ToggleButtonGroup
-            classes={{ root: classes.toggleGroup }}
-            exclusive
-            onChange={(_, value) => {
-              if (value) setForm(value)
-            }}
-          >
-            {formVariant.map(({ label, value, desc }) => {
-              return (
-                <ToggleButton
-                  classes={{
-                    root: classes.toggleBtnRoot,
-                    selected: classes.toggleBtnSelected,
-                  }}
-                  key={value}
-                  value={value}
-                  selected={form === value}
-                >
-                  <Box>
-                    <Typography className={classes.toggleBtnLabel}>{label}</Typography>
-                    <Typography variant={'body1'} color={'textSecondary'}>
-                      {desc}
-                    </Typography>
-                  </Box>
-                </ToggleButton>
-              )
-            })}
-          </ToggleButtonGroup>
+    <PageWrapper className={classes.wrapper}>
+      <Form initialValues={initialData} onSubmit={onSubmit}>
+        <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
+          <Box>
+            <Typography variant={'h1'} className={classes.formTitle}>
+              Sell Artwork
+            </Typography>
+            <ToggleButtonGroup
+              classes={{ root: classes.toggleGroup }}
+              exclusive
+              onChange={(_, value) => {
+                if (value) setForm(value)
+              }}
+            >
+              {formVariant.map(({ label, value, desc }) => {
+                return (
+                  <ToggleButton
+                    classes={{
+                      root: classes.toggleBtnRoot,
+                      selected: classes.toggleBtnSelected,
+                    }}
+                    key={value}
+                    value={value}
+                    selected={form === value}
+                  >
+                    <Box>
+                      <Typography className={classes.toggleBtnLabel}>{label}</Typography>
+                      <Typography variant={'body1'} color={'textSecondary'}>
+                        {desc}
+                      </Typography>
+                    </Box>
+                  </ToggleButton>
+                )
+              })}
+            </ToggleButtonGroup>
 
-          {form === BUY_NOW ? <SetPriceForm /> : <AuctionForm />}
-        </Box>
-      </DucolLayout>
-    </Form>
+            {form === BUY_NOW ? <SetPriceForm /> : <AuctionForm />}
+          </Box>
+        </DucolLayout>
+      </Form>
+    </PageWrapper>
   )
 }

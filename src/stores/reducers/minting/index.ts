@@ -79,6 +79,7 @@ export const {
   uploadImageRequest,
   uploadImageSuccess,
   uploadImageFailure,
+
   lazyMintingRequest,
   lazyMintingSuccess,
   lazyMintingFailure,

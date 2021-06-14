@@ -1,15 +1,10 @@
+import { ListingData } from 'types'
 export interface ListingStateType {
   fetching: boolean
   error: string
-  data: {
-    type: IListingType
-    startPrice: string
-    endPrice: string
-    startTime: string
-    endTime: string
-    salesTokenContract: string
-    platfromFee: string
-  }
+  data: ListingData
+  orderId: null | number
+  salesDetailId: null | number
+  listItemId: null | number
+  listing: 'none' | 'done'
 }
-
-export type IListingType = 'auction' | 'instant_buy'
