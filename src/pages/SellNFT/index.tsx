@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import DucolLayout from 'layouts/DucolLayout'
 import { Box, Typography } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
@@ -7,6 +8,8 @@ import { Aside } from './components'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { SetPriceForm, AuctionForm } from './components'
+import { listingRequest } from 'stores/reducers/listing'
+import { ISellArtwork } from './types'
 
 const {
   FILTER_VALUES: { IN_AUCTION, BUY_NOW },
@@ -30,22 +33,24 @@ const initialData = {
   minimumBid: 0.01,
   reservePrice: 1,
   startingPrice: 0.01,
-  endingPrice: 0.01,
   refferalBounty: 2.5,
   futureTime: '',
-  buyerAddress: '',
   startDate: '',
   isEndingPrice: false,
   isFutureTime: false,
-  isPrivacy: false,
 }
 
 export default function SellNFT() {
   const classes = useStyles()
   const [form, setForm] = useState(BUY_NOW)
+  const dispatch = useDispatch()
+
+  const onSubmit = (state: ISellArtwork) => {
+    dispatch(listingRequest())
+  }
 
   return (
-    <Form initialValues={initialData} onCancel={() => console.log('x')} onSubmit={() => console.log('y')}>
+    <Form initialValues={initialData} onSubmit={onSubmit}>
       <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
         <Box>
           <Typography variant={'h1'} className={classes.formTitle}>

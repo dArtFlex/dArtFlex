@@ -7,6 +7,8 @@ class Blockchain {
   constructor() {
     Contract.setProvider('https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899')
     this.contract = new Contract(ABI, '0x6ede7f3c26975aad32a475e1021d8f6f39c89d82')
+    // Previous contract with assets
+    // this.contract = new Contract(ABI, NFT_CONTRACT_ADDRESS)
   }
 
   getContract() {

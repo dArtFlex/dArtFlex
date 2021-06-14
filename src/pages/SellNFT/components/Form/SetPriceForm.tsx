@@ -104,35 +104,6 @@ export default function SetPriceForm() {
       )}
 
       <Divider className={classes.divider} />
-      <Box className={classes.flexColumn} pb={4}>
-        <Typography className={classes.mainText} color={'textPrimary'}>
-          Include ending price
-        </Typography>
-        <Field type="switch" name="isEndingPrice" fullWidth={false} />
-      </Box>
-      {values.isEndingPrice ? (
-        <>
-          <Typography className={classes.mainText} color={'textPrimary'}>
-            Ending Price
-          </Typography>
-          <Box pt={3}>
-            <Typography className={classes.mainText} color={'textSecondary'}>
-              Must be less than or equal to the starting price. The price will progress linearly to this amount until
-              the expiration date.
-            </Typography>
-          </Box>
-          <Box pt={6} className={classes.flexBox}>
-            <Field type="input" name="endingPrice" variant={'outlined'} fullWidth={false} />
-          </Box>
-        </>
-      ) : (
-        <Typography className={classes.mainText} color={'textSecondary'}>
-          Adding an ending price will allow this listing to expire, or for the price to be reduced until a buyer is
-          found.
-        </Typography>
-      )}
-
-      <Divider className={classes.divider} />
 
       {values.isEndingPrice ? (
         <>
@@ -170,28 +141,7 @@ export default function SetPriceForm() {
       )}
 
       <Divider className={classes.divider} />
-      <Box className={classes.flexColumn} pb={4}>
-        <Typography className={classes.mainText} color={'textPrimary'}>
-          Privacy
-        </Typography>
-        <Field type="switch" name="isPrivacy" fullWidth={false} />
-      </Box>
-      <Box pb={10}>
-        <Typography className={classes.mainText} color={'textSecondary'}>
-          {`You can keep your listing public, or you can specify one address that's allowed to buy it.`}
-        </Typography>
-      </Box>
-      {values.isPrivacy && (
-        <Box pb={15}>
-          <Field
-            type="input"
-            name="buyerAddress"
-            label={'Buyer Address'}
-            variant={'outlined'}
-            placeholder={'Public Key'}
-          />
-        </Box>
-      )}
+
       <Instructions />
     </>
   )

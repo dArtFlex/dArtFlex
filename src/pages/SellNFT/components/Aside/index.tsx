@@ -16,7 +16,7 @@ export default function Aside(props: IAsideProps) {
   const { form } = props
   const classes = useStyles()
   const [showSlider, setShowSlider] = useState<boolean>(false)
-  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
+  const { values, setFieldValue, handleSubmit } = useFormikContext<ISellArtwork>()
 
   return (
     <Box>
@@ -108,7 +108,13 @@ export default function Aside(props: IAsideProps) {
             )}
           </Box>
         )}
-        <Button variant={'contained'} color={'primary'} endIcon={<ArrowRightIcon />} fullWidth>
+        <Button
+          onClick={() => handleSubmit()}
+          variant={'contained'}
+          color={'primary'}
+          endIcon={<ArrowRightIcon />}
+          fullWidth
+        >
           Post Your Listing
         </Button>
       </Card>

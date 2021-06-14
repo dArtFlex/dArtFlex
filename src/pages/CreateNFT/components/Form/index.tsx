@@ -6,7 +6,7 @@ import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
 import { Grid } from 'layouts'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
-import { mintingRequest } from 'stores/reducers/minting'
+import { lazyMintingRequest } from 'stores/reducers/minting'
 import MintingForm from './MintingForm'
 import routes from '../../../../routes'
 import { ICreateNFT } from '../../types'
@@ -20,7 +20,7 @@ export default function Form() {
   const [openViewImage, setOpenViewImage] = useState<boolean>(false)
 
   const handleMinting = () => {
-    dispatch(mintingRequest({ name: values.name, description: values.description }))
+    dispatch(lazyMintingRequest({ name: values.name, description: values.description }))
   }
 
   const handleList = () => history.push(routes.sellNFT)

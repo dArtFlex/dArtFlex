@@ -45,19 +45,6 @@ const DOMAIN_TYPE = [
   },
 ]
 
-const ERC721Types = {
-  Part: [
-    { name: 'account', type: 'address' },
-    { name: 'value', type: 'uint96' },
-  ],
-  Mint721: [
-    { name: 'tokenId', type: 'uint256' },
-    { name: 'tokenURI', type: 'string' },
-    { name: 'creators', type: 'Part[]' },
-    { name: 'royalties', type: 'Part[]' },
-  ],
-}
-
 class OrderService {
   async signTypedData(data) {
     const resp = await web3Service.connectMetaMaskWallet()
