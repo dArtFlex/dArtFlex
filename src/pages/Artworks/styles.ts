@@ -64,5 +64,60 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridGap: theme.spacing(6),
       gridTemplateColumns: 'repeat(auto-fit, 325px)',
     },
+    promotionBox: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      padding: `${theme.spacing(15, 0, 15, 0)}`,
+    },
+    promotionPhoto: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      borderRadius: theme.spacing(1.5),
+    },
+    promotionAuthorAva: {
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      width: theme.spacing(8),
+      height: theme.spacing(8),
+      borderRadius: '100%',
+      marginRight: theme.spacing(2),
+    },
+    promotionTextSecondary: {
+      color: theme.palette.text.secondary,
+    },
+    promotionInfoText: {
+      fontSize: 24,
+      fontWeight: 700,
+    },
+    promotionInfo: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridGap: theme.spacing(5),
+    },
+    promotionButtons: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridGap: theme.spacing(5),
+      marginTop: theme.spacing(6),
+    },
+    promotionInfoWrapper: {
+      margin: 'auto 0',
+    },
+    promotionButtonWhite: {
+      border: `${theme.spacing(0.5)}px solid ${theme.palette.text.primary}`,
+      fontWeight: 'bold',
+    },
+    promotionButtonContained: {
+      background: theme.palette.accentGradient,
+      fontWeight: 'bold',
+      color: theme.palette.white,
+    },
   })
 )
