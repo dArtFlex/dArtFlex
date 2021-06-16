@@ -14,11 +14,17 @@ interface IStepHolderProps {
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
   const {
-    minting: { uploading, data },
+    minting: { uploading, data, minting },
   } = useSelector(selectMinting())
 
   const { values } = useFormikContext<ICreateNFT>()
   const [step, setStep] = useState<IStepNFT>(values.step)
+
+  useEffect(() => {
+    if (minting === 'done') {
+      return setStep(STEPS_NFT.MINTED)
+    }
+  }, [minting])
 
   useEffect(() => {
     if (uploading) {

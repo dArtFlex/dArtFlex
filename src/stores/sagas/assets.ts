@@ -1,44 +1,32 @@
-//@ts-nocheck
-import { put, delay } from 'redux-saga/effects'
-import { bc } from 'services/blockchain_service'
-import { web3Service } from 'services/web3_service'
+import { put, call, all } from 'redux-saga/effects'
 import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
+import { AssetTypes, AssetDataTypes, AdditionalEntities } from 'types'
 import { createDummyAssetData } from 'utils'
-import { NFT_CONTRACT_ADDRESS } from 'core'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function* getAssetData(api: IApi, asset: AssetTypes) {
+  try {
+    const assetData: AssetDataTypes['data'] = yield call(api, {
+      url: asset.uri,
+    })
+    const additionalEntities: AdditionalEntities = createDummyAssetData(assetData.id)
+    return { ...asset, ...additionalEntities, data: assetData }
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 export function* getAssetsData(api: IApi) {
   try {
-    // Network.Rinkeby for test
-    const web3 = yield web3Service.setWeb3OpenSeaProvider()
-    const seaport = yield bc.setSeaport(web3.currentProvider)
+    const getAssetsListAll: AssetTypes[] = yield call(api, {
+      url: 'http://dartflex-dev.ml:8888/api/item/get_all',
+    })
 
-    bc.newContract()
+    const getAssetsListAllData: AssetDataTypes[] = yield all(
+      getAssetsListAll.map((asset) => call(getAssetData, api, asset))
+    )
 
-    const assets = []
-    let i = 0
-    while (i < 10) {
-      const tokenId = yield bc.getTokenId(i)
-
-      const asset: OpenSeaAsset = yield seaport.api.getAsset({
-        tokenAddress: NFT_CONTRACT_ADDRESS,
-        tokenId,
-      })
-      yield delay(500)
-
-      assets.push({
-        name: asset.name,
-        image: asset.imageUrl,
-        tokenId,
-        description: asset.description,
-        ...asset,
-        ...createDummyAssetData(i),
-      })
-      i++
-    }
-
-    yield put(getAssetsSuccess(assets))
+    yield put(getAssetsSuccess(getAssetsListAllData))
   } catch (e) {
     yield put(getAssetsFailure(e.message || e))
   }

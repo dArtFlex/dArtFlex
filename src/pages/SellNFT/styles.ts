@@ -2,6 +2,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    wrapper: {
+      flex: '1 1 auto',
+    },
     toggleGroup: {
       display: 'grid',
       gridTemplateColumns: '270px 270px',

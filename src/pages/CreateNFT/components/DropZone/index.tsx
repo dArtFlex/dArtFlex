@@ -7,7 +7,7 @@ import { DropZone as DropZoneContainer } from 'common'
 import { Box, Typography } from '@material-ui/core'
 import { UploadIcon } from 'common/icons'
 import { ICreateNFT } from '../../types'
-import { loadImageRequest } from 'stores/reducers/minting'
+import { uploadImageRequest } from 'stores/reducers/minting'
 import { acceptFileTypes } from 'utils'
 import { useStyles } from './styles'
 
@@ -23,7 +23,7 @@ export default function DropZone() {
 
   useEffect(() => {
     if (values.file) {
-      dispatch(loadImageRequest({ file: values.file }))
+      dispatch(uploadImageRequest({ file: values.file }))
     }
   }, [values.file])
 

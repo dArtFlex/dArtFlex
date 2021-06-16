@@ -42,7 +42,7 @@ export default function CreateNFT() {
                 <Stepper step={step} />
                 {step === STEPS_NFT.UPLOAD_FILE && <DropZone />}
                 {step === STEPS_NFT.UPLOADING && <Uploading />}
-                {step === STEPS_NFT.FILL_FORM && <FormCreateNFT />}
+                {(step === STEPS_NFT.FILL_FORM || step === STEPS_NFT.MINTED) && <FormCreateNFT />}
               </>
             )}
           </StepHolder>

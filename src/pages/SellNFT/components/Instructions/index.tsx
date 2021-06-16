@@ -38,21 +38,21 @@ export default function Instructions() {
         }}
       >
         <Typography className={classes.mainText} color={'textPrimary'}>
-          dArtflex is decentralized, so we never escrow your items. As a result, if this is your first time selling a
-          crypto collectible, you need to complete 2 free (plus gas) transactions: # To initialize your account for
-          making sell orders, which only needs to be done once for your account.
+          dArtflex   is decentralized, so we never escrow your items. As a result, if this is your first time selling a
+          crypto collectible, you need to complete 2 free (plus gas) transactions:
         </Typography>
 
         <Typography className={classes.mainText} color={'textPrimary'}>
-          {`To allow dArtflex to access your item (or all items in the collection, if the collection supports it) when a
-            sale occurs. After that, you'll see a signature request to finalize your listing. In the future, as long as
-            the item was approved in step 2 above, you won't have any transactions at all, only a signature! This is how
-            we can (almost) achieve gas-free listings.`}
+          {`To initialize your account for making sell orders, which only needs to be done once for your account. To allow
+          dArtflex to access your item (or all items in the collection, if the collection supports it) when a sale
+          occurs. After those, you'll see a signature request to finalize your listing. In the future, as long as the
+          item was approved in step 2 above, you won't have any transactions at all, only a signature! This is how we
+          can (almost) achieve gas-free listings.`}
         </Typography>
 
         <Typography className={classes.mainText} color={'textPrimary'}>
           Note that you can always decrease the price of your listing for free, without making a transaction or paying
-          gas. You can view all your items here.
+          gas.
         </Typography>
       </AccordionDetails>
     </Accordion>

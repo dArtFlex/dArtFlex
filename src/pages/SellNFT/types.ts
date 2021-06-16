@@ -1,16 +1,13 @@
-export interface ISellArtworkProps {}
-
 export interface ISellArtwork {
   price: number
   minimumBid: number
-  endingPrice: number
-  startingPrice: number
-  reservePrice: number
-  refferalBounty: number
+  startingPrice: string
+  reservePrice: string
+  fee: string
   futureTime: string
+  expirationTime: string
   startDate: string
-  buyerAddress: string
+  endDate: string
   isEndingPrice: boolean
   isFutureTime: boolean
-  isPrivacy: boolean
 }

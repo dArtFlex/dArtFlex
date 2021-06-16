@@ -32,13 +32,6 @@ export const selectWalletError = () =>
     ({ wallet: { error } }: stateType) => ({ error })
   )
 
-// Auction
-export const selectAuction = () =>
-  createSelector(
-    (store: stateType) => store,
-    ({ auction }: stateType) => ({ auction })
-  )
-
 // Minting
 export const selectMinting = () =>
   createSelector(
