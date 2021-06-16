@@ -89,7 +89,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         width: '20px',
         height: '20px',
       },
-      '--swiper-navigation-size': '30px',
+      '--swiper-navigation-size': '32px',
       '--swiper-theme-color': theme.palette.text.primary,
       '&.swiper-pagination, .swiper-pagination-fraction': {
         display: 'flex',
