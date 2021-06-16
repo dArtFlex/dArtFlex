@@ -19,14 +19,14 @@ export default function Promotions(props: IPromotion) {
           type: 'fraction',
         }}
         navigation={props.artworks.length > 1}
-        className="mySwiper"
         autoplay={true}
+        className={classes.sliderNext}
       >
         {props.artworks.map((item, index) => {
           return (
             <SwiperSlide key={index}>
               <Box className={classes.promotionBox}>
-                <Box position="relative" height="380px" width="550px">
+                <Box position="relative" className={classes.promotionSlide}>
                   <div style={{ backgroundImage: `url(${item.url})` }} className={classes.promotionPhoto} />
                 </Box>
                 <Box className={classes.promotionInfoWrapper}>
@@ -35,7 +35,7 @@ export default function Promotions(props: IPromotion) {
                       style={{ backgroundImage: `url(${item.author.profilePhoto})` }}
                       className={classes.promotionAuthorAva}
                     />
-                    <Typography variant={'h4'}>{item.author.name}</Typography>
+                    <Typography variant={'h4'}>@{item.author.name}</Typography>
                   </Box>
                   <Typography variant={'h2'}>{item.name}</Typography>
                   <Box className={classes.promotionInfo} mt={6}>

@@ -66,8 +66,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     promotionBox: {
       display: 'flex',
-      justifyContent: 'space-around',
+      justifyContent: 'center',
       padding: `${theme.spacing(15, 0, 15, 0)}`,
+      height: theme.spacing(112),
+      '@media (min-width:1025px)': {
+        height: theme.spacing(135),
+      },
     },
     promotionPhoto: {
       position: 'absolute',
@@ -79,6 +83,26 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       borderRadius: theme.spacing(1.5),
+    },
+    sliderNext: {
+      '&.swiper-button-next, .swiper-button-prev': {
+        width: '20px',
+        height: '20px',
+      },
+      '--swiper-navigation-size': '30px',
+      '--swiper-theme-color': theme.palette.text.primary,
+      '&.swiper-pagination, .swiper-pagination-fraction': {
+        display: 'flex',
+        backgroundColor: theme.palette.white,
+        width: theme.spacing(20),
+        height: theme.spacing(12.5),
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: '50%',
+        borderRadius: theme.spacing(3),
+        boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
+        fontWeight: 700,
+      },
     },
     promotionAuthorAva: {
       backgroundRepeat: 'no-repeat',
@@ -108,7 +132,21 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(6),
     },
     promotionInfoWrapper: {
-      margin: 'auto 0',
+      marginLeft: theme.spacing(20),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      '@media (min-width:1025px)': {
+        marginLeft: theme.spacing(40),
+      },
+    },
+    promotionSlide: {
+      height: theme.spacing(76),
+      width: theme.spacing(110),
+      '@media (min-width:1025px)': {
+        height: theme.spacing(95),
+        width: theme.spacing(137),
+      },
     },
     promotionButtonWhite: {
       border: `${theme.spacing(0.5)}px solid ${theme.palette.text.primary}`,
