@@ -16,8 +16,8 @@ const {
 } = appConst
 
 export default function ApprovedForm(props: IApprovedFormProps) {
-  const { tokenId, onSubmit } = props
-  const { asset } = useSelector(selectAsset(tokenId))
+  const { onSubmit } = props
+  const { assetDetails } = useSelector(selectAsset())
   const classes = useStyles()
 
   const { values } = useFormikContext<ApprovedFormState>()
@@ -97,7 +97,7 @@ export default function ApprovedForm(props: IApprovedFormProps) {
         </Box>
         <Button
           onClick={() => {
-            if (asset?._status === LIVE_AUCTION || asset?._status === RESERVE_NOT_MET) {
+            if (assetDetails.infoData?._status === LIVE_AUCTION || assetDetails.infoData?._status === RESERVE_NOT_MET) {
               // dispatch(createBidRequest({ tokenId }))
             }
             onSubmit()

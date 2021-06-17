@@ -1,7 +1,4 @@
-export interface ApprovedSubFormProps {}
-
 export interface IApprovedFormProps {
-  tokenId: string
   onSubmit: () => void
 }
 

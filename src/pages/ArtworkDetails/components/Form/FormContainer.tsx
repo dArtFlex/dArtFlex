@@ -17,16 +17,15 @@ const initialApprovedData = {
 }
 
 export default function FormContainer(props: IFormContainer) {
-  const { tokenId, formId, setFormId } = props
-  const { asset } = useSelector(selectAsset(tokenId))
+  const { formId, setFormId } = props
+  const { assetDetails } = useSelector(selectAsset())
 
   switch (formId) {
     case 1:
       return (
         <DetailsForm
-          tokenId={tokenId}
           onSubmit={() => {
-            if (asset?._status === BUY_NOW) {
+            if (assetDetails.infoData?._status === BUY_NOW) {
               setFormId(formId + 2)
             } else {
               setFormId(formId + 1)
@@ -41,11 +40,11 @@ export default function FormContainer(props: IFormContainer) {
           onCancel={() => console.log('x')}
           onSubmit={(state: ApprovedFormState) => console.log('y', state)}
         >
-          <ApprovedForm tokenId={tokenId} onSubmit={() => setFormId(formId + 1)} />
+          <ApprovedForm onSubmit={() => setFormId(formId + 1)} />
         </Form>
       )
     case 3:
-      return <ApprovedSubForm tokenId={tokenId} />
+      return <ApprovedSubForm />
     default:
       return null
   }
