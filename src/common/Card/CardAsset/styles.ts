@@ -2,6 +2,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
     artContainer: {
       position: 'relative',
       padding: theme.spacing(1),
@@ -56,7 +61,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(0, 2, 0, 1),
     },
     actionBtnBox: {
-      padding: theme.spacing(6),
+      padding: theme.spacing(0, 6, 6),
     },
     listBtn: {
       background: theme.palette.text.primary,
