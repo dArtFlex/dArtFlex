@@ -22,19 +22,20 @@ export default function CardAsset(props: ICardAssetProps) {
 
   return (
     <>
-      <Card key={asset.tokenId} elevation={1} className={classes.card}>
-        <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.tokenId}`)}>
-          <img src={asset.image} />
+      <Card key={asset.tokenId} elevation={1}>
+        <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.data[0].id}`)}>
+          <img src={asset.data[0].image} />
           {withLabel && <CardBadge status={asset._status} />}
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
-            <Box display={'flex'} mb={4} alignItems={'center'}>
-              <Avatar className={classes.avatar} alt="Avatar" />
-              <Typography variant={'h4'}>
-                {asset?.owner?.user?.username ? `@${asset.owner.user.username}` : '@you'}
-              </Typography>
-            </Box>
+            {Boolean(asset.user.length) && (
+              <Box display={'flex'} mb={4} alignItems={'center'}>
+                <Avatar className={classes.avatar} alt="Avatar" src={asset.user[0].profile_image} />
+                <Typography variant={'h4'}>{asset.user[0].userid ? `@${asset.user[0].userid}` : '@you'}</Typography>
+              </Box>
+            )}
+
             {withAction && (
               <IconButton
                 className={classes.borderdIconButton}
@@ -47,7 +48,7 @@ export default function CardAsset(props: ICardAssetProps) {
               </IconButton>
             )}
           </Box>
-          <Typography variant={'h4'}>{asset.name}</Typography>
+          <Typography variant={'h4'}>{asset.data[0].name}</Typography>
         </Box>
         <CardActions
           status={asset._status}

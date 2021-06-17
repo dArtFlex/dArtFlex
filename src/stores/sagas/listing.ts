@@ -8,6 +8,7 @@ import { listingSuccess, listingFailure } from 'stores/reducers/listing'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { walletService } from 'services/wallet_service'
 import { orderService } from 'services/order_service'
+import APP_CONFIG from 'config'
 
 function getIdFromString(v) {
   return +v.match(/\d/g).join('')
@@ -19,7 +20,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const accounts = walletService.getAccoutns()
 
     const salesDetailId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/sales_detail/create',
+      url: APP_CONFIG.createSalesDetail,
       method: 'POST',
       data: {
         type: data.type,
@@ -49,7 +50,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     })
 
     const orderId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/order/create',
+      url: APP_CONFIG.createOrder,
       method: 'POST',
       data: {
         maker: order[0].maker,
@@ -70,7 +71,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     })
 
     const listItemId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/bid/list_item',
+      url: APP_CONFIG.bidListItem,
       method: 'POST',
       data: {
         itemId: lazyMintItemId,

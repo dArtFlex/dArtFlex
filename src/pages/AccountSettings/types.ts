@@ -9,14 +9,14 @@ export interface IAccountSettings extends ISocials {
 }
 
 export interface ISocials {
-  socials?: {
-    website?: string
-    twitter?: string
-    instagram?: string
-    discord?: string
-    facebook?: string
-    youtube?: string
-    tiktok?: string
-    other?: string
+  socials: {
+    website: string
+    twitter: string
+    instagram: string
+    discord: string
+    facebook: string
+    youtube: string
+    tiktok: string
+    otherUrl: string
   }
 }

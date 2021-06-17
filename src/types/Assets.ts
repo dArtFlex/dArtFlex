@@ -1,10 +1,12 @@
+import { UserDataTypes } from './User'
+
 export interface AssetTypes {
   id: number
   contract: string
   tokenId: string
   uri: string
-  creator: number
-  owner: number
+  creator: string
+  owner: string
   royalty: number
   royaltyFee: number
   lazymint: boolean
@@ -22,6 +24,7 @@ export interface AssetDataTypes extends AssetTypes, AdditionalEntities {
     name: string
     updated_at: string
   }
+  user: UserDataTypes
 }
 
 export type AssetStatus =
