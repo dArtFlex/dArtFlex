@@ -13,6 +13,7 @@ const APP_CONFIG = {
   getUserProfile: (id: number) => `http://dartflex-dev.ml:8888/api/user/get/${id}`,
   getUserProfileByOwner: (owner: string) => `http://dartflex-dev.ml:8888/api/user/get/wallet/${owner}`,
   getItemAll: 'http://dartflex-dev.ml:8888/api/item/get_all',
+  getItemByTokenId: (token_id: number) => `http://dartflex-dev.ml:8888/api/item/get_by_token_id/${token_id}`,
   getMetadata: (id: number) => `http://3.11.202.153:8888/api/metadata/get/${id}`,
 
   uploadImage: 'http://3.11.202.153:8888/api/image/upload',

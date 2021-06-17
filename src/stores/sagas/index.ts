@@ -1,13 +1,13 @@
 import { takeLatest, all } from 'redux-saga/effects'
 import apiMiddleware from '../../services/api_middleware'
 import { getUserDataRequest, createNewUserRequest } from '../reducers/user'
-import { getAssetsRequest } from '../reducers/assets'
+import { getAssetsAllRequest, getAssetByIdRequest } from '../reducers/assets'
 import { connectMetaMaskRequest, connnectWalletConnectRequest } from '../reducers/wallet'
 
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
 import { getUserData, createNewUser } from '../sagas/user'
-import { getAssetsData } from '../sagas/assets'
+import { getAssetsAllData, getAssetById } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect } from '../sagas/wallet'
 
 import { minting, uploadImage } from '../sagas/minting'
@@ -15,9 +15,11 @@ import { listing } from '../sagas/listing'
 
 export default function* root() {
   yield all([
+    /** Assets **/
+    takeLatest(getAssetsAllRequest.type, getAssetsAllData, apiMiddleware),
+    takeLatest(getAssetByIdRequest.type, getAssetById, apiMiddleware),
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
-    takeLatest(getAssetsRequest.type, getAssetsData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
