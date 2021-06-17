@@ -7,6 +7,7 @@ import { MintingStateType } from 'stores/reducers/minting/types'
 import { lazyMintService } from 'services/lazymint_service'
 import { walletService } from 'services/wallet_service'
 import { ILazyMintData } from 'types'
+import APP_CONFIG from 'config'
 
 function getIdFromString(v) {
   return +v.match(/\d/g).join('')
@@ -18,7 +19,7 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
     formData.append('file', file as File)
     const image = yield call(api, {
       method: 'POST',
-      url: 'http://3.11.202.153:8888/api/image/upload',
+      url: APP_CONFIG.uploadImage,
       data: formData,
       transform: false,
     })
@@ -45,12 +46,12 @@ export function* minting(
 
     const createMetadataId = yield call(api, {
       method: 'POST',
-      url: 'http://3.11.202.153:8888/api/metadata/create',
+      url: APP_CONFIG.createMetadata,
       data: preparedData,
     })
 
     const tokenId = getIdFromString(createMetadataId)
-    const tokenUri = 'http://3.11.202.153:8888/api/metadata/get/' + tokenId
+    const tokenUri = APP_CONFIG.getMetadata(tokenId)
 
     const lm: ILazyMintData = yield lazyMintService.generateLazyMint({
       body: {
@@ -61,7 +62,7 @@ export function* minting(
     })
 
     const createItemId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/item/create',
+      url: APP_CONFIG.createItem,
       method: 'POST',
       data: {
         contract: lm.contract,

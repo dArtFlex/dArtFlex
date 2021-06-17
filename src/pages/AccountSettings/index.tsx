@@ -24,7 +24,7 @@ const data: IAccountSettings = {
     facebook: '',
     youtube: '',
     tiktok: '',
-    other: '',
+    otherUrl: '',
   },
 }
 

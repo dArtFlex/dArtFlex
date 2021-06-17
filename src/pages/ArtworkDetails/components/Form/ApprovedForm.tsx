@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -18,7 +18,6 @@ const {
 export default function ApprovedForm(props: IApprovedFormProps) {
   const { tokenId, onSubmit } = props
   const { asset } = useSelector(selectAsset(tokenId))
-  const dispatch = useDispatch()
   const classes = useStyles()
 
   const { values } = useFormikContext<ApprovedFormState>()
