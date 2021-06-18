@@ -81,21 +81,6 @@ export default function Artworks() {
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
-  const promotionSingle = {
-    id: 1,
-    author: {
-      id: 1,
-      name: '@scheleifer44',
-      profilePhoto:
-        'https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/08/18/20/istock-847257772.jpg?width=982&height=726&auto=webp&quality=75',
-    },
-    name: 'Over Indulgence 2',
-    bid: 0.44,
-    endDate: 1628957487000,
-    url:
-      'https://live-production.wcms.abc-cdn.net.au/cbe346eee79d3e08dee5e8eb04284438?impolicy=wcms_crop_resize&cropH=1680&cropW=2983&xPos=17&yPos=574&width=862&height=485',
-  }
-
   const promotionMultiply = [
     {
       id: 1,
