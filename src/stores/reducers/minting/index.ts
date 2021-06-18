@@ -10,7 +10,7 @@ const initialState: MintingStateType = {
     name: '',
     image: '',
     image_data: '',
-    royalties: 0,
+    royalties: '',
     attribute: '', // unnecessary field
     description: '',
   },
@@ -45,14 +45,16 @@ const userSlice = createSlice({
     lazyMintingRequest: (
       state,
       {
-        payload: { name, description },
+        payload: { name, description, royalties },
       }: PayloadAction<{
         name: MintingStateType['data']['name']
         description: MintingStateType['data']['description']
+        royalties: MintingStateType['data']['royalties']
       }>
     ) => {
       state.data.name = name
       state.data.description = description
+      state.data.royalties = royalties
       state.minting = 'in progress'
     },
     lazyMintingSuccess: (

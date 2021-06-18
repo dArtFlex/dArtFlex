@@ -14,12 +14,12 @@ const APP_CONFIG = {
   getUserProfileByOwner: (owner: string) => `http://dartflex-dev.ml:8888/api/user/get/wallet/${owner}`,
   getItemAll: 'http://dartflex-dev.ml:8888/api/item/get_all',
   getItemByTokenId: (token_id: number) => `http://dartflex-dev.ml:8888/api/item/get_by_token_id/${token_id}`,
-  getMetadata: (id: number) => `http://3.11.202.153:8888/api/metadata/get/${id}`,
+  getMetadata: (id: number) => `http://dartflex-dev.ml:8888/api/metadata/get/${id}`,
 
-  uploadImage: 'http://3.11.202.153:8888/api/image/upload',
-  createMetadata: 'http://3.11.202.153:8888/api/metadata/create',
+  uploadImage: 'http://dartflex-dev.ml:8888/api/image/upload',
+  createMetadata: 'http://dartflex-dev.ml:8888/api/metadata/create',
   createItem: 'http://dartflex-dev.ml:8888/api/item/create',
-  createSalesDetail: 'http://dartflex-dev.ml:8888/api/sales_detail/create',
+  createSalesDetail: 'http://dartflex-dev.ml:8888/api/marketplace/create',
   createOrder: 'http://dartflex-dev.ml:8888/api/order/create',
   bidListItem: 'http://dartflex-dev.ml:8888/api/bid/list_item',
 

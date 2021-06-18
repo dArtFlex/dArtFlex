@@ -16,6 +16,7 @@ const initialState: ListingStateType = {
   orderId: null,
   salesDetailId: null,
   listItemId: null,
+  bidListItemId: null,
   listing: 'none',
 }
 
@@ -38,12 +39,14 @@ const userSlice = createSlice({
         orderId: ListingStateType['orderId']
         salesDetailId: ListingStateType['salesDetailId']
         listItemId: ListingStateType['listItemId']
+        bidListItemId: ListingStateType['bidListItemId']
       }>
     ) => {
       state.fetching = false
       state.orderId = payload.orderId
       state.salesDetailId = payload.salesDetailId
       state.listItemId = payload.listItemId
+      state.bidListItemId = payload.bidListItemId
       state.listing = 'done'
     },
     listingFailure: (state, { payload }: PayloadAction<string>) => {

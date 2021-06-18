@@ -1,4 +1,4 @@
-import { FORMATS } from '../constants'
+import { FORMATS } from 'constant'
 
 export const acceptFileTypes = (fileExt: string) =>
   FORMATS[Object.keys(FORMATS).find((type) => FORMATS[type].includes(fileExt)) || '']

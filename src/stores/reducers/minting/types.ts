@@ -11,7 +11,7 @@ export interface MintingStateType {
     image_data: string
     attribute: string
     description: string
-    royalties: number
+    royalties: string
   }
   lazyMintData: null | ILazyMintData
   lazyMintItemId: null | number

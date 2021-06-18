@@ -2,40 +2,10 @@
 import HttpStatusCodes from 'http-status-codes'
 import { web3Service } from 'services/web3_service'
 import { signTypedData_v4 } from 'eth-sig-util'
+import { DOMAIN_TYPE, ERC721Types } from 'constant'
 
 const web3 = web3Service.getWeb3()
 
-const DOMAIN_TYPE = [
-  {
-    type: 'string',
-    name: 'name',
-  },
-  {
-    type: 'string',
-    name: 'version',
-  },
-  {
-    type: 'uint256',
-    name: 'chainId',
-  },
-  {
-    type: 'address',
-    name: 'verifyingContract',
-  },
-]
-
-const ERC721Types = {
-  Part: [
-    { name: 'account', type: 'address' },
-    { name: 'value', type: 'uint96' },
-  ],
-  Mint721: [
-    { name: 'tokenId', type: 'uint256' },
-    { name: 'tokenURI', type: 'string' },
-    { name: 'creators', type: 'Part[]' },
-    { name: 'royalties', type: 'Part[]' },
-  ],
-}
 class LazyMintService {
   async signTypedData(data) {
     const resp = await web3Service.connectMetaMaskWallet()
@@ -59,9 +29,11 @@ class LazyMintService {
           // @ts-ignore
           return web3.currentProvider.sendAsync(
             {
+              jsonrpc: '2.0',
               method: 'eth_signTypedData_v4',
               params: [from, msgData],
               from,
+              id: new Date().getTime(),
             },
             cb
           )
