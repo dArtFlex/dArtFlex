@@ -64,5 +64,98 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridGap: theme.spacing(6),
       gridTemplateColumns: 'repeat(auto-fit, 325px)',
     },
+    promotionBox: {
+      display: 'flex',
+      justifyContent: 'center',
+      padding: `${theme.spacing(15, 0, 15, 0)}`,
+      height: theme.spacing(112),
+      '@media (min-width:1025px)': {
+        height: theme.spacing(135),
+      },
+    },
+    promotionPhoto: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      borderRadius: theme.spacing(1.5),
+    },
+    sliderNext: {
+      '&.swiper-button-next, .swiper-button-prev': {
+        width: '20px',
+        height: '20px',
+      },
+      '--swiper-navigation-size': '32px',
+      '--swiper-theme-color': theme.palette.text.primary,
+      '&.swiper-pagination, .swiper-pagination-fraction': {
+        display: 'flex',
+        backgroundColor: theme.palette.white,
+        width: theme.spacing(20),
+        height: theme.spacing(12.5),
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: '50%',
+        borderRadius: theme.spacing(3),
+        boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
+        fontWeight: 700,
+      },
+    },
+    promotionAuthorAva: {
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      width: theme.spacing(8),
+      height: theme.spacing(8),
+      borderRadius: '100%',
+      marginRight: theme.spacing(2),
+    },
+    promotionTextSecondary: {
+      color: theme.palette.text.secondary,
+    },
+    promotionInfoText: {
+      fontSize: 24,
+      fontWeight: 700,
+    },
+    promotionInfo: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridGap: theme.spacing(5),
+    },
+    promotionButtons: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridGap: theme.spacing(5),
+      marginTop: theme.spacing(6),
+    },
+    promotionInfoWrapper: {
+      marginLeft: theme.spacing(20),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      '@media (min-width:1025px)': {
+        marginLeft: theme.spacing(40),
+      },
+    },
+    promotionSlide: {
+      height: theme.spacing(76),
+      width: theme.spacing(110),
+      '@media (min-width:1025px)': {
+        height: theme.spacing(95),
+        width: theme.spacing(137),
+      },
+    },
+    promotionButtonWhite: {
+      border: `${theme.spacing(0.5)}px solid ${theme.palette.text.primary}`,
+      fontWeight: 'bold',
+    },
+    promotionButtonContained: {
+      background: theme.palette.accentGradient,
+      fontWeight: 'bold',
+      color: theme.palette.white,
+    },
   })
 )
