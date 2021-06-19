@@ -27,7 +27,7 @@ export default function Sales() {
             <>
               {assets
                 ?.filter((el) => {
-                  return el._status === IN_AUCTION || el._status === BUY_NOW
+                  return el.sold
                 })
                 .map((asset, i) => (
                   <CardAsset key={i} asset={asset} withLabel withAction />

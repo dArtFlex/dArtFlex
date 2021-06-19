@@ -1,45 +1,82 @@
-//@ts-nocheck
-import { put, delay } from 'redux-saga/effects'
-import { bc } from 'services/blockchain_service'
-import { web3Service } from 'services/web3_service'
-import { getAssetsSuccess, getAssetsFailure } from 'stores/reducers/assets'
+import { put, call, all } from 'redux-saga/effects'
+import { PayloadAction } from '@reduxjs/toolkit'
+import {
+  getAssetsAllSuccess,
+  getAssetsAllFailure,
+  getAssetByIdSuccess,
+  getAssetByIdFailure,
+} from 'stores/reducers/assets'
 import { IApi } from '../../services/types'
-import { createDummyAssetData } from 'utils'
-import { NFT_CONTRACT_ADDRESS } from 'core'
+import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes } from 'types'
+import APP_CONFIG from 'config'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function* getAssetsData(api: IApi) {
+function* getUserData(api: IApi, owner: string) {
   try {
-    // Network.Rinkeby for test
-    const web3 = yield web3Service.setWeb3OpenSeaProvider()
-    const seaport = yield bc.setSeaport(web3.currentProvider)
-
-    bc.newContract()
-
-    const assets = []
-    let i = 0
-    while (i < 10) {
-      const tokenId = yield bc.getTokenId(i)
-
-      const asset: OpenSeaAsset = yield seaport.api.getAsset({
-        tokenAddress: NFT_CONTRACT_ADDRESS,
-        tokenId,
-      })
-      yield delay(500)
-
-      assets.push({
-        name: asset.name,
-        image: asset.imageUrl,
-        tokenId,
-        description: asset.description,
-        ...asset,
-        ...createDummyAssetData(i),
-      })
-      i++
-    }
-
-    yield put(getAssetsSuccess(assets))
+    const userData: UserDataTypes = yield call(api, {
+      url: APP_CONFIG.getUserProfileByOwner(owner),
+    })
+    return { user: userData }
   } catch (e) {
-    yield put(getAssetsFailure(e.message || e))
+    yield put(getAssetsAllFailure(e.message || e))
+  }
+}
+
+function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
+  try {
+    const assetById: AssetTypes = yield call(api, {
+      url: APP_CONFIG.getItemByItemId(parseFloat(asset.item_id)),
+    })
+    const userData: AssetDataTypes['userData'] = yield call(getUserData, api, assetById.owner)
+    const imageData: AssetDataTypes['imageData'] = yield call(api, {
+      url: assetById.uri,
+    })
+
+    return { ...asset, imageData, userData }
+  } catch (e) {
+    yield put(getAssetsAllFailure(e.message || e))
+  }
+}
+
+export function* getAssetsAllData(api: IApi) {
+  try {
+    const getAssetsListAll: AssetMarketplaceTypes[] = yield call(api, {
+      url: APP_CONFIG.getMarketplaceAll,
+    })
+
+    const getAssetsListAllData: AssetDataTypes[] = yield all(
+      getAssetsListAll.map((asset) => call(getAssetData, api, asset))
+    )
+
+    yield put(getAssetsAllSuccess(getAssetsListAllData))
+  } catch (e) {
+    yield put(getAssetsAllFailure(e.message || e))
+  }
+}
+
+export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
+  try {
+    const assetById: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemByItemId(payload),
+    })
+    const marketplaceData: AssetMarketplaceTypes[] = yield call(api, {
+      url: APP_CONFIG.getMarketplaceItemById(payload),
+    })
+    const userByOwner: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+    })
+    const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+      url: assetById[0].uri,
+    })
+
+    yield put(
+      getAssetByIdSuccess({
+        tokenData: assetById[0],
+        imageData: imageData[0],
+        ownerData: userByOwner[0],
+        marketData: marketplaceData[0],
+      })
+    )
+  } catch (e) {
+    yield put(getAssetByIdFailure(e.message || e))
   }
 }

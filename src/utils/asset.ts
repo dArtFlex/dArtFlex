@@ -1,8 +1,4 @@
-import { Asset } from 'stores/reducers/assets/types'
-import appConst from 'config/consts'
-const {
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, MINTED, COLLECTED, CREATED, UNLISTED },
-} = appConst
+import { AssetDataTypes } from 'types'
 
 export function createDummyAssetData(index: number) {
   const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
@@ -12,66 +8,66 @@ export function createDummyAssetData(index: number) {
   switch (index) {
     case 0:
       return {
-        _status: LIVE_AUCTION,
+        _status: 'auction',
         _priceReserve: 0.1,
         _currentBit: 0.2,
         _expPeriod: currentDate + plus1h1m,
       }
     case 1:
       return {
-        _status: BUY_NOW,
+        _status: 'instant_buy',
         _price: 0.5,
         _expPeriod: currentDate + plus1h1m,
       }
     case 2:
       return {
-        _status: RESERVE_NOT_MET,
+        _status: 'reserve_not_met',
         _priceReserve: 0.1,
         _expPeriod: currentDate + plus30m,
       }
     case 3:
       return {
-        _status: RESERVE_NOT_MET,
+        _status: 'reserve_not_met',
         _expPeriod: currentDate + plus30m,
       }
     case 4:
       return {
-        _status: MINTED,
+        _status: 'minted',
       }
     case 5:
       return {
-        _status: SOLD,
+        _status: 'sold',
         _sold: 1,
         _price: 0.5,
         _expPeriod: currentDate + plus30m,
       }
     case 6:
       return {
-        _status: COLLECTED,
+        _status: 'collected',
       }
     case 7:
       return {
-        _status: CREATED,
+        _status: 'created',
         _priceReserve: 0.1,
       }
     case 8:
       return {
-        _status: UNLISTED,
+        _status: 'unlisted',
       }
     default:
       return {
-        _status: RESERVE_NOT_MET,
+        _status: 'reserve_not_met',
         _expPeriod: currentDate + plus1h1m,
       }
   }
 }
 
 // todo:
-export function getPriceLable(asset: Asset) {
-  switch (asset?._status) {
+export function getPriceLable(asset: Pick<AssetDataTypes, 'type'>) {
+  switch (asset?.type) {
     case 'auction':
-      return asset?._currentBit ? 'Current Bid' : 'Reserve Price'
-    case 'buy_now':
+      return 'Current Bid'
+    case 'instant_buy':
       return 'Buy Now'
     case 'reserve_price':
       return 'Reserve Price'

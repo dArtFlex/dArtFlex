@@ -30,7 +30,7 @@ const useTimer = (endTime: ITimerProps['endTime'], timeInterval: ITimerProps['ti
   const format = (value: number) => (value.toString().length > 1 ? value : `0${value}`)
 
   return {
-    timer: `${format(days)}:${format(hours)}:${format(minutes)}`,
+    timer: `${format(days)}:${format(hours - 24 * days)}:${format(minutes - 60 * hours)}`,
   }
 }
 

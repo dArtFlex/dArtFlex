@@ -151,7 +151,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         />
         <Field
           type="input"
-          name="other"
+          name="otherUrl"
           label="Other"
           variant="outlined"
           placeholder={'URL'}

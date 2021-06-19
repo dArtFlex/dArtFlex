@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectMinting } from 'stores/selectors'
+import { selectMinting, selectListing } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { Box } from '@material-ui/core'
 import { IStepNFT, ICreateNFT } from '../../types'
@@ -14,18 +14,35 @@ interface IStepHolderProps {
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
   const {
-    minting: { uploading, data },
+    minting: { uploading, data, minting },
   } = useSelector(selectMinting())
+  const {
+    listing: { listing },
+  } = useSelector(selectListing())
 
   const { values } = useFormikContext<ICreateNFT>()
   const [step, setStep] = useState<IStepNFT>(values.step)
 
   useEffect(() => {
-    if (uploading) {
-      return setStep(STEPS_NFT.UPLOADING)
+    if (listing === 'done') {
+      return setStep(STEPS_NFT.LISTED)
     }
-    if (!uploading && Boolean(data.image.length)) {
-      return setStep(STEPS_NFT.FILL_FORM)
+  }, [listing])
+
+  useEffect(() => {
+    if (listing !== 'done' && minting === 'done') {
+      return setStep(STEPS_NFT.MINTED)
+    }
+  }, [minting])
+
+  useEffect(() => {
+    if (minting !== 'done') {
+      if (uploading) {
+        return setStep(STEPS_NFT.UPLOADING)
+      }
+      if (!uploading && Boolean(data.image.length)) {
+        return setStep(STEPS_NFT.FILL_FORM)
+      }
     }
   }, [uploading])
 
@@ -36,7 +53,7 @@ export default function StepHolder(props: IStepHolderProps) {
   }, [values.step])
 
   useEffect(() => {
-    if (values.file === null) {
+    if (minting !== 'done' && values.file === null) {
       setStep(STEPS_NFT.UPLOAD_FILE)
     }
   }, [values.file])

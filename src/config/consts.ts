@@ -9,7 +9,7 @@ const appConst = {
     MINTED: 'minted',
     LISTED: 'listed',
     LIVE_AUCTION: 'live_auction', // That does it means the asset is LISTED on an Artwork
-    BUY_NOW: 'buy_now', // That does it means the asset is LISTED on an Artwork
+    BUY_NOW: 'instant_buy', // That does it means the asset is LISTED on an Artwork
     PLACED_BID: 'placed_bid',
     RESERVE_NOT_MET: 'reserve_not_met',
     SOLD: 'sold',

@@ -110,15 +110,10 @@ export default function Dashboard() {
                     if (filter === IN_AUCTION) {
                       return true
                     }
-                    return el._status === filter
+                    return el.type === filter
                   })
                   .map((asset, i) => (
-                    <CardAsset
-                      key={i}
-                      asset={asset}
-                      withLabel
-                      withAction={Boolean(asset._currentBit || asset._priceReserve)}
-                    />
+                    <CardAsset key={i} asset={asset} withLabel withAction={Boolean(asset.type === 'auction')} />
                   ))}
                 {!assets?.length && <Empty />}
               </>
