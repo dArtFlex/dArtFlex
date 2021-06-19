@@ -29,7 +29,7 @@ export default function Form() {
   const [openViewImage, setOpenViewImage] = useState<boolean>(false)
 
   const handleMinting = () => {
-    dispatch(lazyMintingRequest({ name: values.name, description: values.description }))
+    dispatch(lazyMintingRequest({ name: values.name, description: values.description, royalties: values.royalties }))
   }
 
   const handleList = () => history.push(routes.sellNFT)

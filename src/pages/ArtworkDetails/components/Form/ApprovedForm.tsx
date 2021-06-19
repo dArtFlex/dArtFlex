@@ -97,9 +97,6 @@ export default function ApprovedForm(props: IApprovedFormProps) {
         </Box>
         <Button
           onClick={() => {
-            if (assetDetails.infoData?._status === LIVE_AUCTION || assetDetails.infoData?._status === RESERVE_NOT_MET) {
-              // dispatch(createBidRequest({ tokenId }))
-            }
             onSubmit()
           }}
           variant={'contained'}

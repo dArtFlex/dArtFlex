@@ -48,15 +48,15 @@ export default function SellNFT() {
   const dispatch = useDispatch()
 
   const onSubmit = (state: ISellArtwork) => {
-    const type = form === 'buy_now' ? 'instant_buy' : 'auction'
+    const type = form === 'instant_buy' ? 'instant_buy' : 'auction'
     dispatch(
       listingRequest({
         data: {
           type,
           startPrice: state.startingPrice,
           endPrice: state.reservePrice,
-          startTime: state.startDate,
-          endTime: state.endDate,
+          start_time: state.startDate,
+          end_time: state.endDate,
           platfromFee: state.fee,
         },
       })

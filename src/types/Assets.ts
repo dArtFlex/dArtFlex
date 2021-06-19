@@ -1,49 +1,32 @@
-import { UserDataTypes } from './User'
+import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity, AssetType } from 'types'
 
-export interface AssetTypes {
-  id: number
+export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
+  item_id: string
+  type: AssetType
+  platform_fee: string
+  sales_token_contract: string
+  sold: boolean
+}
+
+export interface AssetTypes extends IEntity, IDatedEntity {
   contract: string
-  tokenId: string
+  token_id: string
   uri: string
   creator: string
   owner: string
   royalty: number
-  royaltyFee: number
-  lazymint: boolean
+  royalty_fee: number
   signature: string
+  lazymint: boolean
+  ban: boolean
 }
 
-export interface AssetDataTypes extends AssetTypes, AdditionalEntities {
-  data: {
-    attribute: string
-    created_at: string
-    description: string
-    id: number
-    image: string
-    image_data: string
-    name: string
-    updated_at: string
-  }
-  user: UserDataTypes
+export interface AssetDataTypes extends AssetMarketplaceTypes {
+  imageData: IImageData
+  userData: UserDataTypes
 }
 
-export type AssetStatus =
-  | 'auction'
-  | 'buy_now'
-  | 'reserve_not_met'
-  | 'reserve_price'
-  | 'sold'
-  | 'minted'
-  | 'collected'
-  | 'unlisted'
-  | 'created'
-
-// Todo: Should be discuss with BE all below entities
-export interface AdditionalEntities {
-  _status: AssetStatus
-  _sold?: number
-  _price?: number
-  _priceReserve?: number
-  _currentBit?: number
-  _expPeriod?: number
+export interface IImageData extends IImageEntity {
+  attribute: string
+  description: string
 }

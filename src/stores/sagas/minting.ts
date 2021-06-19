@@ -33,8 +33,12 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
 export function* minting(
   api: IApi,
   {
-    payload: { name, description },
-  }: PayloadAction<{ data: MintingStateType['data']['name']; description: MintingStateType['data']['description'] }>
+    payload: { name, description, royalties },
+  }: PayloadAction<{
+    data: MintingStateType['data']['name']
+    description: MintingStateType['data']['description']
+    royalties: MintingStateType['data']['royalties']
+  }>
 ) {
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
@@ -58,6 +62,7 @@ export function* minting(
         contract: '0x6ede7f3c26975aad32a475e1021d8f6f39c89d82',
         uri: tokenUri,
         creator: walletService.getAccoutns()[0],
+        royalty: royalties,
       },
     })
 

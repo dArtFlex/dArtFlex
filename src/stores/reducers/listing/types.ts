@@ -6,5 +6,6 @@ export interface ListingStateType {
   orderId: null | number
   salesDetailId: null | number
   listItemId: null | number
+  bidListItemId: null | number
   listing: 'none' | 'done'
 }

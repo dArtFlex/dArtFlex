@@ -1,4 +1,4 @@
-import { AssetDataTypes, AssetTypes, AdditionalEntities } from 'types'
+import { AssetDataTypes, AssetTypes, AssetMarketplaceTypes, UserDataTypes } from 'types'
 export interface AssetsStateType {
   fetching: boolean
   error: string
@@ -7,7 +7,8 @@ export interface AssetsStateType {
 }
 
 export interface IAssetDetails {
-  imageData: null | AssetDataTypes['data']
+  imageData: null | AssetDataTypes['imageData']
   tokenData: null | AssetTypes
-  infoData: null | AdditionalEntities
+  ownerData: null | UserDataTypes
+  marketData: null | AssetMarketplaceTypes
 }

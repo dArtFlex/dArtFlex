@@ -10,7 +10,7 @@ export const selectAssets = () =>
 export const selectAssetFromList = (id: string) =>
   createSelector(
     (store: stateType) => store,
-    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.tokenId === id) })
+    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.item_id === id) })
   )
 export const selectAsset = () =>
   createSelector(
