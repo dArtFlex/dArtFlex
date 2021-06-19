@@ -8,7 +8,8 @@ const initialState: AssetsStateType = {
   assetDetails: {
     imageData: null,
     tokenData: null,
-    infoData: null,
+    ownerData: null,
+    marketData: null,
   },
 }
 
@@ -39,12 +40,14 @@ const assetsSlice = createSlice({
       }: PayloadAction<{
         imageData: AssetsStateType['assetDetails']['imageData']
         tokenData: AssetsStateType['assetDetails']['tokenData']
-        infoData: AssetsStateType['assetDetails']['infoData']
+        ownerData: AssetsStateType['assetDetails']['ownerData']
+        marketData: AssetsStateType['assetDetails']['marketData']
       }>
     ) => {
       state.assetDetails.imageData = payload.imageData
       state.assetDetails.tokenData = payload.tokenData
-      state.assetDetails.infoData = payload.infoData
+      state.assetDetails.ownerData = payload.ownerData
+      state.assetDetails.marketData = payload.marketData
       state.fetching = false
     },
     getAssetByIdFailure: (state, { payload }: PayloadAction<string>) => {
@@ -55,7 +58,8 @@ const assetsSlice = createSlice({
     clearAssetDetails: (state) => {
       state.assetDetails.imageData = null
       state.assetDetails.tokenData = null
-      state.assetDetails.infoData = null
+      state.assetDetails.ownerData = null
+      state.assetDetails.marketData = null
     },
   },
 })

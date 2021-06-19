@@ -25,7 +25,7 @@ export default function FormContainer(props: IFormContainer) {
       return (
         <DetailsForm
           onSubmit={() => {
-            if (assetDetails.infoData?._status === BUY_NOW) {
+            if (assetDetails.marketData?.type === BUY_NOW) {
               setFormId(formId + 2)
             } else {
               setFormId(formId + 1)

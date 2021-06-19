@@ -1,6 +1,6 @@
-import { AdditionalEntities, AssetDataTypes } from 'types'
+import { AssetDataTypes } from 'types'
 
-export function createDummyAssetData(index: number): AdditionalEntities {
+export function createDummyAssetData(index: number) {
   const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
   const plus30m = 1000 * 60 * 60 * 0.5
   const currentDate = new Date().getTime()
@@ -15,7 +15,7 @@ export function createDummyAssetData(index: number): AdditionalEntities {
       }
     case 1:
       return {
-        _status: 'buy_now',
+        _status: 'instant_buy',
         _price: 0.5,
         _expPeriod: currentDate + plus1h1m,
       }
@@ -63,11 +63,11 @@ export function createDummyAssetData(index: number): AdditionalEntities {
 }
 
 // todo:
-export function getPriceLable(asset: Pick<AssetDataTypes, '_status' | '_currentBit'>) {
-  switch (asset?._status) {
+export function getPriceLable(asset: Pick<AssetDataTypes, 'type'>) {
+  switch (asset?.type) {
     case 'auction':
-      return asset?._currentBit ? 'Current Bid' : 'Reserve Price'
-    case 'buy_now':
+      return 'Current Bid'
+    case 'instant_buy':
       return 'Buy Now'
     case 'reserve_price':
       return 'Reserve Price'

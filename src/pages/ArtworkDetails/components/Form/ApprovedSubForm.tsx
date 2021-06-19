@@ -17,7 +17,7 @@ export default function ApprovedSubForm() {
   const [fetch, setFetch] = useState<boolean>(true)
   const { assetDetails } = useSelector(selectAsset())
 
-  const status = assetDetails.infoData?._status
+  const status = assetDetails.marketData?.type
 
   useEffect(() => {
     setTimeout(() => {

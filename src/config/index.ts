@@ -10,11 +10,20 @@ const APP_CONFIG = {
   baseURL: 'http://3.11.202.153/',
   localURL: 'http://localhost:3000/',
 
+  // GET All
+  getItemAll: 'http://dartflex-dev.ml:8888/api/item/get_all',
+  getMarketplaceAll: 'http://dartflex-dev.ml:8888/api/marketplace/get_all',
+
+  // GET User
   getUserProfile: (id: number) => `http://dartflex-dev.ml:8888/api/user/get/${id}`,
   getUserProfileByOwner: (owner: string) => `http://dartflex-dev.ml:8888/api/user/get/wallet/${owner}`,
-  getItemAll: 'http://dartflex-dev.ml:8888/api/item/get_all',
+  getUserByWallet: (wallet: string) => `http://dartflex-dev.ml:8888/api/user/get/wallet/${wallet}`,
+
+  // GET Asset
   getItemByTokenId: (token_id: number) => `http://dartflex-dev.ml:8888/api/item/get_by_token_id/${token_id}`,
+  getItemByItemId: (id: number) => `http://dartflex-dev.ml:8888/api/item/get/${id}`,
   getMetadata: (id: number) => `http://dartflex-dev.ml:8888/api/metadata/get/${id}`,
+  getMarketplaceItemById: (item_id: number) => `http://dartflex-dev.ml:8888/api/marketplace/get/${item_id}`,
 
   uploadImage: 'http://dartflex-dev.ml:8888/api/image/upload',
   createMetadata: 'http://dartflex-dev.ml:8888/api/metadata/create',

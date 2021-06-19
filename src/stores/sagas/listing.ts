@@ -31,8 +31,8 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         endPrice: data.type === 'instant_buy' ? '0' : data.endPrice,
         // it's Reserve Price
         // endPrice must be 0 if data.type is "instant_buy"
-        startTime: data.startTime,
-        endTime: data.type === 'instant_buy' ? '0' : data.endTime,
+        startTime: data.start_time,
+        endTime: data.type === 'instant_buy' ? '0' : data.end_time,
         // should be 0 if data.type is "instant_buy"
         salesTokenContract: '0x',
         // for ETH don't have addresse that's why use 0x
