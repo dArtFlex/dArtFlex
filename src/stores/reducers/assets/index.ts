@@ -9,6 +9,7 @@ const initialState: AssetsStateType = {
     imageData: null,
     tokenData: null,
     ownerData: null,
+    creatorData: null,
     marketData: null,
   },
 }
@@ -41,12 +42,14 @@ const assetsSlice = createSlice({
         imageData: AssetsStateType['assetDetails']['imageData']
         tokenData: AssetsStateType['assetDetails']['tokenData']
         ownerData: AssetsStateType['assetDetails']['ownerData']
+        creatorData: AssetsStateType['assetDetails']['creatorData']
         marketData: AssetsStateType['assetDetails']['marketData']
       }>
     ) => {
       state.assetDetails.imageData = payload.imageData
       state.assetDetails.tokenData = payload.tokenData
       state.assetDetails.ownerData = payload.ownerData
+      state.assetDetails.creatorData = payload.creatorData
       state.assetDetails.marketData = payload.marketData
       state.fetching = false
     },
@@ -59,6 +62,7 @@ const assetsSlice = createSlice({
       state.assetDetails.imageData = null
       state.assetDetails.tokenData = null
       state.assetDetails.ownerData = null
+      state.assetDetails.creatorData = null
       state.assetDetails.marketData = null
     },
   },

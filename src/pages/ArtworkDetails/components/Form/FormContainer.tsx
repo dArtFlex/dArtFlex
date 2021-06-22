@@ -35,11 +35,7 @@ export default function FormContainer(props: IFormContainer) {
       )
     case 2:
       return (
-        <Form
-          initialValues={initialApprovedData}
-          onCancel={() => console.log('x')}
-          onSubmit={(state: ApprovedFormState) => console.log('y', state)}
-        >
+        <Form initialValues={initialApprovedData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
           <ApprovedForm onSubmit={() => setFormId(formId + 1)} />
         </Form>
       )
