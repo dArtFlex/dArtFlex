@@ -10,5 +10,6 @@ export interface IAssetDetails {
   imageData: null | AssetDataTypes['imageData']
   tokenData: null | AssetTypes
   ownerData: null | UserDataTypes
+  creatorData: null | UserDataTypes
   marketData: null | AssetMarketplaceTypes
 }

@@ -1,9 +1,14 @@
 import React from 'react'
 import { Card, CardHeader, CardContent, Avatar, Typography } from '@material-ui/core'
-
+import { UserDataTypes } from 'types'
 import { useStyles } from './styles'
 
-export default function About() {
+interface IAbout {
+  creator: UserDataTypes
+}
+
+export default function About(props: IAbout) {
+  const { creator } = props
   const styles = useStyles()
   return (
     <Card className={styles.root} elevation={0}>
@@ -13,15 +18,12 @@ export default function About() {
           title: styles.title,
           subheader: styles.subheader,
         }}
-        avatar={<Avatar aria-label={status} className={styles.avatar} src="https://picsum.photos/200/300" />}
-        title="Giana Press"
-        subheader={<Typography className={styles.subheader}>@gianapress</Typography>}
+        avatar={<Avatar aria-label={status} className={styles.avatar} src={creator.profile_image} />}
+        title={creator.fullname}
+        subheader={<Typography className={styles.subheader}>@{creator.userid}</Typography>}
       />
       <CardContent classes={{ root: styles.footer }}>
-        <Typography className={styles.footerText}>
-          Tiana is the Co-founder and Creative Director at Toast. He is a 3D artist that specializes in creating
-          whimsical, vibrant content.
-        </Typography>
+        <Typography className={styles.footerText}>{creator.overview}</Typography>
       </CardContent>
     </Card>
   )

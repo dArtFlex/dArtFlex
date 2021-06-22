@@ -29,7 +29,6 @@ const tabsItems = [
 
 // constants should be removed when logic will be provided
 const ethRate = 2511
-const ifAuction = true
 const ifAuctionEnds = false
 
 interface IDetailsFormProps {
@@ -41,7 +40,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
   const { assetDetails } = useSelector(selectAsset())
-  const status = assetDetails.infoData?._status
+  const status = assetDetails.infoData?.type
 
   const { timer } = useTimer(assetDetails.tokenInfo?._expPeriod || 0)
   const burnTime = new Date().getTime() + 1000 * 60 * 60
@@ -75,19 +74,23 @@ export default function DetailsForm(props: IDetailsFormProps) {
             <Typography variant={'body1'} className={classes.infoTitle}>
               Creator
             </Typography>
-            <Box>
-              <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
-              <span>@gianapress</span>
+            <Box className={classes.avatarBox}>
+              <Avatar className={classes.avatar} alt="Avatar" src={assetDetails.creatorData.profile_image} />
+              <span>@{assetDetails.creatorData?.userid}</span>
             </Box>
           </Box>
-          {!ifAuction && (
+          {!assetDetails.infoData?.type === 'auction' && (
             <Box>
               <Typography variant={'body1'} className={classes.infoTitle}>
                 Owned by
               </Typography>
-              <Box>
-                <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
-                <span>{asset?.owner?.user?.username ? `@${asset.owner.user.username}` : '@you'}</span>
+              <Box className={classes.avatarBox}>
+                <Avatar className={classes.avatar} alt="Avatar" src={assetDetails.ownerData.profile_image} />
+                <span>
+                  {assetDetails.ownerData.userid !== assetDetails.creatorData.userid
+                    ? `@${assetDetails.ownerData.userid}`
+                    : '@you'}
+                </span>
               </Box>
             </Box>
           )}
@@ -219,7 +222,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
           </div>
         )}
         {tab === 1 && <History />}
-        {tab === 2 && <About />}
+        {tab === 2 && <About creator={assetDetails.creatorData} />}
       </Box>
 
       <Modal

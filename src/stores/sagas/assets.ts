@@ -64,6 +64,9 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
     const userByOwner: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserByWallet(assetById[0].owner),
     })
+    const userByCreator: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(assetById[0].creator),
+    })
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,
     })
@@ -73,6 +76,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
         tokenData: assetById[0],
         imageData: imageData[0],
         ownerData: userByOwner[0],
+        creatorData: userByCreator[0],
         marketData: marketplaceData[0],
       })
     )
