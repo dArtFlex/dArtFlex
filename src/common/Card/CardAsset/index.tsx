@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import BigNumber from 'bignumber.js'
 import { PopoverLinks } from 'common'
 import { MoreHorizontalIcon } from 'common/icons'
 import { Box, Typography, IconButton, Card, Avatar } from '@material-ui/core'
@@ -15,24 +16,25 @@ export default function CardAsset(props: ICardAssetProps) {
   const classes = useStyles()
   const history = useHistory()
 
-  const { timer } = useTimer(asset?._expPeriod || 0)
-  const burnTime = new Date().getTime() + 1000 * 60 * 60
+  const { timer } = useTimer(new Date(asset.end_time).getTime() || 0)
+  const burnTime = new Date(asset.start_time).getTime() + 1000 * 60 * 60
+  const startPrice = new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
 
   return (
     <>
-      <Card key={asset.tokenId} elevation={1}>
-        <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.token_id}`)}>
-          <img src={asset.data[0].image} />
-          {withLabel && <CardBadge status={asset._status} />}
+      <Card key={asset.item_id} elevation={1}>
+        <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}>
+          <img src={asset.imageData.image} />
+          {withLabel && <CardBadge status={asset.type} />}
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
-            {Boolean(asset.user.length) && (
+            {Boolean(asset.userData.length) && (
               <Box display={'flex'} mb={4} alignItems={'center'}>
-                <Avatar className={classes.avatar} alt="Avatar" src={asset.user[0].profile_image} />
-                <Typography variant={'h4'}>{asset.user[0].userid ? `@${asset.user[0].userid}` : '@you'}</Typography>
+                <Avatar className={classes.avatar} alt="Avatar" src={asset.userData.profile_image} />
+                <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
               </Box>
             )}
 
@@ -48,15 +50,15 @@ export default function CardAsset(props: ICardAssetProps) {
               </IconButton>
             )}
           </Box>
-          <Typography variant={'h4'}>{asset.data[0].name}</Typography>
+          <Typography variant={'h4'}>{asset.imageData.name}</Typography>
         </Box>
         <CardActions
-          status={asset._status}
-          currentBit={asset._currentBit}
-          priceReserve={asset._priceReserve}
-          price={asset._price}
-          sold={asset._sold}
-          expPeriod={asset._expPeriod}
+          status={asset.type}
+          currentBit={asset.end_price}
+          priceReserve={asset.end_price}
+          price={startPrice}
+          sold={asset.sold}
+          expPeriod={asset.end_time}
           burnTime={burnTime}
           timer={timer}
         />
