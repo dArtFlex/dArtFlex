@@ -12,10 +12,10 @@ import APP_CONFIG from 'config'
 
 function* getUserData(api: IApi, owner: string) {
   try {
-    const userData: UserDataTypes = yield call(api, {
+    const userData: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserProfileByOwner(owner),
     })
-    return { user: userData }
+    return userData[0]
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }
@@ -23,15 +23,15 @@ function* getUserData(api: IApi, owner: string) {
 
 function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
   try {
-    const assetById: AssetTypes = yield call(api, {
+    const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(parseFloat(asset.item_id)),
     })
-    const userData: AssetDataTypes['userData'] = yield call(getUserData, api, assetById.owner)
-    const imageData: AssetDataTypes['imageData'] = yield call(api, {
-      url: assetById.uri,
+    const userData: UserDataTypes = yield call(getUserData, api, assetById[0].owner)
+    const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+      url: assetById[0].uri,
     })
 
-    return { ...asset, imageData, userData }
+    return { ...asset, imageData: imageData[0], userData }
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }

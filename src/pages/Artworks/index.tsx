@@ -275,7 +275,7 @@ export default function Artworks() {
                 if (filter === FEATURED_ARTWORKS) {
                   return true
                 }
-                return el._status === filter
+                return el.type === filter
               })
               .map((asset, i) => <CardAsset key={i} asset={asset} />)
           )}
