@@ -41,7 +41,9 @@ export function* createNewUser(
     const { profile_image, cover_image, fullname, userid, email, overview, socials } = accountSettings
     const { website, twitter, instagram, discord, facebook, youtube, tiktok, otherUrl } = socials
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const coverImageUrl: string = yield call(uploadImage as any, api, cover_image)
 
     const formData = new FormData()

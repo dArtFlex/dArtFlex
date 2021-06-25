@@ -20,6 +20,9 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const accounts = walletService.getAccoutns()
 
     const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
+    const endPrice = yield web3.utils.toWei(data.endPrice, 'ether')
+
+    const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 
     const marketId = yield call(api, {
       url: APP_CONFIG.createSalesDetail,
@@ -28,13 +31,13 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         itemId: lazyMintItemId,
         type: data.type,
         startPrice: startPrice,
-        endPrice: data.type === 'instant_buy' ? '0' : data.endPrice,
+        endPrice: data.type === 'instant_buy' ? '0' : endPrice,
         // it's Reserve Price
         // endPrice must be 0 if data.type is "instant_buy"
         startTime: data.start_time,
         endTime: data.type === 'instant_buy' ? '0' : data.end_time,
         // should be 0 if data.type is "instant_buy"
-        salesTokenContract: '0x',
+        salesTokenContract: data.type === 'instant_buy' ? '0x' : WETH_Contract_Rinkeby,
         // for ETH don't have addresse that's why use 0x
         // token contract address ETH, DAF etc.
         platfromFee: data.platfromFee,
@@ -87,7 +90,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         bidAmount: startPrice,
         // bidAmount the same with startPrice
         marketId: getIdFromString(marketId),
-        bidContract: '0x',
+        bidContract: data.type === 'instant_buy' ? '0x' : WETH_Contract_Rinkeby,
         // Sells token contract
         // for ETH don't have addresse that's why use 0x
         // token contract address ETH, DAF etc.
@@ -106,7 +109,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         bidAmount: startPrice,
         marketId: getIdFromString(marketId),
         // 0x only ETH
-        bidContract: '0x',
+        bidContract: data.type === 'instant_buy' ? '0x' : WETH_Contract_Rinkeby,
       },
     })
 
