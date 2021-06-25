@@ -7,13 +7,8 @@ import { Field, InputAdornment } from 'common'
 import { InfoIcon } from 'common/icons'
 // import { createBidRequest } from 'stores/reducers/auction'
 import { selectAsset } from 'stores/selectors'
-import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { IApprovedFormProps, ApprovedFormState } from './types'
-
-const {
-  FILTER_VALUES: { LIVE_AUCTION, RESERVE_NOT_MET },
-} = appConst
 
 export default function ApprovedForm(props: IApprovedFormProps) {
   const { onSubmit } = props
