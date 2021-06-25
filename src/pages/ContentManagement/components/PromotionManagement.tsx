@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { Box, Button, Icon, IconButton, Paper, Typography } from '@material-ui/core'
+import { Box, Button, Icon, List, ListItem, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
-import { DragIcon, EditIcon, PlusHugeIcon, PlusSmallIcon, TrashIcon } from '../../../common/icons'
+import { PlusSmallIcon } from '../../../common/icons'
 import NFTCard from './NFTCard'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 export default function PromotionManagement() {
   const classes = useStyles()
-
-  const [isEditNFT, setIsEditNFT] = useState()
 
   const NFTs = [
     {
@@ -36,6 +35,16 @@ export default function PromotionManagement() {
     },
   ]
 
+  const [artworks, setArtworks] = useState(NFTs)
+
+  function handleOnDragEnd(res: any) {
+    if (!res.destination) return
+    const items = Array.from(artworks)
+    const [reorderedItem] = items.splice(res.source.index, 1)
+    items.splice(res.destination.index, 0, reorderedItem)
+    setArtworks(items)
+  }
+
   return (
     <Box className={classes.managementWrapper}>
       <Box display="flex" alignItems="center" ml={7}>
@@ -44,9 +53,34 @@ export default function PromotionManagement() {
         </Typography>
         <Typography className={classes.textSecondary}>(6 recommended)</Typography>
       </Box>
-      {NFTs.map((item) => {
-        return <NFTCard url={item.url} name={item.name} key={item.id} />
-      })}
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="NFTCard">
+          {(provided) => {
+            return (
+              <List {...provided.droppableProps} ref={provided.innerRef}>
+                {artworks.map((item, index) => {
+                  return (
+                    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                      {(provided) => {
+                        return (
+                          <ListItem
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            classes={{ root: classes.listItem }}
+                          >
+                            <NFTCard url={item.url} name={item.name} />
+                          </ListItem>
+                        )
+                      }}
+                    </Draggable>
+                  )
+                })}
+              </List>
+            )
+          }}
+        </Droppable>
+      </DragDropContext>
       <Box mt={6} ml={6}>
         <Box display="flex">
           <Button classes={{ label: classes.addButton }}>

@@ -3,6 +3,7 @@ import { PageWrapper } from '../../common'
 import { Box, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
 import PromotionManagement from './components/PromotionManagement'
+import ContentManagementTab from './components/ContentManagementTab'
 
 export default function ContentManagement() {
   const classes = useStyles()
@@ -48,7 +49,7 @@ export default function ContentManagement() {
             </Tabs>
           </Paper>
           {Boolean(tab === 0) && <PromotionManagement />}
-          {Boolean(tab === 1) && <div>Ban</div>}
+          {Boolean(tab === 1) && <ContentManagementTab />}
         </Box>
       </>
     </PageWrapper>

@@ -22,7 +22,7 @@ export default function NFTCard(props: INFTCard) {
               {isEdit ? (
                 <>
                   <Typography className={classes.NFTLink}>Link</Typography>
-                  <input value={props.url} className={classes.NFTInputBox} />
+                  <input value={props.url} className={classes.NFTInputBox} onChange={() => console.log('Change url')} />
                   <IconButton className={classes.CheckedIcon} onClick={() => setIsEdit(false)}>
                     <CheckedIcon />
                   </IconButton>
