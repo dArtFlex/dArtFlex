@@ -12,15 +12,12 @@ const {
   FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET },
 } = appConst
 
-interface IApprovedSubFormProps {
-  tokenId: string
-}
-
-export default function ApprovedSubForm(props: IApprovedSubFormProps) {
-  const { tokenId } = props
+export default function ApprovedSubForm() {
   const classes = useStyles()
   const [fetch, setFetch] = useState<boolean>(true)
-  const { asset } = useSelector(selectAsset(tokenId))
+  const { assetDetails } = useSelector(selectAsset())
+
+  const status = assetDetails.marketData?.type
 
   useEffect(() => {
     setTimeout(() => {
@@ -33,8 +30,8 @@ export default function ApprovedSubForm(props: IApprovedSubFormProps) {
       <Box className={classes.formContant}>
         <Box mb={4}>
           <Typography variant="h1" component="p">
-            {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && `Your bid has been submitted!`}
-            {asset?._status === BUY_NOW && `Your transaction has started`}
+            {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && `Your bid has been submitted!`}
+            {status === BUY_NOW && `Your transaction has started`}
           </Typography>
         </Box>
         <Box mb={5.5}>
@@ -42,12 +39,12 @@ export default function ApprovedSubForm(props: IApprovedSubFormProps) {
         </Box>
         <Box mb={5}>
           <Box className={classes.infoRowIcon}>
-            {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+            {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && (
               <Typography
                 className={classes.warningText}
               >{`Your bid is being confirmed on the Ethereum blockchain. You are free to leave this page if you like`}</Typography>
             )}
-            {asset?._status === BUY_NOW && (
+            {status === BUY_NOW && (
               <Box className={classes.warningSubText}>
                 <Box mb={4}>
                   <Typography className={classes.warningText}>
@@ -72,12 +69,12 @@ export default function ApprovedSubForm(props: IApprovedSubFormProps) {
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
-          {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+          {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && (
             <Typography variant="h1" component="p">
               Your bid was placed successfully!
             </Typography>
           )}
-          {asset?._status === BUY_NOW && (
+          {status === BUY_NOW && (
             <Typography variant="h1" component="p">
               Your transaction succeeded
             </Typography>
@@ -86,7 +83,7 @@ export default function ApprovedSubForm(props: IApprovedSubFormProps) {
         <Box mb={5.5}>
           <SuccessfullyIcon />
         </Box>
-        {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+        {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && (
           <Box mb={5}>
             <Box className={classes.infoRowIcon}>
               <Typography
@@ -99,12 +96,12 @@ export default function ApprovedSubForm(props: IApprovedSubFormProps) {
           <ExternalLinkIcon />
           <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
         </Box>
-        {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+        {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && (
           <Button variant={'outlined'} color={'secondary'} disableElevation className={clsx(classes.bitViewBtn)}>
             View Artwork
           </Button>
         )}
-        {asset?._status === BUY_NOW && (
+        {status === BUY_NOW && (
           <Button variant={'outlined'} color={'secondary'} disableElevation className={clsx(classes.bitViewBtn)}>
             View My Profile
           </Button>

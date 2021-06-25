@@ -7,10 +7,15 @@ export const selectAssets = () =>
     (store: stateType) => store,
     ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
   )
-export const selectAsset = (id: string) =>
+export const selectAssetFromList = (id: string) =>
   createSelector(
     (store: stateType) => store,
-    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.tokenId === id) })
+    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.item_id === id) })
+  )
+export const selectAsset = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { assetDetails, fetching } }: stateType) => ({ assetDetails, fetching })
   )
 
 // User
@@ -37,4 +42,11 @@ export const selectMinting = () =>
   createSelector(
     (store: stateType) => store,
     ({ minting }: stateType) => ({ minting })
+  )
+
+// Listing
+export const selectListing = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ listing }: stateType) => ({ listing })
   )

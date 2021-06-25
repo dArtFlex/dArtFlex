@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -7,18 +7,12 @@ import { Field, InputAdornment } from 'common'
 import { InfoIcon } from 'common/icons'
 // import { createBidRequest } from 'stores/reducers/auction'
 import { selectAsset } from 'stores/selectors'
-import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { IApprovedFormProps, ApprovedFormState } from './types'
 
-const {
-  FILTER_VALUES: { LIVE_AUCTION, RESERVE_NOT_MET },
-} = appConst
-
 export default function ApprovedForm(props: IApprovedFormProps) {
-  const { tokenId, onSubmit } = props
-  const { asset } = useSelector(selectAsset(tokenId))
-  const dispatch = useDispatch()
+  const { onSubmit } = props
+  const { assetDetails } = useSelector(selectAsset())
   const classes = useStyles()
 
   const { values } = useFormikContext<ApprovedFormState>()
@@ -98,9 +92,6 @@ export default function ApprovedForm(props: IApprovedFormProps) {
         </Box>
         <Button
           onClick={() => {
-            if (asset?._status === LIVE_AUCTION || asset?._status === RESERVE_NOT_MET) {
-              // dispatch(createBidRequest({ tokenId }))
-            }
             onSubmit()
           }}
           variant={'contained'}

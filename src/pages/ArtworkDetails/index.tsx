@@ -1,20 +1,33 @@
 //@ts-nocheck
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
 import { PageWrapper, CardAsset } from 'common'
 import { FormContainer } from './components'
 import { ArrowExpandIcon } from 'common/icons'
 import { selectAsset } from 'stores/selectors'
+import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
 import { useStyles } from './styles'
 
 export default function ArtworkDetails() {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { id } = useParams<{ id: string }>()
-  const { asset } = useSelector(selectAsset(id))
+  const { assetDetails } = useSelector(selectAsset())
   const [formId, setFormId] = useState<number>(1)
+
+  useEffect(() => {
+    dispatch(getAssetByIdRequest(id))
+    return () => {
+      dispatch(clearAssetDetails())
+    }
+  }, [])
+
+  if (assetDetails.tokenData === null) {
+    return null
+  }
 
   return (
     <PageWrapper>
@@ -26,14 +39,14 @@ export default function ArtworkDetails() {
             </Box>
           ) : (
             <Box className={classes.previewContainer}>
-              <img src={asset?.image} />
+              <img src={assetDetails.imageData?.image} />
               <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
                 <ArrowExpandIcon />
               </IconButton>
             </Box>
           )}
         </Box>
-        <FormContainer tokenId={id} formId={formId} setFormId={setFormId} />
+        <FormContainer formId={formId} setFormId={setFormId} />
       </Box>
     </PageWrapper>
   )

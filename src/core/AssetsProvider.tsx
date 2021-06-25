@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { getAssetsRequest } from 'stores/reducers/assets'
+import { getAssetsAllRequest } from 'stores/reducers/assets'
 import { CircularProgressLoader } from 'common'
 
 export const AssetsProvider: React.FC = ({ children }) => {
@@ -9,7 +9,7 @@ export const AssetsProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     function setWallets() {
-      dispatch(getAssetsRequest())
+      dispatch(getAssetsAllRequest())
       setReady(true)
     }
 

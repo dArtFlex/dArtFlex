@@ -1,9 +1,15 @@
-import { AssetDataTypes } from 'types'
-export interface AssetsStateType extends Asset {
+import { AssetDataTypes, AssetTypes, AssetMarketplaceTypes, UserDataTypes } from 'types'
+export interface AssetsStateType {
   fetching: boolean
   error: string
+  assets: null | AssetDataTypes[]
+  assetDetails: IAssetDetails
 }
 
-export interface Asset {
-  assets: Array<AssetDataTypes> | null
+export interface IAssetDetails {
+  imageData: null | AssetDataTypes['imageData']
+  tokenData: null | AssetTypes
+  ownerData: null | UserDataTypes
+  creatorData: null | UserDataTypes
+  marketData: null | AssetMarketplaceTypes
 }

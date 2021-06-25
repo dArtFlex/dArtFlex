@@ -20,7 +20,7 @@ const initialData: ICreateNFT = {
   file: null,
   name: '',
   description: '',
-  royalties: 0,
+  royalties: '',
   step: STEPS_NFT.UPLOAD_FILE,
 }
 
@@ -42,7 +42,9 @@ export default function CreateNFT() {
                 <Stepper step={step} />
                 {step === STEPS_NFT.UPLOAD_FILE && <DropZone />}
                 {step === STEPS_NFT.UPLOADING && <Uploading />}
-                {(step === STEPS_NFT.FILL_FORM || step === STEPS_NFT.MINTED) && <FormCreateNFT />}
+                {(step === STEPS_NFT.FILL_FORM || step === STEPS_NFT.MINTED || step === STEPS_NFT.LISTED) && (
+                  <FormCreateNFT />
+                )}
               </>
             )}
           </StepHolder>

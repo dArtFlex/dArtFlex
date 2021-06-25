@@ -33,6 +33,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'inline-flex',
       marginRight: theme.spacing(2),
     },
+    avatarBox: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     bitBtn: {
       marginBottom: theme.spacing(6),
     },

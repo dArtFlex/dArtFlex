@@ -21,7 +21,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
 
-  const bids = ['0x']
+  const bids: Array<string> = []
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)

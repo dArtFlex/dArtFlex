@@ -29,20 +29,20 @@ const tabsItems = [
 
 // constants should be removed when logic will be provided
 const ethRate = 2511
-const ifAuction = true
 const ifAuctionEnds = false
 
 interface IDetailsFormProps {
-  tokenId: string
   onSubmit: () => void
 }
 
 export default function DetailsForm(props: IDetailsFormProps) {
-  const { onSubmit, tokenId } = props
+  const { onSubmit } = props
   const classes = useStyles()
-  const { asset } = useSelector(selectAsset(tokenId))
   const { wallet } = useSelector(selectWallet())
-  const { timer } = useTimer(asset?._expPeriod || 0)
+  const { assetDetails } = useSelector(selectAsset())
+  const status = assetDetails.infoData?.type
+
+  const { timer } = useTimer(assetDetails.tokenInfo?._expPeriod || 0)
   const burnTime = new Date().getTime() + 1000 * 60 * 60
 
   const [tab, setTab] = useState(0)
@@ -53,7 +53,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
     <>
       <Box pt={14}>
         <Box className={classes.title}>
-          <Typography variant={'h2'}>{asset?.name}</Typography>
+          <Typography variant={'h2'}>{assetDetails.imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
             <IconButton className={classes.borderdIconButton}>
               <ShareIcon />
@@ -74,19 +74,23 @@ export default function DetailsForm(props: IDetailsFormProps) {
             <Typography variant={'body1'} className={classes.infoTitle}>
               Creator
             </Typography>
-            <Box>
-              <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
-              <span>@gianapress</span>
+            <Box className={classes.avatarBox}>
+              <Avatar className={classes.avatar} alt="Avatar" src={assetDetails.creatorData.profile_image} />
+              <span>@{assetDetails.creatorData?.userid}</span>
             </Box>
           </Box>
-          {!ifAuction && (
+          {!assetDetails.infoData?.type === 'auction' && (
             <Box>
               <Typography variant={'body1'} className={classes.infoTitle}>
                 Owned by
               </Typography>
-              <Box>
-                <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
-                <span>{asset?.owner?.user?.username ? `@${asset.owner.user.username}` : '@you'}</span>
+              <Box className={classes.avatarBox}>
+                <Avatar className={classes.avatar} alt="Avatar" src={assetDetails.ownerData.profile_image} />
+                <span>
+                  {assetDetails.ownerData.userid !== assetDetails.creatorData.userid
+                    ? `@${assetDetails.ownerData.userid}`
+                    : '@you'}
+                </span>
               </Box>
             </Box>
           )}
@@ -94,52 +98,69 @@ export default function DetailsForm(props: IDetailsFormProps) {
         <Box className={classes.infoRow} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              {asset?._status === LIVE_AUCTION && <span>{asset._currentBit ? 'Current Bid' : 'Reserve Price'}</span>}
-              {asset?._status === BUY_NOW && <span>Buy Now Price</span>}
-              {asset?._status === RESERVE_NOT_MET && <span>Reserve Price</span>}
-              {asset?._status === SOLD && <span>Sold for</span>}
+              {status === LIVE_AUCTION && (
+                <span>{assetDetails.infoData._currentBit ? 'Current Bid' : 'Reserve Price'}</span>
+              )}
+              {status === BUY_NOW && <span>Buy Now Price</span>}
+              {status === RESERVE_NOT_MET && <span>Reserve Price</span>}
+              {status === SOLD && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>
-              {asset?._status === LIVE_AUCTION && `${asset?._priceReserve || asset?._currentBit} ETH`}
-              {asset?._status === BUY_NOW && `${asset?._price} ETH`}
-              {asset?._status === RESERVE_NOT_MET ? (asset?._priceReserve ? `${asset?._priceReserve} ETH` : '-') : ''}
-              {asset?._status === SOLD && `${asset._sold} ETH`}
+              {status === LIVE_AUCTION &&
+                `${assetDetails.infoData?._priceReserve || assetDetails.infoData?._currentBit} ETH`}
+              {status === BUY_NOW && `${assetDetails.infoData?._price} ETH`}
+              {status === RESERVE_NOT_MET
+                ? assetDetails.infoData?._priceReserve
+                  ? `${assetDetails.infoData?._priceReserve} ETH`
+                  : '-'
+                : ''}
+              {status === SOLD && `${assetDetails.infoData._sold} ETH`}
             </Typography>
             <span>
-              {asset?._status === LIVE_AUCTION &&
-                `$${(asset?._priceReserve * ethRate).toFixed(1) || (asset?._currentBit * ethRate).toFixed(1)}`}
-              {asset?._status === BUY_NOW && `$${(asset?._price * ethRate).toFixed(1)}`}
-              {asset?._status === RESERVE_NOT_MET
-                ? asset?._priceReserve
-                  ? `$${(asset?._priceReserve * ethRate).toFixed(1)}`
+              {status === LIVE_AUCTION &&
+                `$${
+                  (assetDetails.infoData?._priceReserve * ethRate).toFixed(1) ||
+                  (assetDetails.infoData?._currentBit * ethRate).toFixed(1)
+                }`}
+              {status === BUY_NOW && `$${(assetDetails.infoData?._price * ethRate).toFixed(1)}`}
+              {status === RESERVE_NOT_MET
+                ? assetDetails.infoData?._priceReserve
+                  ? `$${(assetDetails.infoData?._priceReserve * ethRate).toFixed(1)}`
                   : ''
                 : ''}
-              {asset?._status === SOLD && `$${asset._sold * ethRate}`}
+              {status === SOLD && `$${assetDetails.infoData._sold * ethRate}`}
             </span>
           </Box>
-          {asset?._status === LIVE_AUCTION && asset._currentBit && (
+          {status === LIVE_AUCTION && assetDetails.infoData._currentBit && (
             <Box>
               <Box className={classes.infoRowIcon}>
                 <Typography variant={'body1'}>Auction Ending In </Typography>
                 <InfoIcon />
               </Box>
-              <Box className={clsx(classes.timerBox, asset._expPeriod < burnTime && classes.timerBoxBurn)}>
-                {asset._expPeriod < burnTime && <BurnIcon className={classes.actionBtnIcon} />}
-                <Typography className={clsx(asset._expPeriod < burnTime && classes.actionBtnBurn)} variant={'h2'}>
+              <Box
+                className={clsx(classes.timerBox, assetDetails.infoData._expPeriod < burnTime && classes.timerBoxBurn)}
+              >
+                {assetDetails.infoData._expPeriod < burnTime && <BurnIcon className={classes.actionBtnIcon} />}
+                <Typography
+                  className={clsx(assetDetails.infoData._expPeriod < burnTime && classes.actionBtnBurn)}
+                  variant={'h2'}
+                >
                   {timer}
                 </Typography>
               </Box>
             </Box>
           )}
         </Box>
-        {asset?._status === RESERVE_NOT_MET && !asset?._currentBit && asset?._priceReserve !== undefined && (
-          <Box className={classes.warningBox}>
-            <Typography component="span" className={classes.warningText}>
-              Once a bid has been placed and the reserve price has been met, a 24 hour auction for this artwork will
-              begin.
-            </Typography>
-          </Box>
-        )}
+        {status === RESERVE_NOT_MET &&
+          !assetDetails.infoData?._currentBit &&
+          assetDetails.infoData?._priceReserve !== undefined && (
+            <Box className={classes.warningBox}>
+              <Typography component="span" className={classes.warningText}>
+                Once a bid has been placed and the reserve price has been met, a 24 hour auction for this artwork will
+                begin.
+              </Typography>
+            </Box>
+          )}
         {ifAuctionEnds && (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
@@ -148,7 +169,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
             </Typography>
           </Box>
         )}
-        {(asset?._status === RESERVE_NOT_MET || asset?._status === LIVE_AUCTION) && (
+        {(status === RESERVE_NOT_MET || status === LIVE_AUCTION) && (
           <Button
             onClick={() => {
               if (wallet) {
@@ -166,7 +187,7 @@ export default function DetailsForm(props: IDetailsFormProps) {
             {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
           </Button>
         )}
-        {asset?._status === BUY_NOW && (
+        {status === BUY_NOW && (
           <Button
             onClick={() => {
               if (wallet) {
@@ -197,11 +218,11 @@ export default function DetailsForm(props: IDetailsFormProps) {
         </Tabs>
         {tab === 0 && (
           <div className={classes.tabContant}>
-            <p>{asset?.description}</p>
+            <p>{assetDetails.imageData?.description}</p>
           </div>
         )}
         {tab === 1 && <History />}
-        {tab === 2 && <About />}
+        {tab === 2 && <About creator={assetDetails.creatorData} />}
       </Box>
 
       <Modal

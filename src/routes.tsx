@@ -13,4 +13,5 @@ export default {
   bidDetails: '/artworks/my-bids/:id',
   sales: '/artworks/my-sales',
   contentManagement: '/content-management',
+  makeOffer: '/make-offer',
 }
