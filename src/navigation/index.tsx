@@ -6,17 +6,15 @@ import routes from '../routes'
 import RouteHOC from './RouteHOC'
 import Bids, { BidDetails } from 'pages/Bids'
 import Sales from 'pages/Sales'
-import {
-  ContentManagement,
-  ArtworkDetails,
-  Artworks,
-  AccountSettings,
-  Dashboard,
-  SellNFT,
-  CreateNFT,
-  Constructor,
-  TradingHistory,
-} from '../pages/index'
+import Artworks from '../pages/Artworks'
+import AccountSettings from '../pages/AccountSettings'
+import Dashboard from '../pages/Dashboard'
+import SellNFT from '../pages/SellNFT'
+import CreateNFT from '../pages/CreateNFT'
+import Constructor from '../pages/Constructor'
+import TradingHistory from '../pages/TradingHistory'
+import ArtworkDetails from '../pages/ArtworkDetails'
+import ContentManagement from '../pages/ContentManagement'
 
 export const history = createBrowserHistory()
 
@@ -67,6 +65,7 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
       component: <ArtworkDetails />,
       hiddenFooter: true,
     },
+
     {
       path: routes.blog,
       component: <div>blog</div>,
