@@ -19,6 +19,7 @@ const palette = {
   redMiddle: '#EB5757', //disconnect
   violet: '#5F4EC2',
   lightPink: '#FFF7F2',
+  lightViolet: '#8566FF',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
