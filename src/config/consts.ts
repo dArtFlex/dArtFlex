@@ -32,6 +32,9 @@ const appConst = {
     SPECIFIC: 'specific',
     NEVER: 'never',
   },
+  INTERVALS: {
+    UPDATE_ASSETS: 30000, // in 0,5 min
+  },
 }
 
 export default appConst

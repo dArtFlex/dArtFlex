@@ -1,4 +1,5 @@
-import { AssetDataTypes } from 'types'
+//@ts-nocheck
+import { AssetDataTypes, AssetMarketplaceTypes, AssetStatus } from 'types'
 
 export function createDummyAssetData(index: number) {
   const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
@@ -73,5 +74,33 @@ export function getPriceLable(asset: Pick<AssetDataTypes, 'type'>) {
       return 'Reserve Price'
     case 'sold':
       return 'Sold for'
+  }
+}
+
+export function getAssetStatus({
+  type,
+  start_price,
+  end_price,
+  start_time,
+  end_time,
+  sold,
+}: Omit<
+  AssetMarketplaceTypes,
+  'item_id' & 'id' & 'platform_fee' & 'sales_token_contract' & 'end_time' & 'start_time'
+> & { start_time: Date | string; end_time: Date | string }): AssetStatus | undefined {
+  if (type !== 'auction' && type !== 'instant_buy') {
+    throw new Error(`Insufficient type: ${type}`)
+  }
+
+  const now_time = new Date()
+  if (type === 'instant_buy') {
+    return 'buy_now'
+  } else if (type === 'auction') {
+    if (new Date(end_time).getTime() < now_time.getTime() + 1000 * 60 * 60 * 24) {
+      return 'reserve_not_met'
+    }
+    return 'auction'
+  } else if (sold) {
+    return 'sold'
   }
 }

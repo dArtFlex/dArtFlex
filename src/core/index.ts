@@ -1,2 +1,2 @@
 export * from './abi'
-export { AssetsProvider } from './AssetsProvider'
+export { DataProvider } from './DataProvider'

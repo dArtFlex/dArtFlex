@@ -6,3 +6,8 @@ export const acceptFileTypes = (fileExt: string) =>
 export function daysInMonth(month: number, year: number) {
   return new Date(year, month, 0).getDate()
 }
+
+export function getIdFromString(v: string): number | null {
+  const getId = v.match(/\d/g)
+  return getId ? Number(getId.join('')) : null
+}

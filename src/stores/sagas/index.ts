@@ -1,17 +1,19 @@
 import { takeLatest, all } from 'redux-saga/effects'
 import apiMiddleware from '../../services/api_middleware'
+
 import { getUserDataRequest, createNewUserRequest } from '../reducers/user'
 import { getAssetsAllRequest, getAssetByIdRequest } from '../reducers/assets'
 import { connectMetaMaskRequest, connnectWalletConnectRequest } from '../reducers/wallet'
-
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
+import { placeBidRequest } from '../reducers/placeBid'
+
 import { getUserData, createNewUser } from '../sagas/user'
 import { getAssetsAllData, getAssetById } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect } from '../sagas/wallet'
-
 import { minting, uploadImage } from '../sagas/minting'
 import { listing } from '../sagas/listing'
+import { placeBid } from '../sagas/placeBid'
 
 export default function* root() {
   yield all([
@@ -29,5 +31,7 @@ export default function* root() {
     takeLatest(uploadImageRequest.type, uploadImage, apiMiddleware),
     /** Listing **/
     takeLatest(listingRequest.type, listing, apiMiddleware),
+    /** Place Bid **/
+    takeLatest(placeBidRequest.type, placeBid, apiMiddleware),
   ])
 }

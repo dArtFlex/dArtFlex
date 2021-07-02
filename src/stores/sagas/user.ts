@@ -2,18 +2,38 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put } from 'redux-saga/effects'
 import { history } from '../../navigation'
-import { getUserDataFailure, getUserDataSuccess, createNewUserSuccess, createNewUserFailure } from '../reducers/user'
+import {
+  getUserDataFailure,
+  getUserDataSuccess,
+  createNewUserSuccess,
+  createNewUserFailure,
+} from 'stores/reducers/user'
+import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
+import { UserDataTypes } from 'types'
 import APP_CONFIG from 'config'
+import { getIdFromString } from 'utils'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function* getUserData(api: IApi) {
+export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
-    yield put(getUserDataSuccess({ id: 'user id' }))
+    const userData: UserStateType['user'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(payload.wallet),
+    })
+    yield put(getUserDataSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
-    localStorage.removeItem('token')
     history.push('/')
     yield put(getUserDataFailure(message))
+  }
+}
+
+export function* getUserDataByOwner(api: IApi, owner: string) {
+  try {
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByOwner(owner),
+    })
+    return userData[0]
+  } catch (e) {
+    yield put(getUserDataFailure(e.message || e))
   }
 }
 
@@ -63,16 +83,18 @@ export function* createNewUser(
     formData.append('tiktok', tiktok)
     formData.append('otherUrl', otherUrl)
 
-    const response: string = yield call(api, {
+    const userProfileId: string = yield call(api, {
       method: 'POST',
       url: 'http://3.11.202.153:8888/api/user/create',
       data: formData,
       transform: false,
     })
 
-    // @ts-ignore: Unreachable code error
-    const profileId = response.match(/\d/g).join('') || ''
-    yield put(createNewUserSuccess(profileId))
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(getIdFromString(userProfileId) as number),
+    })
+
+    yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
   }

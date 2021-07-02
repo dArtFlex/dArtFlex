@@ -1,4 +1,5 @@
 import React from 'react'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { Box, Button, Typography, ButtonBase } from '@material-ui/core'
 import { TimeIcon, BurnIcon } from 'common/icons'
@@ -14,6 +15,19 @@ export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
   const { status, currentBit, priceReserve, price, sold, expPeriod = 0, burnTime = 0, timer } = props
 
+  const priceReserveToCoin = priceReserve
+    ? new BigNumber(priceReserve)
+        .dividedBy(`10e${18 - 1}`)
+        .toNumber()
+        .toFixed(2)
+    : priceReserve
+  const currentBitToCoin = currentBit
+    ? new BigNumber(currentBit)
+        .dividedBy(`10e${18 - 1}`)
+        .toNumber()
+        .toFixed(2)
+    : currentBit
+
   switch (status) {
     case MINTED:
       return (
@@ -26,7 +40,10 @@ export default function CardActions(props: ICardActionsProps) {
     case LIVE_AUCTION:
       return (
         <Box className={classes.cardAction}>
-          <Section text={currentBit ? 'Current Bid' : 'Reserve Price'} value={`${priceReserve || currentBit} ETH`} />
+          <Section
+            text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
+            value={`${priceReserveToCoin || currentBitToCoin} ETH`}
+          />
           <ButtonBase className={clsx(classes.actionBtn, expPeriod < burnTime && classes.actionBtnBurn)}>
             {expPeriod < burnTime ? (
               <BurnIcon className={classes.actionBtnIcon} />
@@ -46,7 +63,7 @@ export default function CardActions(props: ICardActionsProps) {
     case RESERVE_NOT_MET:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Reserve Price'} value={priceReserve ? `${priceReserve} ETH` : '-'} />
+          <Section text={'Reserve Price'} value={priceReserveToCoin ? `${priceReserveToCoin} ETH` : '-'} />
         </Box>
       )
     case SOLD:
@@ -69,7 +86,7 @@ export default function CardActions(props: ICardActionsProps) {
     case CREATED:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionNotMet)}>
-          <Section text={'Reserve Not Met'} value={`${priceReserve} ETH`} />
+          <Section text={'Reserve Not Met'} value={`${priceReserveToCoin} ETH`} />
         </Box>
       )
     case UNLISTED:

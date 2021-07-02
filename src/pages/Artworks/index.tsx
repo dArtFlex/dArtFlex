@@ -267,7 +267,7 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {fetching ? (
+          {!assets?.length && fetching ? (
             <CircularProgressLoader />
           ) : (
             assets

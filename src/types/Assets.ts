@@ -26,7 +26,13 @@ export interface AssetDataTypes extends AssetMarketplaceTypes {
   userData: UserDataTypes
 }
 
+export interface AssetDataTypesWithStatuses {
+  status: AssetStatus
+}
+
 export interface IImageData extends IImageEntity {
   attribute: string
   description: string
 }
+
+export type AssetStatus = 'auction' | 'buy_now' | 'reserve_not_met' | 'sold' | 'minted' | 'collected' | 'unlisted'

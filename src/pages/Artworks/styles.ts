@@ -62,7 +62,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     grid: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fit, 325px)',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 1fr))',
     },
     promotionBox: {
       display: 'flex',
