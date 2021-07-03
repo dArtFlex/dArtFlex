@@ -1,8 +1,4 @@
-import appConst from 'config/consts'
-
-const {
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, MINTED, UNLISTED, COLLECTED, CREATED },
-} = appConst
+import { IAssetType, IAssetStatus } from 'types'
 
 export interface ICardAssetProps {
   asset: any
@@ -10,18 +6,9 @@ export interface ICardAssetProps {
   withAction?: boolean
 }
 
-type UserResponse =
-  | typeof LIVE_AUCTION
-  | typeof BUY_NOW
-  | typeof RESERVE_NOT_MET
-  | typeof SOLD
-  | typeof MINTED
-  | typeof UNLISTED
-  | typeof COLLECTED
-  | typeof CREATED
-
 export interface ICardActionsProps {
-  status: UserResponse
+  status: IAssetStatus
+  type: IAssetType
   onAction?: () => void
   currentBit?: number
   priceReserve?: number
@@ -32,4 +19,4 @@ export interface ICardActionsProps {
   sold?: number
 }
 
-export interface ICardBadgeProps extends Pick<ICardActionsProps, 'status'> {}
+export type ICardBadgeProps = Pick<ICardActionsProps, 'status'>

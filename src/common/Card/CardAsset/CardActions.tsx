@@ -8,7 +8,8 @@ import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
 
 const {
-  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, COLLECTED, CREATED, UNLISTED },
+  STATUSES: { MINTED, LISTED, UNLISTED },
+  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, COLLECTED, CREATED },
 } = appConst
 
 export default function CardActions(props: ICardActionsProps) {

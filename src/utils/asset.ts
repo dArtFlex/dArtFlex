@@ -1,5 +1,4 @@
-//@ts-nocheck
-import { AssetDataTypes, AssetMarketplaceTypes, AssetStatus } from 'types'
+import { AssetDataTypes, AssetMarketplaceTypes, IAssetStatus, AssetTypes } from 'types'
 
 export function createDummyAssetData(index: number) {
   const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
@@ -84,16 +83,29 @@ export function getAssetStatus({
   start_time,
   end_time,
   sold,
-}: Omit<
-  AssetMarketplaceTypes,
-  'item_id' & 'id' & 'platform_fee' & 'sales_token_contract' & 'end_time' & 'start_time'
-> & { start_time: Date | string; end_time: Date | string }): AssetStatus | undefined {
+  creator,
+  owner,
+  isListed,
+}: {
+  type: AssetMarketplaceTypes['type']
+  start_price: AssetMarketplaceTypes['start_price']
+  end_price: AssetMarketplaceTypes['end_price']
+  start_time: AssetMarketplaceTypes['start_time']
+  end_time: AssetMarketplaceTypes['end_time']
+  sold: AssetMarketplaceTypes['sold']
+  creator: AssetTypes['creator']
+  owner: AssetTypes['owner']
+  isListed?: boolean
+}): IAssetStatus | undefined {
   if (type !== 'auction' && type !== 'instant_buy') {
     throw new Error(`Insufficient type: ${type}`)
   }
 
   const now_time = new Date()
   if (type === 'instant_buy') {
+    if (creator === owner) {
+      return isListed ? 'listed' : 'minted'
+    }
     return 'buy_now'
   } else if (type === 'auction') {
     if (new Date(end_time).getTime() < now_time.getTime() + 1000 * 60 * 60 * 24) {

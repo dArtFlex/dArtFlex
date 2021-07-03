@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectMinting, selectListing } from 'stores/selectors'
+import { selectMinting, selectListing, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
 import { Grid } from 'layouts'
@@ -20,11 +20,12 @@ export default function Form() {
   const dispatch = useDispatch()
   const { values } = useFormikContext<ICreateNFT>()
   const {
-    minting: { data },
+    minting: { data, lazyMintItemId },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
   } = useSelector(selectListing())
+  const { user } = useSelector(selectUser())
 
   const [openViewImage, setOpenViewImage] = useState<boolean>(false)
 
@@ -34,7 +35,7 @@ export default function Form() {
 
   const handleList = () => history.push(routes.sellNFT)
 
-  const handleViewArtwork = () => history.push(routes.home)
+  const handleViewArtwork = () => history.push(`${routes.artworks}/${lazyMintItemId}`)
 
   return (
     <Grid columns={2}>
@@ -61,9 +62,13 @@ export default function Form() {
           <Box className={classes.cardContent}>
             <Box className={classes.cardInfo}>
               <Box className={classes.cardInfoUser}>
-                <Avatar className={classes.avatar} alt="Avatar" src="/images/avatar/1.jpg" />
+                <Avatar
+                  className={classes.avatar}
+                  alt="Avatar"
+                  src={user ? user.profile_image : '/images/avatar/1.jpg'}
+                />
                 <Typography component={'span'} variant={'h4'}>
-                  @gianapress
+                  {user ? `@${user.userid}` : '@'}
                 </Typography>
               </Box>
               {values.name.length ? (

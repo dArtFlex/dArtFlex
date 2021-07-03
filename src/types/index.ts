@@ -25,14 +25,3 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   image_data: string
   name: string
 }
-
-export type AssetType =
-  | 'auction'
-  | 'instant_buy'
-  | 'reserve_not_met'
-  | 'reserve_price'
-  | 'sold'
-  | 'minted'
-  | 'collected'
-  | 'unlisted'
-  | 'created'

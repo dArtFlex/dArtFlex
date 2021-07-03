@@ -20,8 +20,8 @@ export function* placeBid(api: IApi) {
   try {
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const accounts = walletService.getAccoutns()
-    // const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
-    const endPrice = '104000000000000000'
+    const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
+    // const endPrice = '108000000000000000'
 
     const order = yield placeBidService.generateOrder({
       body: {
@@ -69,6 +69,8 @@ export function* placeBid(api: IApi) {
       },
     })
 
+    yield call(acceptBid)
+
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
     yield put(placeBidFailure(e))
@@ -77,11 +79,12 @@ export function* placeBid(api: IApi) {
 
 export function* getBidsHistory(api: IApi) {
   try {
+    debugger
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const getHistory = yield call(api, {
-      url: APP_CONFIG.getHistory(marketData.id),
+      url: APP_CONFIG.getHistory(+marketData.id),
     })
-    yield put(getBidsHistorySuccess({ bidHistory }))
+    return getHistory
   } catch (e) {
     yield put(getBidsHistoryFailure(e))
   }
@@ -89,6 +92,8 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(api: IApi) {
   try {
+    debugger
+    const history = yield call(getBidsHistory)
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const acceptBid = yield call(api, {
       url: APP_CONFIG.acceptBid,
