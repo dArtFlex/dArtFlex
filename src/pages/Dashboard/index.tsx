@@ -7,6 +7,7 @@ import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
 import { selectAssets } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
+import { useCardStatus } from './lib'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 
@@ -111,7 +112,13 @@ export default function Dashboard() {
                     return el.type === filter
                   })
                   .map((asset, i) => (
-                    <CardAsset key={i} asset={asset} withLabel withAction={Boolean(asset.type === 'auction')} />
+                    <CardAsset
+                      key={i}
+                      asset={asset}
+                      withLabel
+                      withAction={Boolean(asset.type === 'auction')}
+                      useCardStatus={useCardStatus}
+                    />
                   ))}
                 {!assets?.length && <Empty />}
               </>

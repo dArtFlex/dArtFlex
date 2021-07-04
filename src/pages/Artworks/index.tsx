@@ -17,8 +17,16 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
+import {
+  useSortedAssets,
+  useCardStatusLiveAuction,
+  useCardStatusBuyNow,
+  useCardStatusReserveNotMet,
+  useCardStatusSold,
+  useCardStatusFeaturedArtworks,
+} from './lib'
 import appConst from 'config/consts'
-import { AssetDataTypes } from 'types'
+import { IArtworksFiltes } from './types'
 import { useStyles } from './styles'
 
 const {
@@ -146,22 +154,11 @@ export default function Artworks() {
   const { wallet } = useSelector(selectWallet())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
-  const [filter, setFilter] = useState(LIVE_AUCTION)
+  const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
-  const [showAssets, setShowAssets] = useState<AssetDataTypes[] | null>(assets)
-
-  const fetchAssets = useCallback(() => {
-    setShowAssets(assets)
-  }, [assets])
-
-  useEffect(() => {
-    fetchAssets()
-    return () => {
-      fetchAssets()
-    }
-  }, [assets])
+  const sortedAssets = useSortedAssets({ assets, filter })
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -279,17 +276,26 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {!showAssets?.length && fetching ? (
+          {!assets?.length && fetching ? (
             <CircularProgressLoader />
           ) : (
-            showAssets
-              ?.filter((el) => {
-                if (filter === FEATURED_ARTWORKS) {
-                  return true
+            sortedAssets?.map((asset, i) => (
+              <CardAsset
+                key={i}
+                asset={asset}
+                useCardStatus={
+                  filter === LIVE_AUCTION
+                    ? useCardStatusLiveAuction
+                    : filter === BUY_NOW
+                    ? useCardStatusBuyNow
+                    : filter === RESERVE_NOT_MET
+                    ? useCardStatusReserveNotMet
+                    : filter === SOLD
+                    ? useCardStatusSold
+                    : useCardStatusFeaturedArtworks
                 }
-                return el.type === filter
-              })
-              .map((asset, i) => <CardAsset key={i} asset={asset} />)
+              />
+            ))
           )}
         </Box>
       </Box>

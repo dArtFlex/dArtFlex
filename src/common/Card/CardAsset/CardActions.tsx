@@ -8,28 +8,30 @@ import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
 
 const {
-  STATUSES: { MINTED, LISTED, UNLISTED },
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, COLLECTED, CREATED },
+  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
 } = appConst
 
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
-  const { status, currentBit, priceReserve, price, sold, expPeriod = 0, burnTime = 0, timer } = props
+  const { endPrice, startPrice, sold, endTime = 0, burnTime = 0, timer, type, status, useCardStatus } = props
 
-  const priceReserveToCoin = priceReserve
-    ? new BigNumber(priceReserve)
+  const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
+
+  const startPriceToCoin = startPrice
+    ? new BigNumber(startPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
         .toFixed(2)
-    : priceReserve
-  const currentBitToCoin = currentBit
-    ? new BigNumber(currentBit)
+    : startPrice
+  const currentBitToCoin = endPrice
+    ? new BigNumber(endPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
         .toFixed(2)
-    : currentBit
+    : endPrice
 
-  switch (status) {
+  const now_time = new Date().getTime()
+  switch (cardStatus) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
@@ -43,28 +45,30 @@ export default function CardActions(props: ICardActionsProps) {
         <Box className={classes.cardAction}>
           <Section
             text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={`${priceReserveToCoin || currentBitToCoin} ETH`}
+            value={now_time < new Date(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
           />
-          <ButtonBase className={clsx(classes.actionBtn, expPeriod < burnTime && classes.actionBtnBurn)}>
-            {expPeriod < burnTime ? (
-              <BurnIcon className={classes.actionBtnIcon} />
-            ) : (
-              <TimeIcon className={classes.actionBtnIcon} />
-            )}
-            {timer}
-          </ButtonBase>
+          {now_time < new Date(endTime).getTime() ? (
+            <ButtonBase className={clsx(classes.actionBtn, endTime < burnTime && classes.actionBtnBurn)}>
+              {endTime < burnTime ? (
+                <BurnIcon className={classes.actionBtnIcon} />
+              ) : (
+                <TimeIcon className={classes.actionBtnIcon} />
+              )}
+              {timer}
+            </ButtonBase>
+          ) : null}
         </Box>
       )
     case BUY_NOW:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Buy Now'} value={`${price} ETH`} />
+          <Section text={'Buy Now'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
     case RESERVE_NOT_MET:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Reserve Price'} value={priceReserveToCoin ? `${priceReserveToCoin} ETH` : '-'} />
+          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
         </Box>
       )
     case SOLD:
@@ -87,11 +91,9 @@ export default function CardActions(props: ICardActionsProps) {
     case CREATED:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionNotMet)}>
-          <Section text={'Reserve Not Met'} value={`${priceReserveToCoin} ETH`} />
+          <Section text={'Reserve Not Met'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
-    case UNLISTED:
-      return <Box></Box>
     default:
       return null
   }

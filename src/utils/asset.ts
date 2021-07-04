@@ -1,4 +1,11 @@
-import { AssetDataTypes, AssetMarketplaceTypes, IAssetStatus, AssetTypes } from 'types'
+import { AssetDataTypes, AssetMarketplaceTypes, IAssetStatus, AssetTypes, IAssetType } from 'types'
+import appConst from 'config/consts'
+
+const {
+  TYPES: { INSTANT_BY, AUCTION },
+  STATUSES: { MINTED, LISTED, UNLISTED, ON_SALE, PURCHASED, SOLD },
+  FILTER_VALUES: { RESERVE_NOT_MET },
+} = appConst
 
 export function createDummyAssetData(index: number) {
   const plus1h1m = 1000 * 60 * 60 * 1 + 1000 * 60 * 1
@@ -62,7 +69,6 @@ export function createDummyAssetData(index: number) {
   }
 }
 
-// todo:
 export function getPriceLable(asset: Pick<AssetDataTypes, 'type'>) {
   switch (asset?.type) {
     case 'auction':
@@ -86,6 +92,7 @@ export function getAssetStatus({
   creator,
   owner,
   isListed,
+  userWallet,
 }: {
   type: AssetMarketplaceTypes['type']
   start_price: AssetMarketplaceTypes['start_price']
@@ -96,23 +103,61 @@ export function getAssetStatus({
   creator: AssetTypes['creator']
   owner: AssetTypes['owner']
   isListed?: boolean
+  userWallet?: string
 }): IAssetStatus | undefined {
-  if (type !== 'auction' && type !== 'instant_buy') {
+  if (type !== AUCTION && type !== INSTANT_BY) {
     throw new Error(`Insufficient type: ${type}`)
   }
 
   const now_time = new Date()
-  if (type === 'instant_buy') {
-    if (creator === owner) {
-      return isListed ? 'listed' : 'minted'
+  if (sold) {
+    return SOLD
+  } else if (isListed === false) {
+    if (userWallet === creator && userWallet === owner) {
+      return MINTED
+    } else if (userWallet !== creator && userWallet === owner) {
+      return PURCHASED
     }
-    return 'buy_now'
-  } else if (type === 'auction') {
-    if (new Date(end_time).getTime() < now_time.getTime() + 1000 * 60 * 60 * 24) {
-      return 'reserve_not_met'
+  } else if (isListed && new Date(end_time).getTime() < now_time.getTime() && Boolean(start_price) === false) {
+    return UNLISTED
+  } else if (type === INSTANT_BY || type === AUCTION) {
+    if (userWallet === owner) {
+      if (creator !== owner && isListed !== undefined) {
+        return ON_SALE
+      } else if (creator === owner && isListed !== undefined) {
+        return LISTED
+      }
     }
-    return 'auction'
-  } else if (sold) {
-    return 'sold'
+    return LISTED
+  }
+}
+
+export function getAssetCartStatus({
+  type,
+  status,
+  start_price,
+  end_price,
+  start_time,
+  end_time,
+}: {
+  type: IAssetType
+  status: IAssetStatus
+  start_price: AssetMarketplaceTypes['start_price']
+  end_price: AssetMarketplaceTypes['end_price']
+  start_time: AssetMarketplaceTypes['start_time']
+  end_time: AssetMarketplaceTypes['end_time']
+}) {
+  const now_time = new Date()
+
+  switch (status) {
+    case MINTED:
+      return RESERVE_NOT_MET
+    case LISTED:
+      if (type === AUCTION) {
+        if (new Date(end_time).getTime() < now_time.getTime() + 1000 * 60 * 60 * 24) {
+          return RESERVE_NOT_MET
+        }
+      }
+      return
   }
 }

@@ -22,9 +22,7 @@ export default function BidDetails() {
     <PageWrapper>
       <Box className={classes.bidContainer}>
         <Box className={classes.outerContainer}>
-          <Box className={classes.previewContainer}>
-            <CardAsset asset={assetDetails.imageData?.image} />
-          </Box>
+          <Box className={classes.previewContainer}>{/* <CardAsset asset={assetDetails.} /> */}</Box>
         </Box>
         <Box className={classes.bidInfoBox}>
           <InfoBid />

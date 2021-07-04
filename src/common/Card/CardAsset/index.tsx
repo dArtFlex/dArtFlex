@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import BigNumber from 'bignumber.js'
 import { PopoverLinks } from 'common'
 import { MoreHorizontalIcon } from 'common/icons'
 import { Box, Typography, IconButton, Card, Avatar } from '@material-ui/core'
@@ -12,13 +11,12 @@ import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, withLabel, withAction } = props
+  const { asset, withLabel, withAction, useCardStatus } = props
   const classes = useStyles()
   const history = useHistory()
 
   const { timer } = useTimer(new Date(asset.end_time).getTime() || 0)
   const burnTime = new Date(asset.start_time).getTime() + 1000 * 60 * 60
-  const startPrice = new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
 
@@ -31,7 +29,7 @@ export default function CardAsset(props: ICardAssetProps) {
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
-            {Boolean(asset.userData.length) && (
+            {Boolean(asset.userData) && (
               <Box display={'flex'} mb={4} alignItems={'center'}>
                 <Avatar className={classes.avatar} alt="Avatar" src={asset.userData.profile_image} />
                 <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
@@ -54,12 +52,12 @@ export default function CardAsset(props: ICardAssetProps) {
         </Box>
         <CardActions
           status={asset.status}
+          useCardStatus={useCardStatus}
           type={asset.type}
-          currentBit={asset.end_price}
-          priceReserve={asset.end_price}
-          price={startPrice}
+          startPrice={asset.start_price}
+          endPrice={asset.end_price}
           sold={asset.sold}
-          expPeriod={asset.end_time}
+          endTime={asset.end_time}
           burnTime={burnTime}
           timer={timer}
         />

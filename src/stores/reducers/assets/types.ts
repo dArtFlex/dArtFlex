@@ -1,8 +1,8 @@
-import { AssetDataTypes, AssetTypes, AssetMarketplaceTypes, UserDataTypes } from 'types'
+import { AssetDataTypes, AssetTypes, AssetMarketplaceTypes, UserDataTypes, AssetDataTypesWithStatus } from 'types'
 export interface AssetsStateType {
   fetching: boolean
   error: string
-  assets: null | AssetDataTypes[]
+  assets: null | AssetDataTypesWithStatus[]
   assetDetails: IAssetDetails
 }
 

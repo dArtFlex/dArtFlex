@@ -28,7 +28,7 @@ export interface AssetDataTypes extends AssetMarketplaceTypes {
   userData: UserDataTypes
 }
 
-export interface AssetDataTypesWithStatuses extends AssetDataTypes {
+export interface AssetDataTypesWithStatus extends AssetDataTypes {
   status: IAssetStatus
 }
 

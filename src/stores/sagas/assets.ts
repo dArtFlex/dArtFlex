@@ -1,4 +1,4 @@
-import { put, call, all } from 'redux-saga/effects'
+import { put, call, all, select } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import {
   getAssetsAllSuccess,
@@ -6,9 +6,10 @@ import {
   getAssetByIdSuccess,
   getAssetByIdFailure,
 } from 'stores/reducers/assets'
+import { selectUser } from 'stores/selectors'
 import { getUserDataByOwner } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
-import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes, AssetDataTypesWithStatuses } from 'types'
+import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes, AssetDataTypesWithStatus } from 'types'
 import APP_CONFIG from 'config'
 import { getAssetStatus } from 'utils'
 
@@ -37,7 +38,7 @@ export function* getAssetsAllData(api: IApi) {
       getAssetsListAll.map((asset) => call(getAssetData, api, asset))
     )
 
-    const getAssetsListAllWithStatuses: AssetDataTypesWithStatuses[] = yield all(
+    const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
 
@@ -49,7 +50,8 @@ export function* getAssetsAllData(api: IApi) {
 
 export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
   try {
-    const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, payload)
+    const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(payload))
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
 
     const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(Number(payload)),
@@ -63,6 +65,22 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,
     })
+
+    let status
+    if (marketplaceData) {
+      status = getAssetStatus({
+        type: marketplaceData.type,
+        start_price: marketplaceData.start_price,
+        end_price: marketplaceData.end_price,
+        start_time: marketplaceData.start_time as string,
+        end_time: marketplaceData.end_time,
+        sold: marketplaceData.sold,
+        creator: assetById[0].creator,
+        owner: assetById[0].owner,
+        isListed: Boolean(marketplaceData),
+        userWallet: user ? user.wallet : undefined,
+      })
+    }
 
     yield put(
       getAssetByIdSuccess({
@@ -92,13 +110,8 @@ function* getMarketplaceData(api: IApi, itemId: number) {
   }
 }
 
-function* getMainAssetStatus(api: IApi, asset: AssetDataTypes, itemId?: number) {
+function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
   try {
-    let isListed
-    if (itemId) {
-      const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, itemId)
-      isListed = Boolean(marketplaceData)
-    }
     const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
     })
@@ -111,7 +124,6 @@ function* getMainAssetStatus(api: IApi, asset: AssetDataTypes, itemId?: number) 
       sold: asset.sold,
       creator: assetById[0].creator,
       owner: assetById[0].owner,
-      isListed: isListed,
     })
 
     return {
