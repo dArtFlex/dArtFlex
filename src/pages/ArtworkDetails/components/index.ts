@@ -1,5 +1,5 @@
 import About from './About'
 import History from './History'
-import { ApprovedForm, ApprovedSubForm, DetailsForm, FormContainer } from './Form'
+import { ApprovedSubForm, FormContainer, FormAuction, FormBuy } from './Form'
 
-export { About, History, DetailsForm, ApprovedForm, ApprovedSubForm, FormContainer }
+export { About, History, ApprovedSubForm, FormContainer, FormAuction, FormBuy }

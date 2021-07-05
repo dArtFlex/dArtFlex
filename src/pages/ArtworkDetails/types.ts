@@ -6,10 +6,7 @@ export interface ApprovedFormState {
   bid: number
   acknowledge: boolean
   agreeTerms: boolean
+  formProgress: IFormProgress
 }
 
-export interface IFormContainer {
-  tokenId: string
-  formId: number
-  setFormId: (formId: number) => void
-}
+type IFormProgress = 'details' | 'approve' | 'transaction_start' | 'transaction_finish'

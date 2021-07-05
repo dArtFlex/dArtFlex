@@ -17,38 +17,24 @@ const tokensAll = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
     },
-    {
-      name: 'DAF Token',
-      symbol: 'DAF',
-      id: '',
-      decimals: 18,
-      logoURI: '',
-    },
   ],
 
   // Rinkeby
   '0x4': [
     {
       id: 'ETH',
-      erc20id: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      erc20id: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
     },
     {
       name: 'Wrapped Ether',
-      id: '0xdf032bc4b9dc2782bb09352007d4c57b75160b15',
+      id: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
       symbol: 'WETH',
       decimals: 18,
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
-    },
-    {
-      name: 'DAF Token',
-      symbol: 'DAF',
-      id: '',
-      decimals: 18,
-      logoURI: '',
     },
   ],
 }

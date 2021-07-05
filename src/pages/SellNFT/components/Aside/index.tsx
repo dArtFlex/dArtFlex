@@ -8,7 +8,7 @@ import { useStyles } from './styles'
 import appConst from 'config/consts'
 
 const {
-  FILTER_VALUES: { IN_AUCTION },
+  TYPES: { AUCTION },
 } = appConst
 
 export default function Aside(props: IAsideProps) {
@@ -44,7 +44,7 @@ export default function Aside(props: IAsideProps) {
 
         <Divider className={classes.divider} />
         <Typography className={classes.sectionTitle}>Listing</Typography>
-        {form === IN_AUCTION ? (
+        {form === AUCTION ? (
           <Box pb={5}>
             <Typography className={classes.textListing}>
               Your item will be auctioned. The highest bidder will win it on Mon, May 10, 2021 11:18 AM, as long as

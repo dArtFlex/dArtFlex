@@ -1,6 +1,6 @@
 //@ts-nocheck
 import Contract from 'web3-eth-contract'
-import { ABI } from 'core'
+import { ABI } from 'core/contracts/dartflex_contract'
 import { OpenSeaPort, Network } from 'opensea-js'
 
 class Blockchain {

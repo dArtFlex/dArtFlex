@@ -1,6 +1,8 @@
+import { UserDataTypes } from 'types'
+
 export interface UserStateType {
   isOpenSideBar: boolean
   fetching: boolean
   error: string
-  user: Record<string, any>
+  user: UserDataTypes | null
 }

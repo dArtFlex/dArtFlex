@@ -3,7 +3,7 @@ import { Modal as MUIModal, Box, Grid, Button } from '@material-ui/core'
 import { CloseIcon } from 'common/icons'
 import { noop } from 'lodash'
 import { IModalProps } from './types'
-import { modalBgUrl } from 'config/consts'
+import { modalBgUrl } from 'common/icons/bgUrl'
 import { useStyles } from './styles'
 
 export default function Modal(props: IModalProps) {

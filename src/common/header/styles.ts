@@ -85,5 +85,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: 4,
       paddingLeft: theme.spacing(3),
     },
+    avatar: {
+      width: 32,
+      height: 32,
+    },
   })
 )

@@ -3,7 +3,7 @@ import { web3Service } from 'services/web3_service'
 import { signTypedData_v4 } from 'eth-sig-util'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 
-class ListingService {
+class PlaceBidService {
   async signTypedData(data) {
     const resp = await web3Service.connectMetaMaskWallet()
     const from = resp[0]
@@ -90,27 +90,27 @@ class ListingService {
     return '0x'
   }
 
-  async encodeOrder(form) {
+  async encodeOrder(form, taker) {
     const makeAsset = form.make.assetType
     const takeAsset = form.take.assetType
     return {
       data: web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
       dataType: '0x4c234266',
-      maker: form.maker,
+      maker: taker,
       makeAsset: {
-        assetType: {
-          assetClass: web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
-          data: this.enc(makeAsset),
-        },
-        value: form.make.value,
-      },
-      taker: ZERO,
-      takeAsset: {
         assetType: {
           assetClass: web3.utils.keccak256(form.take.assetType.assetClass).substring(0, 10),
           data: this.enc(takeAsset),
         },
         value: form.take.value,
+      },
+      taker: ZERO,
+      takeAsset: {
+        assetType: {
+          assetClass: web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
+          data: this.enc(makeAsset),
+        },
+        value: form.make.value,
       },
       start: 0,
       end: 0,
@@ -136,10 +136,10 @@ class ListingService {
   // taker is ZERO
   // price = '100000000000000000'
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, erc20, price, signature } = request.body
+    const { contract, tokenId, uri, maker, taker, erc20, price, signature } = request.body
 
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature)
-    const order = await this.encodeOrder(notSignedOrderForm)
+    const order = await this.encodeOrder(notSignedOrderForm, taker)
     const data = this.createTypeData(
       {
         name: 'Exchange',
@@ -157,4 +157,4 @@ class ListingService {
   }
 }
 
-export const listingService = new ListingService()
+export const placeBidService = new PlaceBidService()

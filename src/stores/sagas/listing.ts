@@ -24,6 +24,11 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 
+    // const dateEndTime = data.end_time.getTime()
+    const dateEndTime = new Date().getTime() + 1000 * 60 * 5
+
+    const dateStartTime = data.start_time === '0' ? new Date().getTime() : data.start_time
+
     const marketId = yield call(api, {
       url: APP_CONFIG.createSalesDetail,
       method: 'POST',
@@ -34,8 +39,10 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         endPrice: data.type === 'instant_buy' ? '0' : endPrice,
         // it's Reserve Price
         // endPrice must be 0 if data.type is "instant_buy"
-        startTime: data.start_time,
-        endTime: data.type === 'instant_buy' ? '0' : data.end_time,
+
+        // Todo: startTime and endTime in instant_buy should be new Date().getTime
+        startTime: data.type === 'instant_buy' ? dateStartTime : new Date().getTime(),
+        endTime: data.type === 'instant_buy' ? dateStartTime : dateEndTime,
         // should be 0 if data.type is "instant_buy"
         salesTokenContract: data.type === 'instant_buy' ? '0x' : WETH_Contract_Rinkeby,
         // for ETH don't have addresse that's why use 0x

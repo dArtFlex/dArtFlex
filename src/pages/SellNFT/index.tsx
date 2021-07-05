@@ -12,17 +12,17 @@ import { listingRequest } from 'stores/reducers/listing'
 import { ISellArtwork } from './types'
 
 const {
-  FILTER_VALUES: { IN_AUCTION, BUY_NOW },
+  TYPES: { AUCTION, INSTANT_BY },
 } = appConst
 
 const formVariant = [
   {
-    value: BUY_NOW,
+    value: INSTANT_BY,
     label: 'Set Price',
     desc: 'a fixed or declining price',
   },
   {
-    value: IN_AUCTION,
+    value: AUCTION,
     label: 'Auction',
     desc: 'to the highest bid',
   },
@@ -44,7 +44,7 @@ const initialData = {
 
 export default function SellNFT() {
   const classes = useStyles()
-  const [form, setForm] = useState(BUY_NOW)
+  const [form, setForm] = useState(INSTANT_BY)
   const dispatch = useDispatch()
 
   const onSubmit = (state: ISellArtwork) => {
@@ -100,7 +100,7 @@ export default function SellNFT() {
               })}
             </ToggleButtonGroup>
 
-            {form === BUY_NOW ? <SetPriceForm /> : <AuctionForm />}
+            {form === INSTANT_BY ? <SetPriceForm /> : <AuctionForm />}
           </Box>
         </DucolLayout>
       </Form>

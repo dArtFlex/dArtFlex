@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge } from '@material-ui/core'
+import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
-import { selectWallet } from 'stores/selectors'
+import { selectWallet, selectUser } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -20,6 +20,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
 
   const bids: Array<string> = []
 
@@ -102,7 +103,13 @@ export default function Header({ toggleTheme }: HeaderType) {
                   variant={'outlined'}
                   color={'primary'}
                   disableElevation
-                  startIcon={<SmileyFaceIcon />}
+                  startIcon={
+                    user?.profile_image ? (
+                      <Avatar src={user.profile_image} className={classes.avatar} />
+                    ) : (
+                      <SmileyFaceIcon />
+                    )
+                  }
                   endIcon={<CurrentDownIcon />}
                 >
                   {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}

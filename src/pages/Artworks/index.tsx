@@ -1,8 +1,7 @@
-//@ts-nocheck
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
-import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
+import { selectAssets, selectWallet } from 'stores/selectors'
+import clsx from 'clsx'
 import {
   Box,
   Typography,
@@ -15,12 +14,20 @@ import {
   Checkbox,
 } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { useStyles } from './styles'
-
-import appConst from 'config/consts'
-import { selectAssets, selectWallet } from 'stores/selectors'
-import clsx from 'clsx'
+import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
+import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
+import {
+  useSortedAssets,
+  useCardStatusLiveAuction,
+  useCardStatusBuyNow,
+  useCardStatusReserveNotMet,
+  useCardStatusSold,
+  useCardStatusFeaturedArtworks,
+} from './lib'
+import appConst from 'config/consts'
+import { IArtworksFiltes } from './types'
+import { useStyles } from './styles'
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -71,85 +78,87 @@ const filterItems = [
 
 const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
+const promotionMultiply = [
+  {
+    id: 1,
+    author: {
+      id: 1,
+      name: 'scheleifer44',
+      profilePhoto:
+        'https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/08/18/20/istock-847257772.jpg?width=982&height=726&auto=webp&quality=75',
+    },
+    name: 'Over Indulgence 2',
+    bid: 0.44,
+    endDate: 1628957487000,
+    url:
+      'https://live-production.wcms.abc-cdn.net.au/cbe346eee79d3e08dee5e8eb04284438?impolicy=wcms_crop_resize&cropH=1680&cropW=2983&xPos=17&yPos=574&width=862&height=485',
+  },
+  {
+    id: 2,
+    author: {
+      id: 2,
+      name: 'ann1990',
+      profilePhoto:
+        'https://media.istockphoto.com/photos/portrait-of-young-woman-with-curly-hair-in-the-city-picture-id1218228957?k=6&m=1218228957&s=612x612&w=0&h=Oc5qFk225PFhWuDawxef2BZfcgkqGo-QWU5ZMXPWC7M=',
+    },
+    name: 'Artwork 2',
+    bid: 1.23,
+    endDate: 1629130287000,
+    url:
+      'https://static.media.thinknum.com/media/uploads/blog/.thumbnails/alternativedata_crypto_art_featured.jpg/alternativedata_crypto_art_featured-770x400.jpg',
+  },
+  {
+    id: 3,
+    author: {
+      id: 3,
+      name: 'johnsmith47',
+      profilePhoto:
+        'https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    },
+    name: 'Artwork 3',
+    bid: 3.21,
+    endDate: 1628611887000,
+    url: 'https://static.coindesk.com/wp-content/uploads/2021/03/artmosh3-1200x628.jpg',
+  },
+  {
+    id: 4,
+    author: {
+      id: 4,
+      name: 'fisher2918',
+      profilePhoto: 'https://images.all-free-download.com/images/graphicthumb/man_singer_musician_214792.jpg',
+    },
+    name: 'Artwork 4',
+    bid: 0.56,
+    endDate: 1628611887000,
+    url:
+      'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/200315897/original/6d796053c884c1964ff7a2cf1253ce71b60c045d/do-crypto-nft-collage-surreal-atheistic-retro-vintage-art.jpg',
+  },
+  {
+    id: 5,
+    author: {
+      id: 5,
+      name: 'marthajunior',
+      profilePhoto: 'https://ak.picdn.net/shutterstock/videos/20647573/thumb/1.jpg',
+    },
+    name: 'Artwork 5',
+    bid: 2.43,
+    endDate: 1628698287000,
+    url:
+      'https://1.bp.blogspot.com/-KmIwQYP6jcI/YEOh0Un2VXI/AAAAAAAAJDM/S92sajpugZsNaPGhtLlEXOHg7kps2G4CQCLcBGAsYHQ/w1200-h630-p-k-no-nu/bitcoin-image-nft.jpg',
+  },
+]
+
 export default function Artworks() {
   const classes = useStyles()
   const { assets, fetching } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
-  const [filter, setFilter] = useState(LIVE_AUCTION)
+  const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
-  const promotionMultiply = [
-    {
-      id: 1,
-      author: {
-        id: 1,
-        name: 'scheleifer44',
-        profilePhoto:
-          'https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/08/18/20/istock-847257772.jpg?width=982&height=726&auto=webp&quality=75',
-      },
-      name: 'Over Indulgence 2',
-      bid: 0.44,
-      endDate: 1628957487000,
-      url:
-        'https://live-production.wcms.abc-cdn.net.au/cbe346eee79d3e08dee5e8eb04284438?impolicy=wcms_crop_resize&cropH=1680&cropW=2983&xPos=17&yPos=574&width=862&height=485',
-    },
-    {
-      id: 2,
-      author: {
-        id: 2,
-        name: 'ann1990',
-        profilePhoto:
-          'https://media.istockphoto.com/photos/portrait-of-young-woman-with-curly-hair-in-the-city-picture-id1218228957?k=6&m=1218228957&s=612x612&w=0&h=Oc5qFk225PFhWuDawxef2BZfcgkqGo-QWU5ZMXPWC7M=',
-      },
-      name: 'Artwork 2',
-      bid: 1.23,
-      endDate: 1629130287000,
-      url:
-        'https://static.media.thinknum.com/media/uploads/blog/.thumbnails/alternativedata_crypto_art_featured.jpg/alternativedata_crypto_art_featured-770x400.jpg',
-    },
-    {
-      id: 3,
-      author: {
-        id: 3,
-        name: 'johnsmith47',
-        profilePhoto:
-          'https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-      },
-      name: 'Artwork 3',
-      bid: 3.21,
-      endDate: 1628611887000,
-      url: 'https://static.coindesk.com/wp-content/uploads/2021/03/artmosh3-1200x628.jpg',
-    },
-    {
-      id: 4,
-      author: {
-        id: 4,
-        name: 'fisher2918',
-        profilePhoto: 'https://images.all-free-download.com/images/graphicthumb/man_singer_musician_214792.jpg',
-      },
-      name: 'Artwork 4',
-      bid: 0.56,
-      endDate: 1628611887000,
-      url:
-        'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/200315897/original/6d796053c884c1964ff7a2cf1253ce71b60c045d/do-crypto-nft-collage-surreal-atheistic-retro-vintage-art.jpg',
-    },
-    {
-      id: 5,
-      author: {
-        id: 5,
-        name: 'marthajunior',
-        profilePhoto: 'https://ak.picdn.net/shutterstock/videos/20647573/thumb/1.jpg',
-      },
-      name: 'Artwork 5',
-      bid: 2.43,
-      endDate: 1628698287000,
-      url:
-        'https://1.bp.blogspot.com/-KmIwQYP6jcI/YEOh0Un2VXI/AAAAAAAAJDM/S92sajpugZsNaPGhtLlEXOHg7kps2G4CQCLcBGAsYHQ/w1200-h630-p-k-no-nu/bitcoin-image-nft.jpg',
-    },
-  ]
+  const sortedAssets = useSortedAssets({ assets, filter })
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -267,17 +276,26 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {fetching ? (
+          {!assets?.length && fetching ? (
             <CircularProgressLoader />
           ) : (
-            assets
-              ?.filter((el) => {
-                if (filter === FEATURED_ARTWORKS) {
-                  return true
+            sortedAssets?.map((asset, i) => (
+              <CardAsset
+                key={i}
+                asset={asset}
+                useCardStatus={
+                  filter === LIVE_AUCTION
+                    ? useCardStatusLiveAuction
+                    : filter === BUY_NOW
+                    ? useCardStatusBuyNow
+                    : filter === RESERVE_NOT_MET
+                    ? useCardStatusReserveNotMet
+                    : filter === SOLD
+                    ? useCardStatusSold
+                    : useCardStatusFeaturedArtworks
                 }
-                return el.type === filter
-              })
-              .map((asset, i) => <CardAsset key={i} asset={asset} />)
+              />
+            ))
           )}
         </Box>
       </Box>

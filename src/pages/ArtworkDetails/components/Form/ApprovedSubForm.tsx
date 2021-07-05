@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
 import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
-import { selectAsset } from 'stores/selectors'
+import { selectAssetDetails } from 'stores/selectors'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 
@@ -15,7 +15,7 @@ const {
 export default function ApprovedSubForm() {
   const classes = useStyles()
   const [fetch, setFetch] = useState<boolean>(true)
-  const { assetDetails } = useSelector(selectAsset())
+  const { assetDetails } = useSelector(selectAssetDetails())
 
   const status = assetDetails.marketData?.type
 

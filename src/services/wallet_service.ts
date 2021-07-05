@@ -1,7 +1,7 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
 import { web3Service } from 'services/web3_service'
-import APP_CONFIG from 'config'
+import appConst from 'config/consts'
 
 class WalletService {
   async getMetaMaskAccount() {
@@ -18,7 +18,7 @@ class WalletService {
 
   async getWalletConnectAccount() {
     const web3 = await web3Service.setWeb3WalletConnectProvider()
-    const wallet = localStorage.getItem(APP_CONFIG.walletConnect)
+    const wallet = localStorage.getItem(appConst.WALLET_CONNECT)
 
     if (wallet) {
       this.accounts = JSON.parse(wallet as string).accounts
