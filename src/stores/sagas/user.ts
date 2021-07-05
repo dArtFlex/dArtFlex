@@ -1,7 +1,9 @@
+//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put } from 'redux-saga/effects'
+import { call, put, all } from 'redux-saga/effects'
 import { history } from '../../navigation'
+import BigNumber from 'bignumber.js'
 import {
   getUserDataFailure,
   getUserDataSuccess,
@@ -10,8 +12,11 @@ import {
 } from 'stores/reducers/user'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { UserDataTypes } from 'types'
+import { walletService } from 'services/wallet_service'
+import { UserDataTypes, IChainId, ITokenBalances } from 'types'
 import APP_CONFIG from 'config'
+import tokensAll from 'core/tokens'
+import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { getIdFromString } from 'utils'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -97,5 +102,44 @@ export function* createNewUser(
     yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
+  }
+}
+
+export function* getUserBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
+  try {
+    const chainId: IChainId = walletService.getChainId()
+    const tokens = tokensAll[chainId].filter((t) => t.id.startsWith('0x'))
+    const balances: Array<ITokenBalances | undefined> = yield all(
+      tokens.map((t) => call(getBalance, api, t, payload.wallet))
+    )
+    const existBalances: ITokenBalances[] = balances.filter((b) => b && b.balance !== '0')
+    console.log(existBalances)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function* getBalance(api, token, acc) {
+  try {
+    const { id, decimals, symbol } = token
+    if (acc && web3 && id) {
+      const tokenContract = new web3.eth.Contract(STANDART_TOKEN_ABI, id)
+      const balance = yield tokenContract.methods.balanceOf(acc).call()
+      if (balance !== '0') {
+        const _balance = new BigNumber(balance)
+          .div(`10e${decimals - 1}`)
+          .toNumber()
+          .toFixed(2)
+
+        const price: { [key: string]: number } = yield call(api, {
+          url: APP_CONFIG.exchangeRate(symbol, 'USD'),
+          method: 'GET',
+        })
+        const _price = price?.USD
+        return { id, symbol, balance: _balance, priceUSD: _price, balanceUSD: _balance * _price }
+      }
+    }
+  } catch (e) {
+    throw new Error(e.message || `getBalance: ${e}`)
   }
 }

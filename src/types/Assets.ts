@@ -46,3 +46,11 @@ export type IAssetStatus =
   | typeof STATUSES.ON_SALE
   | typeof STATUSES.PURCHASED
   | typeof STATUSES.SOLD
+
+export interface ITokenBalances {
+  balance: string
+  balanceUSD: number
+  id: string
+  priceUSD: number
+  symbol: string
+}

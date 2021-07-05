@@ -41,6 +41,11 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getUserBalancesRequest: (state, i) => {
+      state.fetching = true
+      state.error = ''
+    },
   },
 })
 
@@ -53,6 +58,8 @@ export const {
   createNewUserRequest,
   createNewUserSuccess,
   createNewUserFailure,
+
+  getUserBalancesRequest,
 } = userSlice.actions
 
 export const { reducer } = userSlice

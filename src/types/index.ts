@@ -25,3 +25,6 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   image_data: string
   name: string
 }
+
+export type IChainId = '0x1' | '0x4'
+export type IPaymentToken = 'ETH' | 'WETH'

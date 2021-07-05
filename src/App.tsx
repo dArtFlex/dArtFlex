@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Provider as StoreProvider } from 'react-redux'
 import { theme, lightPalette, DarkPalette } from './theme'
-import { DataProvider } from 'core'
+import { DataProvider } from 'core/DataProvider'
 import configureStore from './stores'
 import MainNavigation from './navigation'
 

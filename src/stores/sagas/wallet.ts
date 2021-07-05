@@ -9,7 +9,7 @@ import {
   connnectWalletConnectFailure,
 } from '../reducers/wallet'
 import { storageActiveWallet, createWalletInstance } from 'utils'
-import APP_CONFIG from 'config'
+import appConst from 'config/consts'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
@@ -22,7 +22,7 @@ export function* connectMetaMask(api: IApi) {
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
-    storageActiveWallet(walletInstance, APP_CONFIG.walletConnectMetaMaskStorage)
+    storageActiveWallet(walletInstance, appConst.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
 
     const chainChannel = yield call(chainChangedChannel)
@@ -47,7 +47,7 @@ export function* connectWalletConnect(api: IApi) {
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
-    storageActiveWallet(walletInstance, APP_CONFIG.walletConnectTrustStorage)
+    storageActiveWallet(walletInstance, appConst.WALLET_CONNECT_STORAGE.TRUST)
     yield put(connnectWalletConnectSuccess(walletInstance))
 
     const chainChannel = yield call(chainChangedChannel)

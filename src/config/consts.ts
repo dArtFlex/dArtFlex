@@ -44,6 +44,13 @@ const appConst = {
   INTERVALS: {
     UPDATE_ASSETS: 30000, // in 0,5 min
   },
+
+  ACTIVE_WALLET_STORAGE: 'active.wallet',
+  WALLET_CONNECT_STORAGE: {
+    METAMASK: 'metamask.connect',
+    TRUST: 'trust.connect',
+  },
+  WALLET_CONNECT: 'walletconnect',
 }
 
 export default appConst

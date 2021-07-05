@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectWallet } from 'stores/selectors'
 import { getAssetsAllRequest } from 'stores/reducers/assets'
-import { getUserDataRequest } from 'stores/reducers/user'
+import { getUserDataRequest, getUserBalancesRequest } from 'stores/reducers/user'
 import { CircularProgressLoader } from 'common'
 import appConst from 'config/consts'
 
@@ -18,7 +18,10 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   const fetchUser = useCallback(() => {
-    dispatch(getUserDataRequest({ wallet: wallet?.accounts[0] }))
+    if (wallet?.accounts[0]) {
+      dispatch(getUserDataRequest({ wallet: wallet?.accounts[0] }))
+      dispatch(getUserBalancesRequest({ wallet: wallet?.accounts[0] }))
+    }
   }, [wallet?.accounts[0]])
 
   useEffect(() => {
