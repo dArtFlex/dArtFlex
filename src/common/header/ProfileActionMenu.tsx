@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { PopoverLinks } from 'common'
-import { ManIcon, ListIcon, BidsIcon, SellIcon, SettingsIcon, DisconnectIcon } from 'common/icons'
+import { ManIcon, ListIcon, BidsIcon, SellIcon, SettingsIcon, DisconnectIcon, ContentIcon } from 'common/icons'
 import routes from '../../routes'
 
 interface IProfileActionMenuProps {
@@ -41,6 +41,11 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
           lable: 'Account Settings',
           icon: <SettingsIcon />,
           onClick: () => history.push(routes.artworkAccountSettings),
+        },
+        {
+          lable: 'Content Management',
+          icon: <ContentIcon />,
+          onClick: () => history.push(routes.contentManagement),
         },
       ]}
       subLinks={[
