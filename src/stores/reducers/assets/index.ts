@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AssetsStateType } from './types'
-import { IAssetStatus } from 'types'
 
 const initialState: AssetsStateType = {
   fetching: false,

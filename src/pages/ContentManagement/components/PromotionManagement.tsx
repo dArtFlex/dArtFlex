@@ -3,7 +3,7 @@ import { Box, Button, Icon, List, ListItem, Typography } from '@material-ui/core
 import { useStyles } from '../styles'
 import { PlusSmallIcon } from '../../../common/icons'
 import NFTCard from './NFTCard'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
 export default function PromotionManagement() {
   const classes = useStyles()
@@ -37,7 +37,7 @@ export default function PromotionManagement() {
 
   const [artworks, setArtworks] = useState(NFTs)
 
-  function handleOnDragEnd(res: any) {
+  function handleOnDragEnd(res: DropResult) {
     if (!res.destination) return
     const items = Array.from(artworks)
     const [reorderedItem] = items.splice(res.source.index, 1)

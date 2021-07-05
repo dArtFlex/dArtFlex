@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserStateType } from './types'
-import { IAccountSettings } from 'pages/AccountSettings/types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,

@@ -28,6 +28,7 @@ const userSlice = createSlice({
     getBidsHistoryRequest: (state, i) => {
       state.fetching = true
     },
+    // eslint-disable-next-line
     getBidsHistorySuccess: (state, { payload }: PayloadAction<{ bidHistory: any }>) => {
       state.bidHistory = payload.bidHistory
       state.fetching = false

@@ -1,6 +1,5 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { Form } from 'common'
 import { useSelector } from 'react-redux'
 import { ApprovedFormState } from '../../types'
 import { useFormikContext } from 'formik'
@@ -8,7 +7,6 @@ import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Link } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { History, About } from '../../components'
-import { useTimer } from 'hooks'
 import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon, InfoIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet } from 'stores/selectors'
 import { Field } from 'common'
@@ -135,7 +133,7 @@ function FormBuyDetails(props: IDetailsFormProps) {
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
   const {
-    assetDetails: { status, creatorData, ownerData, marketData, imageData },
+    assetDetails: { creatorData, ownerData, marketData, imageData },
   } = useSelector(selectAssetDetails())
 
   const [tab, setTab] = useState(0)

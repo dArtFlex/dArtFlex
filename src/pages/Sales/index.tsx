@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { selectAssets } from 'stores/selectors'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, CircularProgressLoader, CardAsset } from 'common'
-import { useCardStatus } from './lib'
 import { useStyles } from './styles'
 
 export default function Sales() {
@@ -26,7 +25,7 @@ export default function Sales() {
                   return el.sold
                 })
                 .map((asset, i) => (
-                  <CardAsset key={i} asset={asset} withLabel withAction useCardStatus={useCardStatus} />
+                  <CardAsset key={i} asset={asset} withLabel withAction />
                 ))}
             </>
           )}

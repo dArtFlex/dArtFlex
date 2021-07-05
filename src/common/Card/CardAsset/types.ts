@@ -32,7 +32,7 @@ export interface ICardAssetProps {
   asset: AssetDataTypesWithStatus
   withLabel?: boolean
   withAction?: boolean
-  useCardStatus: (
+  useCardStatus?: (
     data: IUseCardStatus
   ) =>
     | typeof LIVE_AUCTION

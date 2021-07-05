@@ -1,14 +1,14 @@
 //@ts-nocheck
-import { PayloadAction } from '@reduxjs/toolkit'
+// import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
 import {
   placeBidSuccess,
   placeBidFailure,
   getBidsHistoryFailure,
-  getBidsHistorySuccess,
+  // getBidsHistorySuccess,
 } from 'stores/reducers/placeBid'
-import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
+// import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
@@ -79,7 +79,6 @@ export function* placeBid(api: IApi) {
 
 export function* getBidsHistory(api: IApi) {
   try {
-    debugger
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const getHistory = yield call(api, {
       url: APP_CONFIG.getHistory(+marketData.id),
@@ -92,10 +91,9 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(api: IApi) {
   try {
-    debugger
-    const history = yield call(getBidsHistory)
+    // const history = yield call(getBidsHistory)
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
-    const acceptBid = yield call(api, {
+    yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
       data: {
