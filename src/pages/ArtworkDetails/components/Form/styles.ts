@@ -175,5 +175,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontWeight: 400,
       },
     },
+    borderdIconButton: {},
+    actionBtnBurn: {},
   })
 )

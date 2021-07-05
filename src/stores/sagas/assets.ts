@@ -84,6 +84,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
 
     yield put(
       getAssetByIdSuccess({
+        status,
         tokenData: assetById[0],
         imageData: imageData[0],
         ownerData: userByOwner[0],

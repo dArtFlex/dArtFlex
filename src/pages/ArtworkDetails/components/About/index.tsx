@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, CardHeader, CardContent, Avatar, Typography } from '@material-ui/core'
-import { UserDataTypes } from 'types'
+import { IAssetDetails } from 'stores/reducers/assets/types'
 import { useStyles } from './styles'
 
 interface IAbout {
-  creator: UserDataTypes
+  creator: IAssetDetails['creatorData']
 }
 
 export default function About(props: IAbout) {
@@ -18,12 +18,12 @@ export default function About(props: IAbout) {
           title: styles.title,
           subheader: styles.subheader,
         }}
-        avatar={<Avatar aria-label={status} className={styles.avatar} src={creator.profile_image} />}
-        title={creator.fullname}
-        subheader={<Typography className={styles.subheader}>@{creator.userid}</Typography>}
+        avatar={<Avatar aria-label={status} className={styles.avatar} src={creator?.profile_image} />}
+        title={creator?.fullname}
+        subheader={<Typography className={styles.subheader}>@{creator?.userid}</Typography>}
       />
       <CardContent classes={{ root: styles.footer }}>
-        <Typography className={styles.footerText}>{creator.overview}</Typography>
+        <Typography className={styles.footerText}>{creator?.overview}</Typography>
       </CardContent>
     </Card>
   )

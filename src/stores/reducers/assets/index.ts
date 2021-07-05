@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AssetsStateType } from './types'
+import { IAssetStatus } from 'types'
 
 const initialState: AssetsStateType = {
   fetching: false,
@@ -39,6 +40,7 @@ const assetsSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
+        status: AssetsStateType['assetDetails']['status']
         imageData: AssetsStateType['assetDetails']['imageData']
         tokenData: AssetsStateType['assetDetails']['tokenData']
         ownerData: AssetsStateType['assetDetails']['ownerData']
@@ -46,6 +48,7 @@ const assetsSlice = createSlice({
         marketData: AssetsStateType['assetDetails']['marketData']
       }>
     ) => {
+      state.assetDetails.status = payload.status
       state.assetDetails.imageData = payload.imageData
       state.assetDetails.tokenData = payload.tokenData
       state.assetDetails.ownerData = payload.ownerData

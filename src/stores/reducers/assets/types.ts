@@ -1,4 +1,11 @@
-import { AssetDataTypes, AssetTypes, AssetMarketplaceTypes, UserDataTypes, AssetDataTypesWithStatus } from 'types'
+import {
+  AssetDataTypes,
+  AssetTypes,
+  AssetMarketplaceTypes,
+  UserDataTypes,
+  AssetDataTypesWithStatus,
+  IAssetStatus,
+} from 'types'
 export interface AssetsStateType {
   fetching: boolean
   error: string
@@ -7,6 +14,7 @@ export interface AssetsStateType {
 }
 
 export interface IAssetDetails {
+  status?: IAssetStatus
   imageData: null | AssetDataTypes['imageData']
   tokenData: null | AssetTypes
   ownerData: null | UserDataTypes

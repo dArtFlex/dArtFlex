@@ -30,7 +30,6 @@ export function useSortedAssets({
       return assets.filter((a) => a.type === INSTANT_BY && Boolean(a.sold) === false)
     case RESERVE_NOT_MET:
       return assets.filter((a) => {
-        debugger
         if (a.type === AUCTION && Boolean(a.sold) === false) {
           return new Date(a.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
         }

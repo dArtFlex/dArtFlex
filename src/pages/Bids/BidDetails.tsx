@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectAsset } from 'stores/selectors'
+import { selectAssetDetails } from 'stores/selectors'
 import { Box } from '@material-ui/core'
 import { PageWrapper, CardAsset } from 'common'
 import { InfoBid } from './components'
@@ -11,7 +11,7 @@ import routes from '../../routes'
 export default function BidDetails() {
   const classes = useStyles()
   const history = useHistory()
-  const { assetDetails, fetching } = useSelector(selectAsset())
+  const { assetDetails, fetching } = useSelector(selectAssetDetails())
 
   if (assetDetails.imageData === null && fetching === false) {
     history.push(routes.artworks)
