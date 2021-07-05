@@ -9,14 +9,15 @@ import { useTimer } from 'hooks'
 import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
+import { normalizeDate } from 'utils'
 
 export default function CardAsset(props: ICardAssetProps) {
   const { asset, withLabel, withAction, useCardStatus } = props
   const classes = useStyles()
   const history = useHistory()
 
-  const { timer } = useTimer(new Date(asset.end_time).getTime() || 0)
-  const burnTime = new Date(asset.start_time).getTime() + 1000 * 60 * 60
+  const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
+  const burnTime = normalizeDate(asset.start_time).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
 

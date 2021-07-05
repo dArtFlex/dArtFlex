@@ -165,6 +165,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+
   const now_time = new Date().getTime()
   const isAuctionExpired = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time
   const isReserveNotMet =
@@ -239,7 +240,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
                 `$${new BigNumber(marketData.end_price).multipliedBy(ethRate).toNumber().toFixed(1)}`}
             </span>
           </Box>
-          {marketData?.end_price && (
+          {marketData?.end_time && isAuctionExpired && (
             <Box>
               <Box className={classes.infoRowIcon}>
                 <Typography variant={'body1'}>Auction Ending In </Typography>

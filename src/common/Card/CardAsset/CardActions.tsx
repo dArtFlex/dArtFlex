@@ -4,8 +4,10 @@ import clsx from 'clsx'
 import { Box, Button, Typography, ButtonBase } from '@material-ui/core'
 import { TimeIcon, BurnIcon } from 'common/icons'
 import appConst from 'config/consts'
+import { useDefaultCardStatus } from './lib'
 import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
+import { normalizeDate } from 'utils'
 
 const {
   FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
@@ -13,7 +15,17 @@ const {
 
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
-  const { endPrice, startPrice, sold, endTime = 0, burnTime = 0, timer, type, status, useCardStatus } = props
+  const {
+    endPrice,
+    startPrice,
+    sold,
+    endTime = '0',
+    burnTime = 0,
+    timer,
+    type,
+    status,
+    useCardStatus = useDefaultCardStatus,
+  } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
 
@@ -45,11 +57,13 @@ export default function CardActions(props: ICardActionsProps) {
         <Box className={classes.cardAction}>
           <Section
             text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={now_time < new Date(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
+            value={now_time < normalizeDate(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
           />
-          {now_time < new Date(endTime).getTime() ? (
-            <ButtonBase className={clsx(classes.actionBtn, endTime < burnTime && classes.actionBtnBurn)}>
-              {endTime < burnTime ? (
+          {now_time < normalizeDate(endTime).getTime() ? (
+            <ButtonBase
+              className={clsx(classes.actionBtn, normalizeDate(endTime).getTime() < burnTime && classes.actionBtnBurn)}
+            >
+              {normalizeDate(endTime).getTime() < burnTime ? (
                 <BurnIcon className={classes.actionBtnIcon} />
               ) : (
                 <TimeIcon className={classes.actionBtnIcon} />

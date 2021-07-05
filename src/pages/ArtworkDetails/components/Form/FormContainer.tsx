@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React from 'react'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
@@ -7,14 +6,14 @@ import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
-import { ApprovedFormState, IFormContainer } from '../../types'
+import { ApprovedFormState } from '../../types'
+import { AssetDataTypesWithStatus } from 'types'
 import { selectAssetDetails } from 'stores/selectors'
-import { useStyles } from '../../styles'
+import { useStyles } from './styles'
 import appConst from 'config/consts'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
-  FILTER_VALUES: { LISTED, LIVE_AUCTION, MINTED },
 } = appConst
 
 export default function FormContainer() {
@@ -23,13 +22,14 @@ export default function FormContainer() {
 
   const { values } = useFormikContext<ApprovedFormState>()
 
-  const asset = {
-    ...assetDetails.marketData,
-    status: assetDetails.status,
-    assetDetails: assetDetails.imageData,
-    userData: assetDetails.ownerData,
-    imageData: assetDetails.imageData,
-  }
+  const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
+    ? {
+        ...assetDetails.marketData,
+        status: assetDetails.status as string,
+        userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
+        imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+      }
+    : null
 
   return (
     <Box className={classes.root}>
@@ -43,7 +43,7 @@ export default function FormContainer() {
           </Box>
         ) : (
           <Box className={classes.previewContainer}>
-            <CardAsset asset={asset} useCardStatus={useCardStatus} />
+            {composeData !== null ? <CardAsset asset={composeData} /> : null}
           </Box>
         )}
       </Box>
@@ -51,13 +51,4 @@ export default function FormContainer() {
       {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
     </Box>
   )
-}
-
-function useCardStatus({ status, type, endPrice, startPrice, sold, endTime }: IUseCardStatus) {
-  switch (status) {
-    case LISTED:
-      return LIVE_AUCTION
-    default:
-      return MINTED
-  }
 }

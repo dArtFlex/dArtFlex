@@ -13,6 +13,6 @@ export function getIdFromString(v: string): number | null {
 }
 
 export function normalizeDate(date: string): Date {
-  const dateInst = new Date(date)
-  return dateInst.getTime() ? new Date(Number(date)) : new Date(date)
+  const isTimestamp = new Date(date).getTime() > 0
+  return isTimestamp ? new Date(date) : new Date(Number(date))
 }

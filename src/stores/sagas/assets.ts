@@ -6,7 +6,6 @@ import {
   getAssetByIdSuccess,
   getAssetByIdFailure,
 } from 'stores/reducers/assets'
-import { selectUser } from 'stores/selectors'
 import { getUserDataByOwner } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
 import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes, AssetDataTypesWithStatus } from 'types'

@@ -5,6 +5,7 @@ import { selectAssetDetails } from 'stores/selectors'
 import { Box } from '@material-ui/core'
 import { PageWrapper, CardAsset } from 'common'
 import { InfoBid } from './components'
+import { AssetDataTypesWithStatus } from 'types'
 import { useStyles } from './styles'
 import routes from '../../routes'
 
@@ -18,11 +19,22 @@ export default function BidDetails() {
     return null
   }
 
+  const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
+    ? {
+        ...assetDetails.marketData,
+        status: assetDetails.status as string,
+        userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
+        imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+      }
+    : null
+
   return (
     <PageWrapper>
       <Box className={classes.bidContainer}>
         <Box className={classes.outerContainer}>
-          <Box className={classes.previewContainer}>{/* <CardAsset asset={assetDetails.} /> */}</Box>
+          <Box className={classes.previewContainer}>
+            {composeData !== null ? <CardAsset asset={composeData} /> : null}
+          </Box>
         </Box>
         <Box className={classes.bidInfoBox}>
           <InfoBid />
