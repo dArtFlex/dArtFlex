@@ -1,4 +1,4 @@
-const STAGE_URL = 'http://localhost:8888/api-docs'
+const STAGE_URL = 'http://dartflex-dev.ml:8888/api-docs'
 // const DEV_URL = 'http://3.11.202.153:8888/api'
 // const LOCAL_URL = 'http://localhost:3000/api'
 
