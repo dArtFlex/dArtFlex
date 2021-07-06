@@ -15,7 +15,7 @@ export default function apiMiddleware({
     Accept: 'application/json; charset=UTF-8',
     'Content-Type': 'application/json; charset=UTF-8',
     'Content-Language': localStorage.getItem('i18nextLng') || 'en',
-    Authorization: `Bearer ${localStorage.getItem('fdlt.token')}`,
+    // Authorization: `Bearer ${localStorage.getItem('token')}`,
   })
 
   return axios({
