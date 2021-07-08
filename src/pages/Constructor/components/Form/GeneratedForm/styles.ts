@@ -30,6 +30,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       margin: 'auto',
       maxWidth: 325,
+      color: theme.palette.text.primary,
     },
     btnBack: {
       alignSelf: 'flex-start',

@@ -15,6 +15,7 @@ import Constructor from '../pages/Constructor'
 import TradingHistory from '../pages/TradingHistory'
 import ArtworkDetails from '../pages/ArtworkDetails'
 import ContentManagement from '../pages/ContentManagement'
+import MakeOffer from '../pages/MakeOffer'
 
 export const history = createBrowserHistory()
 
@@ -73,6 +74,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.contentManagement,
       component: <ContentManagement />,
+    },
+    {
+      path: routes.makeOffer,
+      component: <MakeOffer />,
     },
   ]
 
