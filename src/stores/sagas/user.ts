@@ -90,7 +90,7 @@ export function* createNewUser(
 
     const userProfileId: string = yield call(api, {
       method: 'POST',
-      url: 'http://3.11.202.153:8888/api/user/create',
+      url: APP_CONFIG.createUserProfile,
       data: formData,
       transform: false,
     })

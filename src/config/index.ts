@@ -29,6 +29,7 @@ const APP_CONFIG = {
   createItem: `${STAGE_URL}/item/create`,
   createSalesDetail: `${STAGE_URL}/marketplace/create`,
   createOrder: `${STAGE_URL}/order/create`,
+  createUserProfile: `${STAGE_URL}/user/create`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,
