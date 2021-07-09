@@ -1,6 +1,7 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
 import { web3Service } from 'services/web3_service'
+import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import appConst from 'config/consts'
 
 class WalletService {
@@ -41,6 +42,10 @@ class WalletService {
 
   getAccoutns() {
     return this.accounts
+  }
+
+  getTokenContract(tokenId) {
+    return new web3.eth.Contract(STANDART_TOKEN_ABI, tokenId)
   }
 }
 
