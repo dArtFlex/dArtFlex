@@ -55,6 +55,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: 'transparent',
       },
+      color: theme.palette.error.main,
     },
     strike: {
       textDecoration: 'line-through',

@@ -8,9 +8,21 @@ import Description from './Description'
 import History from './History'
 import AboutCreator from './AboutCreator'
 
+const tabsItems = [
+  {
+    title: 'Description',
+  },
+  {
+    title: 'History',
+  },
+  {
+    title: 'About Creator',
+  },
+]
+
 export default function FormArtworkInfo(props: IMakeOfferForm) {
   const classes = useStyles()
-  const [tabIndex, setTabIndex] = useState<number>(0)
+  const [tab, setTab] = useState(0)
 
   const makeOfferTabs = [
     {
@@ -26,37 +38,6 @@ export default function FormArtworkInfo(props: IMakeOfferForm) {
       component: <AboutCreator />,
     },
   ]
-
-  function TabPanel(props: ITabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box>
-            <Typography component={'span'}>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    )
-  }
-
-  function a11yProps(index: number) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    }
-  }
-
-  const handleChange = (event: ChangeEvent<any>, value: number) => {
-    setTabIndex(value)
-  }
 
   return (
     <Box className={classes.artworkInfoWrapper}>
@@ -111,16 +92,20 @@ export default function FormArtworkInfo(props: IMakeOfferForm) {
         Make offer
       </Button>
       <Box mt={10}>
-        <Tabs aria-label="navigation" value={tabIndex} onChange={handleChange}>
-          {makeOfferTabs.map(({ title }, index) => (
-            <Tab key={title} label={title} {...a11yProps(index)} />
+        <Tabs
+          aria-label="info"
+          value={tab}
+          onChange={(_, newValue) => {
+            setTab(newValue)
+          }}
+        >
+          {tabsItems.map(({ title }) => (
+            <Tab key={title} label={title} />
           ))}
         </Tabs>
-        {makeOfferTabs.map(({ component }, index) => (
-          <TabPanel key={index} value={tabIndex} index={index}>
-            {component}
-          </TabPanel>
-        ))}
+        {tab === 0 && <Description />}
+        {tab === 1 && <History />}
+        {tab === 2 && <AboutCreator />}
       </Box>
     </Box>
   )

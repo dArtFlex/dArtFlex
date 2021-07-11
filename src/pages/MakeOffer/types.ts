@@ -10,14 +10,3 @@ export interface ITabPanelProps {
   index: number
   value: number
 }
-
-export interface IHistoryData {
-  id: number
-  avatar: string
-  date: number
-  bid: number
-  author: string
-  listed?: boolean
-  minted?: boolean
-  expiration?: number
-}

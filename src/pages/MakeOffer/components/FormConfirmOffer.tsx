@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IMakeOfferForm } from '../types'
 import {
   Box,
@@ -15,12 +15,55 @@ import {
 import { useStyles } from '../styles'
 import { ArrowLeftIcon, InfoIcon } from '../../../common/icons'
 import clsx from 'clsx'
-import { Select } from '../../../common'
+import { Field, Select } from '../../../common'
 import DateFnsUtils from '@date-io/date-fns'
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import appConst from '../../../config/consts'
+import { daysInMonth } from '../../../utils'
+import { ISellArtwork } from '../../SellNFT/types'
+import { useFormikContext } from 'formik'
+
+// const {
+//   SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC, NEVER },
+// } = appConst
+//
+// const schedule = [
+//   {
+//     value: DAYS3,
+//     label: '3 days',
+//   },
+//   {
+//     value: DAYS5,
+//     label: '5 days',
+//   },
+//   {
+//     value: MONTH,
+//     label: '1 month',
+//   },
+//   {
+//     value: SPECIFIC,
+//     label: 'Custom Date',
+//   },
+// ]
 
 export default function FormConfirmOffer(props: IMakeOfferForm) {
   const classes = useStyles()
+
+  // const { values, setFieldValue } = useFormikContext<ISellArtwork>()
+  // const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
+  //
+  // useEffect(() => {
+  //   switch (values.expirationTime) {
+  //     case '5days':
+  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 5))
+  //     case '3days':
+  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 3))
+  //     case 'week':
+  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
+  //     case 'month':
+  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
+  //   }
+  // }, [values.expirationTime])
 
   const [sortValue, setSortValue] = useState('3days')
 
