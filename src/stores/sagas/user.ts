@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, all } from 'redux-saga/effects'
@@ -9,14 +8,15 @@ import {
   getUserDataSuccess,
   createNewUserSuccess,
   createNewUserFailure,
+  getUserBalancesSuccess,
+  getUserBalancesFailure,
 } from 'stores/reducers/user'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import { walletService } from 'services/wallet_service'
-import { UserDataTypes, IChainId, ITokenBalances } from 'types'
+import { UserDataTypes, IChainId, ITokenBalances, IBaseTokens } from 'types'
 import APP_CONFIG from 'config'
 import tokensAll from 'core/tokens'
-import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { getIdFromString } from 'utils'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -54,7 +54,7 @@ function* uploadImage(api: IApi, file: File) {
     })
     return imageUrl
   } catch (e) {
-    console.log(e)
+    throw new Error(e.message || e)
   }
 }
 
@@ -88,9 +88,17 @@ export function* createNewUser(
     formData.append('tiktok', tiktok)
     formData.append('otherUrl', otherUrl)
 
+    const checkUserByWallet: UserStateType['user'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(wallet),
+    })
+    const url = checkUserByWallet.length ? APP_CONFIG.updateUserProfile : APP_CONFIG.createUserProfile
+    if (checkUserByWallet.length && checkUserByWallet[0] !== null) {
+      formData.append('id', `${checkUserByWallet[0].id}`)
+    }
+
     const userProfileId: string = yield call(api, {
       method: 'POST',
-      url: 'http://3.11.202.153:8888/api/user/create',
+      url,
       data: formData,
       transform: false,
     })
@@ -108,23 +116,25 @@ export function* createNewUser(
 export function* getUserBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
     const chainId: IChainId = walletService.getChainId()
-    const tokens = tokensAll[chainId].filter((t) => t.id.startsWith('0x'))
+    const tokens: Array<IBaseTokens> = tokensAll[chainId].filter((t) => t.id.startsWith('0x'))
     const balances: Array<ITokenBalances | undefined> = yield all(
       tokens.map((t) => call(getBalance, api, t, payload.wallet))
     )
-    const existBalances: ITokenBalances[] = balances.filter((b) => b && b.balance !== '0')
-    console.log(existBalances)
+
+    const existBalances = balances.filter((b) => b && b.balance !== '0')
+    yield put(getUserBalancesSuccess({ balances: existBalances as ITokenBalances[] | [] }))
   } catch (e) {
-    console.log(e)
+    yield put(getUserBalancesFailure(e.message || e))
   }
 }
 
-function* getBalance(api, token, acc) {
+function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
   try {
     const { id, decimals, symbol } = token
-    if (acc && web3 && id) {
-      const tokenContract = new web3.eth.Contract(STANDART_TOKEN_ABI, id)
-      const balance = yield tokenContract.methods.balanceOf(acc).call()
+
+    if (acc && id) {
+      const tokenContract = walletService.getTokenContract(id)
+      const balance: string = yield tokenContract.methods.balanceOf(acc).call()
       if (balance !== '0') {
         const _balance = new BigNumber(balance)
           .div(`10e${decimals - 1}`)
@@ -136,7 +146,13 @@ function* getBalance(api, token, acc) {
           method: 'GET',
         })
         const _price = price?.USD
-        return { id, symbol, balance: _balance, priceUSD: _price, balanceUSD: _balance * _price }
+        return {
+          id,
+          symbol,
+          balance: _balance,
+          priceUSD: _price,
+          balanceUSD: new BigNumber(_balance).times(_price).toNumber(),
+        }
       }
     }
   } catch (e) {

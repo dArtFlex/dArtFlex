@@ -67,6 +67,16 @@ const assetsSlice = createSlice({
       state.assetDetails.creatorData = null
       state.assetDetails.marketData = null
     },
+
+    getExchangeRateTokensRequest: (state) => state,
+    getExchangeRateTokensSuccess: (state, { payload }: PayloadAction<AssetsStateType['exchangeRates']>) => {
+      state.exchangeRates = payload
+      state.fetching = false
+    },
+    getExchangeRateTokensFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -80,6 +90,10 @@ export const {
   getAssetByIdFailure,
 
   clearAssetDetails,
+
+  getExchangeRateTokensRequest,
+  getExchangeRateTokensSuccess,
+  getExchangeRateTokensFailure,
 } = assetsSlice.actions
 
 export const { reducer } = assetsSlice

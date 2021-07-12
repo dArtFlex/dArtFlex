@@ -92,5 +92,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.greyMid,
       },
     },
+    linkIcon: {
+      fill: theme.palette.text.primary,
+    },
   })
 )

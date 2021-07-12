@@ -1,6 +1,6 @@
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
-// const DEV_URL = 'http://3.11.202.153:8888/api'
-// const LOCAL_URL = 'http://localhost:3000/api'
+// const STAGE_URL_OLD = 'http://dartflex-dev.ml:8888/api'
+// const DEV_URL = 'https://3.11.202.153:8888/api'
 
 const APP_CONFIG = {
   rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
@@ -29,6 +29,8 @@ const APP_CONFIG = {
   createItem: `${STAGE_URL}/item/create`,
   createSalesDetail: `${STAGE_URL}/marketplace/create`,
   createOrder: `${STAGE_URL}/order/create`,
+  createUserProfile: `${STAGE_URL}/user/create`,
+  updateUserProfile: `${STAGE_URL}/user/update`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,

@@ -12,11 +12,9 @@ export default function apiMiddleware({
   transform = true,
 }: IApiMiddleware): Promise<string> {
   defaults(headers, {
-    Accept: 'application/json; charset=UTF-8',
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Content-Language': localStorage.getItem('i18nextLng') || 'en',
     'Access-Control-Allow-Origin': '*',
-    // Authorization: `Bearer ${localStorage.getItem('token')}`,
+    'Access-Control-Allow-Methods': 'POST, GET',
+    'Access-Control-Allow-Headers': 'Content-Type',
   })
 
   return axios({

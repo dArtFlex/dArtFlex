@@ -54,3 +54,12 @@ export interface ITokenBalances {
   priceUSD: number
   symbol: string
 }
+
+export interface IBaseTokens {
+  name: string
+  id: string
+  erc20id?: string
+  symbol: string
+  decimals: number
+  logoURI: string
+}
