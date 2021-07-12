@@ -12,10 +12,8 @@ export default function apiMiddleware({
   transform = true,
 }: IApiMiddleware): Promise<string> {
   defaults(headers, {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    Accept: 'application/json; charset=UTF-8',
+    'Content-Type': 'application/json; charset=UTF-8',
   })
 
   return axios({
