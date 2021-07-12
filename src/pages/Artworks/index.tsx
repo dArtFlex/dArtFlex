@@ -174,12 +174,14 @@ export default function Artworks() {
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
                   setSortValue(target.value as string)
                 }}
+                classes={{ select: classes.sortArtworksMenu }}
+                className={classes.sortArtworksMenu}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:
                 </Typography>
                 {sortItems.map(({ label, value }) => (
-                  <Select key={value} value={value}>
+                  <Select key={value} value={value} className={classes.sortItem}>
                     {label}
                   </Select>
                 ))}
@@ -192,14 +194,25 @@ export default function Artworks() {
             onChange={(_, value) => {
               if (value) setFilter(value)
             }}
+            classes={{ root: classes.sortArtworksMenu }}
           >
             {filterItems.map(({ label, value }) => {
               return wallet !== null ? (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton
+                  key={value}
+                  value={value}
+                  selected={filter === value}
+                  classes={{ selected: classes.toggleButtonSelected }}
+                >
                   {label}
                 </ToggleButton>
               ) : value === LIVE_AUCTION || value === RESERVE_NOT_MET ? (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton
+                  key={value}
+                  value={value}
+                  selected={filter === value}
+                  classes={{ selected: classes.toggleButtonSelected }}
+                >
                   {label}
                 </ToggleButton>
               ) : null
@@ -217,7 +230,7 @@ export default function Artworks() {
         </Box>
         {showCustomFilters && (
           <Box mb={7}>
-            <Divider />
+            <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
               <Box flex={'1 1 auto'} mr={10}>
                 {hashTags.map((ht) => {
@@ -246,9 +259,11 @@ export default function Artworks() {
                     InputProps={{
                       classes: {
                         input: classes.priceInput,
+                        notchedOutline: classes.priceInputBorder,
                       },
                       endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
                     }}
+                    className={classes.priceInput}
                   />
                   {Boolean(index === 0) && (
                     <Box ml={1.5} mr={1.5}>

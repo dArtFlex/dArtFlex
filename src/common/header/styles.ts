@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     toolbar: {
       backgroundColor: theme.palette.background.default,
-      borderBottom: `1px solid ${theme.palette.greyLight}`,
+      borderBottom: `1px solid ${theme.palette.grey['100']}`,
     },
     navTabs: {
       padding: theme.spacing(5, 0),
@@ -33,6 +33,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     buttonWallet: {
       borderColor: theme.palette.grey['200'],
       backgroundColor: theme.palette.background.default,
+      color: theme.palette.primary.contrastText,
     },
     notification: {
       margin: theme.spacing(0, 6),
@@ -46,6 +47,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
+      backgroundColor: theme.palette.background.default,
     },
     notificationBadge: {
       background: theme.palette.redMiddle,
@@ -58,13 +60,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     notificationCard: {
       minWidth: 428,
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['100'],
       padding: theme.spacing(3),
       borderRadius: 12,
       cursor: 'pointer',
     },
     notificationBadgeUnread: {
-      background: theme.palette.primary.light,
+      background: theme.palette.warning.light,
     },
     notificationCardBadge: {
       width: 8,

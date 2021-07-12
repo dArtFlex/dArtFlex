@@ -21,6 +21,7 @@ const palette = {
   lightPink: '#FFF7F2',
   lightViolet: '#8566FF',
   blackMain: '#222A2C',
+  blackDark: '#141717',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
@@ -47,11 +48,12 @@ const lightPalette = {
   primary: {
     main: PrimaryMain,
     light: PrimaryLight,
+    contrastText: PrimaryMain,
   },
   secondary: {
     main: palette.greyLight,
   },
-  warning: { main: '#FF5C00' },
+  warning: { main: '#FF5C00', light: PrimaryLight },
   text: { primary: TextPrimary, secondary: palette.greyDark },
   background: {
     default: '#fff',
@@ -71,6 +73,7 @@ const DarkPalette = {
   primary: {
     main: PrimaryMain,
     light: PrimaryLight,
+    contrastText: '#fff',
   },
   secondary: {
     main: palette.white,
@@ -78,8 +81,9 @@ const DarkPalette = {
   text: { primary: '#fff', secondary: palette.greyMid },
   background: {
     default: '#141717',
-    paper: '#FFFFFF',
+    paper: palette.blackMain,
   },
+  warning: { main: '#FF5C00', light: palette.violet },
   grey: {
     50: '#141717',
     100: palette.blackMain,

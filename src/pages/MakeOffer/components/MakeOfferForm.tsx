@@ -16,7 +16,7 @@ export default function MakeOfferForm(props: IMakeOfferForm) {
     <>
       {Boolean(props.formId === 1) && <FormArtworkInfo formId={props.formId} setFormId={props.setFormId} />}
       {Boolean(props.formId === 2) && (
-        <Form initialValues={values} onSubmit={() => console.log('Submit')}>
+        <Form initialValues={values} onSubmit={(values) => console.log(values)}>
           <FormConfirmOffer formId={props.formId} setFormId={props.setFormId} />
         </Form>
       )}

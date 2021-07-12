@@ -49,7 +49,7 @@ const schedule = [
 export default function FormConfirmOffer(props: IMakeOfferForm) {
   const classes = useStyles()
 
-  const { values, setFieldValue } = useFormikContext<{ offerExpiration: string; endDate: string }>()
+  const { values, setFieldValue, handleSubmit } = useFormikContext<{ offerExpiration: string; endDate: string }>()
   const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
 
   const [datePicker, setDatePicker] = useState(false)
 
-  const [date, setDate] = React.useState<Date | null>(new Date())
+  const [date, setDate] = React.useState<Date>(new Date())
 
   function onSort({ target }: React.ChangeEvent<{ value: unknown }>) {
     if (target.value === 'customDate') {
@@ -171,7 +171,9 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
           {/*  </MuiPickersUtilsProvider>*/}
           {/*)}*/}
           <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
-          {values.offerExpiration === SPECIFIC && <Field type="picker" name="endDate" fullWidth={false} />}
+          {values.offerExpiration === SPECIFIC && (
+            <Field type="picker" name="endDate" fullWidth={false} date={date} setDate={setDate} />
+          )}
         </Box>
         <Box mt={6}>
           <Box className={classes.rulesBox}>
@@ -183,7 +185,13 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
             <span>I agree with dArtflex&apos;s Terms and Services</span>
           </Box>
           <Box mt={8}>
-            <Button className={classes.makeOfferBlockContent} fullWidth variant="contained" color="primary">
+            <Button
+              className={classes.makeOfferBlockContent}
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => handleSubmit()}
+            >
               Make Offer
             </Button>
           </Box>
