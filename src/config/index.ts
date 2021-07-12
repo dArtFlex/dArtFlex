@@ -1,4 +1,5 @@
 // const STAGE_URL = 'http://dartflex-dev.ml:8887/api'
+// const STAGE_URL_OLD = 'http://dartflex-dev.ml:8888/api'
 const DEV_URL = 'http://3.11.202.153:8888/api'
 
 const APP_CONFIG = {

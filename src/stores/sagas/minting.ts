@@ -6,6 +6,7 @@ import { uploadImageSuccess, uploadImageFailure, lazyMintingSuccess, lazyMinting
 import { MintingStateType } from 'stores/reducers/minting/types'
 import { lazyMintService } from 'services/lazymint_service'
 import { walletService } from 'services/wallet_service'
+import { LAZY_MINT_ADDRESS } from 'core/contracts/lazy_mint_contract'
 import { ILazyMintData } from 'types'
 import APP_CONFIG from 'config'
 
@@ -59,7 +60,7 @@ export function* minting(
 
     const lm: ILazyMintData = yield lazyMintService.generateLazyMint({
       body: {
-        contract: '0x6ede7f3c26975aad32a475e1021d8f6f39c89d82',
+        contract: LAZY_MINT_ADDRESS,
         uri: tokenUri,
         creator: walletService.getAccoutns()[0],
         royalty: royalties,
