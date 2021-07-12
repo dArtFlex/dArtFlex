@@ -2,8 +2,7 @@ const tokensAll = {
   // Ethereum
   '0x1': [
     {
-      id: 'ETH',
-      erc20id: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      id: '0x',
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
@@ -22,8 +21,7 @@ const tokensAll = {
   // Rinkeby
   '0x4': [
     {
-      id: 'ETH',
-      erc20id: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+      id: '0x',
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,

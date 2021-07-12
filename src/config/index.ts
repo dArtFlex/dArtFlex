@@ -1,5 +1,6 @@
 // const STAGE_URL = 'http://dartflex-dev.ml:8887/api'
-const DEV_URL = 'http://3.11.202.153:8888/api'
+// const STAGE_URL_OLD = 'http://dartflex-dev.ml:8888/api'
+const DEV_URL = 'https://3.11.202.153:8888/api'
 
 const APP_CONFIG = {
   rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
