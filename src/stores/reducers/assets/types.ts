@@ -11,6 +11,7 @@ export interface AssetsStateType {
   error: string
   assets: null | AssetDataTypesWithStatus[]
   assetDetails: IAssetDetails
+  exchangeRates?: IExchangeRates[]
 }
 
 export interface IAssetDetails {
@@ -20,4 +21,10 @@ export interface IAssetDetails {
   ownerData: null | UserDataTypes
   creatorData: null | UserDataTypes
   marketData: null | AssetMarketplaceTypes
+}
+
+export interface IExchangeRates {
+  id: string
+  rateUsd: number
+  symbol: string
 }

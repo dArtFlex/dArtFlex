@@ -5,11 +5,22 @@ import {
   getAssetsAllFailure,
   getAssetByIdSuccess,
   getAssetByIdFailure,
+  getExchangeRateTokensSuccess,
+  getExchangeRateTokensFailure,
 } from 'stores/reducers/assets'
 import { getUserDataByOwner } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
-import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes, AssetDataTypesWithStatus } from 'types'
+import { walletService } from 'services/wallet_service'
+import {
+  AssetTypes,
+  AssetDataTypes,
+  UserDataTypes,
+  AssetMarketplaceTypes,
+  AssetDataTypesWithStatus,
+  IChainId,
+} from 'types'
 import APP_CONFIG from 'config'
+import tokensAll from 'core/tokens'
 import { getAssetStatus } from 'utils'
 
 function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
@@ -132,5 +143,33 @@ function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
     }
   } catch (e) {
     throw new Error(e.message || e)
+  }
+}
+
+function* getPrice(api: IApi, symbol: string) {
+  try {
+    const price: { [key: string]: number } = yield call(api, {
+      url: APP_CONFIG.exchangeRate(symbol, 'USD'),
+      method: 'GET',
+    })
+    return { priceUSD: price?.USD || 0 }
+  } catch (e) {
+    throw new Error(e.message || e)
+  }
+}
+
+export function* getExchangeRateTokens(api: IApi) {
+  try {
+    const chainId: IChainId = walletService.getChainId()
+    const tAll = tokensAll[chainId || '0x1']
+    const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
+    const exchangeRates = tAll.map((t, i) => ({
+      id: t.id,
+      rateUsd: rateUsd[i].priceUSD,
+      symbol: t.symbol,
+    }))
+    yield put(getExchangeRateTokensSuccess(exchangeRates))
+  } catch (e) {
+    yield put(getExchangeRateTokensFailure(e.message || e))
   }
 }

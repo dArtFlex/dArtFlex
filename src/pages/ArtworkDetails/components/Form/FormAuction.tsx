@@ -1,15 +1,26 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectWallet } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
 // import { createBidRequest } from 'stores/reducers/auction'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Link } from '@material-ui/core'
+import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Link, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Field, InputAdornment } from 'common'
-import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon, BurnIcon, InfoIcon } from 'common/icons'
+import {
+  MoreHorizontalIcon,
+  TwitterIcon,
+  LinkIcon,
+  EtherscanIcon,
+  OpenseaIcon,
+  IpfsIcon,
+  BurnIcon,
+  InfoIcon,
+  EyeIcon,
+  ReportIcon,
+} from 'common/icons'
 import { History, About } from '../../components'
-import { useTimer } from 'hooks'
+import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
 import { ApprovedFormState } from '../../types'
 import { useStyles } from './styles'
@@ -142,10 +153,6 @@ const tabsItems = [
     title: 'About Creator',
   },
 ]
-
-// constants should be removed when logic will be provided
-const ethRate = 2511
-
 interface IDetailsFormProps {
   onSubmit: () => void
 }
@@ -157,6 +164,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData },
   } = useSelector(selectAssetDetails())
+  const { exchangeRates } = useSelector(selectAssetTokenRates())
 
   const endTime = marketData?.end_time ? normalizeDate(marketData?.end_time).getTime() : 0
   const { timer } = useTimer(endTime)
@@ -172,15 +180,22 @@ function FormAuctionDetails(props: IDetailsFormProps) {
     marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
   const ifAuctionEnds = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60
 
+  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
+  const tokenRate = exchangeRates
+    ? exchangeRates.find((tR) => tokenInfo?.id && tR.id === tokenInfo.id)?.rateUsd || 0
+    : 0
+
+  const endPriceToToken =
+    marketData?.end_price && tokenInfo?.decimals
+      ? new BigNumber(marketData?.end_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
+      : 0
+
   return (
     <>
       <Box pt={14}>
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            <IconButton className={classes.borderdIconButton}>
-              <ShareIcon />
-            </IconButton>
             <IconButton
               onClick={(event: React.SyntheticEvent<EventTarget>) => {
                 const target = event.currentTarget as HTMLElement
@@ -188,7 +203,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
               }}
               className={classes.borderdIconButton}
             >
-              <ExternalLinkIcon />
+              <MoreHorizontalIcon />
             </IconButton>
           </Box>
         </Box>
@@ -217,30 +232,31 @@ function FormAuctionDetails(props: IDetailsFormProps) {
         <Box className={classes.infoRow} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              <span>{isAuctionExpired ? 'Current Bid' : 'Reserve Price'}</span>
-              {isReserveNotMet && <span>Reserve Price</span>}
+              <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>
-              {`${marketData?.end_price} ETH`}
-              {isAuctionExpired ? (marketData?.end_price ? `${marketData?.end_price} ETH` : '-') : ''}
-              {marketData?.sold && `${marketData?.end_price} ETH`}
+              {!isAuctionExpired ? `${endPriceToToken} ETH` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${endPriceToToken} ETH` : '-') : ''}
+              {marketData?.sold && `${endPriceToToken} ETH`}
             </Typography>
             <span>
-              {marketData?.end_price &&
-                `$${new BigNumber(marketData.end_price).multipliedBy(ethRate).toNumber().toFixed(1)}`}
+              {!isAuctionExpired
+                ? marketData?.end_price &&
+                  `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                : null}
 
-              {isReserveNotMet
+              {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(marketData.end_price).multipliedBy(ethRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                   : ''
                 : ''}
               {marketData?.sold &&
                 marketData?.end_price &&
-                `$${new BigNumber(marketData.end_price).multipliedBy(ethRate).toNumber().toFixed(1)}`}
+                `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
             </span>
           </Box>
-          {marketData?.end_time && isAuctionExpired && (
+          {!isAuctionExpired && marketData?.end_time ? (
             <Box>
               <Box className={classes.infoRowIcon}>
                 <Typography variant={'body1'}>Auction Ending In </Typography>
@@ -263,7 +279,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
                 </Typography>
               </Box>
             </Box>
-          )}
+          ) : null}
         </Box>
         {isReserveNotMet &&
           marketData?.start_price &&
@@ -276,14 +292,14 @@ function FormAuctionDetails(props: IDetailsFormProps) {
               </Typography>
             </Box>
           )}
-        {ifAuctionEnds && (
+        {ifAuctionEnds && !isAuctionExpired ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
               This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
               would result in an error.
             </Typography>
           </Box>
-        )}
+        ) : null}
 
         <Button
           onClick={() => {
@@ -298,8 +314,9 @@ function FormAuctionDetails(props: IDetailsFormProps) {
           fullWidth
           disableElevation
           className={classes.bitBtn}
+          disabled={Boolean(isAuctionExpired)}
         >
-          {ifAuctionEnds ? 'I understand, let me bid anyway' : 'Place a Bid'}
+          {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
         </Button>
 
         <Tabs
@@ -330,15 +347,29 @@ function FormAuctionDetails(props: IDetailsFormProps) {
       />
 
       <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box className={classes.externalLinkMenu}>
-          <Typography
-            variant="body1"
-            className={clsx(classes.externalLinkMenuItem, classes.linkTitle)}
-            color="textPrimary"
-          >
-            View on
-          </Typography>
+        <Box>
           <Grid container direction="column">
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<TwitterIcon className={classes.linkIcon} />}
+            >
+              Share with Twitter
+            </Button>
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<LinkIcon className={classes.linkIcon} />}
+            >
+              Copy link
+            </Button>
+            <Divider />
             <Button
               onClick={() => console.log('todo')}
               variant={'text'}
@@ -347,17 +378,7 @@ function FormAuctionDetails(props: IDetailsFormProps) {
               className={classes.btnTitle}
               startIcon={<EtherscanIcon />}
             >
-              Ethescan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              Opensea
+              View on Etherscan
             </Button>
             <Button
               onClick={() => console.log('todo')}
@@ -367,7 +388,39 @@ function FormAuctionDetails(props: IDetailsFormProps) {
               className={classes.btnTitle}
               startIcon={<IpfsIcon />}
             >
-              IPFS
+              View on IPFS
+            </Button>
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<OpenseaIcon />}
+            >
+              View on Opensea
+            </Button>
+            <Divider />
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={clsx(classes.btnTitle, classes.btnTitleGreen)}
+              startIcon={<EyeIcon className={classes.linkIconGreen} />}
+            >
+              Unban Work
+            </Button>
+            <Divider />
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={clsx(classes.btnTitle, classes.btnTitleRed)}
+              startIcon={<ReportIcon />}
+            >
+              Report
             </Button>
           </Grid>
         </Box>

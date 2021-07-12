@@ -212,5 +212,20 @@ export const useStyles = makeStyles((theme: Theme) =>
     actionBtnBurn: {
       color: theme.palette.warning.main,
     },
+    linkIcon: {
+      fill: theme.palette.text.primary,
+    },
+    linkIconRed: {
+      fill: theme.palette.redMiddle,
+    },
+    btnTitleRed: {
+      color: theme.palette.redMiddle,
+    },
+    linkIconGreen: {
+      fill: theme.palette.green,
+    },
+    btnTitleGreen: {
+      color: theme.palette.green,
+    },
   })
 )

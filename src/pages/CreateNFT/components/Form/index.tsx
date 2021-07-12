@@ -77,7 +77,12 @@ export default function Form() {
                 <Box className={classes.empyName}></Box>
               )}
             </Box>
-            <Button variant={'outlined'} startIcon={<EyeIcon />} fullWidth onClick={() => setOpenViewImage(true)}>
+            <Button
+              variant={'outlined'}
+              startIcon={<EyeIcon className={classes.linkIcon} />}
+              fullWidth
+              onClick={() => setOpenViewImage(true)}
+            >
               Preview
             </Button>
           </Box>

@@ -31,7 +31,7 @@ const tokensAll = {
     },
     {
       name: 'Wrapped Ether',
-      id: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+      id: '0xdf032bc4b9dc2782bb09352007d4c57b75160b15',
       symbol: 'WETH',
       decimals: 18,
       logoURI:

@@ -54,7 +54,7 @@ function* uploadImage(api: IApi, file: File) {
     })
     return imageUrl
   } catch (e) {
-    console.log(e)
+    throw new Error(e.message || e)
   }
 }
 
@@ -88,9 +88,17 @@ export function* createNewUser(
     formData.append('tiktok', tiktok)
     formData.append('otherUrl', otherUrl)
 
+    const checkUserByWallet: UserStateType['user'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(wallet),
+    })
+    const url = checkUserByWallet.length ? APP_CONFIG.updateUserProfile : APP_CONFIG.createUserProfile
+    if (checkUserByWallet.length && checkUserByWallet[0] !== null) {
+      formData.append('id', `${checkUserByWallet[0].id}`)
+    }
+
     const userProfileId: string = yield call(api, {
       method: 'POST',
-      url: APP_CONFIG.createUserProfile,
+      url,
       data: formData,
       transform: false,
     })
