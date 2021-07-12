@@ -46,7 +46,12 @@ export default function Header({ toggleTheme }: HeaderType) {
       <AppBar position="static" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} />
-          <Tabs aria-label="navigation" value={pathname !== routes.blog ? 0 : 1} className={classes.navTabsContainer}>
+          <Tabs
+            aria-label="navigation"
+            value={pathname !== routes.blog ? 0 : 1}
+            className={classes.navTabsContainer}
+            classes={{ indicator: classes.indicator }}
+          >
             {MenuItems.map(({ title, to }) => (
               <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
             ))}
@@ -64,8 +69,8 @@ export default function Header({ toggleTheme }: HeaderType) {
                 setAnchorElCreateLink(target)
               }}
               variant={'outlined'}
-              color={'primary'}
               disableElevation
+              classes={{ root: classes.createButton }}
               endIcon={<CurrentDownIcon />}
             >
               Create

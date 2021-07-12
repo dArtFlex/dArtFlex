@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
       flex: '1 1 auto',
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['50'],
     },
     menuTitle: {
       padding: theme.spacing(2, 4, 2, 7.5),
@@ -93,7 +93,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       '--swiper-theme-color': theme.palette.text.primary,
       '&.swiper-pagination, .swiper-pagination-fraction': {
         display: 'flex',
-        backgroundColor: theme.palette.white,
+        backgroundColor: theme.palette.background.default,
         width: theme.spacing(20),
         height: theme.spacing(12.5),
         justifyContent: 'center',
@@ -102,6 +102,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         borderRadius: theme.spacing(3),
         boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
         fontWeight: 700,
+        border: `2px solid ${theme.palette.text.secondary}`,
       },
     },
     promotionAuthorAva: {

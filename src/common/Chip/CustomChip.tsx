@@ -20,7 +20,7 @@ export default function CustomChip(props: ICustomChipProps) {
       }}
       className={classes.chipBtn}
       variant={'text'}
-      color={'primary'}
+      // color={'primary'}
       disableElevation
       startIcon={startIcon && Component}
       endIcon={endIcon && Component}

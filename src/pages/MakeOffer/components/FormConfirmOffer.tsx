@@ -23,47 +23,47 @@ import { daysInMonth } from '../../../utils'
 import { ISellArtwork } from '../../SellNFT/types'
 import { useFormikContext } from 'formik'
 
-// const {
-//   SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC, NEVER },
-// } = appConst
-//
-// const schedule = [
-//   {
-//     value: DAYS3,
-//     label: '3 days',
-//   },
-//   {
-//     value: DAYS5,
-//     label: '5 days',
-//   },
-//   {
-//     value: MONTH,
-//     label: '1 month',
-//   },
-//   {
-//     value: SPECIFIC,
-//     label: 'Custom Date',
-//   },
-// ]
+const {
+  SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC, NEVER },
+} = appConst
+
+const schedule = [
+  {
+    value: DAYS3,
+    label: '3 days',
+  },
+  {
+    value: DAYS5,
+    label: '5 days',
+  },
+  {
+    value: MONTH,
+    label: '1 month',
+  },
+  {
+    value: SPECIFIC,
+    label: 'Custom Date',
+  },
+]
 
 export default function FormConfirmOffer(props: IMakeOfferForm) {
   const classes = useStyles()
 
-  // const { values, setFieldValue } = useFormikContext<ISellArtwork>()
-  // const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
-  //
-  // useEffect(() => {
-  //   switch (values.expirationTime) {
-  //     case '5days':
-  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 5))
-  //     case '3days':
-  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 3))
-  //     case 'week':
-  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
-  //     case 'month':
-  //       return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
-  //   }
-  // }, [values.expirationTime])
+  const { values, setFieldValue } = useFormikContext<{ offerExpiration: string; endDate: string }>()
+  const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
+
+  useEffect(() => {
+    switch (values.offerExpiration) {
+      case '5days':
+        return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 5))
+      case '3days':
+        return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 3))
+      case 'week':
+        return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
+      case 'month':
+        return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
+    }
+  }, [values.offerExpiration])
 
   const [sortValue, setSortValue] = useState('3days')
 
@@ -139,37 +139,39 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
           <Typography className={classes.textBold}>Offer expiration</Typography>
         </Box>
         <Box className={clsx(classes.flexBox, classes.dateSelect)}>
-          <FormControl variant="outlined" color={'primary'} className={classes.datePickerWrapper}>
-            <MUISelect
-              style={{ minWidth: '155px' }}
-              value={sortValue}
-              defaultValue={'in 3 days'}
-              onChange={onSort}
-              MenuProps={{
-                PopoverClasses: {
-                  paper: classes.selectPopover,
-                },
-              }}
-            >
-              {sortItems.map(({ label, value }) => (
-                <Select key={value} value={value}>
-                  {label}
-                </Select>
-              ))}
-            </MUISelect>
-          </FormControl>
-          {datePicker && (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
-                value={date}
-                onChange={(newDate) => setDate(newDate)}
-                ampm={false}
-                classes={{}}
-                className={clsx(classes.timePickerWrapper, classes.timePicker)}
-                format={'MM/dd/yyyy hh:mm'}
-              />
-            </MuiPickersUtilsProvider>
-          )}
+          {/*<FormControl variant="outlined" color={'primary'} className={classes.datePickerWrapper}>*/}
+          {/*  <MUISelect*/}
+          {/*    style={{ minWidth: '155px' }}*/}
+          {/*    value={sortValue}*/}
+          {/*    defaultValue={'in 3 days'}*/}
+          {/*    onChange={onSort}*/}
+          {/*    MenuProps={{*/}
+          {/*      PopoverClasses: {*/}
+          {/*        paper: classes.selectPopover,*/}
+          {/*      },*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    {sortItems.map(({ label, value }) => (*/}
+          {/*      <Select key={value} value={value}>*/}
+          {/*        {label}*/}
+          {/*      </Select>*/}
+          {/*    ))}*/}
+          {/*  </MUISelect>*/}
+          {/*</FormControl>*/}
+          {/*{datePicker && (*/}
+          {/*  <MuiPickersUtilsProvider utils={DateFnsUtils}>*/}
+          {/*    <DateTimePicker*/}
+          {/*      value={date}*/}
+          {/*      onChange={(newDate) => setDate(newDate)}*/}
+          {/*      ampm={false}*/}
+          {/*      classes={{}}*/}
+          {/*      className={clsx(classes.timePickerWrapper, classes.timePicker)}*/}
+          {/*      format={'MM/dd/yyyy hh:mm'}*/}
+          {/*    />*/}
+          {/*  </MuiPickersUtilsProvider>*/}
+          {/*)}*/}
+          <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
+          {values.offerExpiration === SPECIFIC && <Field type="picker" name="endDate" fullWidth={false} />}
         </Box>
         <Box mt={6}>
           <Box className={classes.rulesBox}>

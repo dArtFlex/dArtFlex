@@ -6,16 +6,20 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(16),
     },
     toolbar: {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.greyLight}`,
     },
     navTabs: {
       padding: theme.spacing(5, 0),
+      color: `${theme.palette.text.primary} !important`,
     },
     navTabsContainer: {
       '&>div>div': {
         borderBottom: 'none',
       },
+    },
+    indicator: {
+      backgroundColor: theme.palette.text.primary,
     },
     buttonContainer: {
       display: 'flex',
@@ -27,13 +31,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     buttonWallet: {
-      borderColor: theme.palette.greyLight,
+      borderColor: theme.palette.grey['200'],
+      backgroundColor: theme.palette.background.default,
     },
     notification: {
       margin: theme.spacing(0, 6),
     },
     notificationIcon: {
-      fill: theme.palette.primary.main,
+      fill: theme.palette.text.primary,
     },
 
     notificationContainer: {
@@ -88,6 +93,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: 32,
       height: 32,
+    },
+    createButton: {
+      border: `2px solid ${theme.palette.grey.A100}`,
     },
   })
 )
