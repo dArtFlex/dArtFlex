@@ -17,6 +17,11 @@ export const selectAssetDetails = () =>
     (store: stateType) => store,
     ({ assets: { assetDetails, fetching } }: stateType) => ({ assetDetails, fetching })
   )
+export const selectAssetTokenRates = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
+  )
 
 // User
 export const selectUser = () =>
