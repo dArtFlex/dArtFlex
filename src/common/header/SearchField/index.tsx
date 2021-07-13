@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextField } from '@material-ui/core'
+import { Icon, TextField } from '@material-ui/core'
 import { SearchIcon } from 'common/icons'
 import { useStyles } from './styles'
 
@@ -10,12 +10,17 @@ export default function SearchField() {
     <TextField
       variant={'outlined'}
       placeholder="Items, accounts, creator, k..."
+      classes={{ root: classes.searchInputBox }}
       InputProps={{
         classes: {
-          root: classes.searchInputBox,
           input: classes.searchInput,
+          notchedOutline: classes.inputWrapper,
         },
-        startAdornment: <SearchIcon />,
+        startAdornment: (
+          <Icon className={classes.searchIcon}>
+            <SearchIcon />
+          </Icon>
+        ),
       }}
     />
   )

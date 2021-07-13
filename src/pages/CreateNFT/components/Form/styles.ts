@@ -67,6 +67,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardForm: {
       maxWidth: 478,
       padding: theme.spacing(8, 13),
+      color: theme.palette.text.primary,
     },
     confirming: {
       maxWidth: 325,

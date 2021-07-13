@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
       flex: '1 1 auto',
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['50'],
     },
     menuTitle: {
       padding: theme.spacing(2, 4, 2, 7.5),
@@ -15,9 +15,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       minWidth: '122px',
       display: 'flex',
       justifyContent: 'space-around',
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
     },
     filtersBtnActive: {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.background.paper,
     },
     customFiltersContainer: {
       whiteSpace: 'nowrap',
@@ -25,7 +27,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     hashTagBtn: {
       minWidth: 'auto',
       padding: '6px 12px',
-      color: theme.palette.greyDark,
+      color: theme.palette.text.secondary,
       border: `1px solid ${theme.palette.greyMid}`,
       '&+&': {
         marginLeft: '8px',
@@ -33,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     hashTagBtnActive: {
       border: `1px solid ${theme.palette.primary.main}`,
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: '#8566FF1A',
       color: theme.palette.primary.main,
     },
     buttomIcon: {
@@ -43,7 +45,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },
     priceInput: {
-      width: '59px',
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: 12,
+      width: 120,
+    },
+    priceInputBorder: {
+      border: `1px solid ${theme.palette.grey['200']}`,
     },
     inputAdorment: {
       fontSize: '16px',
@@ -93,7 +100,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       '--swiper-theme-color': theme.palette.text.primary,
       '&.swiper-pagination, .swiper-pagination-fraction': {
         display: 'flex',
-        backgroundColor: theme.palette.white,
+        backgroundColor: theme.palette.background.default,
         width: theme.spacing(20),
         height: theme.spacing(12.5),
         justifyContent: 'center',
@@ -102,6 +109,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         borderRadius: theme.spacing(3),
         boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
         fontWeight: 700,
+        border: `2px solid ${theme.palette.text.secondary}`,
       },
     },
     promotionAuthorAva: {
@@ -156,6 +164,25 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.accentGradient,
       fontWeight: 'bold',
       color: theme.palette.white,
+    },
+    sortArtworksMenu: {
+      borderRadius: 12,
+      backgroundColor: theme.palette.background.paper,
+      '&:focus': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
+    toggleButtonSelected: {
+      backgroundColor: `${theme.palette.text.primary} !important`,
+      color: `${theme.palette.background.paper} !important`,
+    },
+    sortItem: {
+      '&:hover': {
+        backgroundColor: theme.palette.blackDark,
+      },
+    },
+    filterDivider: {
+      backgroundColor: theme.palette.text.secondary,
     },
   })
 )

@@ -166,6 +166,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: 'fit-content',
     },
     disabledButton: {
+      color: theme.palette.text.primary,
+
       '&:disabled': {
         opacity: '35%',
       },
