@@ -149,7 +149,7 @@ export default function SetPriceForm() {
           {values.isFutureTime && (
             <Box pt={6} className={classes.flexBox}>
               <Field type="select" options={schedule} name="futureTime" fullWidth={false} />
-              {values.futureTime === SPECIFIC && <Field type="picker" name="startDate" fullWidth={false} />}
+              {values.futureTime === SPECIFIC && <Field type="pickerTime" name="startDate" fullWidth={false} />}
             </Box>
           )}
         </>

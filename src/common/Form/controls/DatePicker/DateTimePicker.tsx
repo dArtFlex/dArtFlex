@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 import DateFnsUtils from '@date-io/date-fns'
 import { getFormikFieldError } from '../../lib'
@@ -8,7 +8,7 @@ import { IFormDatePickerProps } from './types'
 import { FieldRenderProps } from '../../types'
 import { useStyles } from './styles'
 
-function FormDatePicker(props: IFormDatePickerProps & FieldRenderProps<string>) {
+function FormDateTimePicker(props: IFormDatePickerProps & FieldRenderProps<string>) {
   const { form, field, label, disabled, className, inputVariant = 'outlined', fullWidth, helperText } = props
   const classes = useStyles()
   const { errorText, hasError } = getFormikFieldError({ form, field })
@@ -32,25 +32,19 @@ function FormDatePicker(props: IFormDatePickerProps & FieldRenderProps<string>) 
       fullWidth={fullWidth}
     >
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
+        <DateTimePicker
+          {...field}
           autoOk
-          disableToolbar
-          format="dd.MM.yyyy"
-          margin="none"
+          value={field.value ? field.value : null}
+          onChange={handleChange}
+          ampm={false}
+          format={'dd.MM.yyyy HH:mm'}
           autoComplete="off"
           label={label}
           disabled={disabled}
           inputVariant={inputVariant}
           variant="inline"
           error={hasError}
-          invalidDateMessage={false}
-          maxDateMessage={false}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-          {...field}
-          value={field.value ? field.value : null}
-          onChange={handleChange}
           classes={{
             root: classes.datePicker,
           }}
@@ -60,4 +54,4 @@ function FormDatePicker(props: IFormDatePickerProps & FieldRenderProps<string>) 
   )
 }
 
-export default memo(FormDatePicker)
+export default memo(FormDateTimePicker)
