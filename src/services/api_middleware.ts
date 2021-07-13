@@ -12,9 +12,9 @@ export default function apiMiddleware({
   transform = true,
 }: IApiMiddleware): Promise<string> {
   defaults(headers, {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Language': 'en',
+    Accept: 'application/json; charset=UTF-8',
+    'Content-Type': 'application/json; charset=UTF-8',
   })
 
   return axios({
