@@ -35,7 +35,7 @@ function FormDateTimePicker(props: IFormDatePickerProps & FieldRenderProps<strin
         <DateTimePicker
           {...field}
           autoOk
-          value={field.value ? field.value : null}
+          value={field.value ? field.value : new Date()}
           onChange={handleChange}
           ampm={false}
           format={'dd.MM.yyyy HH:mm'}
@@ -45,6 +45,11 @@ function FormDateTimePicker(props: IFormDatePickerProps & FieldRenderProps<strin
           inputVariant={inputVariant}
           variant="inline"
           error={hasError}
+          PopoverProps={{
+            classes: {
+              root: classes.datePickerPopover,
+            },
+          }}
           classes={{
             root: classes.datePicker,
           }}

@@ -50,7 +50,6 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
         return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
     }
   }, [values.offerExpiration])
-  console.log(new Date(values.endDate))
 
   return (
     <Box className={classes.formConfirmOffer}>
@@ -90,7 +89,7 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
         <Box mt={6}>
           <Typography className={classes.textBold}>Offer expiration</Typography>
         </Box>
-        <Box className={clsx(classes.flexBox, classes.dateSelect)}>
+        <Box className={clsx(classes.gridBox, classes.dateSelect, classes.gridGap)}>
           <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
           {values.offerExpiration === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
         </Box>

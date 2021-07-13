@@ -22,4 +22,24 @@ export const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  datePickerPopover: {
+    '& .MuiPickersToolbarText-toolbarTxt': {
+      color: '#fff',
+    },
+    '& .MuiTab-textColorInherit.Mui-selected': {
+      color: '#fff',
+    },
+    '& .MuiTab-textColorInherit': {
+      color: theme.palette.greyDark,
+    },
+    '& .MuiPickersDay-daySelected': {
+      color: '#fff',
+    },
+    '& .MuiPickersDay-current': {
+      border: `1px solid ${theme.palette.greyMid}`,
+    },
+    '& .MuiPickersClockNumber-clockNumberSelected': {
+      color: '#fff',
+    },
+  },
 }))
