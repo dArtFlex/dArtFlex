@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useState } from 'react'
-import { IMakeOfferForm, ITabPanelProps } from '../types'
+import React, { useState } from 'react'
+import { IMakeOfferForm } from '../types'
 import { Box, Button, CardMedia, IconButton, Tab, Tabs, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
 import { MoreHorizontalIcon } from '../../../common/icons'
@@ -23,21 +23,6 @@ const tabsItems = [
 export default function FormArtworkInfo(props: IMakeOfferForm) {
   const classes = useStyles()
   const [tab, setTab] = useState(0)
-
-  const makeOfferTabs = [
-    {
-      title: 'Description',
-      component: <Description />,
-    },
-    {
-      title: 'History',
-      component: <History />,
-    },
-    {
-      title: 'About Creator',
-      component: <AboutCreator />,
-    },
-  ]
 
   return (
     <Box className={classes.artworkInfoWrapper}>

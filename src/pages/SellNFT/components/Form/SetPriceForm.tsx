@@ -59,7 +59,7 @@ export default function SetPriceForm() {
         return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
     }
   }, [values.futureTime])
-
+  console.log(values)
   return (
     <>
       {values.isEndingPrice ? (

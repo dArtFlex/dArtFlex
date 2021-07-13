@@ -19,6 +19,7 @@ export default function Form() {
   const history = useHistory()
   const dispatch = useDispatch()
   const { values } = useFormikContext<ICreateNFT>()
+
   const {
     minting: { data, lazyMintItemId },
   } = useSelector(selectMinting())
@@ -89,10 +90,10 @@ export default function Form() {
         </Card>
       </Box>
 
-      {listing === 'done' ? (
-        <ListingForm onViewArtwork={handleViewArtwork} />
-      ) : (
+      {listing !== 'done' ? (
         <MintingForm onMinting={handleMinting} onList={handleList} onViewArtwork={handleViewArtwork} />
+      ) : (
+        <ListingForm onViewArtwork={handleViewArtwork} />
       )}
     </Grid>
   )

@@ -2,6 +2,7 @@
 import { web3Service } from 'services/web3_service'
 import { signTypedData_v4 } from 'eth-sig-util'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
+import { ORDER_LISTING_ADDRESS } from 'core/contracts/order_contract'
 
 class ListingService {
   async signTypedData(data) {
@@ -145,7 +146,7 @@ class ListingService {
         name: 'Exchange',
         version: '2',
         chainId: 4,
-        verifyingContract: '0x1e1B6E13F0eB4C570628589e3c088BC92aD4dB45',
+        verifyingContract: ORDER_LISTING_ADDRESS,
       },
       'Order',
       order,

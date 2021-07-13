@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React from 'react'
 import { TextFieldProps } from '@material-ui/core'
 import { Field as FormikField } from 'formik'
 import FormUpload from './controls/Upload'
@@ -6,17 +6,13 @@ import FormTextInput from './controls/Input'
 import FormSwitch from './controls/Switch'
 import FormCheckbox from './controls/Checkbox'
 import FormSelect, { IFormSelectProps } from './controls/Select'
+import FormDateTimePicker from './controls/DatePicker/DateTimePicker'
 import FormDatePicker from './controls/DatePicker'
 import { IFormDatePickerProps } from './controls/DatePicker/types'
 import { FieldRenderProps, ITextInput, IUploadInput, IFormSwitchProps, IFormCheckboxProps } from './types'
 import { FieldInputProps } from 'formik/dist/types'
-import DateFnsUtils from '@date-io/date-fns'
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import clsx from 'clsx'
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
-import { useStyles } from './styles'
 
-export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker' | 'checkbox'
+export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker' | 'pickerTime' | 'checkbox'
 
 export type IFieldProps = IFormSelectProps &
   ITextInput &
@@ -27,14 +23,10 @@ export type IFieldProps = IFormSelectProps &
   IFormDatePickerProps & {
     name: string
     type: FieldType
-    date?: Date
-    setDate?: Dispatch<SetStateAction<any>>
   }
 
 export default function Field(props: IFieldProps) {
-  const { name, type, date, setDate, ...rest } = props
-
-  const classes = useStyles()
+  const { name, type, ...rest } = props
 
   return (
     <FormikField key={name} name={name}>
@@ -56,18 +48,10 @@ export default function Field(props: IFieldProps) {
             return <FormSelect form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           case 'picker': {
-            return (
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DateTimePicker
-                  value={date}
-                  onChange={(newDate) => setDate!(newDate)}
-                  ampm={false}
-                  classes={{}}
-                  format={'MM/dd/yyyy hh:mm'}
-                  className={clsx(classes.timePickerWrapper, classes.timePicker)}
-                />
-              </MuiPickersUtilsProvider>
-            )
+            return <FormDatePicker form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
+          }
+          case 'pickerTime': {
+            return <FormDateTimePicker form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           default: {
             return null
