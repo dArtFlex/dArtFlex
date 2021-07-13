@@ -106,7 +106,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     // Push bid to list item with bids
     const bidListItemId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/bid/list_item',
+      url: APP_CONFIG.bidListItem,
       method: 'POST',
       data: {
         itemId: lazyMintItemId,
