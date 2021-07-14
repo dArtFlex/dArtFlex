@@ -2,18 +2,38 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put } from 'redux-saga/effects'
 import { history } from '../../navigation'
-import { getUserDataFailure, getUserDataSuccess, createNewUserSuccess, createNewUserFailure } from '../reducers/user'
+import {
+  getUserDataFailure,
+  getUserDataSuccess,
+  createNewUserSuccess,
+  createNewUserFailure,
+} from 'stores/reducers/user'
+import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
+import { UserDataTypes } from 'types'
 import APP_CONFIG from 'config'
+import { getIdFromString } from 'utils'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function* getUserData(api: IApi) {
+export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
-    yield put(getUserDataSuccess({ id: 'user id' }))
+    const userData: UserStateType['user'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(payload.wallet),
+    })
+    yield put(getUserDataSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
-    localStorage.removeItem('token')
     history.push('/')
     yield put(getUserDataFailure(message))
+  }
+}
+
+export function* getUserDataByOwner(api: IApi, owner: string) {
+  try {
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByOwner(owner),
+    })
+    return userData[0]
+  } catch (e) {
+    yield put(getUserDataFailure(e.message || e))
   }
 }
 
@@ -29,7 +49,7 @@ function* uploadImage(api: IApi, file: File) {
     })
     return imageUrl
   } catch (e) {
-    console.log(e)
+    throw new Error(e.message || e)
   }
 }
 
@@ -41,7 +61,9 @@ export function* createNewUser(
     const { profile_image, cover_image, fullname, userid, email, overview, socials } = accountSettings
     const { website, twitter, instagram, discord, facebook, youtube, tiktok, otherUrl } = socials
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const coverImageUrl: string = yield call(uploadImage as any, api, cover_image)
 
     const formData = new FormData()
@@ -61,16 +83,26 @@ export function* createNewUser(
     formData.append('tiktok', tiktok)
     formData.append('otherUrl', otherUrl)
 
-    const response: string = yield call(api, {
+    const checkUserByWallet: UserStateType['user'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(wallet),
+    })
+    const url = checkUserByWallet.length ? APP_CONFIG.updateUserProfile : APP_CONFIG.createUserProfile
+    if (checkUserByWallet.length && checkUserByWallet[0] !== null) {
+      formData.append('id', `${checkUserByWallet[0].id}`)
+    }
+
+    const userProfileId: string = yield call(api, {
       method: 'POST',
-      url: 'http://3.11.202.153:8888/api/user/create',
+      url,
       data: formData,
       transform: false,
     })
 
-    // @ts-ignore: Unreachable code error
-    const profileId = response.match(/\d/g).join('') || ''
-    yield put(createNewUserSuccess(profileId))
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(getIdFromString(userProfileId) as number),
+    })
+
+    yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
   }

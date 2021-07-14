@@ -6,9 +6,12 @@ import { history } from '../../navigation'
 import routes from '../../routes'
 import { listingSuccess, listingFailure } from 'stores/reducers/listing'
 import { ListingStateType } from 'stores/reducers/listing/types'
+import { IChainId } from 'types'
 import { walletService } from 'services/wallet_service'
 import { listingService } from 'services/listing_service'
 import APP_CONFIG from 'config'
+import tokensAll from 'core/tokens'
+import { normalizeDate } from 'utils'
 
 function getIdFromString(v) {
   return +v.match(/\d/g).join('')
@@ -20,6 +23,15 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const accounts = walletService.getAccoutns()
 
     const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
+    const endPrice = yield web3.utils.toWei(data.endPrice, 'ether')
+
+    const chainId: IChainId = walletService.getChainId()
+    const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id
+    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
+    const tokenContract = data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH
+
+    const dateStartTime = data.start_time ? data.start_time.getTime() : new Date().getTime()
+    const dateEndTime = data.type === 'instant_buy' ? dateStartTime : normalizeDate(data.end_time).getTime()
 
     const marketId = yield call(api, {
       url: APP_CONFIG.createSalesDetail,
@@ -28,13 +40,15 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         itemId: lazyMintItemId,
         type: data.type,
         startPrice: startPrice,
-        endPrice: data.type === 'instant_buy' ? '0' : data.endPrice,
+        endPrice: data.type === 'instant_buy' ? '0' : endPrice,
         // it's Reserve Price
         // endPrice must be 0 if data.type is "instant_buy"
-        startTime: data.start_time,
-        endTime: data.type === 'instant_buy' ? '0' : data.end_time,
+
+        // Todo: startTime and endTime in instant_buy should be new Date().getTime
+        startTime: dateStartTime,
+        endTime: dateEndTime,
         // should be 0 if data.type is "instant_buy"
-        salesTokenContract: '0x',
+        salesTokenContract: tokenContract,
         // for ETH don't have addresse that's why use 0x
         // token contract address ETH, DAF etc.
         platfromFee: data.platfromFee,
@@ -87,7 +101,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         bidAmount: startPrice,
         // bidAmount the same with startPrice
         marketId: getIdFromString(marketId),
-        bidContract: '0x',
+        bidContract: tokenContract,
         // Sells token contract
         // for ETH don't have addresse that's why use 0x
         // token contract address ETH, DAF etc.
@@ -96,7 +110,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     // Push bid to list item with bids
     const bidListItemId = yield call(api, {
-      url: 'http://dartflex-dev.ml:8888/api/bid/list_item',
+      url: APP_CONFIG.bidListItem,
       method: 'POST',
       data: {
         itemId: lazyMintItemId,
@@ -106,7 +120,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         bidAmount: startPrice,
         marketId: getIdFromString(marketId),
         // 0x only ETH
-        bidContract: '0x',
+        bidContract: tokenContract,
       },
     })
 

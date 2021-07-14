@@ -3,12 +3,7 @@ import { useSelector } from 'react-redux'
 import { selectAssets } from 'stores/selectors'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, CircularProgressLoader, CardAsset } from 'common'
-import appConst from 'config/consts'
 import { useStyles } from './styles'
-
-const {
-  FILTER_VALUES: { IN_AUCTION, BUY_NOW },
-} = appConst
 
 export default function Sales() {
   const classes = useStyles()

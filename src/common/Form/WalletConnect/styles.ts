@@ -10,10 +10,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       flexDirection: 'column',
     },
+    walletConnectText: {
+      color: theme.palette.text.primary,
+    },
     walletConnectDesc: {
       fontSize: 16,
       marginTop: theme.spacing(4),
       fontWeight: 'normal',
+      color: theme.palette.text.primary,
+    },
+    walletConnectBtn: {
+      backgroundColor: theme.palette.text.primary,
+      color: theme.palette.background.default,
     },
     connectBtnContainer: {
       width: '100%',
@@ -32,6 +40,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     walletLearnMoreLink: {
       fontSize: 16,
       fontWeight: 700,
+      color: theme.palette.primary.main,
     },
   })
 )

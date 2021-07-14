@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserStateType } from './types'
-import { IAccountSettings } from 'pages/AccountSettings/types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
   fetching: false,
   error: '',
-  user: {},
+  user: null,
 }
 
 const userSlice = createSlice({
@@ -16,30 +15,26 @@ const userSlice = createSlice({
     toogleSideBar: (state) => {
       state.isOpenSideBar = !state.isOpenSideBar
     },
-    getUserDataRequest: (state) => {
+    getUserDataRequest: (state, i) => {
       state.fetching = true
       state.error = ''
     },
-    getUserDataSuccess: (state, { payload }: PayloadAction<{ id: string }>) => {
+    getUserDataSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
       state.fetching = false
-      state.user = payload
+      state.user = payload.userData
     },
     getUserDataFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
     },
 
-    createNewUserRequest: (
-      state,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      { payload }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
-    ) => {
+    createNewUserRequest: (state, i) => {
       state.fetching = true
       state.error = ''
     },
-    createNewUserSuccess: (state, { payload }: PayloadAction<string>) => {
+    createNewUserSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
       state.fetching = false
-      state.user.profileId = payload
+      state.user = payload.userData
     },
     createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload

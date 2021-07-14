@@ -1,37 +1,39 @@
-import { put, call, all } from 'redux-saga/effects'
+import { put, call, all, select } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import {
   getAssetsAllSuccess,
   getAssetsAllFailure,
   getAssetByIdSuccess,
   getAssetByIdFailure,
+  getExchangeRateTokensSuccess,
+  getExchangeRateTokensFailure,
 } from 'stores/reducers/assets'
+import { getUserDataByOwner } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
-import { AssetTypes, AssetDataTypes, UserDataTypes, AssetMarketplaceTypes } from 'types'
+import { walletService } from 'services/wallet_service'
+import {
+  AssetTypes,
+  AssetDataTypes,
+  UserDataTypes,
+  AssetMarketplaceTypes,
+  AssetDataTypesWithStatus,
+  IChainId,
+} from 'types'
 import APP_CONFIG from 'config'
-
-function* getUserData(api: IApi, owner: string) {
-  try {
-    const userData: UserDataTypes = yield call(api, {
-      url: APP_CONFIG.getUserProfileByOwner(owner),
-    })
-    return { user: userData }
-  } catch (e) {
-    yield put(getAssetsAllFailure(e.message || e))
-  }
-}
+import tokensAll from 'core/tokens'
+import { getAssetStatus } from 'utils'
 
 function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
   try {
-    const assetById: AssetTypes = yield call(api, {
+    const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(parseFloat(asset.item_id)),
     })
-    const userData: AssetDataTypes['userData'] = yield call(getUserData, api, assetById.owner)
-    const imageData: AssetDataTypes['imageData'] = yield call(api, {
-      url: assetById.uri,
+    const userData: UserDataTypes = yield call(getUserDataByOwner, api, assetById[0].owner)
+    const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+      url: assetById[0].uri,
     })
 
-    return { ...asset, imageData, userData }
+    return { ...asset, imageData: imageData[0], userData }
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }
@@ -42,12 +44,15 @@ export function* getAssetsAllData(api: IApi) {
     const getAssetsListAll: AssetMarketplaceTypes[] = yield call(api, {
       url: APP_CONFIG.getMarketplaceAll,
     })
-
     const getAssetsListAllData: AssetDataTypes[] = yield all(
       getAssetsListAll.map((asset) => call(getAssetData, api, asset))
     )
 
-    yield put(getAssetsAllSuccess(getAssetsListAllData))
+    const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
+      getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
+    )
+
+    yield put(getAssetsAllSuccess(getAssetsListAllWithStatuses))
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }
@@ -55,28 +60,116 @@ export function* getAssetsAllData(api: IApi) {
 
 export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
   try {
+    const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(payload))
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+
     const assetById: AssetTypes[] = yield call(api, {
-      url: APP_CONFIG.getItemByItemId(payload),
-    })
-    const marketplaceData: AssetMarketplaceTypes[] = yield call(api, {
-      url: APP_CONFIG.getMarketplaceItemById(payload),
+      url: APP_CONFIG.getItemByItemId(Number(payload)),
     })
     const userByOwner: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+    })
+    const userByCreator: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(assetById[0].creator),
     })
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,
     })
 
+    let status
+    if (marketplaceData) {
+      status = getAssetStatus({
+        type: marketplaceData.type,
+        start_price: marketplaceData.start_price,
+        end_price: marketplaceData.end_price,
+        start_time: marketplaceData.start_time as string,
+        end_time: marketplaceData.end_time,
+        sold: marketplaceData.sold,
+        creator: assetById[0].creator,
+        owner: assetById[0].owner,
+        isListed: Boolean(marketplaceData),
+        userWallet: user ? user.wallet : undefined,
+      })
+    }
+
     yield put(
       getAssetByIdSuccess({
+        status,
         tokenData: assetById[0],
         imageData: imageData[0],
         ownerData: userByOwner[0],
-        marketData: marketplaceData[0],
+        creatorData: userByCreator[0],
+        marketData: marketplaceData ? marketplaceData : null,
       })
     )
   } catch (e) {
     yield put(getAssetByIdFailure(e.message || e))
+  }
+}
+
+function* getMarketplaceData(api: IApi, itemId: number) {
+  try {
+    const allMarketplace: AssetMarketplaceTypes[] = yield call(api, {
+      url: APP_CONFIG.getMarketplaceAll,
+    })
+    const marketplaceData: AssetMarketplaceTypes | undefined = allMarketplace.find(
+      (marketItem) => Number(marketItem.item_id) === itemId
+    )
+    return marketplaceData
+  } catch (e) {
+    throw new Error(e.message || e)
+  }
+}
+
+function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
+  try {
+    const assetById: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
+    })
+    const status = getAssetStatus({
+      type: asset.type,
+      start_price: asset.start_price,
+      end_price: asset.end_price,
+      start_time: asset.start_time as string,
+      end_time: asset.end_time,
+      sold: asset.sold,
+      creator: assetById[0].creator,
+      owner: assetById[0].owner,
+    })
+
+    return {
+      ...asset,
+      status,
+    }
+  } catch (e) {
+    throw new Error(e.message || e)
+  }
+}
+
+function* getPrice(api: IApi, symbol: string) {
+  try {
+    const price: { [key: string]: number } = yield call(api, {
+      url: APP_CONFIG.exchangeRate(symbol, 'USD'),
+      method: 'GET',
+    })
+    return { priceUSD: price?.USD || 0 }
+  } catch (e) {
+    throw new Error(e.message || e)
+  }
+}
+
+export function* getExchangeRateTokens(api: IApi) {
+  try {
+    const chainId: IChainId = walletService.getChainId()
+    const tAll = tokensAll[chainId || '0x1']
+    const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
+    const exchangeRates = tAll.map((t, i) => ({
+      id: t.id,
+      rateUsd: rateUsd[i].priceUSD,
+      symbol: t.symbol,
+    }))
+    yield put(getExchangeRateTokensSuccess(exchangeRates))
+  } catch (e) {
+    yield put(getExchangeRateTokensFailure(e.message || e))
   }
 }

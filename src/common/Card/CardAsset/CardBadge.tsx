@@ -6,7 +6,8 @@ import { ICardBadgeProps } from './types'
 import { useStyles } from './styles'
 
 const {
-  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, UNLISTED },
+  STATUSES: { MINTED, UNLISTED },
+  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW },
 } = appConst
 
 export default function CardBadge(props: ICardBadgeProps) {

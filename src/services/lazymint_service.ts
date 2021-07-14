@@ -65,7 +65,7 @@ class LazyMintService {
   }
 
   async generateLazyMint(request, response) {
-    const { contract, uri, creator, royalty } = request.body
+    const { contract, uri, creator } = request.body
 
     if (!contract || !uri || !creator) {
       return response.status(HttpStatusCodes.BAD_REQUEST).send('Missing Data')
@@ -79,7 +79,7 @@ class LazyMintService {
       tokenId: tokenId,
       uri: uri,
       creators: [{ account: creator, value: '10000' }],
-      // Todo: Should be checked rayalty
+      // Todo: Should be checked royalty
       royalties: [],
     }
 

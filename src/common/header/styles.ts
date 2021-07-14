@@ -6,16 +6,20 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(16),
     },
     toolbar: {
-      backgroundColor: theme.palette.white,
-      borderBottom: `1px solid ${theme.palette.greyLight}`,
+      backgroundColor: theme.palette.background.default,
+      borderBottom: `1px solid ${theme.palette.grey['100']}`,
     },
     navTabs: {
       padding: theme.spacing(5, 0),
+      color: `${theme.palette.text.primary} !important`,
     },
     navTabsContainer: {
       '&>div>div': {
         borderBottom: 'none',
       },
+    },
+    indicator: {
+      backgroundColor: theme.palette.text.primary,
     },
     buttonContainer: {
       display: 'flex',
@@ -27,13 +31,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     buttonWallet: {
-      borderColor: theme.palette.greyLight,
+      borderColor: theme.palette.grey['200'],
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.primary.contrastText,
     },
     notification: {
       margin: theme.spacing(0, 6),
     },
     notificationIcon: {
-      fill: theme.palette.primary.main,
+      fill: theme.palette.text.primary,
     },
 
     notificationContainer: {
@@ -41,6 +47,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
+      backgroundColor: theme.palette.background.default,
     },
     notificationBadge: {
       background: theme.palette.redMiddle,
@@ -53,13 +60,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     notificationCard: {
       minWidth: 428,
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['100'],
       padding: theme.spacing(3),
       borderRadius: 12,
       cursor: 'pointer',
     },
     notificationBadgeUnread: {
-      background: theme.palette.primary.light,
+      background: theme.palette.warning.light,
     },
     notificationCardBadge: {
       width: 8,
@@ -84,6 +91,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       gap: 4,
       paddingLeft: theme.spacing(3),
+    },
+    avatar: {
+      width: 32,
+      height: 32,
+    },
+    createButton: {
+      border: `2px solid ${theme.palette.grey.A100}`,
     },
   })
 )

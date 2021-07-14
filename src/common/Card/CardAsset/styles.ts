@@ -106,6 +106,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,
+      color: theme.palette.text.primary,
+    },
+    cardImage: {
+      borderRadius: 10,
     },
   })
 )

@@ -83,7 +83,7 @@ If you receive a bid above the starting value but below your reserve price - you
               position="start"
               icon={
                 <Typography className={classes.mainText} color={'textSecondary'}>
-                  ETH
+                  WETH
                 </Typography>
               }
             />
@@ -114,7 +114,7 @@ If you receive a bid above the starting value but below your reserve price - you
               position="start"
               icon={
                 <Typography className={classes.mainText} color={'textSecondary'}>
-                  ETH
+                  WETH
                 </Typography>
               }
             />
@@ -133,7 +133,7 @@ If you receive a bid above the starting value but below your reserve price - you
       </Typography>
       <Box pt={6} pb={10} className={classes.flexBox}>
         <Field type="select" options={schedule} name="expirationTime" fullWidth={false} />
-        {values.expirationTime === SPECIFIC && <Field type="picker" name="endDate" fullWidth={false} />}
+        {values.expirationTime === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
       </Box>
 
       <Instructions />

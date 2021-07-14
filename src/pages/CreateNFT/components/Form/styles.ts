@@ -67,6 +67,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardForm: {
       maxWidth: 478,
       padding: theme.spacing(8, 13),
+      color: theme.palette.text.primary,
     },
     confirming: {
       maxWidth: 325,
@@ -90,6 +91,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.background.default,
         background: theme.palette.greyMid,
       },
+    },
+    linkIcon: {
+      fill: theme.palette.text.primary,
     },
   })
 )

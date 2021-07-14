@@ -1,25 +1,26 @@
-//@ts-nocheck
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import clsx from 'clsx'
-import { Box, IconButton } from '@material-ui/core'
-import { PageWrapper, CardAsset } from 'common'
+import { PageWrapper, Form } from 'common'
 import { FormContainer } from './components'
-import { ArrowExpandIcon } from 'common/icons'
-import { selectAsset } from 'stores/selectors'
+import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
-import { useStyles } from './styles'
+import { ApprovedFormState } from './types'
+
+const initialApprovedData: ApprovedFormState = {
+  bid: 0,
+  acknowledge: false,
+  agreeTerms: false,
+  formProgress: 'details',
+}
 
 export default function ArtworkDetails() {
-  const classes = useStyles()
   const dispatch = useDispatch()
   const { id } = useParams<{ id: string }>()
-  const { assetDetails } = useSelector(selectAsset())
-  const [formId, setFormId] = useState<number>(1)
+  const { assetDetails } = useSelector(selectAssetDetails())
 
   useEffect(() => {
-    dispatch(getAssetByIdRequest(id))
+    dispatch(getAssetByIdRequest(Number(id)))
     return () => {
       dispatch(clearAssetDetails())
     }
@@ -31,23 +32,9 @@ export default function ArtworkDetails() {
 
   return (
     <PageWrapper>
-      <Box className={classes.root}>
-        <Box className={classes.outerContainer}>
-          {formId > 1 ? (
-            <Box className={classes.previewContainer}>
-              <CardAsset asset={asset} />
-            </Box>
-          ) : (
-            <Box className={classes.previewContainer}>
-              <img src={assetDetails.imageData?.image} />
-              <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
-                <ArrowExpandIcon />
-              </IconButton>
-            </Box>
-          )}
-        </Box>
-        <FormContainer formId={formId} setFormId={setFormId} />
-      </Box>
+      <Form initialValues={initialApprovedData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
+        <FormContainer />
+      </Form>
     </PageWrapper>
   )
 }

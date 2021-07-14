@@ -2,6 +2,7 @@ export * from './LazyMint'
 export * from './Listing'
 export * from './Assets'
 export * from './User'
+export * from './Wallet'
 
 export interface IEntity {
   id: number
@@ -26,13 +27,5 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   name: string
 }
 
-export type AssetType =
-  | 'auction'
-  | 'instant_buy'
-  | 'reserve_not_met'
-  | 'reserve_price'
-  | 'sold'
-  | 'minted'
-  | 'collected'
-  | 'unlisted'
-  | 'created'
+export type IChainId = '0x1' | '0x4'
+export type IPaymentToken = 'ETH' | 'WETH'

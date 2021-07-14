@@ -5,15 +5,15 @@ import { useStyles } from './styles'
 const social = [
   {
     title: 'Twitter',
-    href: '#',
+    href: 'https://twitter.com/dartflexart',
   },
   {
     title: 'Github',
-    href: '#',
+    href: 'https://github.com/dArtFlex',
   },
   {
     title: 'Medium',
-    href: '#',
+    href: 'https://medium.com/dartflex',
   },
 ]
 
@@ -31,7 +31,7 @@ const links = [
     href: '#',
   },
   {
-    title: 'Coockie Policy',
+    title: 'Cookie Policy',
     href: '#',
   },
   {

@@ -31,7 +31,6 @@ export default function CreateNFT() {
     <PageWrapper className={classes.container}>
       <Form
         initialValues={initialData}
-        onCancel={() => console.log('x')}
         onSubmit={(state: ICreateNFT) => console.log('y', state)}
         validationSchema={useValidationSchema()}
       >

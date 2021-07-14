@@ -1,20 +1,49 @@
 import React from 'react'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { Box, Button, Typography, ButtonBase } from '@material-ui/core'
 import { TimeIcon, BurnIcon } from 'common/icons'
 import appConst from 'config/consts'
+import { useDefaultCardStatus } from './lib'
 import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
+import { normalizeDate } from 'utils'
 
 const {
-  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, COLLECTED, CREATED, UNLISTED },
+  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
 } = appConst
 
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
-  const { status, currentBit, priceReserve, price, sold, expPeriod = 0, burnTime = 0, timer } = props
+  const {
+    endPrice,
+    startPrice,
+    sold,
+    endTime = '0',
+    burnTime = 0,
+    timer,
+    type,
+    status,
+    useCardStatus = useDefaultCardStatus,
+  } = props
 
-  switch (status) {
+  const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
+
+  const startPriceToCoin = startPrice
+    ? new BigNumber(startPrice)
+        .dividedBy(`10e${18 - 1}`)
+        .toNumber()
+        .toFixed(2)
+    : startPrice
+  const currentBitToCoin = endPrice
+    ? new BigNumber(endPrice)
+        .dividedBy(`10e${18 - 1}`)
+        .toNumber()
+        .toFixed(2)
+    : endPrice
+
+  const now_time = new Date().getTime()
+  switch (cardStatus) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
@@ -26,27 +55,34 @@ export default function CardActions(props: ICardActionsProps) {
     case LIVE_AUCTION:
       return (
         <Box className={classes.cardAction}>
-          <Section text={currentBit ? 'Current Bid' : 'Reserve Price'} value={`${priceReserve || currentBit} ETH`} />
-          <ButtonBase className={clsx(classes.actionBtn, expPeriod < burnTime && classes.actionBtnBurn)}>
-            {expPeriod < burnTime ? (
-              <BurnIcon className={classes.actionBtnIcon} />
-            ) : (
-              <TimeIcon className={classes.actionBtnIcon} />
-            )}
-            {timer}
-          </ButtonBase>
+          <Section
+            text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
+            value={now_time < normalizeDate(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
+          />
+          {now_time < normalizeDate(endTime).getTime() ? (
+            <ButtonBase
+              className={clsx(classes.actionBtn, normalizeDate(endTime).getTime() < burnTime && classes.actionBtnBurn)}
+            >
+              {normalizeDate(endTime).getTime() < burnTime ? (
+                <BurnIcon className={classes.actionBtnIcon} />
+              ) : (
+                <TimeIcon className={classes.actionBtnIcon} />
+              )}
+              {timer}
+            </ButtonBase>
+          ) : null}
         </Box>
       )
     case BUY_NOW:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Buy Now'} value={`${price} ETH`} />
+          <Section text={'Buy Now'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
     case RESERVE_NOT_MET:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Reserve Price'} value={priceReserve ? `${priceReserve} ETH` : '-'} />
+          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
         </Box>
       )
     case SOLD:
@@ -69,11 +105,9 @@ export default function CardActions(props: ICardActionsProps) {
     case CREATED:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionNotMet)}>
-          <Section text={'Reserve Not Met'} value={`${priceReserve} ETH`} />
+          <Section text={'Reserve Not Met'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
-    case UNLISTED:
-      return <Box></Box>
     default:
       return null
   }

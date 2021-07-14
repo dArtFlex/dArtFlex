@@ -9,8 +9,11 @@ import appConsts from 'config/consts'
 import { IBids } from './types'
 
 const {
-  FILTER_VALUES: { LIVE_AUCTION, PLACED_BID, OWNED },
+  FILTER_VALUES: { LIVE_AUCTION },
 } = appConsts
+
+const PLACED_BID = ''
+const OWNED = ''
 
 const MY_BIDS: IBids[] = [
   {

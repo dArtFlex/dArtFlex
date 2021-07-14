@@ -12,10 +12,15 @@ export const selectAssetFromList = (id: string) =>
     (store: stateType) => store,
     ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.item_id === id) })
   )
-export const selectAsset = () =>
+export const selectAssetDetails = () =>
   createSelector(
     (store: stateType) => store,
     ({ assets: { assetDetails, fetching } }: stateType) => ({ assetDetails, fetching })
+  )
+export const selectAssetTokenRates = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
   )
 
 // User

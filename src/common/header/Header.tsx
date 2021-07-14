@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge } from '@material-ui/core'
+import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
-import { selectWallet } from 'stores/selectors'
+import { selectWallet, selectUser } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -20,8 +20,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
 
-  const bids = ['0x']
+  const bids: Array<string> = []
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
@@ -45,7 +46,12 @@ export default function Header({ toggleTheme }: HeaderType) {
       <AppBar position="static" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} />
-          <Tabs aria-label="navigation" value={pathname !== routes.blog ? 0 : 1} className={classes.navTabsContainer}>
+          <Tabs
+            aria-label="navigation"
+            value={pathname !== routes.blog ? 0 : 1}
+            className={classes.navTabsContainer}
+            classes={{ indicator: classes.indicator }}
+          >
             {MenuItems.map(({ title, to }) => (
               <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
             ))}
@@ -63,8 +69,8 @@ export default function Header({ toggleTheme }: HeaderType) {
                 setAnchorElCreateLink(target)
               }}
               variant={'outlined'}
-              color={'primary'}
               disableElevation
+              classes={{ root: classes.createButton }}
               endIcon={<CurrentDownIcon />}
             >
               Create
@@ -102,7 +108,13 @@ export default function Header({ toggleTheme }: HeaderType) {
                   variant={'outlined'}
                   color={'primary'}
                   disableElevation
-                  startIcon={<SmileyFaceIcon />}
+                  startIcon={
+                    user?.profile_image ? (
+                      <Avatar src={user.profile_image} className={classes.avatar} />
+                    ) : (
+                      <SmileyFaceIcon />
+                    )
+                  }
                   endIcon={<CurrentDownIcon />}
                 >
                   {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}

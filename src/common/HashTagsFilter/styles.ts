@@ -19,6 +19,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     btnAction: {
       border: `1px solid ${theme.palette.greyLight}`,
       marginLeft: theme.spacing(2),
+      color: theme.palette.text.primary,
     },
   })
 )
