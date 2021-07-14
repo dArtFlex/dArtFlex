@@ -48,6 +48,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: 'repeat(2, 1fr)',
     },
+    gridGap: {
+      gridGap: 16,
+    },
     spaceContent: {
       justifyContent: 'space-between',
     },
