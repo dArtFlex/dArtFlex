@@ -2,6 +2,7 @@ export * from './LazyMint'
 export * from './Listing'
 export * from './Assets'
 export * from './User'
+export * from './Wallet'
 
 export interface IEntity {
   id: number
