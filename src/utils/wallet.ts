@@ -1,5 +1,5 @@
 import APP_CONFIG from 'config/consts'
-import { IWallet } from 'stores/reducers/wallet/types'
+import { IWallet } from 'types'
 
 export function storageActiveWallet(wallet: IWallet, walletStorageKey: string) {
   localStorage.setItem(walletStorageKey, JSON.stringify(wallet))
