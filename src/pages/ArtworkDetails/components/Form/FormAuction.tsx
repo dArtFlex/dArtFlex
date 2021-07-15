@@ -381,7 +381,7 @@ function FormAuctionApprove() {
             <Typography variant="body1" color="textSecondary">
               Your Balance
             </Typography>
-            <Typography className={classes.boldText}>{`${tokenBalanceWETH} WETH`}</Typography>
+            <Typography className={classes.boldText}>{`${Number(tokenBalanceWETH).toFixed(4)} WETH`}</Typography>
           </Box>
           <Field
             type="input"
