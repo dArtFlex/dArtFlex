@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import {
   Card,
   CardHeader,
@@ -16,8 +17,10 @@ import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { status, title, user, expDate, src, action } = props
+  const { status, updated_at, userData, action } = props
   const classes = useStyles()
+
+  const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
 
   switch (status) {
     case 'owend':
@@ -27,17 +30,17 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'listed':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={src} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
             </IconButton>
           }
-          title={title}
+          title={updatedDate}
           subheader={
             <Box>
               <Typography className={classes.subheader}>Artwork {status}</Typography>
-              by <Link underline="none">@gianapress</Link>
+              by <Link underline="none">@{userData.userid}</Link>
             </Box>
           }
         />
@@ -46,26 +49,26 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'logged':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={src} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
             </IconButton>
           }
-          title={title}
+          title={updatedDate}
           subheader={
             <Box>
               <Typography className={classes.subheader}>
                 Bid <strong>0.044 ETH</strong> ($107.10) placed
               </Typography>
-              by <Link underline="none">{user}</Link>
+              by <Link underline="none">{'user'}</Link>
             </Box>
           }
         >
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {expDate}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
               {action && (
                 <Button classes={{ root: classes.cardBtn }} disableRipple>
                   Cancel Bid
@@ -78,13 +81,13 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'canceled':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={src} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
             </IconButton>
           }
-          title={title}
+          title={updatedDate}
           subheader={
             <Box>
               <Typography className={classes.subheader}>
@@ -93,7 +96,7 @@ export default function CardHistory(props: ICardHistoryProps) {
                 </span>{' '}
                 canceled
               </Typography>
-              by <Link underline="none">@gianapress</Link>
+              by <Link underline="none">@{userData.userid}</Link>
             </Box>
           }
         />

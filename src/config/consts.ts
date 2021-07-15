@@ -43,6 +43,7 @@ const appConst = {
   },
   INTERVALS: {
     UPDATE_ASSETS: 30000, // in 0,5 min
+    UPDATE_BIDS_HISTORY: 10000, // in 0,1 min
   },
 
   ACTIVE_WALLET_STORAGE: 'active.wallet',

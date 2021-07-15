@@ -1,13 +1,14 @@
 //@ts-nocheck
 // import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, all } from 'redux-saga/effects'
 import {
   placeBidSuccess,
   placeBidFailure,
   getBidsHistoryFailure,
-  // getBidsHistorySuccess,
+  getBidsHistorySuccess,
 } from 'stores/reducers/placeBid'
+import { getUserDataById } from 'stores/sagas/user'
 // import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
@@ -19,9 +20,9 @@ const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 export function* placeBid(api: IApi) {
   try {
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
     const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
-    // const endPrice = '108000000000000000'
 
     const order = yield placeBidService.generateOrder({
       body: {
@@ -63,7 +64,7 @@ export function* placeBid(api: IApi) {
       data: {
         orderId: getIdFromString(orderId),
         itemId: marketData.id,
-        userId: 1,
+        userId,
         marketId: Number(marketData.id),
         bidAmount: endPrice,
       },
@@ -83,7 +84,10 @@ export function* getBidsHistory(api: IApi) {
     const getHistory = yield call(api, {
       url: APP_CONFIG.getHistory(+marketData.id),
     })
-    return getHistory
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+    const composeData = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+
+    yield put(getBidsHistorySuccess(composeData))
   } catch (e) {
     yield put(getBidsHistoryFailure(e))
   }
@@ -91,8 +95,8 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(api: IApi) {
   try {
-    // const history = yield call(getBidsHistory)
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',

@@ -34,7 +34,7 @@ export const selectUser = () =>
 export const selectWallet = () =>
   createSelector(
     (store: stateType) => store,
-    ({ wallet: { wallet } }: stateType) => ({ wallet })
+    ({ wallet: { wallet, tokensBalances } }: stateType) => ({ wallet, tokensBalances })
   )
 export const selectWalletError = () =>
   createSelector(
@@ -54,4 +54,11 @@ export const selectListing = () =>
   createSelector(
     (store: stateType) => store,
     ({ listing }: stateType) => ({ listing })
+  )
+
+// Bid
+export const selectBid = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ bid }: stateType) => ({ bid })
   )
