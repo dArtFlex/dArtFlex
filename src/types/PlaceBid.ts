@@ -10,4 +10,12 @@ export interface IBidsHistory {
   user_id: string
 }
 
-export type HistoryStatusType = 'owend' | 'transferred' | 'sold' | 'minted' | 'logged' | 'listed' | 'canceled'
+export type HistoryStatusType =
+  | 'owend'
+  | 'transferred'
+  | 'sold'
+  | 'minted'
+  | 'logged'
+  | 'listed'
+  | 'canceled'
+  | 'pending'

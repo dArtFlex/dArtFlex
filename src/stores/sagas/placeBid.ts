@@ -1,5 +1,5 @@
 //@ts-nocheck
-// import { PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select, all } from 'redux-saga/effects'
 import {
@@ -14,11 +14,15 @@ import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
+import tokensAll from 'core/tokens'
 
-const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
+// const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 
-export function* placeBid(api: IApi) {
+export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
+    const chainId: IChainId = walletService.getChainId()
+    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
+    debugger
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
@@ -32,7 +36,7 @@ export function* placeBid(api: IApi) {
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,
-        erc20: WETH_Contract_Rinkeby,
+        erc20: tokenContractWETH,
         signature: tokenData.signature,
       },
     })
@@ -69,8 +73,6 @@ export function* placeBid(api: IApi) {
         bidAmount: endPrice,
       },
     })
-
-    yield call(acceptBid)
 
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {

@@ -17,7 +17,7 @@ import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { status, updated_at, userData, action } = props
+  const { status, updated_at, user_id, userWalletId, bidAmountToToken, bidAmountUsd, userData, action } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
@@ -40,13 +40,13 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>Artwork {status}</Typography>
-              by <Link underline="none">@{userData.userid}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
             </Box>
           }
         />
       )
 
-    case 'logged':
+    case 'pending':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
@@ -59,9 +59,9 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>0.044 ETH</strong> ($107.10) placed
+                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
-              by <Link underline="none">{'user'}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
             </Box>
           }
         >
@@ -92,11 +92,11 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>0.044 ETH</strong> ($107.10)
+                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>
-              by <Link underline="none">@{userData.userid}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
             </Box>
           }
         />

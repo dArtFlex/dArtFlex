@@ -2,11 +2,9 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
-// import { createBidRequest } from 'stores/reducers/auction'
-import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Link, Divider } from '@material-ui/core'
-import { Popover, Modal, WalletConnect, Field, InputAdornment } from 'common'
+import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
+import { Popover, Modal, WalletConnect } from 'common'
 import {
   MoreHorizontalIcon,
   TwitterIcon,
@@ -19,23 +17,13 @@ import {
   EyeIcon,
   ReportIcon,
 } from 'common/icons'
-import { History, About } from '../../components'
+import { History, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
-import { ApprovedFormState } from '../../types'
-import { useStyles } from './styles'
+import { useStyles } from '../styles'
 
-export default function FormAuction() {
-  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
-
-  switch (values.formProgress) {
-    case 'details':
-      return <FormAuctionDetails onSubmit={() => setFieldValue('formProgress', 'approve')} />
-    case 'approve':
-      return <FormAuctionApprove />
-    default:
-      return null
-  }
+interface IDetailsFormProps {
+  onSubmit: () => void
 }
 
 const tabsItems = [
@@ -49,11 +37,8 @@ const tabsItems = [
     title: 'About Creator',
   },
 ]
-interface IDetailsFormProps {
-  onSubmit: () => void
-}
 
-function FormAuctionDetails(props: IDetailsFormProps) {
+export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
@@ -81,9 +66,9 @@ function FormAuctionDetails(props: IDetailsFormProps) {
     ? exchangeRates.find((tR) => tokenInfo?.id && tR.id === tokenInfo.id)?.rateUsd || 0
     : 0
 
-  const endPriceToToken =
-    marketData?.end_price && tokenInfo?.decimals
-      ? new BigNumber(marketData?.end_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
+  const startPriceToToken =
+    marketData?.start_price && tokenInfo?.decimals
+      ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
 
   return (
@@ -132,24 +117,24 @@ function FormAuctionDetails(props: IDetailsFormProps) {
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${endPriceToToken} ETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${endPriceToToken} ETH` : '-') : ''}
-              {marketData?.sold && `${endPriceToToken} ETH`}
+              {!isAuctionExpired ? `${startPriceToToken} ETH` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${startPriceToToken} ETH` : '-') : ''}
+              {marketData?.sold && `${startPriceToToken} ETH`}
             </Typography>
             <span>
               {!isAuctionExpired
                 ? marketData?.end_price &&
-                  `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                 : null}
 
               {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                   : ''
                 : ''}
               {marketData?.sold &&
                 marketData?.end_price &&
-                `$${new BigNumber(endPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
+                `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
             </span>
           </Box>
           {!isAuctionExpired && marketData?.end_time ? (
@@ -321,134 +306,6 @@ function FormAuctionDetails(props: IDetailsFormProps) {
           </Grid>
         </Box>
       </Popover>
-    </>
-  )
-}
-
-function FormAuctionApprove() {
-  const classes = useStyles()
-  const { values, handleSubmit } = useFormikContext<ApprovedFormState>()
-  const { tokensBalances } = useSelector(selectWallet())
-  const { exchangeRates } = useSelector(selectAssetTokenRates())
-
-  const {
-    assetDetails: { marketData },
-  } = useSelector(selectAssetDetails())
-
-  const minBid = marketData
-    ? new BigNumber(marketData.start_price)
-        .plus(new BigNumber(marketData.start_price).multipliedBy(0.1).toNumber())
-        .dividedBy(`10e${18 - 1}`)
-        .toNumber()
-        .toFixed(5)
-    : 0
-
-  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
-
-  const tokenBalanceWETH = tokenInfo ? tokensBalances?.find((t) => t.id === tokenInfo.id)?.balance || 0 : 0
-  const tokenRate = exchangeRates
-    ? exchangeRates.find((tR) => tokenInfo?.id && tR.id === tokenInfo.id)?.rateUsd || 0
-    : 0
-  const bidValueAmountUsd =
-    values.bid && parseFloat(`${values.bid}`)
-      ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
-      : 0
-  const isValidBidValueAmount = Number(tokenBalanceWETH) > Number(values.bid) && Number(values.bid) >= Number(minBid)
-  const disabledBid = isValidBidValueAmount && Boolean(values.acknowledge) && Boolean(values.agreeTerms)
-
-  return (
-    <>
-      <Box className={classes.formContainer}>
-        <Box className={classes.formContant}>
-          <Box mb={4}>
-            <Typography variant="h1" component="p">
-              Place a bid
-            </Typography>
-          </Box>
-          <Box mb={5}>
-            <Box className={classes.infoRowIcon}>
-              <Typography className={classes.warningText}>{`This item hasn't been reviewed by dArtflex`}</Typography>
-              <InfoIcon />
-            </Box>
-          </Box>
-          <Box mb={5} className={classes.priceRow}>
-            <Typography variant="body1" color="textSecondary">
-              You must bid at least
-            </Typography>
-            <Typography className={classes.boldText}>{`${minBid} WETH`}</Typography>
-          </Box>
-          <Box mb={8.5} className={classes.priceRow}>
-            <Typography variant="body1" color="textSecondary">
-              Your Balance
-            </Typography>
-            <Typography className={classes.boldText}>{`${Number(tokenBalanceWETH).toFixed(4)} WETH`}</Typography>
-          </Box>
-          <Field
-            type="input"
-            name="bid"
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment
-                  position="start"
-                  icon={
-                    <Typography className={classes.inputAdorment} color={'textSecondary'}>
-                      WETH
-                    </Typography>
-                  }
-                />
-              ),
-            }}
-          />
-
-          <Box mt={2}>
-            <Typography className={classes.warningText}>{`$${bidValueAmountUsd}`}</Typography>
-          </Box>
-          <Box mt={6} mb={4}>
-            <Field
-              type="checkbox"
-              name="acknowledge"
-              label={'I acknowledge that this item has not been reviewed or approved by dArtflex'}
-              className={classes.checkbox}
-            />
-          </Box>
-          <Box mb={6}>
-            <Field
-              type="checkbox"
-              name="agreeTerms"
-              // Todo: Need to fixed ts issue
-              // @ts-ignore
-              label={
-                <Typography className={classes.warningText}>
-                  {`I agree with dArtflex's `}
-                  <Link>Terms and Services</Link>
-                </Typography>
-              }
-              className={classes.checkbox}
-            />
-          </Box>
-          <Button
-            onClick={() => handleSubmit()}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            className={clsx(classes.bitBtn, !disabledBid && classes.bitBtnDisabled)}
-            disabled={!disabledBid}
-          >
-            {!isValidBidValueAmount ? (
-              <Typography className={classes.bitBtnDisabledText}>You don’t have enough WETH</Typography>
-            ) : (
-              'Place a Bid'
-            )}
-          </Button>
-        </Box>
-        <Box mt={4}>
-          <Link href={'#'} className={classes.learnLink} underline="none">
-            Learn how our auctions work
-          </Link>
-        </Box>
-      </Box>
     </>
   )
 }
