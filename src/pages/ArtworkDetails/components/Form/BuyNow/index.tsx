@@ -1,7 +1,8 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
-import FormBuyDetails from './FormBuyDetails'
-import FormBuyApprove from './FormBuyApprove'
+import FormDetails from './FormDetails'
+import FormBuy from './FormBuy'
+import FormApproved from './FormApproved'
 import { ApprovedFormState } from '../../../types'
 
 export default function FormAuction() {
@@ -9,9 +10,11 @@ export default function FormAuction() {
 
   switch (values.formProgress) {
     case 'details':
-      return <FormBuyDetails onSubmit={() => setFieldValue('formProgress', 'buy')} />
+      return <FormDetails onSubmit={() => setFieldValue('formProgress', 'buy')} />
     case 'buy':
-      return <FormBuyApprove />
+      return <FormBuy />
+    case 'approved':
+      return <FormApproved />
     default:
       return null
   }
