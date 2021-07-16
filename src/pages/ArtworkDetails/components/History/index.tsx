@@ -7,6 +7,7 @@ import { acceptBidRequest } from 'stores/reducers/placeBid'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
 import { CardHistory } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
+import { normalizeDate } from 'utils'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -30,7 +31,7 @@ export default function History() {
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { ownerData },
+    assetDetails: { ownerData, marketData },
   } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
@@ -49,18 +50,41 @@ export default function History() {
     dispatch(acceptBidRequest({ creatorId: bidHistory[0].order_id, buyerId: bidHistoryReverse[0].order_id }))
   }
 
+  const handleCancelOffer = ({
+    id,
+    order_id,
+    user_id,
+    market_id,
+  }: {
+    id: number
+    order_id: string
+    user_id: string
+    market_id: string
+  }) => {
+    console.log(id, order_id, user_id, market_id)
+  }
+
+  const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
+
   if (bidHistory.length > 4 && !showMore) {
     return (
       <Box mt={3} mb={3}>
-        {bidHistoryReverse.slice(0, 4).map((props, i) => (
-          <CardHistory
-            key={i}
-            {...props}
-            {...getBidAmountToTokenAndUsd(props.bid_amount)}
-            userWalletId={user?.id}
-            onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
-          />
-        ))}
+        {bidHistoryReverse.slice(0, 4).map((props, i) => {
+          return (
+            <CardHistory
+              key={i}
+              {...props}
+              {...getBidAmountToTokenAndUsd(props.bid_amount)}
+              userWalletId={user?.id}
+              onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
+              onCancel={
+                user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
+                  ? handleCancelOffer
+                  : undefined
+              }
+            />
+          )
+        })}
         <Button
           classes={{ root: classes.showMoreBtn }}
           disableRipple
@@ -83,6 +107,11 @@ export default function History() {
           {...getBidAmountToTokenAndUsd(props.bid_amount)}
           userWalletId={user?.id}
           onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
+          onCancel={
+            user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
+              ? handleCancelOffer
+              : undefined
+          }
         />
       ))}
     </Box>

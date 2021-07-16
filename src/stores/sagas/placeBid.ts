@@ -77,7 +77,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
-    yield put(placeBidFailure(e))
+    yield put(placeBidFailure(e.message || e))
   }
 }
 

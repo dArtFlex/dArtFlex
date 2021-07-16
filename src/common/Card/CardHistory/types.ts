@@ -6,7 +6,17 @@ export interface ICardHistoryProps extends IBidsHistory {
   bidAmountUsd: string
   userWalletId?: number
   onAccept?: () => void
-  onCancel?: () => void
+  onCancel?: ({
+    id,
+    order_id,
+    user_id,
+    market_id,
+  }: {
+    id: number
+    order_id: string
+    user_id: string
+    market_id: string
+  }) => void
 }
 
 export interface ICardContainerProps {
