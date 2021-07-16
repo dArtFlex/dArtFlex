@@ -3,6 +3,7 @@ export * from './Listing'
 export * from './Assets'
 export * from './User'
 export * from './Wallet'
+export * from './PlaceBid'
 
 export interface IEntity {
   id: number

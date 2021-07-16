@@ -20,6 +20,7 @@ function getIdFromString(v) {
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
     const { lazyMintData, lazyMintItemId }: ReturnType<typeof selector> = yield select((state) => state.minting)
+    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
 
     const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
@@ -97,7 +98,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       data: {
         itemId: lazyMintItemId,
         orderId: getIdFromString(orderId),
-        userId: 1,
+        userId,
         bidAmount: startPrice,
         // bidAmount the same with startPrice
         marketId: getIdFromString(marketId),
@@ -115,8 +116,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       data: {
         itemId: lazyMintItemId,
         orderId: getIdFromString(orderId),
-        // userId should be get from /api/user/get/wallet/{wallet}
-        userId: 1,
+        userId,
         bidAmount: startPrice,
         marketId: getIdFromString(marketId),
         // 0x only ETH
@@ -135,6 +135,6 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     history.push(routes.createNFT)
   } catch (e) {
-    yield put(listingFailure(e))
+    yield put(listingFailure(e.message || e))
   }
 }

@@ -5,7 +5,11 @@ import { PageWrapper, Form } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
+import { getBidsHistoryRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
+import appConst from 'config/consts'
+
+const { INTERVALS } = appConst
 
 const initialApprovedData: ApprovedFormState = {
   bid: 0,
@@ -25,6 +29,23 @@ export default function ArtworkDetails() {
       dispatch(clearAssetDetails())
     }
   }, [])
+
+  const fetchBidsHistory = () => {
+    if (assetDetails) {
+      dispatch(getBidsHistoryRequest())
+    }
+  }
+
+  useEffect(() => {
+    if (!assetDetails) {
+      return
+    }
+    dispatch(getBidsHistoryRequest())
+    const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
+    return () => {
+      clearInterval(iId)
+    }
+  }, [assetDetails])
 
   if (assetDetails.tokenData === null) {
     return null

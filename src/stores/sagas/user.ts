@@ -37,6 +37,17 @@ export function* getUserDataByOwner(api: IApi, owner: string) {
   }
 }
 
+export function* getUserDataById(api: IApi, id: string) {
+  try {
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(Number(id)),
+    })
+    return userData[0]
+  } catch (e) {
+    throw new Error(e.message || e)
+  }
+}
+
 function* uploadImage(api: IApi, file: File) {
   try {
     const formData = new FormData()

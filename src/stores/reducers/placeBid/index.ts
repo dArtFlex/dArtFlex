@@ -25,15 +25,26 @@ const userSlice = createSlice({
       state.fetching = false
     },
 
-    getBidsHistoryRequest: (state, i) => {
+    getBidsHistoryRequest: (state) => {
       state.fetching = true
     },
     // eslint-disable-next-line
-    getBidsHistorySuccess: (state, { payload }: PayloadAction<{ bidHistory: any }>) => {
-      state.bidHistory = payload.bidHistory
+    getBidsHistorySuccess: (state, { payload }: PayloadAction<PlaceBidStateType['bidHistory']>) => {
+      state.bidHistory = payload
       state.fetching = false
     },
     getBidsHistoryFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    acceptBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    acceptBidSuccess: (state) => {
+      state.fetching = false
+    },
+    acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
     },
@@ -44,9 +55,14 @@ export const {
   placeBidRequest,
   placeBidSuccess,
   placeBidFailure,
+
   getBidsHistoryRequest,
   getBidsHistorySuccess,
   getBidsHistoryFailure,
+
+  acceptBidRequest,
+  acceptBidSuccess,
+  acceptBidFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

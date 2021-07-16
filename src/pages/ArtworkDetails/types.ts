@@ -9,4 +9,4 @@ export interface ApprovedFormState {
   formProgress: IFormProgress
 }
 
-type IFormProgress = 'details' | 'approve' | 'transaction_start' | 'transaction_finish'
+type IFormProgress = 'details' | 'auction' | 'buy' | 'approved'

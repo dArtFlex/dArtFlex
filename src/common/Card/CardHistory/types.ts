@@ -1,13 +1,13 @@
-export interface ICardHistoryProps {
-  user?: string
-  title: string
-  expDate?: string
-  src: string
-  action?: () => void
-  status: HistoryStatusType
-}
+import { IBidsHistory, UserDataTypes } from 'types'
 
-type HistoryStatusType = 'owend' | 'transferred' | 'sold' | 'minted' | 'logged' | 'listed' | 'canceled'
+export interface ICardHistoryProps extends IBidsHistory {
+  userData: UserDataTypes
+  bidAmountToToken: string
+  bidAmountUsd: string
+  userWalletId?: number
+  onAccept?: () => void
+  onCancel?: () => void
+}
 
 export interface ICardContainerProps {
   avatar: JSX.Element

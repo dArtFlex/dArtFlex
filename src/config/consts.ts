@@ -43,6 +43,7 @@ const appConst = {
   },
   INTERVALS: {
     UPDATE_ASSETS: 30000, // in 0,5 min
+    UPDATE_BIDS_HISTORY: 10000, // in 0,1 min
   },
 
   ACTIVE_WALLET_STORAGE: 'active.wallet',
@@ -51,6 +52,7 @@ const appConst = {
     TRUST: 'trust.connect',
   },
   WALLET_CONNECT: 'walletconnect',
+  APPROVE_AMOUNT: '900000000000000000000000000000000000000000000000000000000000000',
 }
 
 export default appConst
