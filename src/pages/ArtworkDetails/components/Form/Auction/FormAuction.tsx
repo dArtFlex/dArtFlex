@@ -5,8 +5,8 @@ import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
-import { Field, InputAdornment } from 'common'
-import { InfoIcon, ArrowLeftIcon } from 'common/icons'
+import { Field, InputAdornment, Tooltip } from 'common'
+import { ArrowLeftIcon } from 'common/icons'
 import { useTokenInfo } from 'hooks'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
@@ -60,10 +60,11 @@ export default function FormAuction(props: IFormAuctionProps) {
             </Typography>
           </Box>
           <Box mb={5}>
-            <Box className={classes.infoRowIcon}>
-              <Typography className={classes.warningText}>{`This item hasn't been reviewed by dArtflex`}</Typography>
-              <InfoIcon />
-            </Box>
+            <Tooltip
+              text={`This item hasn't been reviewed by dArtflex`}
+              desc={`You should proceed with extra caution. Anyone can create a digital item on a blockchain with any name, including fake versions of existing items. Please take extra caution and do your research when interacting with this item to ensure it's what it claims to be.`}
+              className={classes.tooltip}
+            />
           </Box>
           <Box mb={5} className={classes.priceRow}>
             <Typography variant="body1" color="textSecondary">

@@ -232,5 +232,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       color: theme.palette.text.primary,
     },
+    tooltip: {
+      '& > p': {
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        fontWeight: 400,
+      },
+    },
   })
 )
