@@ -18,9 +18,12 @@ import { ICardHistoryProps, ICardContainerProps } from './types'
 
 export default function CardHistory(props: ICardHistoryProps) {
   const {
+    id,
+    order_id,
+    market_id,
+    user_id,
     status,
     updated_at,
-    user_id,
     userWalletId,
     bidAmountToToken,
     bidAmountUsd,
@@ -80,7 +83,11 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box className={classes.footerBox}>
               <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
               {onCancel && (
-                <Button classes={{ root: classes.cardBtn }} disableRipple onClick={onCancel}>
+                <Button
+                  classes={{ root: classes.cardBtn }}
+                  disableRipple
+                  onClick={() => onCancel({ id, order_id, user_id, market_id })}
+                >
                   Cancel Bid
                 </Button>
               )}

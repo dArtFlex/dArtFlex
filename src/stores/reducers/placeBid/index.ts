@@ -3,6 +3,7 @@ import { PlaceBidStateType } from './types'
 
 const initialState: PlaceBidStateType = {
   fetching: false,
+  transacting: false,
   error: '',
   data: null,
   bidHistory: [],
@@ -14,15 +15,15 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     placeBidRequest: (state, i) => {
-      state.fetching = true
+      state.transacting = true
     },
     placeBidSuccess: (state, { payload }: PayloadAction<{ data: unknown }>) => {
       state.data = payload.data
-      state.fetching = false
+      state.transacting = false
     },
     placeBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
-      state.fetching = false
+      state.transacting = false
     },
 
     getBidsHistoryRequest: (state) => {
