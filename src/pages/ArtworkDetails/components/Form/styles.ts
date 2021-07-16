@@ -270,5 +270,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontSize: 30,
       },
     },
+    tooltip: {
+      '& > p': {
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        fontWeight: 400,
+      },
+    },
   })
 )

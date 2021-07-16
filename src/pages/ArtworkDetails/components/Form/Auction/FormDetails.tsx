@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
-import { Popover, Modal, WalletConnect } from 'common'
+import { Popover, Modal, WalletConnect, Tooltip } from 'common'
 import {
   MoreHorizontalIcon,
   TwitterIcon,
@@ -13,7 +13,6 @@ import {
   OpenseaIcon,
   IpfsIcon,
   BurnIcon,
-  InfoIcon,
   EyeIcon,
   ReportIcon,
 } from 'common/icons'
@@ -139,10 +138,8 @@ export default function FormDetails(props: IDetailsFormProps) {
           </Box>
           {!isAuctionExpired && marketData?.end_time ? (
             <Box>
-              <Box className={classes.infoRowIcon}>
-                <Typography variant={'body1'}>Auction Ending In </Typography>
-                <InfoIcon />
-              </Box>
+              <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
+
               <Box
                 className={clsx(
                   classes.timerBox,
