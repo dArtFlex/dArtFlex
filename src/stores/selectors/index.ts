@@ -29,6 +29,11 @@ export const selectUser = () =>
     (store: stateType) => store,
     ({ user: { user } }: stateType) => ({ user })
   )
+export const selectUserRole = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { role } }: stateType) => ({ role })
+  )
 
 // Wallet
 export const selectWallet = () =>

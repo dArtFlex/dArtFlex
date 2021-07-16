@@ -10,8 +10,9 @@ import {
 } from 'stores/reducers/user'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { UserDataTypes } from 'types'
+import { UserDataTypes, IUserRole } from 'types'
 import APP_CONFIG from 'config'
+import appConst from 'config/consts'
 import { getIdFromString } from 'utils'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -19,7 +20,13 @@ export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: str
     const userData: UserStateType['user'][] = yield call(api, {
       url: APP_CONFIG.getUserByWallet(payload.wallet),
     })
-    yield put(getUserDataSuccess({ userData: userData[0] }))
+    const userRole: IUserRole = appConst.USER.SECRET_KEYS.some(
+      (i) => i.toLocaleLowerCase() === payload.wallet.toLocaleLowerCase()
+    )
+      ? 'ROLE_SUPER_ADMIN'
+      : 'ROLE_COMMON'
+
+    yield put(getUserDataSuccess({ userData: userData[0], role: userRole }))
   } catch ({ message = '' }) {
     history.push('/')
     yield put(getUserDataFailure(message))

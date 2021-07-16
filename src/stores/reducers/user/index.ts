@@ -19,9 +19,13 @@ const userSlice = createSlice({
       state.fetching = true
       state.error = ''
     },
-    getUserDataSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
+    getUserDataSuccess: (
+      state,
+      { payload }: PayloadAction<{ userData: UserStateType['user']; role: UserStateType['role'] }>
+    ) => {
       state.fetching = false
       state.user = payload.userData
+      state.role = payload.role
     },
     getUserDataFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload

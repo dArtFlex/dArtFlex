@@ -3,51 +3,58 @@ import { useHistory } from 'react-router-dom'
 import { PopoverLinks } from 'common'
 import { ManIcon, ListIcon, BidsIcon, SellIcon, SettingsIcon, DisconnectIcon, ContentIcon } from 'common/icons'
 import routes from '../../routes'
-
 interface IProfileActionMenuProps {
   anchor: null | HTMLElement
   setAnchor: (target: null) => void
+  isUserSuperAdmin: boolean
 }
 
 export default function ProfileActionMenu(props: IProfileActionMenuProps) {
-  const { anchor, setAnchor } = props
+  const { anchor, setAnchor, isUserSuperAdmin } = props
   const history = useHistory()
+
+  const mainLinks = [
+    {
+      lable: 'Dashboard',
+      icon: <ManIcon />,
+      onClick: () => history.push(routes.dashboard),
+    },
+    {
+      lable: 'Trading History',
+      icon: <ListIcon />,
+      onClick: () => history.push(routes.tradingHistory),
+    },
+    {
+      lable: 'My Bids',
+      icon: <BidsIcon />,
+      onClick: () => history.push(routes.bids),
+    },
+    {
+      lable: 'My Sales',
+      icon: <SellIcon />,
+      onClick: () => history.push(routes.sales),
+    },
+    {
+      lable: 'Account Settings',
+      icon: <SettingsIcon />,
+      onClick: () => history.push(routes.artworkAccountSettings),
+    },
+  ]
+  const adminLinks = [
+    {
+      lable: 'Content Management',
+      icon: <ContentIcon />,
+      onClick: () => history.push(routes.contentManagement),
+    },
+  ]
+
+  const combineLinks = isUserSuperAdmin ? [...mainLinks, ...adminLinks] : mainLinks
+
   return (
     <PopoverLinks
       anchor={anchor}
       setAnchor={setAnchor}
-      links={[
-        {
-          lable: 'Dashboard',
-          icon: <ManIcon />,
-          onClick: () => history.push(routes.dashboard),
-        },
-        {
-          lable: 'Trading History',
-          icon: <ListIcon />,
-          onClick: () => history.push(routes.tradingHistory),
-        },
-        {
-          lable: 'My Bids',
-          icon: <BidsIcon />,
-          onClick: () => history.push(routes.bids),
-        },
-        {
-          lable: 'My Sales',
-          icon: <SellIcon />,
-          onClick: () => history.push(routes.sales),
-        },
-        {
-          lable: 'Account Settings',
-          icon: <SettingsIcon />,
-          onClick: () => history.push(routes.artworkAccountSettings),
-        },
-        {
-          lable: 'Content Management',
-          icon: <ContentIcon />,
-          onClick: () => history.push(routes.contentManagement),
-        },
-      ]}
+      links={combineLinks}
       subLinks={[
         {
           lable: 'Disconnect',
