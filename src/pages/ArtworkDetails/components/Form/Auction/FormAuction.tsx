@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, Button, Link } from '@material-ui/core'
+import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
-import { InfoIcon } from 'common/icons'
+import { InfoIcon, ArrowLeftIcon } from 'common/icons'
 import { useTokenInfo } from 'hooks'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
@@ -18,7 +18,7 @@ interface IFormAuctionProps {
 export default function FormAuction(props: IFormAuctionProps) {
   const classes = useStyles()
   const { onSubmit } = props
-  const { values } = useFormikContext<ApprovedFormState>()
+  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { tokensBalances } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
 
@@ -51,7 +51,10 @@ export default function FormAuction(props: IFormAuctionProps) {
     <>
       <Box className={classes.formContainer}>
         <Box className={classes.formContant}>
-          <Box mb={4}>
+          <Box className={classes.formHead}>
+            <IconButton className={classes.backIcon} onClick={() => setFieldValue('formProgress', 'details')}>
+              <ArrowLeftIcon />
+            </IconButton>
             <Typography variant="h1" component="p">
               Place a bid
             </Typography>
@@ -66,18 +69,21 @@ export default function FormAuction(props: IFormAuctionProps) {
             <Typography variant="body1" color="textSecondary">
               You must bid at least
             </Typography>
-            <Typography className={classes.boldText}>{`${minBid} WETH`}</Typography>
+            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${minBid} WETH`}</Typography>
           </Box>
           <Box mb={8.5} className={classes.priceRow}>
             <Typography variant="body1" color="textSecondary">
               Your Balance
             </Typography>
-            <Typography className={classes.boldText}>{`${Number(tokenBalanceWETH).toFixed(4)} WETH`}</Typography>
+            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${Number(
+              tokenBalanceWETH
+            ).toFixed(4)} WETH`}</Typography>
           </Box>
           <Field
             type="input"
             name="bid"
             variant="outlined"
+            className={classes.rootField}
             InputProps={{
               endAdornment: (
                 <InputAdornment
@@ -90,11 +96,9 @@ export default function FormAuction(props: IFormAuctionProps) {
                 />
               ),
             }}
+            helperText={`$${bidValueAmountUsd}`}
           />
 
-          <Box mt={2}>
-            <Typography className={classes.warningText}>{`$${bidValueAmountUsd}`}</Typography>
-          </Box>
           <Box mt={6} mb={4}>
             <Field
               type="checkbox"

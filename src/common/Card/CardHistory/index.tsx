@@ -43,7 +43,7 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'listed':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
@@ -53,7 +53,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>Artwork {status}</Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
             </Box>
           }
         />
@@ -62,7 +62,7 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'pending':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
@@ -74,7 +74,7 @@ export default function CardHistory(props: ICardHistoryProps) {
               <Typography className={classes.subheader}>
                 Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
             </Box>
           }
         >
@@ -108,7 +108,7 @@ export default function CardHistory(props: ICardHistoryProps) {
     case 'canceled':
       return (
         <CardContainer
-          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData.profile_image} />}
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             <IconButton className={classes.borderdIconButton}>
               <ExternalLinkIcon />
@@ -123,7 +123,7 @@ export default function CardHistory(props: ICardHistoryProps) {
                 </span>{' '}
                 canceled
               </Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData.userid}`}</Link>
+              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
             </Box>
           }
         />
