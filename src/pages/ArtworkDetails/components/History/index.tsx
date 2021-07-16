@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectBid, selectAssetTokenRates, selectUser } from 'stores/selectors'
+import { selectBid, selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
+import { acceptBidRequest } from 'stores/reducers/placeBid'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
 import { CardHistory } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -20,11 +22,16 @@ const useStyles = makeStyles(() =>
 export default function History() {
   const [showMore, setShowMore] = useState<boolean>(false)
   const classes = useStyles()
+  const dispatch = useDispatch()
   const {
     bid: { bidHistory },
   } = useSelector(selectBid())
+  const bidHistoryReverse = bidHistory.slice().reverse()
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
+  const {
+    assetDetails: { ownerData },
+  } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
@@ -38,15 +45,22 @@ export default function History() {
     return { bidAmountToToken, bidAmountUsd }
   }
 
+  const handleAcceptOffer = () => {
+    dispatch(acceptBidRequest({ creatorId: bidHistory[0].order_id, buyerId: bidHistoryReverse[0].order_id }))
+  }
+
   if (bidHistory.length > 4 && !showMore) {
     return (
       <Box mt={3} mb={3}>
-        {bidHistory
-          .slice(0, 4)
-          .reverse()
-          .map((props, i) => (
-            <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
-          ))}
+        {bidHistoryReverse.slice(0, 4).map((props, i) => (
+          <CardHistory
+            key={i}
+            {...props}
+            {...getBidAmountToTokenAndUsd(props.bid_amount)}
+            userWalletId={user?.id}
+            onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
+          />
+        ))}
         <Button
           classes={{ root: classes.showMoreBtn }}
           disableRipple
@@ -62,12 +76,15 @@ export default function History() {
 
   return (
     <Box mt={3} mb={3}>
-      {bidHistory
-        .slice()
-        .reverse()
-        .map((props, i) => (
-          <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
-        ))}
+      {bidHistoryReverse.map((props, i) => (
+        <CardHistory
+          key={i}
+          {...props}
+          {...getBidAmountToTokenAndUsd(props.bid_amount)}
+          userWalletId={user?.id}
+          onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
+        />
+      ))}
     </Box>
   )
 }

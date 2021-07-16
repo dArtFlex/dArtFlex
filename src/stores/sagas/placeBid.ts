@@ -12,6 +12,7 @@ import { getUserDataById } from 'stores/sagas/user'
 // import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
+import { acceptBidService } from 'services/accept_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
@@ -22,7 +23,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
   try {
     const chainId: IChainId = walletService.getChainId()
     const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
-    debugger
+
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
@@ -95,18 +96,25 @@ export function* getBidsHistory(api: IApi) {
   }
 }
 
-export function* acceptBid(api: IApi) {
+export function* acceptBid(api: IApi, { payload }: PayloadAction<{ creatorId: string; buyerId: string }>) {
   try {
-    const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+    const creatorOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(payload.creatorId),
+    })
+    const buyerOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
+    })
+
+    yield acceptBidService.performMint(creatorOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
       data: {
-        id: marketData.id,
+        id: payload.buyerId,
       },
     })
   } catch (e) {
-    console.log(e)
+    throw new Error(e.message || e)
   }
 }

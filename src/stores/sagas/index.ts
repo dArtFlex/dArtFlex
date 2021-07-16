@@ -6,14 +6,14 @@ import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest 
 import { connectMetaMaskRequest, connnectWalletConnectRequest, getTokensBalancesRequest } from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
-import { placeBidRequest, getBidsHistoryRequest } from '../reducers/placeBid'
+import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
 
 import { getUserData, createNewUser } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect, getTokensBalances } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing } from '../sagas/listing'
-import { placeBid, getBidsHistory } from '../sagas/placeBid'
+import { placeBid, getBidsHistory, acceptBid } from '../sagas/placeBid'
 
 export default function* root() {
   yield all([
@@ -21,20 +21,26 @@ export default function* root() {
     takeLatest(getAssetsAllRequest.type, getAssetsAllData, apiMiddleware),
     takeLatest(getAssetByIdRequest.type, getAssetById, apiMiddleware),
     takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
+
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
+
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
+
     /** Minting **/
     takeLatest(lazyMintingRequest.type, minting, apiMiddleware),
     takeLatest(uploadImageRequest.type, uploadImage, apiMiddleware),
+
     /** Listing **/
     takeLatest(listingRequest.type, listing, apiMiddleware),
+
     /** Place Bid **/
     takeLatest(placeBidRequest.type, placeBid, apiMiddleware),
     takeLatest(getBidsHistoryRequest.type, getBidsHistory, apiMiddleware),
+    takeLatest(acceptBidRequest.type, acceptBid, apiMiddleware),
   ])
 }

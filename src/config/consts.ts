@@ -52,6 +52,7 @@ const appConst = {
     TRUST: 'trust.connect',
   },
   WALLET_CONNECT: 'walletconnect',
+  APPROVE_AMOUNT: '900000000000000000000000000000000000000000000000000000000000000',
 }
 
 export default appConst

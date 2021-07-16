@@ -135,6 +135,6 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     history.push(routes.createNFT)
   } catch (e) {
-    yield put(listingFailure(e))
+    yield put(listingFailure(e.message || e))
   }
 }

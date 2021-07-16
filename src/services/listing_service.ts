@@ -52,7 +52,7 @@ class ListingService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: 'ERC721',
+          assetClass: signature == '0x' ? 'ERC721' : 'ERC721_LAZY',
           contract: contract,
           tokenId: tokenId,
           uri,

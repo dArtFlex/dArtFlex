@@ -1,11 +1,12 @@
 import { IBidsHistory, UserDataTypes } from 'types'
 
 export interface ICardHistoryProps extends IBidsHistory {
-  action?: () => void
   userData: UserDataTypes
   bidAmountToToken: string
   bidAmountUsd: string
   userWalletId?: number
+  onAccept?: () => void
+  onCancel?: () => void
 }
 
 export interface ICardContainerProps {

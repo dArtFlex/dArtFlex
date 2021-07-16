@@ -19,3 +19,28 @@ export type HistoryStatusType =
   | 'listed'
   | 'canceled'
   | 'pending'
+
+export interface IOrderData {
+  data: string
+  dataType: string
+  maker: string
+  makeAsset: {
+    assetType: {
+      assetClass: string
+      data: string
+    }
+    value: string
+  }
+  taker: string
+  takeAsset: {
+    assetType: {
+      assetClass: string
+      data: string
+    }
+    value: string
+  }
+  start: string
+  end: string
+  salt: string
+  signature: string
+}

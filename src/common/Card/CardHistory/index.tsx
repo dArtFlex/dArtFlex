@@ -12,12 +12,22 @@ import {
   Divider,
   Button,
 } from '@material-ui/core'
-import { ExternalLinkIcon } from 'common/icons'
+import { ExternalLinkIcon, SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { status, updated_at, user_id, userWalletId, bidAmountToToken, bidAmountUsd, userData, action } = props
+  const {
+    status,
+    updated_at,
+    user_id,
+    userWalletId,
+    bidAmountToToken,
+    bidAmountUsd,
+    userData,
+    onCancel,
+    onAccept,
+  } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
@@ -69,9 +79,19 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Divider />
             <Box className={classes.footerBox}>
               <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
-              {action && (
-                <Button classes={{ root: classes.cardBtn }} disableRipple>
+              {onCancel && (
+                <Button classes={{ root: classes.cardBtn }} disableRipple onClick={onCancel}>
                   Cancel Bid
+                </Button>
+              )}
+              {onAccept && (
+                <Button
+                  classes={{ root: classes.cardAcceptBtn }}
+                  disableRipple
+                  onClick={onAccept}
+                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                >
+                  Accept Offer
                 </Button>
               )}
             </Box>

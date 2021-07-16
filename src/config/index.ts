@@ -22,6 +22,7 @@ const APP_CONFIG = {
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
+  getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
 
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,

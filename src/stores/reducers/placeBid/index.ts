@@ -37,6 +37,17 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    acceptBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    acceptBidSuccess: (state) => {
+      state.fetching = false
+    },
+    acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -44,9 +55,14 @@ export const {
   placeBidRequest,
   placeBidSuccess,
   placeBidFailure,
+
   getBidsHistoryRequest,
   getBidsHistorySuccess,
   getBidsHistoryFailure,
+
+  acceptBidRequest,
+  acceptBidSuccess,
+  acceptBidFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice
