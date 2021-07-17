@@ -25,12 +25,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     cardImage: {
       padding: theme.spacing(21),
-      '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: theme.spacing(3),
-      },
+
+      height: 630,
+      objectFit: 'cover',
+      borderRadius: theme.spacing(3),
     },
   })
 )
