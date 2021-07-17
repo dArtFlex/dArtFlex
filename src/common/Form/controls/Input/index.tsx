@@ -54,6 +54,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
         InputProps={InputProps}
         InputLabelProps={{ shrink, classes: { root: classes.label } }}
         error={hasError}
+        className={classes.textInput}
       />
       {multiline && <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>}
     </FormControl>

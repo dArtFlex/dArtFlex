@@ -11,11 +11,8 @@ import appConsts from 'config/consts'
 import routes from '../../../../routes'
 
 const {
-  FILTER_VALUES: { LIVE_AUCTION },
+  FILTER_VALUES: { LIVE_AUCTION, PLACED_BID, OWNED },
 } = appConsts
-
-const PLACED_BID = ''
-const OWNED = ''
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
@@ -35,7 +32,7 @@ export default function CardBid(props: ICardBidProps) {
             {name}
           </Typography>
         </Box>
-        <Timer endDate={endDate} className={classes.timer} />
+        {status !== OWNED && <Timer endDate={endDate} className={classes.timer} />}
       </Box>
       <Box className={classes.cardBidBids}>
         {currentBid && yourBid ? (
@@ -75,7 +72,7 @@ export default function CardBid(props: ICardBidProps) {
         )}
         {status === OWNED && (
           <Button
-            className={clsx(classes.btnAction, classes.btnClaneNFT)}
+            className={clsx(classes.btnAction, classes.btnClaimNFT)}
             variant={'contained'}
             onClick={() => history.push(routes.bids + '/1009')}
           >

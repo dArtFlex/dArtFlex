@@ -134,6 +134,7 @@ export default function TradingHistory() {
                 style={{ minWidth: '148px' }}
                 value={sortValue}
                 defaultValue={'Filter By'}
+                className={classes.selectBackgroundColor}
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
                   setSortValue(target.value as string)
                 }}

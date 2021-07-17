@@ -57,7 +57,9 @@ export default function Dashboard() {
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={'https://picsum.photos/1500/500'}
+        coverURL={
+          'https://thumbs.dreamstime.com/b/navy-blue-brick-wall-wide-texture-indigo-masonry-large-long-background-gloomy-dark-color-brickwork-backdrop-209967539.jpg'
+        }
         aside={
           <Aside
             avatar={'https://picsum.photos/200/300'}

@@ -43,7 +43,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
           onClick: () => history.push(routes.artworkAccountSettings),
         },
         {
-          lable: 'Content Management',
+          lable: 'Management',
           icon: <ContentIcon />,
           onClick: () => history.push(routes.contentManagement),
         },

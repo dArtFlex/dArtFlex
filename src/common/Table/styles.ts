@@ -26,11 +26,17 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.white,
         paddingLeft: theme.spacing(6),
         paddingRight: theme.spacing(6),
+        backgroundColor: theme.palette.grey['300'],
       },
     },
     tableRowRoot: {
+      backgroundColor: theme.palette.background.default,
+      '&:hover': {
+        backgroundColor: `${theme.palette.type === 'dark' && theme.palette.background.default} !important`,
+        opacity: theme.palette.type === 'dark' && '70%',
+      },
       '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.greyPale,
+        backgroundColor: theme.palette.background.paper,
       },
     },
     tableCell: {

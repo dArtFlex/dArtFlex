@@ -39,11 +39,11 @@ export default function ContentManagementTab() {
   return (
     <Box className={classes.managementWrapperSmall}>
       <Box className={classes.flexBox}>
-        <ToggleButtonGroup exclusive onChange={handleChange} value={value}>
-          <ToggleButton value="works" classes={{ root: classes.toggleButton }}>
+        <ToggleButtonGroup exclusive onChange={handleChange} value={value} className={classes.toggleButtons}>
+          <ToggleButton value="works" classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}>
             Works
           </ToggleButton>
-          <ToggleButton value="users" classes={{ root: classes.toggleButton }}>
+          <ToggleButton value="users" classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}>
             Users
           </ToggleButton>
         </ToggleButtonGroup>
@@ -55,12 +55,14 @@ export default function ContentManagementTab() {
             onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
               setSortValue(target.value as string)
             }}
+            classes={{ select: classes.sortStatusMenu }}
+            className={classes.sortStatusMenu}
           >
             <Typography variant={'body1'} color={'textSecondary'} className={classes.dropDownLabel}>
               Sort by:
             </Typography>
             {sortItems.map(({ label, value }) => (
-              <Select key={value} value={value}>
+              <Select key={value} value={value} className={classes.sortItem}>
                 {label}
               </Select>
             ))}
