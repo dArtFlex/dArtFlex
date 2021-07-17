@@ -83,9 +83,10 @@ export default function FormArtworkInfo(props: IMakeOfferForm) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
+          indicatorColor="primary"
         >
           {tabsItems.map(({ title }) => (
-            <Tab key={title} label={title} />
+            <Tab key={title} label={title} classes={{ textColorInherit: classes.tabsTextColor }} />
           ))}
         </Tabs>
         {tab === 0 && <Description />}

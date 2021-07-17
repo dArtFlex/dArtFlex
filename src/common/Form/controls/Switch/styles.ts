@@ -16,6 +16,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: 32,
       padding: 0,
       margin: theme.spacing(0, 3),
+      backgroundColor: theme.palette.background.default,
     },
     switchBase: {
       width: 32,
@@ -34,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) =>
           opacity: 1,
         },
         '& $thumb': {
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: theme.palette.white,
         },
       },
     },

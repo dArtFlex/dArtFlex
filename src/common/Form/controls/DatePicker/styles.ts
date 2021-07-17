@@ -6,6 +6,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'wrap',
   },
   datePicker: {
+    backgroundColor: theme.palette.background.default,
     '&.MuiInput-underline': {
       paddingTop: '12px',
       paddingBottom: '12px',

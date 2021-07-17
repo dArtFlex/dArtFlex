@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     cardImageCheckbox: {
       position: 'absolute',
-      background: theme.palette.white,
+      background: theme.palette.background.paper,
       top: 12,
       left: 12,
       display: 'flex',

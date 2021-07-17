@@ -7,7 +7,7 @@ import { useStyles } from './styles'
 import MakeOfferForm from './components/MakeOfferForm'
 
 export default function MakeOffer() {
-  const [formId, setFormId] = useState<number>(2)
+  const [formId, setFormId] = useState<number>(1)
 
   const asset = {
     status: 'sold',

@@ -80,6 +80,8 @@ export default function FormSelect(props: IFormSelectProps & FieldRenderProps<st
           },
           getContentAnchorEl: null,
         }}
+        classes={{ select: classes.select }}
+        className={classes.select}
       >
         {options.map((option: IOptionsType) => (
           <MenuItem key={extractId(option)} value={extractValue(option)}>

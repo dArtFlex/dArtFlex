@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['500'],
       borderRadius: theme.spacing(3),
       margin: theme.spacing(1, 0),
     },
@@ -29,8 +29,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       fontWeight: 'normal',
     },
+    linkText: {
+      color: theme.palette.lightViolet,
+    },
     borderdIconButton: {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.default,
       border: `1px solid ${theme.palette.greyLight}`,
     },
     footer: {
