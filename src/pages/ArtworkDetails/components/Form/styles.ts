@@ -14,6 +14,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         gridTemplateRows: '1fr',
       },
     },
+    fontFamilyRoboto: {
+      fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+    },
     previewContainer: {
       position: 'relative',
       display: 'flex',
@@ -72,6 +75,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
     },
     bitBtn: {
+      padding: theme.spacing(3.5, 5),
       marginBottom: theme.spacing(6),
     },
     bitBtnDisabled: {
@@ -131,6 +135,17 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 'bold',
       color: theme.palette.text.primary,
+    },
+    tokenAmount: {
+      fontSize: 30,
+      fontWeight: 700,
+      color: theme.palette.text.primary,
+    },
+    tokenAmountUsd: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: theme.palette.text.secondary,
+      textAlign: 'right',
     },
     outerContainer: {
       position: 'sticky',
@@ -226,6 +241,41 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnTitleGreen: {
       color: theme.palette.green,
+    },
+    backIcon: {
+      backgroundColor: theme.palette.white,
+      border: `1px solid ${theme.palette.greyLight}`,
+      color: theme.palette.text.primary,
+      marginRight: theme.spacing(4),
+    },
+    formHead: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(4),
+    },
+    rootField: {
+      backgroundColor: 'transparent',
+      '& input': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 30,
+      },
+      '& .MuiFormHelperText-root': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        paddingTop: theme.spacing(2),
+      },
+      '& .MuiInputAdornment-root > p': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 30,
+      },
+    },
+    tooltip: {
+      '& > p': {
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        fontWeight: 400,
+      },
     },
   })
 )

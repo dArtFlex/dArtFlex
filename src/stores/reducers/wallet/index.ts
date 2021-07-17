@@ -1,10 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { WalletsStateType } from './types'
 
 const initialState: WalletsStateType = {
   fetching: false,
   error: '',
   wallet: null,
+  tokensBalances: [],
 }
 
 const walletSlice = createSlice({
@@ -38,6 +39,20 @@ const walletSlice = createSlice({
     closeWarningModal: (state) => {
       state.error = ''
     },
+
+    getTokensBalancesRequest: (state, i) => {
+      state.fetching = true
+      state.error = ''
+    },
+    getTokensBalancesSuccess: (state, { payload }: PayloadAction<WalletsStateType['tokensBalances']>) => {
+      state.fetching = false
+      state.tokensBalances = payload
+      state.error = ''
+    },
+    getTokensBalancesFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -51,6 +66,10 @@ export const {
   connnectWalletConnectFailure,
 
   closeWarningModal,
+
+  getTokensBalancesRequest,
+  getTokensBalancesSuccess,
+  getTokensBalancesFailure,
 } = walletSlice.actions
 
 export const { reducer } = walletSlice

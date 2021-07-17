@@ -1,8 +1,11 @@
 //@ts-nocheck
 import { web3Service } from 'services/web3_service'
+import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
+import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { signTypedData_v4 } from 'eth-sig-util'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import { ORDER_LISTING_ADDRESS } from 'core/contracts/order_contract'
+import appConst from 'config/consts'
 
 class PlaceBidService {
   async signTypedData(data) {
@@ -52,7 +55,7 @@ class PlaceBidService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: 'ERC721',
+          assetClass: signature == '0x' ? 'ERC721' : 'ERC721_LAZY',
           contract: contract,
           tokenId: tokenId,
           uri,
@@ -155,6 +158,14 @@ class PlaceBidService {
 
     const signatureOrder = await this.signTypedData(data)
     return [{ ...order, signatureOrder }]
+  }
+
+  async approveToken(wallet) {
+    return await new web3.eth.Contract(STANDART_TOKEN_ABI, '0x2fce8435f0455edc702199741411dbcd1b7606ca').methods
+      .approve(AUCTION_CONTRACT_ADDRESS, appConst.APPROVE_AMOUNT)
+      .send({
+        from: wallet,
+      })
   }
 }
 

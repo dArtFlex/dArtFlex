@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { IMakeOfferForm } from '../types'
-import { Box, Button, Checkbox, Icon, IconButton, InputAdornment, OutlinedInput, Typography } from '@material-ui/core'
-import { useStyles } from '../styles'
-import { ArrowLeftIcon, InfoIcon } from '../../../common/icons'
-import clsx from 'clsx'
-import { Field } from '../../../common'
-import appConst from '../../../config/consts'
-import { daysInMonth } from '../../../utils'
 import { useFormikContext } from 'formik'
+import { IMakeOfferForm } from '../types'
+import { Box, Button, Checkbox, IconButton, InputAdornment, OutlinedInput, Typography } from '@material-ui/core'
+import { ArrowLeftIcon } from 'common/icons'
+import clsx from 'clsx'
+import { Field, Tooltip } from 'common'
+import appConst from 'config/consts'
+import { daysInMonth } from 'utils'
+import { useStyles } from '../styles'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
@@ -50,7 +50,6 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
         return setFieldValue('endDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
     }
   }, [values.offerExpiration])
-  console.log(new Date(values.endDate))
 
   return (
     <Box className={classes.formConfirmOffer}>
@@ -62,10 +61,11 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
           <Typography variant="h1">Make offer</Typography>
         </Box>
         <Box mt={4} className={classes.flexBox}>
-          <span>This item hasn&apos;t been reviewed by dArtflex</span>
-          <Icon className={clsx(classes.flexBox, classes.infoIcon)}>
-            <InfoIcon />
-          </Icon>
+          <Tooltip
+            text={`This item hasn't been reviewed by dArtflex`}
+            desc={`You should proceed with extra caution. Anyone can create a digital item on a blockchain with any name, including fake versions of existing items. Please take extra caution and do your research when interacting with this item to ensure it's what it claims to be.`}
+            className={classes.tooltip}
+          />
         </Box>
         <Box className={clsx(classes.flexBox, classes.makeOfferBlock, classes.spaceContent)}>
           <Typography variant={'body1'} className={classes.textSecondary}>
@@ -90,7 +90,7 @@ export default function FormConfirmOffer(props: IMakeOfferForm) {
         <Box mt={6}>
           <Typography className={classes.textBold}>Offer expiration</Typography>
         </Box>
-        <Box className={clsx(classes.flexBox, classes.dateSelect)}>
+        <Box className={clsx(classes.gridBox, classes.dateSelect, classes.gridGap)}>
           <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
           {values.offerExpiration === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
         </Box>

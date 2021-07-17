@@ -3,6 +3,7 @@ import { PlaceBidStateType } from './types'
 
 const initialState: PlaceBidStateType = {
   fetching: false,
+  transacting: false,
   error: '',
   data: null,
   bidHistory: [],
@@ -14,26 +15,37 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     placeBidRequest: (state, i) => {
-      state.fetching = true
+      state.transacting = true
     },
     placeBidSuccess: (state, { payload }: PayloadAction<{ data: unknown }>) => {
       state.data = payload.data
-      state.fetching = false
+      state.transacting = false
     },
     placeBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.transacting = false
+    },
+
+    getBidsHistoryRequest: (state) => {
+      state.fetching = true
+    },
+    // eslint-disable-next-line
+    getBidsHistorySuccess: (state, { payload }: PayloadAction<PlaceBidStateType['bidHistory']>) => {
+      state.bidHistory = payload
+      state.fetching = false
+    },
+    getBidsHistoryFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
     },
 
-    getBidsHistoryRequest: (state, i) => {
+    acceptBidRequest: (state, i) => {
       state.fetching = true
     },
-    // eslint-disable-next-line
-    getBidsHistorySuccess: (state, { payload }: PayloadAction<{ bidHistory: any }>) => {
-      state.bidHistory = payload.bidHistory
+    acceptBidSuccess: (state) => {
       state.fetching = false
     },
-    getBidsHistoryFailure: (state, { payload }: PayloadAction<string>) => {
+    acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
     },
@@ -44,9 +56,14 @@ export const {
   placeBidRequest,
   placeBidSuccess,
   placeBidFailure,
+
   getBidsHistoryRequest,
   getBidsHistorySuccess,
   getBidsHistoryFailure,
+
+  acceptBidRequest,
+  acceptBidSuccess,
+  acceptBidFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

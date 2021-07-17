@@ -31,7 +31,7 @@ const links = [
     href: '#',
   },
   {
-    title: 'Coockie Policy',
+    title: 'Cookie Policy',
     href: '#',
   },
   {

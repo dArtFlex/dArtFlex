@@ -3,7 +3,6 @@ import { UserStateType } from './types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
-  balances: [],
   fetching: false,
   error: '',
   user: null,
@@ -41,20 +40,6 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
-
-    getUserBalancesRequest: (state, i) => {
-      state.fetching = true
-      state.error = ''
-    },
-    getUserBalancesSuccess: (state, { payload }: PayloadAction<{ balances: UserStateType['balances'] }>) => {
-      state.fetching = false
-      state.balances = payload.balances
-      state.error = ''
-    },
-    getUserBalancesFailure: (state, { payload }: PayloadAction<string>) => {
-      state.error = payload
-      state.fetching = false
-    },
   },
 })
 
@@ -67,10 +52,6 @@ export const {
   createNewUserRequest,
   createNewUserSuccess,
   createNewUserFailure,
-
-  getUserBalancesRequest,
-  getUserBalancesSuccess,
-  getUserBalancesFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

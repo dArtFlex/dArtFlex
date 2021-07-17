@@ -23,7 +23,7 @@ export default function CardAsset(props: ICardAssetProps) {
 
   return (
     <>
-      <Card key={asset.item_id} elevation={1}>
+      <Card key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}>
           <img src={asset.imageData.image} className={classes.cardImage} />
           {withLabel && <CardBadge status={asset.type} />}

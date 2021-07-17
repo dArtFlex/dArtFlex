@@ -48,6 +48,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: 'repeat(2, 1fr)',
     },
+    gridGap: {
+      gridGap: 16,
+    },
     spaceContent: {
       justifyContent: 'space-between',
     },
@@ -234,6 +237,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     etherScanIcon: {
       marginRight: theme.spacing(1),
       color: theme.palette.text.primary,
+    },
+    tooltip: {
+      '& > p': {
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        fontWeight: 400,
+      },
     },
   })
 )

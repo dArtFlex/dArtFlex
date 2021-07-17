@@ -1,22 +1,17 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put, all } from 'redux-saga/effects'
+import { call, put } from 'redux-saga/effects'
 import { history } from '../../navigation'
-import BigNumber from 'bignumber.js'
 import {
   getUserDataFailure,
   getUserDataSuccess,
   createNewUserSuccess,
   createNewUserFailure,
-  getUserBalancesSuccess,
-  getUserBalancesFailure,
 } from 'stores/reducers/user'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { walletService } from 'services/wallet_service'
-import { UserDataTypes, IChainId, ITokenBalances, IBaseTokens } from 'types'
+import { UserDataTypes } from 'types'
 import APP_CONFIG from 'config'
-import tokensAll from 'core/tokens'
 import { getIdFromString } from 'utils'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -39,6 +34,17 @@ export function* getUserDataByOwner(api: IApi, owner: string) {
     return userData[0]
   } catch (e) {
     yield put(getUserDataFailure(e.message || e))
+  }
+}
+
+export function* getUserDataById(api: IApi, id: string) {
+  try {
+    const userData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(Number(id)),
+    })
+    return userData[0]
+  } catch (e) {
+    throw new Error(e.message || e)
   }
 }
 
@@ -110,52 +116,5 @@ export function* createNewUser(
     yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
-  }
-}
-
-export function* getUserBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
-  try {
-    const chainId: IChainId = walletService.getChainId()
-    const tokens: Array<IBaseTokens> = tokensAll[chainId].filter((t) => t.id.startsWith('0x'))
-    const balances: Array<ITokenBalances | undefined> = yield all(
-      tokens.map((t) => call(getBalance, api, t, payload.wallet))
-    )
-
-    const existBalances = balances.filter((b) => b && b.balance !== '0')
-    yield put(getUserBalancesSuccess({ balances: existBalances as ITokenBalances[] | [] }))
-  } catch (e) {
-    yield put(getUserBalancesFailure(e.message || e))
-  }
-}
-
-function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
-  try {
-    const { id, decimals, symbol } = token
-
-    if (acc && id) {
-      const tokenContract = walletService.getTokenContract(id)
-      const balance: string = yield tokenContract.methods.balanceOf(acc).call()
-      if (balance !== '0') {
-        const _balance = new BigNumber(balance)
-          .div(`10e${decimals - 1}`)
-          .toNumber()
-          .toFixed(2)
-
-        const price: { [key: string]: number } = yield call(api, {
-          url: APP_CONFIG.exchangeRate(symbol, 'USD'),
-          method: 'GET',
-        })
-        const _price = price?.USD
-        return {
-          id,
-          symbol,
-          balance: _balance,
-          priceUSD: _price,
-          balanceUSD: new BigNumber(_balance).times(_price).toNumber(),
-        }
-      }
-    }
-  } catch (e) {
-    throw new Error(e.message || `getBalance: ${e}`)
   }
 }
