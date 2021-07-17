@@ -4,6 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 325,
+      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
     },
     card: {
       display: 'flex',

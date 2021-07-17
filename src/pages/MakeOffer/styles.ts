@@ -220,13 +220,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.greyDark,
     },
     authorizeFormWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(10, 6, 17, 7),
       borderRadius: 12,
       margin: 'auto 0',
     },
     submittedFormWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(10, 6),
       borderRadius: 12,
       margin: 'auto 0',

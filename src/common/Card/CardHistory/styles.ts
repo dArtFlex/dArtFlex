@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: 40,
       height: 40,
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.greyPale : '',
     },
     action: {
       alignSelf: 'center',
