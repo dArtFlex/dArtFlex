@@ -6,6 +6,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.grey['100'],
       marginRight: 24,
       width: 262,
+      [theme.breakpoints.between(760, 840)]: {
+        width: 180,
+      },
+      [theme.breakpoints.between(640, 760)]: {
+        width: 100,
+      },
     },
     inputWrapper: {
       border: 'none',

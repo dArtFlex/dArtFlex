@@ -232,7 +232,7 @@ export default function Artworks() {
           <Box mb={7}>
             <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
-              <Box flex={'1 1 auto'} mr={10}>
+              <Box className={classes.hashTagContainer}>
                 {hashTags.map((ht) => {
                   const isActive = Boolean(activeHashTags.find((h) => h === ht))
                   return (
@@ -272,7 +272,7 @@ export default function Artworks() {
                   )}
                 </>
               ))}
-              <Box ml={11}>
+              <Box className={classes.hotOnlyBtn}>
                 <FormControlLabel
                   control={<Checkbox name="burn" color={'primary'} />}
                   label={

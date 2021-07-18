@@ -4,6 +4,25 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     logo: {
       marginRight: theme.spacing(16),
+      [theme.breakpoints.down(760)]: {
+        marginRight: theme.spacing(8),
+      },
+    },
+    mobileToolBar: {
+      marginLeft: 'auto',
+      display: 'flex',
+      alignItems: 'center',
+    },
+    iconButton: {
+      marginRight: theme.spacing(4),
+      '& span': {
+        width: 32,
+      },
+    },
+    searchIcon: {
+      color: theme.palette.text.primary,
+      marginRight: theme.spacing(4),
+      border: `1px solid ${theme.palette.greyMid}`,
     },
     toolbar: {
       backgroundColor: theme.palette.background.default,

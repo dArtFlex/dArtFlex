@@ -95,6 +95,18 @@ const DarkPalette = {
 
 const theme = {
   spacing: 4,
+  breakpoints: {
+    values: {
+      mobileS: 320,
+      mobileM: 375,
+      mobileL: 425,
+      tabletS: 640,
+      tabletM: 800,
+      tabletL: 960,
+      laptop: 1024,
+      desktop: 1280,
+    },
+  },
   typography: {
     htmlFontSize: 16,
     fontFamily: ['Archivo', 'sans-serif'].join(','),

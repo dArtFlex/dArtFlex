@@ -23,6 +23,21 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     customFiltersContainer: {
       whiteSpace: 'nowrap',
+      flexWrap: 'wrap',
+    },
+    hashTagContainer: {
+      flex: '1 1 auto',
+      marginRight: theme.spacing(10),
+      [theme.breakpoints.between(320, 1025)]: {
+        width: '100%',
+        marginBottom: theme.spacing(4),
+      },
+    },
+    hotOnlyBtn: {
+      marginLeft: theme.spacing(11),
+      [theme.breakpoints.between(320, 1025)]: {
+        marginLeft: 'auto',
+      },
     },
     hashTagBtn: {
       minWidth: 'auto',
@@ -79,6 +94,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       '@media (min-width:1025px)': {
         height: theme.spacing(135),
       },
+      [theme.breakpoints.down(1024)]: {
+        display: 'grid',
+        height: 'unset',
+        marginBottom: theme.spacing(6),
+      },
     },
     promotionPhoto: {
       position: 'absolute',
@@ -110,6 +130,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
         fontWeight: 700,
         border: `2px solid ${theme.palette.text.secondary}`,
+        [theme.breakpoints.down(1024)]: {
+          marginLeft: '45%',
+        },
       },
     },
     promotionAuthorAva: {
@@ -146,6 +169,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       '@media (min-width:1025px)': {
         marginLeft: theme.spacing(40),
+      },
+      [theme.breakpoints.down(1024)]: {
+        marginLeft: 'unset',
+        marginTop: theme.spacing(4),
       },
     },
     promotionSlide: {
