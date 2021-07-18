@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@material-ui/core'
 import { useStyles } from '../styles'
 import moment from 'moment'
-import { CardHistory } from '../../../common'
+import { CardHistory } from 'common'
 
 export default function History() {
   const classes = useStyles()

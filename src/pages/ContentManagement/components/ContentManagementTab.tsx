@@ -3,8 +3,8 @@ import { Box, FormControl, InputAdornment, OutlinedInput, Select as MUISelect, T
 import { useStyles } from '../styles'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import ContentManagementWorks from './ContentManagementWorks'
-import { Select } from '../../../common'
-import { SearchIcon } from '../../../common/icons'
+import { Select } from 'common'
+import { SearchIcon } from 'common/icons'
 import ContentManagementUsers from './ContentManagementUsers'
 
 export default function ContentManagementTab() {

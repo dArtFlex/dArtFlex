@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Box, IconButton } from '@material-ui/core'
-import { CardAsset, PageWrapper } from '../../common'
+import { CardAsset, PageWrapper } from 'common'
 import clsx from 'clsx'
-import { ArrowExpandIcon } from '../../common/icons'
+import { ArrowExpandIcon } from 'common/icons'
 import { useStyles } from './styles'
 import MakeOfferForm from './components/MakeOfferForm'
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PageWrapper } from '../../common'
+import { PageWrapper } from 'common'
 import { Box, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
 import PromotionManagement from './components/PromotionManagement'
