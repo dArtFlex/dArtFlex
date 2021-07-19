@@ -1,4 +1,4 @@
-import { UserDataTypes, IUserRole } from 'types'
+import { UserDataTypes, IUserRole, AssetDataTypesWithStatus, AssetTypes } from 'types'
 
 export interface UserStateType {
   isOpenSideBar: boolean
@@ -6,4 +6,11 @@ export interface UserStateType {
   error: string
   user: UserDataTypes | null
   role?: IUserRole
+  userAssets:
+    | Array<
+        AssetDataTypesWithStatus & {
+          tokenData: AssetTypes
+        }
+      >
+    | []
 }

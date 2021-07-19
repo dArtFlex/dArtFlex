@@ -43,6 +43,8 @@ export function* minting(
 ) {
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+
     const preparedData = {
       ...data,
       name,
@@ -74,8 +76,9 @@ export function* minting(
         contract: lm.contract,
         tokenId: lm.tokenId,
         uri: lm.uri,
-        creator: lm.creators[0].account,
-        owner: lm.creators[0].account,
+        // creator and owner are same only in first sell
+        creator: user.id,
+        owner: user.id,
         royalty: '',
         royaltyFee: '',
         lazymint: true,

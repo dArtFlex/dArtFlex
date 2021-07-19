@@ -27,7 +27,7 @@ export const selectAssetTokenRates = () =>
 export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { user } }: stateType) => ({ user })
+    ({ user: { user, userAssets, fetching } }: stateType) => ({ user, userAssets, fetching })
   )
 export const selectUserRole = () =>
   createSelector(

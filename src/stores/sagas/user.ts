@@ -1,16 +1,26 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put } from 'redux-saga/effects'
+import { call, put, select, all } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import {
   getUserDataFailure,
   getUserDataSuccess,
   createNewUserSuccess,
   createNewUserFailure,
+  getUserAssetsSuccess,
+  getUserAssetsFailure,
 } from 'stores/reducers/user'
+import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { UserDataTypes, IUserRole } from 'types'
+import {
+  UserDataTypes,
+  IUserRole,
+  AssetTypes,
+  AssetDataTypes,
+  AssetMarketplaceTypes,
+  AssetDataTypesWithStatus,
+} from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { getIdFromString } from 'utils'
@@ -123,5 +133,53 @@ export function* createNewUser(
     yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
+  }
+}
+
+function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataTypes) {
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: asset.uri,
+  })
+  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
+  // We need to use dummy marketplace data in order to use common cards component
+  const dummyMarketplaceData = {
+    id: 0,
+    item_id: '',
+    type: appConst.TYPES.INSTANT_BY,
+    start_price: '',
+    end_price: '',
+    start_time: '',
+    end_time: '',
+    platform_fee: '',
+    sales_token_contract: '',
+    sold: false,
+    created_at: '',
+    updated_at: '',
+  }
+
+  return { ...(marketplaceData || dummyMarketplaceData), imageData: imageData[0], userData, tokenData: asset }
+}
+
+export function* getUserAssets(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const getAllItemByOwnerId: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemsByOwnerId(user.id),
+    })
+    const getAssetsListAllData: Array<
+      AssetDataTypes & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllItemByOwnerId.map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListAllWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset)))
+
+    yield put(getUserAssetsSuccess({ userAssets: getAssetsListAllWithStatuses }))
+  } catch (e) {
+    yield put(getUserAssetsFailure(e.message || e))
   }
 }
