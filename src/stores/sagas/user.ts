@@ -9,6 +9,8 @@ import {
   createNewUserFailure,
   getUserAssetsSuccess,
   getUserAssetsFailure,
+  getUserBidsSuccess,
+  getUserBidsFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -20,6 +22,7 @@ import {
   AssetDataTypes,
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
+  IBidsHistory,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
@@ -182,4 +185,37 @@ export function* getUserAssets(api: IApi) {
   } catch (e) {
     yield put(getUserAssetsFailure(e.message || e))
   }
+}
+
+export function* getUserBids(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const userBids: IBidsHistory[] = yield call(api, {
+      url: APP_CONFIG.getBidsByUserId(user.id),
+    })
+
+    const composeUserBidsData: UserStateType['userBids'] = yield all(
+      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid))
+    )
+    yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
+  } catch (e) {
+    yield put(getUserBidsFailure(e.message || e))
+  }
+}
+
+function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, userBids: IBidsHistory) {
+  const assetById: AssetTypes[] = yield call(api, {
+    url: APP_CONFIG.getItemByItemId(Number(item_id)),
+  })
+  const userByOwner: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+  })
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: assetById[0].uri,
+  })
+  const marketData: AssetMarketplaceTypes[] = yield call(api, {
+    url: APP_CONFIG.getMarketplaceItemById(Number(market_id)),
+  })
+
+  return { ...userBids, imageData: imageData[0], ownerData: userByOwner[0], marketData: marketData[0] }
 }

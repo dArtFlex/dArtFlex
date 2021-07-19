@@ -3,10 +3,12 @@ import { UserStateType } from './types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
-  fetching: false,
   userAssets: [],
+  userBids: [],
   error: '',
   user: null,
+  fetching: false,
+  fetchingBids: false,
 }
 
 const userSlice = createSlice({
@@ -57,6 +59,18 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getUserBidsRequest: (state) => {
+      state.fetchingBids = true
+    },
+    getUserBidsSuccess: (state, { payload }: PayloadAction<{ userBids: UserStateType['userBids'] }>) => {
+      state.fetchingBids = false
+      state.userBids = payload.userBids
+    },
+    getUserBidsFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingBids = false
+    },
   },
 })
 
@@ -73,6 +87,10 @@ export const {
   getUserAssetsRequest,
   getUserAssetsSuccess,
   getUserAssetsFailure,
+
+  getUserBidsRequest,
+  getUserBidsSuccess,
+  getUserBidsFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

@@ -1,12 +1,13 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
 import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
 import { selectBid } from 'stores/selectors'
 import { useStyles } from '../styles'
+import { ApprovedFormState } from '../../../types'
 
 export default function FormApproved() {
   const classes = useStyles()
@@ -21,7 +22,6 @@ export default function FormApproved() {
         desc={`Your bid was unconfirmed on the Ethereum blockchain.`}
         icon={null}
         linkEthescan=""
-        linkView=""
       />
     )
   }
@@ -55,7 +55,6 @@ export default function FormApproved() {
       title={'Your bid was placed successfully!'}
       desc={`Your bid was confirmed on the Ethereum blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
       linkEthescan=""
-      linkView=""
     />
   )
 }
@@ -65,13 +64,13 @@ interface ISubFormTransaction {
   desc: string
   icon?: React.ReactElement | null
   linkEthescan: string
-  linkView: string
 }
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const history = useHistory()
-  const { title, desc, icon = <SuccessfullyIcon />, linkEthescan, linkView } = props
+  const { title, desc, icon = <SuccessfullyIcon />, linkEthescan } = props
+
+  const { setFieldValue } = useFormikContext<ApprovedFormState>()
 
   return (
     <Box className={classes.formContainer}>
@@ -92,7 +91,7 @@ function SubFormTransaction(props: ISubFormTransaction) {
           <Link href={linkEthescan} className={classes.externalLinkText}>{`View on Ethescan`}</Link>
         </Box>
         <Button
-          onClick={() => history.push(linkView)}
+          onClick={() => setFieldValue('formProgress', 'details')}
           variant={'outlined'}
           color={'secondary'}
           disableElevation

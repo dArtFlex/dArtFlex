@@ -6,6 +6,6 @@ export interface ICardBidProps {
 
 export interface IBidsProps {
   title: string
-  bidAmount: number
-  bidAmountUsd: number
+  bidAmount: string
+  bidAmountUsd: string
 }

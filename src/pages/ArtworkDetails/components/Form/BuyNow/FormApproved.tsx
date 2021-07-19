@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
-
+import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
 import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
 import { useStyles } from '../styles'
+import routes from 'routes'
 
 export default function FormApproved() {
   const classes = useStyles()
   const [fetch, setFetch] = useState<boolean>(true)
+  const history = useHistory()
 
   useEffect(() => {
     setTimeout(() => {
@@ -63,7 +65,13 @@ export default function FormApproved() {
           <ExternalLinkIcon />
           <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
         </Box>
-        <Button variant={'outlined'} color={'secondary'} disableElevation className={clsx(classes.bitViewBtn)}>
+        <Button
+          onClick={() => history.push(routes.dashboard)}
+          variant={'outlined'}
+          color={'secondary'}
+          disableElevation
+          className={clsx(classes.bitViewBtn)}
+        >
           View My Profile
         </Button>
       </Box>
