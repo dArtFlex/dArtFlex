@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
-import { selectWallet, selectUser } from 'stores/selectors'
+import { selectWallet, selectUser, selectUserRole } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -14,6 +14,7 @@ import NotificationActionMenu from './NotificationActionMenu'
 import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
+import appConst from 'config/consts'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -21,6 +22,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+
+  const { role } = useSelector(selectUserRole())
+  const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
   const bids: Array<string> = []
 
@@ -138,7 +142,11 @@ export default function Header({ toggleTheme }: HeaderType) {
         withAside
       />
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
-      <ProfileActionMenu anchor={anchorElProfileLink} setAnchor={setAnchorElProfileLink} />
+      <ProfileActionMenu
+        anchor={anchorElProfileLink}
+        setAnchor={setAnchorElProfileLink}
+        isUserSuperAdmin={isUserSuperAdmin}
+      />
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )

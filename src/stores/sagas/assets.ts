@@ -19,9 +19,14 @@ import {
   AssetDataTypesWithStatus,
   IChainId,
 } from 'types'
-import APP_CONFIG from 'config'
 import tokensAll from 'core/tokens'
 import { getAssetStatus } from 'utils'
+import APP_CONFIG from 'config'
+import appConst from 'config/consts'
+
+const {
+  STATUSES: { MINTED },
+} = appConst
 
 function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
   try {
@@ -107,7 +112,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
   }
 }
 
-function* getMarketplaceData(api: IApi, itemId: number) {
+export function* getMarketplaceData(api: IApi, itemId: number) {
   try {
     const allMarketplace: AssetMarketplaceTypes[] = yield call(api, {
       url: APP_CONFIG.getMarketplaceAll,
@@ -121,11 +126,19 @@ function* getMarketplaceData(api: IApi, itemId: number) {
   }
 }
 
-function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
+export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
   try {
+    // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
+    if (asset.item_id.length === 0) {
+      return {
+        ...asset,
+        status: MINTED,
+      }
+    }
     const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
     })
+
     const status = getAssetStatus({
       type: asset.type,
       start_price: asset.start_price,

@@ -31,7 +31,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
   const {
-    assetDetails: { creatorData, marketData, imageData },
+    assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
 
@@ -81,6 +81,17 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               <span>@{creatorData?.userid}</span>
             </Box>
           </Box>
+          {tokenData && tokenData.creator !== tokenData.owner && (
+            <Box>
+              <Typography variant={'body1'} className={classes.infoTitle}>
+                Owned by
+              </Typography>
+              <Box className={classes.avatarBox}>
+                <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
+                <span>{ownerData?.userid !== creatorData?.userid ? `@${ownerData?.userid}` : '@you'}</span>
+              </Box>
+            </Box>
+          )}
         </Box>
         <Box className={classes.infoRow} mb={6}>
           <Box>
