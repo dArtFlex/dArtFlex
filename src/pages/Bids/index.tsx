@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Box, Typography } from '@material-ui/core'
-import { PageWrapper } from 'common'
+import { PageWrapper, CircularProgressLoader } from 'common'
 import { CardBid } from './components'
 import BidDetails from './BidDetails'
 import { getUserBidsRequest } from 'stores/reducers/user'
@@ -19,7 +19,7 @@ export default function TradingHistory() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { user, userBids } = useSelector(selectUser())
+  const { user, userBids, fetchingBids } = useSelector(selectUser())
 
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const rateETH = exchangeRates ? exchangeRates[0].rateUsd : 0
@@ -52,11 +52,15 @@ export default function TradingHistory() {
         <Typography variant={'h1'} color={'textPrimary'}>
           Bids
         </Typography>
-        <Box className={classes.cardBidContainer}>
-          {composeUserBidsData.map((bid, i) => (
-            <CardBid key={i} bid={bid} />
-          ))}
-        </Box>
+        {fetchingBids && userBids.length === 0 ? (
+          <CircularProgressLoader />
+        ) : (
+          <Box className={classes.cardBidContainer}>
+            {composeUserBidsData.map((bid, i) => (
+              <CardBid key={i} bid={bid} />
+            ))}
+          </Box>
+        )}
       </Box>
     </PageWrapper>
   )
