@@ -1,4 +1,5 @@
 import { IEntity, IDatedEntity } from 'types'
+import appConst from 'config/consts'
 
 export interface UserDataTypes extends IEntity, IDatedEntity, ISocial {
   fullname: string
@@ -22,3 +23,5 @@ interface ISocial {
   tiktok: string
   other_url: string
 }
+
+export type IUserRole = 'ROLE_SUPER_ADMIN' | 'ROLE_COMMON'

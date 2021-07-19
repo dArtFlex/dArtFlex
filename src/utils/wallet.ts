@@ -10,3 +10,10 @@ export function createWalletInstance(accounts: string | string[], balance: numbe
   const combineAccounts = typeof accounts === 'string' ? [accounts] : accounts
   return { accounts: combineAccounts, balance, meta: { coinAbbr } }
 }
+
+export function shortCutWallet(account: string) {
+  if (account.length < 14) {
+    return account
+  }
+  return `${account?.substring(0, 6)}...${account?.substring(account.length - 4)}`
+}

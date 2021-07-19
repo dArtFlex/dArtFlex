@@ -4,12 +4,12 @@ export interface IAsideProps {
   userName: string
   walletAddress: string
   content: string
-  links: ILink[]
+  links: ILink[] | []
   joinedToArtworks: string
 }
 
 export interface ILink {
-  link: string
+  link?: string
   icon: JSX.Element
   href: string
 }

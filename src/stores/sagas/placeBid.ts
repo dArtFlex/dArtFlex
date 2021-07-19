@@ -33,7 +33,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
       body: {
         contract: tokenData.contract,
         tokenId: marketData.id,
-        maker: tokenData.owner,
+        maker: accounts[0],
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,

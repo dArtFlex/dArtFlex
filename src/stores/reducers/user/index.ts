@@ -3,9 +3,12 @@ import { UserStateType } from './types'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
-  fetching: false,
+  userAssets: [],
+  userBids: [],
   error: '',
   user: null,
+  fetching: false,
+  fetchingBids: false,
 }
 
 const userSlice = createSlice({
@@ -19,9 +22,13 @@ const userSlice = createSlice({
       state.fetching = true
       state.error = ''
     },
-    getUserDataSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
+    getUserDataSuccess: (
+      state,
+      { payload }: PayloadAction<{ userData: UserStateType['user']; role: UserStateType['role'] }>
+    ) => {
       state.fetching = false
       state.user = payload.userData
+      state.role = payload.role
     },
     getUserDataFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -40,6 +47,30 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getUserAssetsRequest: (state) => {
+      state.fetching = true
+    },
+    getUserAssetsSuccess: (state, { payload }: PayloadAction<{ userAssets: UserStateType['userAssets'] }>) => {
+      state.fetching = false
+      state.userAssets = payload.userAssets
+    },
+    getUserAssetsFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    getUserBidsRequest: (state) => {
+      state.fetchingBids = true
+    },
+    getUserBidsSuccess: (state, { payload }: PayloadAction<{ userBids: UserStateType['userBids'] }>) => {
+      state.fetchingBids = false
+      state.userBids = payload.userBids
+    },
+    getUserBidsFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingBids = false
+    },
   },
 })
 
@@ -52,6 +83,14 @@ export const {
   createNewUserRequest,
   createNewUserSuccess,
   createNewUserFailure,
+
+  getUserAssetsRequest,
+  getUserAssetsSuccess,
+  getUserAssetsFailure,
+
+  getUserBidsRequest,
+  getUserBidsSuccess,
+  getUserBidsFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

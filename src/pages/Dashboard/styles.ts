@@ -15,7 +15,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     grid: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fit, minmax(325px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 1fr))',
     },
     toggleGroup: {
       margin: theme.spacing(8, 0, 7),

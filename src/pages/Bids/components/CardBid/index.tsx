@@ -9,6 +9,7 @@ import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
 import appConsts from 'config/consts'
 import routes from '../../../../routes'
+import { normalizeDate } from 'utils'
 
 const {
   FILTER_VALUES: { LIVE_AUCTION, PLACED_BID, OWNED },
@@ -19,6 +20,9 @@ export default function CardBid(props: ICardBidProps) {
   const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status } = bid
   const classes = useStyles()
   const history = useHistory()
+
+  const nowTime = new Date().getTime()
+  const timeExpired = nowTime > normalizeDate(endDate).getTime()
 
   return (
     <Card classes={{ root: classes.cardBid }}>
@@ -32,13 +36,13 @@ export default function CardBid(props: ICardBidProps) {
             {name}
           </Typography>
         </Box>
-        {status !== OWNED && <Timer endDate={endDate} className={classes.timer} />}
+        {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
         {currentBid && yourBid ? (
           <>
-            <Bids title="Current Bid" bidAmount={currentBid as number} bidAmountUsd={currentBidUsd as number} />
-            <Bids title="Your Bid" bidAmount={yourBid as number} bidAmountUsd={yourBidUsd as number} />
+            <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
+            <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
           </>
         ) : (
           <Informer
