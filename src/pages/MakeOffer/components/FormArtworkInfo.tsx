@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IMakeOfferForm } from '../types'
 import { Box, Button, CardMedia, IconButton, Tab, Tabs, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
-import { MoreHorizontalIcon } from '../../../common/icons'
+import { MoreHorizontalIcon } from 'common/icons'
 import clsx from 'clsx'
 import Description from './Description'
 import History from './History'
@@ -83,9 +83,10 @@ export default function FormArtworkInfo(props: IMakeOfferForm) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
+          indicatorColor="primary"
         >
           {tabsItems.map(({ title }) => (
-            <Tab key={title} label={title} />
+            <Tab key={title} label={title} classes={{ textColorInherit: classes.tabsTextColor }} />
           ))}
         </Tabs>
         {tab === 0 && <Description />}

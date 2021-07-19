@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, IconButton, Paper, Typography } from '@material-ui/core'
+import { Box, IconButton, Paper, TextField, Typography } from '@material-ui/core'
 import { CheckedIcon, CloseIcon, DragIcon, EditIcon, TrashIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import { INFTCard } from '../types'
@@ -22,7 +22,19 @@ export default function NFTCard(props: INFTCard) {
               {isEdit ? (
                 <>
                   <Typography className={classes.NFTLink}>Link</Typography>
-                  <input value={props.url} className={classes.NFTInputBox} onChange={() => console.log('Change url')} />
+                  <TextField
+                    type="input"
+                    name="link"
+                    variant="outlined"
+                    className={classes.formField}
+                    value={props.url}
+                    onChange={() => console.log('Changed')}
+                    InputProps={{
+                      classes: {
+                        notchedOutline: classes.borderedInput,
+                      },
+                    }}
+                  />
                   <IconButton className={classes.CheckedIcon} onClick={() => setIsEdit(false)}>
                     <CheckedIcon />
                   </IconButton>

@@ -283,10 +283,7 @@ export default function Artworks() {
                   }
                 />
               </Box>
-              <Button>
-                <RefreshIcon className={classes.buttomIcon} />
-                Clear Filters
-              </Button>
+              <Button startIcon={<RefreshIcon className={classes.buttomIcon} />}>Clear Filters</Button>
             </Box>
           </Box>
         )}

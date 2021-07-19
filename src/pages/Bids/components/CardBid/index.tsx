@@ -12,11 +12,8 @@ import routes from '../../../../routes'
 import { normalizeDate } from 'utils'
 
 const {
-  FILTER_VALUES: { LIVE_AUCTION },
+  FILTER_VALUES: { LIVE_AUCTION, PLACED_BID, OWNED },
 } = appConsts
-
-const PLACED_BID = ''
-const OWNED = ''
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
@@ -79,7 +76,7 @@ export default function CardBid(props: ICardBidProps) {
         )}
         {status === OWNED && (
           <Button
-            className={clsx(classes.btnAction, classes.btnClaneNFT)}
+            className={clsx(classes.btnAction, classes.btnClaimNFT)}
             variant={'contained'}
             onClick={() => history.push(routes.bids + '/1009')}
           >

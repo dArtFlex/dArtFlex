@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
       flex: '1 1 auto',
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['50'],
     },
     linkIcon: {
       fill: theme.palette.text.primary,
@@ -19,6 +19,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     toggleGroup: {
       margin: theme.spacing(8, 0, 7),
+      backgroundColor: theme.palette.background.paper,
+
+      '& .MuiToggleButton-root.Mui-selected': {
+        backgroundColor: theme.palette.text.primary,
+        color: theme.palette.background.paper,
+      },
     },
     inlineFlex: {
       display: 'inline-flex',

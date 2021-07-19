@@ -75,7 +75,7 @@ export default function Form() {
               {values.name.length ? (
                 <Typography className={classes.cardDesc}>{values.name}</Typography>
               ) : (
-                <Box className={classes.empyName}></Box>
+                <Box className={classes.emptyName} />
               )}
             </Box>
             <Button

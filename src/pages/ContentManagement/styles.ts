@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     contentManagementWrapper: {
       padding: theme.spacing(8, 10),
-      backgroundColor: theme.palette.greyLight,
+      backgroundColor: theme.palette.grey['50'],
     },
     managementWrapperSmall: {
       padding: theme.spacing(0, 5),
@@ -15,6 +15,25 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.violet,
       width: theme.spacing(1),
       left: 0,
+    },
+    toggleButtons: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    toggleButtonSelected: {
+      backgroundColor: `${theme.palette.text.primary} !important`,
+      color: `${theme.palette.background.paper} !important`,
+    },
+    sortStatusMenu: {
+      borderRadius: 12,
+      backgroundColor: theme.palette.background.paper,
+      '&:focus': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
+    sortItem: {
+      '&:hover': {
+        backgroundColor: theme.palette.type === 'dark' && theme.palette.blackDark,
+      },
     },
     toggleButton: {
       padding: theme.spacing(1.25, 5),
@@ -48,6 +67,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     textSecondary: {
       fontSize: 18,
       color: theme.palette.greyDark,
+    },
+    formField: {
+      backgroundColor: theme.palette.background.paper,
+      width: theme.spacing(82),
+      marginLeft: theme.spacing(3),
+    },
+    borderedInput: {
+      border: `1px solid ${theme.palette.greyMid}`,
     },
     NFTPhoto: {
       backgroundSize: '100% 100%',
@@ -90,13 +117,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 700,
     },
-    NFTInputBox: {
-      padding: theme.spacing(3.5, 4),
-      borderRadius: theme.spacing(3),
-      width: theme.spacing(82),
-      border: `1px solid ${theme.palette.greyMid}`,
-      marginLeft: theme.spacing(3),
-    },
+
     CheckedIcon: {
       color: theme.palette.green,
       border: `1px solid ${theme.palette.greyMid}`,
@@ -109,10 +130,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     dragIcon: {
       cursor: 'drag',
+      '& svg': {
+        fill: theme.palette.text.primary,
+      },
     },
     listItem: {
       '&:hover': {
         borderRadius: theme.spacing(4),
+        backgroundColor: theme.palette.type === 'dark' && theme.palette.accent,
       },
     },
     photo: {
@@ -123,7 +148,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: theme.spacing(13),
     },
     tableHeadCell: {
-      backgroundColor: theme.palette.text.primary,
+      backgroundColor: theme.palette.type === 'light' ? theme.palette.text.primary : theme.palette.blackLight,
       color: theme.palette.white,
       borderBottom: 'none',
     },
@@ -180,6 +205,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     searchInput: {
       marginLeft: theme.spacing(4),
+      backgroundColor: theme.palette.background.paper,
     },
     userAvatar: {
       width: theme.spacing(10),
@@ -194,7 +220,7 @@ export const useStyles = makeStyles((theme: Theme) =>
 export const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(even)': {
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.background.default,
     },
   },
 }))(TableRow)

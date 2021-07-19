@@ -4,6 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 325,
+      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
     },
     card: {
       display: 'flex',
@@ -14,6 +15,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       padding: theme.spacing(1),
       height: '242px',
+      color: theme.palette.blackMain,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-around',
@@ -50,7 +52,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     actionBtn: {
       padding: theme.spacing(2, 3),
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.paper,
       color: theme.palette.text.primary,
       borderRadius: '8px',
       fontSize: 18,

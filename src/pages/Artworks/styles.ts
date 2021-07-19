@@ -178,7 +178,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     sortItem: {
       '&:hover': {
-        backgroundColor: theme.palette.blackDark,
+        backgroundColor: theme.palette.type === 'dark' && theme.palette.blackDark,
       },
     },
     filterDivider: {
