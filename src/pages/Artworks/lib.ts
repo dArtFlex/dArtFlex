@@ -1,6 +1,8 @@
 import { IArtworksFiltes } from './types'
+import BigNumber from 'bignumber.js'
 import { AssetDataTypesWithStatus } from 'types'
 import { IUseCardStatus } from 'common/Card/CardAsset/types'
+import { UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { normalizeDate } from 'utils'
 import appConst from 'config/consts'
 
@@ -100,4 +102,28 @@ export function useCardStatusFeaturedArtworks({ status, type, endTime }: IUseCar
     default:
       return MINTED
   }
+}
+
+export function usePromotionMultiplyData({
+  promotionIds,
+  promotionAssets,
+}: Pick<UserStateType, 'promotionAssets' | 'promotionIds'>) {
+  console.log(promotionIds, promotionAssets)
+  if (promotionIds.length === 0) {
+    return []
+  }
+  return promotionAssets.map((p: IPromotionAsset) => {
+    return {
+      id: p.marketData ? Number(p.marketData.item_id) : 0,
+      author: {
+        id: p.ownerData?.id ? Number(p.ownerData.id) : 0,
+        name: p.ownerData?.userid || '',
+        profilePhoto: p.ownerData?.profile_image || '',
+      },
+      name: p.imageData.name,
+      bid: p.marketData ? new BigNumber(p.marketData.end_price).dividedBy(`10e${18 - 1}`).toNumber() : 0,
+      endDate: p.marketData ? Number(p.marketData.end_time) : 0,
+      url: p.imageData.image,
+    }
+  })
 }

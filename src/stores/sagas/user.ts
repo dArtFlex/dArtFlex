@@ -11,6 +11,10 @@ import {
   getUserAssetsFailure,
   getUserBidsSuccess,
   getUserBidsFailure,
+  setPromotionSuccess,
+  setPromotionFailure,
+  getPromotionSuccess,
+  getPromotionFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -218,4 +222,54 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
   })
 
   return { ...userBids, imageData: imageData[0], ownerData: userByOwner[0], marketData: marketData[0] }
+}
+
+export function* setPromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: UserStateType['promotionIds'] }>) {
+  try {
+    localStorage.setItem('promotionIds', JSON.stringify(payload.promotionIds))
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      payload.promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+    )
+    yield put(setPromotionSuccess({ promotionAssets, promotionIds: payload.promotionIds }))
+  } catch (e) {
+    yield put(setPromotionFailure(e.message || e))
+  }
+}
+
+export function* getPromotion(api: IApi) {
+  try {
+    const promotionIdsData = localStorage.getItem('promotionIds')
+    const promotionIds: UserStateType['promotionIds'] = promotionIdsData ? JSON.parse(promotionIdsData) : []
+    if (!promotionIds.length) {
+      yield put(setPromotionSuccess({ promotionIds, promotionAssets: [] }))
+      return
+    }
+
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+    )
+
+    yield put(getPromotionSuccess({ promotionAssets, promotionIds }))
+  } catch (e) {
+    yield put(getPromotionFailure(e.message || e))
+  }
+}
+
+function* getPromotionAssetById(api: IApi, assetId: number) {
+  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
+  const assetById: AssetTypes[] = yield call(api, {
+    url: APP_CONFIG.getItemByItemId(Number(assetId)),
+  })
+  const userByOwner: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+  })
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: assetById[0].uri,
+  })
+  return {
+    marketData: marketplaceData ? marketplaceData : null,
+    ownerData: userByOwner[0],
+    imageData: imageData[0],
+    tokenData: assetById[0],
+  }
 }

@@ -42,7 +42,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
   ]
   const adminLinks = [
     {
-      lable: 'Content Management',
+      lable: 'Management',
       icon: <ContentIcon />,
       onClick: () => history.push(routes.contentManagement),
     },

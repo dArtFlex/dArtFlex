@@ -127,6 +127,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     promotionInfoText: {
       fontSize: 24,
       fontWeight: 700,
+      minWidth: 190,
+      marginTop: theme.spacing(3),
     },
     promotionInfo: {
       display: 'grid',

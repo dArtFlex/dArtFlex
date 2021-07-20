@@ -5,10 +5,13 @@ const initialState: UserStateType = {
   isOpenSideBar: true,
   userAssets: [],
   userBids: [],
+  promotionAssets: [],
+  promotionIds: [],
   error: '',
   user: null,
   fetching: false,
   fetchingBids: false,
+  fetchingPromo: false,
 }
 
 const userSlice = createSlice({
@@ -71,6 +74,48 @@ const userSlice = createSlice({
       state.error = payload
       state.fetchingBids = false
     },
+
+    setPromotionRequest: (state, i) => {
+      state.fetchingPromo = true
+    },
+    setPromotionSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        promotionIds: UserStateType['promotionIds']
+        promotionAssets: UserStateType['promotionAssets']
+      }>
+    ) => {
+      state.fetchingPromo = false
+      state.promotionAssets = payload.promotionAssets
+      state.promotionIds = payload.promotionIds
+    },
+    setPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
+    },
+
+    getPromotionRequest: (state) => {
+      state.fetchingPromo = true
+    },
+    getPromotionSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        promotionIds: UserStateType['promotionIds']
+        promotionAssets: UserStateType['promotionAssets']
+      }>
+    ) => {
+      state.fetchingPromo = false
+      state.promotionAssets = payload.promotionAssets
+      state.promotionIds = payload.promotionIds
+    },
+    getPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
+    },
   },
 })
 
@@ -91,6 +136,14 @@ export const {
   getUserBidsRequest,
   getUserBidsSuccess,
   getUserBidsFailure,
+
+  setPromotionRequest,
+  setPromotionSuccess,
+  setPromotionFailure,
+
+  getPromotionRequest,
+  getPromotionSuccess,
+  getPromotionFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice
