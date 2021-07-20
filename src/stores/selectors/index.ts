@@ -40,6 +40,11 @@ export const selectUserRole = () =>
     (store: stateType) => store,
     ({ user: { role } }: stateType) => ({ role })
   )
+export const selectPromotion = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
+  )
 
 // Wallet
 export const selectWallet = () =>

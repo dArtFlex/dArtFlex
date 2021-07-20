@@ -11,11 +11,12 @@ import appConst from 'config/consts'
 
 const { INTERVALS } = appConst
 
-const initialApprovedData: ApprovedFormState = {
+const formData: ApprovedFormState = {
   bid: 0,
   acknowledge: false,
   agreeTerms: false,
   formProgress: 'details',
+  promotion: false,
 }
 
 export default function ArtworkDetails() {
@@ -53,7 +54,7 @@ export default function ArtworkDetails() {
 
   return (
     <PageWrapper>
-      <Form initialValues={initialApprovedData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
+      <Form initialValues={formData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
         <FormContainer />
       </Form>
     </PageWrapper>
