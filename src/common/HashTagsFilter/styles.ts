@@ -13,12 +13,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     hashTagBtnActive: {
       border: `1px solid ${theme.palette.primary.main}`,
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: '#8566FF1A',
       color: theme.palette.primary.main,
     },
     btnAction: {
       border: `1px solid ${theme.palette.greyLight}`,
       marginLeft: theme.spacing(2),
+      color: theme.palette.text.primary,
     },
   })
 )

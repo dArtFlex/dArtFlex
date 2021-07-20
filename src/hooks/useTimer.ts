@@ -1,36 +1,62 @@
 import { useState, useEffect } from 'react'
-import moment from 'moment'
 
 interface ITimerProps {
   endTime: number // timestamp in milliseconds
   timeInterval: number // milliseconds
 }
 
-const EXPIRED_TIMESTAMP: number = new Date().getTime()
-const INTERVAL = 1000 * 60
+const INTERVAL = 1000
 
 const useTimer = (endTime: ITimerProps['endTime'], timeInterval: ITimerProps['timeInterval'] = INTERVAL) => {
-  const duration = endTime > EXPIRED_TIMESTAMP ? endTime - timeInterval : 0
-  const [time, setTime] = useState<number>(duration)
+  const [time, setTime] = useState<number>(endTime)
 
   useEffect(() => {
-    if (time === 0) {
-      return setTime(0)
-    }
     const interval = setInterval(() => {
-      setTime((time) => time - timeInterval)
+      const duration = endTime - new Date().getTime()
+      if (duration <= 0) {
+        clearInterval(interval)
+      } else {
+        setTime((time) => time - timeInterval)
+      }
     }, timeInterval)
-    return () => clearInterval(interval)
+
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
-  const days = Math.floor(moment.duration(time - EXPIRED_TIMESTAMP, 'milliseconds').asDays())
-  const hours = Math.floor(moment.duration(time - EXPIRED_TIMESTAMP, 'milliseconds').asHours())
-  const minutes = Math.floor(moment.duration(time - EXPIRED_TIMESTAMP, 'milliseconds').asMinutes() - hours * 60)
+  const timeBetweenDates = () => {
+    const difference = time - new Date().getTime()
+    if (difference <= 0) {
+      return {
+        timer: `${0}d:${0}h:${0}m`,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+      }
+    }
+    let seconds = Math.floor(difference / 1000)
+    let minutes = Math.floor(seconds / 60)
+    let hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
 
-  const format = (value: number) => (value.toString().length > 1 ? value : `0${value}`)
+    hours %= 24
+    minutes %= 60
+    seconds %= 60
+
+    return {
+      timer: `${days}d:${hours}h:${minutes}m`,
+      days,
+      hours,
+      minutes,
+    }
+  }
 
   return {
-    timer: `${format(days)}:${format(hours)}:${format(minutes)}`,
+    timer: timeBetweenDates().timer,
+    days: timeBetweenDates().days,
+    hours: timeBetweenDates().hours,
+    minutes: timeBetweenDates().minutes,
   }
 }
 

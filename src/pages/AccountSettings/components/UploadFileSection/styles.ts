@@ -15,6 +15,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'start',
     },
     image: {
+      display: 'flex',
+      alignItems: 'center',
       width: 115,
       height: 115,
     },
@@ -38,21 +40,17 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.greyDark,
     },
     avatar: {
-      '& img': {
-        width: 115,
-        height: 115,
-        borderRadius: '50%',
-        alignSelf: 'flex-start',
-      },
+      width: 115,
+      height: 115,
+      borderRadius: '50%',
+      alignSelf: 'flex-start',
     },
     cover: {
-      '& img': {
-        width: 115,
-        height: 50,
-        objectFit: 'cover',
-        borderRadius: 4,
-        alignSelf: 'flex-start',
-      },
+      width: 115,
+      height: 50,
+      objectFit: 'cover',
+      borderRadius: 4,
+      alignSelf: 'flex-start',
     },
   })
 )

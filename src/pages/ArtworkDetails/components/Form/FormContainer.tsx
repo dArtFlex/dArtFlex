@@ -1,52 +1,103 @@
-import React from 'react'
-import { Form } from 'common'
-import { useSelector } from 'react-redux'
-import { DetailsForm, ApprovedForm, ApprovedSubForm } from '../../components'
-import { ApprovedFormState, IFormContainer } from './types'
-import { selectAsset } from 'stores/selectors'
+import React, { useEffect } from 'react'
+import clsx from 'clsx'
+import { Box, IconButton } from '@material-ui/core'
+import { CardAsset, Field } from 'common'
+import { useSelector, useDispatch } from 'react-redux'
+import { useFormikContext } from 'formik'
+import { ArrowExpandIcon } from 'common/icons'
+import { FormAuction, FormBuy } from '../../components'
+import { ApprovedFormState } from '../../types'
+import { AssetDataTypesWithStatus } from 'types'
+import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
+import { setPromotionRequest } from 'stores/reducers/user'
+import { useStyles } from './styles'
 import appConst from 'config/consts'
 
 const {
-  FILTER_VALUES: { BUY_NOW },
+  TYPES: { AUCTION, INSTANT_BY },
 } = appConst
 
-const initialApprovedData = {
-  bid: 0,
-  acknowledge: false,
-  agreeTerms: false,
-}
+export default function FormContainer() {
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const { assetDetails } = useSelector(selectAssetDetails())
+  const { promotionIds } = useSelector(selectPromotion())
 
-export default function FormContainer(props: IFormContainer) {
-  const { tokenId, formId, setFormId } = props
-  const { asset } = useSelector(selectAsset(tokenId))
+  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
-  switch (formId) {
-    case 1:
-      return (
-        <DetailsForm
-          tokenId={tokenId}
-          onSubmit={() => {
-            if (asset?._status === BUY_NOW) {
-              setFormId(formId + 2)
-            } else {
-              setFormId(formId + 1)
-            }
-          }}
-        />
+  const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
+    ? {
+        ...assetDetails.marketData,
+        status: assetDetails.status as string,
+        userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
+        imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+      }
+    : null
+
+  const { role } = useSelector(selectUserRole())
+  const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
+
+  // eslint-disable-next-line
+  const handleAddPromotion = (e: any) => {
+    if (e.target.checked) {
+      dispatch(setPromotionRequest({ promotionIds: [...promotionIds, assetDetails.marketData?.item_id] }))
+    } else {
+      const excludePromotion = promotionIds.filter(
+        (pId) => assetDetails.marketData && Number(pId) !== Number(assetDetails.marketData.item_id)
       )
-    case 2:
-      return (
-        <Form
-          initialValues={initialApprovedData}
-          onCancel={() => console.log('x')}
-          onSubmit={(state: ApprovedFormState) => console.log('y', state)}
-        >
-          <ApprovedForm tokenId={tokenId} onSubmit={() => setFormId(formId + 1)} />
-        </Form>
-      )
-    case 3:
-      return <ApprovedSubForm tokenId={tokenId} />
-    default:
-      return null
+      dispatch(setPromotionRequest({ promotionIds: excludePromotion }))
+    }
+    setFieldValue('promotion', e.target.checked)
   }
+
+  const ckeckPromotion = () => {
+    const isPromoted = promotionIds.findIndex(
+      (pId) => assetDetails.marketData && Number(pId) === Number(assetDetails.marketData.item_id)
+    )
+
+    if (isPromoted !== -1) {
+      setFieldValue('promotion', true)
+    } else {
+      setFieldValue('promotion', false)
+    }
+  }
+
+  useEffect(() => {
+    ckeckPromotion()
+    return () => {
+      ckeckPromotion()
+    }
+  }, [promotionIds, assetDetails])
+
+  return (
+    <Box className={classes.root}>
+      <Box className={classes.outerContainer}>
+        {values.formProgress === 'details' ? (
+          <Box className={classes.previewContainer}>
+            <img src={assetDetails.imageData?.image} />
+            {isUserSuperAdmin && (
+              <Field
+                type="switch"
+                name="promotion"
+                label={'Promotion'}
+                fullWidth={false}
+                className={classes.switcher}
+                onChange={handleAddPromotion}
+                checked={Boolean(values.promotion)}
+              />
+            )}
+            <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
+              <ArrowExpandIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          <Box className={classes.previewContainer}>
+            {composeData !== null ? <CardAsset asset={composeData} /> : null}
+          </Box>
+        )}
+      </Box>
+      {assetDetails.marketData?.type === AUCTION ? <FormAuction /> : null}
+      {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
+    </Box>
+  )
 }

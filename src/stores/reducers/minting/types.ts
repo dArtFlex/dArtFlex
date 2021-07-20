@@ -1,3 +1,4 @@
+import { ILazyMintData } from 'types'
 export interface MintingStateType {
   fetching: boolean
   uploading?: boolean
@@ -10,8 +11,10 @@ export interface MintingStateType {
     image_data: string
     attribute: string
     description: string
-    royalties: number
+    royalties: string
   }
+  lazyMintData: null | ILazyMintData
+  lazyMintItemId: null | number
 }
 
 export type IProcess = 'none' | 'in progress' | 'done' | 'failed'

@@ -26,5 +26,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       boxShadow: theme.shadows[4],
       borderRadius: theme.spacing(3),
     },
+    tooltipIcon: {
+      fill: theme.palette.text.primary,
+      '&:hover': {
+        fill: theme.palette.primary.main,
+      },
+    },
   })
 )

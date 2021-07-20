@@ -12,6 +12,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 700,
     },
+    switcher: {
+      backgroundColor: theme.palette.background.default,
+    },
     divider: {
       background: theme.palette.secondary.main,
       margin: theme.spacing(8, 0),

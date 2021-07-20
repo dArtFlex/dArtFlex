@@ -44,12 +44,13 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
         />
-        <Field type="input" name="fullname" label="Name" variant="outlined" />
+        <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
           name="userid"
           label="User Name"
           variant="outlined"
+          className={classes.formField}
           InputProps={{
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
@@ -69,8 +70,17 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           variant="outlined"
           description="Email is used for notifications. It will not be shown on your profile."
           placeholder="Enter your email"
+          className={classes.formField}
         />
-        <Field type="input" name="overview" label="Short Biography" variant="outlined" multiline rows={4} />
+        <Field
+          type="input"
+          name="overview"
+          label="Short Biography"
+          variant="outlined"
+          multiline
+          rows={4}
+          className={classes.formField}
+        />
       </Box>
       <Box className={classes.section}>
         <Typography component="h3">Socials</Typography>
@@ -82,6 +92,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<WorldIcon />} placeholder={'https://'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -98,6 +109,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
               />
             ),
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -108,6 +120,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<InstagramIcon />} placeholder={'Instagram.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -118,6 +131,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<CodeIcon />} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -128,6 +142,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<FacebookIcon />} placeholder={'facebook.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -138,6 +153,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<YouTubeIcon className={classes.socialsIcon} />} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -148,16 +164,18 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<TikTokIcon />} placeholder={'tiktok.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
-          name="other"
+          name="otherUrl"
           label="Other"
           variant="outlined"
           placeholder={'URL'}
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
           }}
+          className={classes.formField}
         />
       </Box>
       <Box className={classes.section}>

@@ -2,6 +2,43 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      flex: '1 1 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 440px',
+      gridTemplateRows: 'minmax(100%, auto)',
+      gridGap: theme.spacing(10),
+      alignItems: 'start',
+      [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr',
+      },
+    },
+    fontFamilyRoboto: {
+      fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+    },
+    previewContainer: {
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      backgroundColor: theme.palette.ghostWhite,
+      borderRadius: theme.spacing(3),
+      minHeight: 680,
+      '&>img': {
+        maxWidth: '100%',
+        maxHeight: '100%',
+        objectFit: 'contain',
+      },
+    },
+    borderdIconButton: {
+      border: `1px solid ${theme.palette.greyPale}`,
+    },
+    expandBtb: {
+      position: 'absolute',
+      bottom: theme.spacing(6),
+      right: theme.spacing(6),
+    },
     title: {
       display: 'flex',
       alignItems: 'center',
@@ -33,7 +70,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'inline-flex',
       marginRight: theme.spacing(2),
     },
+    avatarBox: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     bitBtn: {
+      padding: theme.spacing(3.5, 5),
       marginBottom: theme.spacing(6),
     },
     bitBtnDisabled: {
@@ -93,6 +135,17 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 'bold',
       color: theme.palette.text.primary,
+    },
+    tokenAmount: {
+      fontSize: 30,
+      fontWeight: 700,
+      color: theme.palette.text.primary,
+    },
+    tokenAmountUsd: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: theme.palette.text.secondary,
+      textAlign: 'right',
     },
     outerContainer: {
       position: 'sticky',
@@ -169,6 +222,68 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiFormControlLabel-label': {
         fontSize: 16,
         fontWeight: 400,
+      },
+    },
+    actionBtnBurn: {
+      color: theme.palette.warning.main,
+    },
+    linkIcon: {
+      fill: theme.palette.text.primary,
+    },
+    linkIconRed: {
+      fill: theme.palette.redMiddle,
+    },
+    btnTitleRed: {
+      color: theme.palette.redMiddle,
+    },
+    linkIconGreen: {
+      fill: theme.palette.green,
+    },
+    btnTitleGreen: {
+      color: theme.palette.green,
+    },
+    backIcon: {
+      backgroundColor: theme.palette.white,
+      border: `1px solid ${theme.palette.greyLight}`,
+      color: theme.palette.text.primary,
+      marginRight: theme.spacing(4),
+    },
+    formHead: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(4),
+    },
+    rootField: {
+      backgroundColor: 'transparent',
+      '& input': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 30,
+      },
+      '& .MuiFormHelperText-root': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        paddingTop: theme.spacing(2),
+      },
+      '& .MuiInputAdornment-root > p': {
+        fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+        fontSize: 30,
+      },
+    },
+    tooltip: {
+      '& > p': {
+        fontSize: 16,
+        color: theme.palette.text.primary,
+        fontWeight: 400,
+      },
+    },
+    switcher: {
+      backgroundColor: 'transparent',
+      position: 'absolute',
+      bottom: theme.spacing(7.25),
+      right: theme.spacing(24),
+      '& .MuiSwitch-root': {
+        backgroundColor: 'transparent',
       },
     },
   })

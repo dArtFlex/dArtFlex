@@ -7,24 +7,50 @@ export const selectAssets = () =>
     (store: stateType) => store,
     ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
   )
-export const selectAsset = (id: string) =>
+export const selectAssetFromList = (id: string) =>
   createSelector(
     (store: stateType) => store,
-    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.tokenId === id) })
+    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.item_id === id) })
+  )
+export const selectAssetDetails = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { assetDetails, fetching } }: stateType) => ({ assetDetails, fetching })
+  )
+export const selectAssetTokenRates = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
   )
 
 // User
 export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { user } }: stateType) => ({ user })
+    ({ user: { user, userAssets, userBids, fetching, fetchingBids } }: stateType) => ({
+      user,
+      userAssets,
+      userBids,
+      fetching,
+      fetchingBids,
+    })
+  )
+export const selectUserRole = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { role } }: stateType) => ({ role })
+  )
+export const selectPromotion = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
   )
 
 // Wallet
 export const selectWallet = () =>
   createSelector(
     (store: stateType) => store,
-    ({ wallet: { wallet } }: stateType) => ({ wallet })
+    ({ wallet: { wallet, tokensBalances } }: stateType) => ({ wallet, tokensBalances })
   )
 export const selectWalletError = () =>
   createSelector(
@@ -32,16 +58,23 @@ export const selectWalletError = () =>
     ({ wallet: { error } }: stateType) => ({ error })
   )
 
-// Auction
-export const selectAuction = () =>
-  createSelector(
-    (store: stateType) => store,
-    ({ auction }: stateType) => ({ auction })
-  )
-
 // Minting
 export const selectMinting = () =>
   createSelector(
     (store: stateType) => store,
     ({ minting }: stateType) => ({ minting })
+  )
+
+// Listing
+export const selectListing = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ listing }: stateType) => ({ listing })
+  )
+
+// Bid
+export const selectBid = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ bid }: stateType) => ({ bid })
   )

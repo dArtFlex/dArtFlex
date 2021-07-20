@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: 'minmax(min-content, 670px) 1fr',
       gridTemplateRows: 'minmax(min-content, 375px)',
       justifyContent: 'center',
-      background: theme.palette.background.default,
+      background: theme.palette.background.paper,
       border: `1px dashed ${theme.palette.text.primary}`,
       borderRadius: theme.spacing(3),
       cursor: 'pointer',

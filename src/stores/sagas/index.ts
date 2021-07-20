@@ -1,29 +1,57 @@
-import { takeLatest, all, debounce } from 'redux-saga/effects'
+import { takeLatest, all } from 'redux-saga/effects'
 import apiMiddleware from '../../services/api_middleware'
-import { getUserDataRequest, createNewUserRequest } from '../reducers/user'
-import { getAssetsRequest } from '../reducers/assets'
-import { connectMetaMaskRequest, connnectWalletConnectRequest } from '../reducers/wallet'
-import { createBidRequest } from '../reducers/auction'
-import { mintingRequest, loadImageRequest } from '../reducers/minting'
-import { getUserData, createNewUser } from '../sagas/user'
-import { getAssetsData } from '../sagas/assets'
-import { connectMetaMask, connectWalletConnect } from '../sagas/wallet'
-import { createBid } from '../sagas/auction'
-import { minting, loadImage } from '../sagas/minting'
+
+import {
+  getUserDataRequest,
+  createNewUserRequest,
+  getUserAssetsRequest,
+  getUserBidsRequest,
+  setPromotionRequest,
+  getPromotionRequest,
+} from '../reducers/user'
+import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
+import { connectMetaMaskRequest, connnectWalletConnectRequest, getTokensBalancesRequest } from '../reducers/wallet'
+import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
+import { listingRequest } from '../reducers/listing'
+import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
+
+import { getUserData, createNewUser, getUserAssets, getUserBids, setPromotion, getPromotion } from '../sagas/user'
+import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
+import { connectMetaMask, connectWalletConnect, getTokensBalances } from '../sagas/wallet'
+import { minting, uploadImage } from '../sagas/minting'
+import { listing } from '../sagas/listing'
+import { placeBid, getBidsHistory, acceptBid } from '../sagas/placeBid'
 
 export default function* root() {
   yield all([
+    /** Assets **/
+    takeLatest(getAssetsAllRequest.type, getAssetsAllData, apiMiddleware),
+    takeLatest(getAssetByIdRequest.type, getAssetById, apiMiddleware),
+    takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
+
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
-    takeLatest(getAssetsRequest.type, getAssetsData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
+    takeLatest(getUserAssetsRequest.type, getUserAssets, apiMiddleware),
+    takeLatest(getUserBidsRequest.type, getUserBids, apiMiddleware),
+    takeLatest(setPromotionRequest.type, setPromotion, apiMiddleware),
+    takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
+
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
-    /** Auction **/
-    debounce(500, createBidRequest.type, createBid, apiMiddleware),
+    takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
+
     /** Minting **/
-    takeLatest(mintingRequest.type, minting, apiMiddleware),
-    takeLatest(loadImageRequest.type, loadImage, apiMiddleware),
+    takeLatest(lazyMintingRequest.type, minting, apiMiddleware),
+    takeLatest(uploadImageRequest.type, uploadImage, apiMiddleware),
+
+    /** Listing **/
+    takeLatest(listingRequest.type, listing, apiMiddleware),
+
+    /** Place Bid **/
+    takeLatest(placeBidRequest.type, placeBid, apiMiddleware),
+    takeLatest(getBidsHistoryRequest.type, getBidsHistory, apiMiddleware),
+    takeLatest(acceptBidRequest.type, acceptBid, apiMiddleware),
   ])
 }

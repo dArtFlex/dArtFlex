@@ -1,28 +1,30 @@
-import { WyvernSchemaName } from 'opensea-js/lib/types'
-
+import {
+  AssetDataTypes,
+  AssetTypes,
+  AssetMarketplaceTypes,
+  UserDataTypes,
+  AssetDataTypesWithStatus,
+  IAssetStatus,
+} from 'types'
 export interface AssetsStateType {
   fetching: boolean
   error: string
-  assets: Asset[] | null
+  assets: null | AssetDataTypesWithStatus[]
+  assetDetails: IAssetDetails
+  exchangeRates?: IExchangeRates[]
 }
 
-type assetStatus = 'auction' | 'buy_now' | 'reserve_price' | 'sold'
+export interface IAssetDetails {
+  status?: IAssetStatus
+  imageData: null | AssetDataTypes['imageData']
+  tokenData: null | AssetTypes
+  ownerData: null | UserDataTypes
+  creatorData: null | UserDataTypes
+  marketData: null | AssetMarketplaceTypes
+}
 
-export interface Asset {
-  name: string
-  image: string
-  tokenId: string
-  description: string | null
-  external_link: string | null
-  animation_url: string | null
-  currenBid: number
-  creator: string
-  ownedBy: string
-  asset: {}
-  _status?: assetStatus
-  _sold?: number
-  _price?: number
-  _priceReserve?: number
-  _currentBit?: number
-  _expPeriod?: string
+export interface IExchangeRates {
+  id: string
+  rateUsd: number
+  symbol: string
 }

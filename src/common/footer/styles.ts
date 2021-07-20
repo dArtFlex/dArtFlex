@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     footer: {
-      backgroundColor: theme.palette.text.primary,
+      backgroundColor: theme.palette.blackMain,
       minHeight: '142px',
       padding: theme.spacing(0, 10),
       display: 'flex',

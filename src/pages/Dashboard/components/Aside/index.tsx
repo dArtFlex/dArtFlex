@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Typography, Card, Avatar, Badge, Button, Link, IconButton } from '@material-ui/core'
 import { PopoverLinks } from 'common'
 import { VerificationIcon, TwitterIcon, LinkIcon, ShareIcon, ExternalLinkIcon } from 'common/icons'
-import { IAsideProps } from './types'
+import { IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
 
 export default function Aside(props: IAsideProps) {
@@ -28,21 +28,23 @@ export default function Aside(props: IAsideProps) {
         <Typography className={classes.userName}>@{userName}</Typography>
         <Box className={classes.wallet}>
           <Typography className={classes.text}>{walletAddress}</Typography>
-          <Button color={'primary'}>Copy</Button>
+          <Button className={classes.actionText}>Copy</Button>
         </Box>
         <Box pb={11}>
           <Typography variant={'body1'} color={'textSecondary'}>
             {content}
           </Typography>
         </Box>
-        {links.map(({ link, icon, href }) => (
-          <Box key={link} className={classes.linkBox}>
-            {icon}
-            <Link className={classes.link} href={href} underline="none">
-              {link}
-            </Link>
-          </Box>
-        ))}
+        {links
+          ? links.map(({ link, icon, href }: ILink) => (
+              <Box key={link} className={classes.linkBox}>
+                {icon}
+                <Link className={classes.link} href={href} underline="none">
+                  {link}
+                </Link>
+              </Box>
+            ))
+          : null}
         <Box className={classes.shareBtnCotainer}>
           <IconButton
             className={classes.borderdIconButton}

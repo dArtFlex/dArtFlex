@@ -1,18 +1,27 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { selectAssets } from 'stores/selectors'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectUser } from 'stores/selectors'
+import { getUserAssetsRequest } from 'stores/reducers/user'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, CircularProgressLoader, CardAsset } from 'common'
-import appConst from 'config/consts'
 import { useStyles } from './styles'
-
-const {
-  FILTER_VALUES: { IN_AUCTION, BUY_NOW },
-} = appConst
+import routes from 'routes'
 
 export default function Sales() {
   const classes = useStyles()
-  const { assets, fetching } = useSelector(selectAssets())
+  const history = useHistory()
+  const { user, userAssets, fetching } = useSelector(selectUser())
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getUserAssetsRequest())
+  }, [])
+
+  if (!user) {
+    history.push(routes.home)
+    return null
+  }
 
   return (
     <PageWrapper className={classes.container}>
@@ -21,16 +30,14 @@ export default function Sales() {
           Sales
         </Typography>
         <Box className={classes.grid} mt={6} mb={4}>
-          {fetching ? (
+          {fetching && userAssets.length === 0 ? (
             <CircularProgressLoader />
           ) : (
             <>
-              {assets
-                ?.filter((el) => {
-                  return el._status === IN_AUCTION || el._status === BUY_NOW
-                })
-                .map((asset, i) => (
-                  <CardAsset key={i} asset={asset} withLabel withAction />
+              {userAssets
+                ?.filter((el) => !el.sold)
+                .map((userAsset, i) => (
+                  <CardAsset key={i} asset={userAsset} withLabel withAction />
                 ))}
             </>
           )}

@@ -23,6 +23,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: 90,
       height: 90,
       borderRadius: 8,
+      backgroundColor: theme.palette.grey['400'],
     },
     image: {
       width: '100%',
@@ -30,7 +31,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 8,
     },
     imageNumber: {
-      color: theme.palette.greyDark,
+      color: theme.palette.text.secondary,
       fontWeight: 700,
       fontSize: 24,
     },

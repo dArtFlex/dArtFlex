@@ -1,23 +1,23 @@
 import appConsts from 'config/consts'
 
 const {
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, OWNED },
+  FILTER_VALUES: { LIVE_AUCTION },
 } = appConsts
 
-export type IBidStatus = typeof LIVE_AUCTION | typeof BUY_NOW | typeof OWNED
+export type IBidStatus = typeof LIVE_AUCTION
 
 export interface IBids {
-  tokenId: string
+  tokenId: string | number
   image: string
   name: string
-  status: IBidStatus
-  endDate: number // as timestamp
+  status?: IBidStatus
+  endDate: string
   creator: {
     avatar: string
     name: string
   }
-  currentBid: number | null
-  currentBidUsd: number | null
-  yourBid: number | null
-  yourBidUsd: number | null
+  currentBid: string
+  currentBidUsd: string
+  yourBid: string
+  yourBidUsd: string
 }

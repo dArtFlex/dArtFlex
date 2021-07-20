@@ -10,21 +10,23 @@ const initialState: MintingStateType = {
     name: '',
     image: '',
     image_data: '',
-    royalties: 0,
+    royalties: '',
     attribute: '', // unnecessary field
     description: '',
   },
+  lazyMintData: null,
+  lazyMintItemId: null,
 }
 
 const userSlice = createSlice({
   name: 'minting',
   initialState,
   reducers: {
-    loadImageRequest: (state, { payload: { file } }: PayloadAction<{ file: MintingStateType['file'] }>) => {
+    uploadImageRequest: (state, { payload: { file } }: PayloadAction<{ file: MintingStateType['file'] }>) => {
       state.file = file
       state.uploading = true
     },
-    loadImageSuccess: (
+    uploadImageSuccess: (
       state,
       {
         payload: { image, image_data },
@@ -35,28 +37,40 @@ const userSlice = createSlice({
       state.uploading = false
       state.error = ''
     },
-    loadImageFailure: (state, { payload }: PayloadAction<string>) => {
+    uploadImageFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.uploading = false
     },
 
-    mintingRequest: (
+    lazyMintingRequest: (
       state,
       {
-        payload: { name, description },
+        payload: { name, description, royalties },
       }: PayloadAction<{
         name: MintingStateType['data']['name']
         description: MintingStateType['data']['description']
+        royalties: MintingStateType['data']['royalties']
       }>
     ) => {
       state.data.name = name
       state.data.description = description
+      state.data.royalties = royalties
       state.minting = 'in progress'
     },
-    mintingSuccess: (state) => {
+    lazyMintingSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        lazyMintData: MintingStateType['lazyMintData']
+        lazyMintItemId: MintingStateType['lazyMintItemId']
+      }>
+    ) => {
       state.minting = 'done'
+      state.lazyMintData = payload.lazyMintData
+      state.lazyMintItemId = payload.lazyMintItemId
     },
-    mintingFailure: (state, { payload }: PayloadAction<string>) => {
+    lazyMintingFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.minting = 'failed'
     },
@@ -64,12 +78,13 @@ const userSlice = createSlice({
 })
 
 export const {
-  loadImageRequest,
-  loadImageSuccess,
-  loadImageFailure,
-  mintingRequest,
-  mintingSuccess,
-  mintingFailure,
+  uploadImageRequest,
+  uploadImageSuccess,
+  uploadImageFailure,
+
+  lazyMintingRequest,
+  lazyMintingSuccess,
+  lazyMintingFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

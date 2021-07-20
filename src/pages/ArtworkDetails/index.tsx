@@ -1,40 +1,62 @@
-//@ts-nocheck
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import clsx from 'clsx'
-import { Box, IconButton } from '@material-ui/core'
-import { PageWrapper, CardAsset } from 'common'
+import { useSelector, useDispatch } from 'react-redux'
+import { PageWrapper, Form } from 'common'
 import { FormContainer } from './components'
-import { ArrowExpandIcon } from 'common/icons'
-import { selectAsset } from 'stores/selectors'
-import { useStyles } from './styles'
+import { selectAssetDetails } from 'stores/selectors'
+import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
+import { getBidsHistoryRequest } from 'stores/reducers/placeBid'
+import { ApprovedFormState } from './types'
+import appConst from 'config/consts'
+
+const { INTERVALS } = appConst
+
+const formData: ApprovedFormState = {
+  bid: 0,
+  acknowledge: false,
+  agreeTerms: false,
+  formProgress: 'details',
+  promotion: false,
+}
 
 export default function ArtworkDetails() {
-  const classes = useStyles()
+  const dispatch = useDispatch()
   const { id } = useParams<{ id: string }>()
-  const { asset } = useSelector(selectAsset(id))
-  const [formId, setFormId] = useState<number>(1)
+  const { assetDetails } = useSelector(selectAssetDetails())
+
+  useEffect(() => {
+    dispatch(getAssetByIdRequest(Number(id)))
+    return () => {
+      dispatch(clearAssetDetails())
+    }
+  }, [])
+
+  const fetchBidsHistory = () => {
+    if (assetDetails) {
+      dispatch(getBidsHistoryRequest())
+    }
+  }
+
+  useEffect(() => {
+    if (!assetDetails) {
+      return
+    }
+    dispatch(getBidsHistoryRequest())
+    const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
+    return () => {
+      clearInterval(iId)
+    }
+  }, [assetDetails])
+
+  if (assetDetails.tokenData === null) {
+    return null
+  }
 
   return (
     <PageWrapper>
-      <Box className={classes.root}>
-        <Box className={classes.outerContainer}>
-          {formId > 1 ? (
-            <Box className={classes.previewContainer}>
-              <CardAsset asset={asset} />
-            </Box>
-          ) : (
-            <Box className={classes.previewContainer}>
-              <img src={asset?.image} />
-              <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
-                <ArrowExpandIcon />
-              </IconButton>
-            </Box>
-          )}
-        </Box>
-        <FormContainer tokenId={id} formId={formId} setFormId={setFormId} />
-      </Box>
+      <Form initialValues={formData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
+        <FormContainer />
+      </Form>
     </PageWrapper>
   )
 }

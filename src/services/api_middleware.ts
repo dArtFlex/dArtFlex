@@ -12,10 +12,9 @@ export default function apiMiddleware({
   transform = true,
 }: IApiMiddleware): Promise<string> {
   defaults(headers, {
+    'Content-Language': 'en',
     Accept: 'application/json; charset=UTF-8',
     'Content-Type': 'application/json; charset=UTF-8',
-    'Content-Language': localStorage.getItem('i18nextLng') || 'en',
-    Authorization: `Bearer ${localStorage.getItem('fdlt.token')}`,
   })
 
   return axios({

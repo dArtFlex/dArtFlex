@@ -13,10 +13,12 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
   const [steps, setSteps] = useState<IStepperProps['steps']>(STEPS)
   const [activeStep, setActiveStep] = useState<IAvailableSteps>(0)
 
-  // 0 - upload_file
-  // 1 - uploading
-  // 2 - filing_form
-  // 3 - minting
+  // 1 - upload_file
+  // 2 - uploading
+  // 3 - filing_form
+  // 4 - minting | minted
+  // 8 - listed
+
   useEffect(() => {
     if (step === 'uploading') {
       setActiveStep(1)
@@ -34,6 +36,22 @@ export default function CreateNFTStepper(props: ICreateNFTStepper) {
     }
     if (step === 'minting') {
       setActiveStep(4)
+    }
+    if (step === 'minted') {
+      setActiveStep(4)
+      setSteps((state) =>
+        state.map((step) => {
+          return step.label === 'Minting' ? { ...step, state: 'done' } : step
+        })
+      )
+    }
+    if (step === 'listed') {
+      setActiveStep(8)
+      setSteps((state) =>
+        state.map((step) => {
+          return step.label === 'Listing' || step.label === 'Minting' ? { ...step, state: 'done' } : step
+        })
+      )
     }
   }, [step, activeStep])
 

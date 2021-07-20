@@ -1,71 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Card, Button, Divider, Link } from '@material-ui/core'
-import { EditIcon, ArrowRightIcon } from 'common/icons'
-import Slider from '../Slider'
+import { ArrowRightIcon } from 'common/icons'
 import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 
 const {
-  FILTER_VALUES: { IN_AUCTION },
+  TYPES: { AUCTION },
 } = appConst
 
 export default function Aside(props: IAsideProps) {
   const { form } = props
   const classes = useStyles()
-  const [showSlider, setShowSlider] = useState<boolean>(false)
-  const { values, setFieldValue } = useFormikContext<ISellArtwork>()
+  const { values, handleSubmit } = useFormikContext<ISellArtwork>()
 
   return (
     <Box>
       <Typography className={classes.asideTitle}>Summary</Typography>
       <Card className={classes.card}>
-        <Typography className={classes.sectionTitle}>Bounties</Typography>
-
-        {showSlider ? (
-          <>
-            <Box className={classes.flexColumn} pb={3}>
-              <Typography className={classes.mainText}>Refferal Bounty</Typography>
-              <Typography className={classes.mainText}>
-                <b>1</b>
-              </Typography>
-            </Box>
-            <Slider />
-            <Box pb={1}>
-              <Typography className={classes.mainText} color={'textSecondary'}>
-                You can increase your bounty from the 1% default up to the dArtflex fee (2.5%). dArtflex rewards this
-                amount to registered affiliates who refer your buyer.
-              </Typography>
-              <Link href={'#'} underline={'none'} className={classes.link}>
-                Learn more
-              </Link>
-            </Box>
-          </>
-        ) : (
-          <>
-            <Box className={classes.flexColumn} pb={3}>
-              <Typography className={classes.mainText}>Refferal Bounty</Typography>
-              <Button
-                variant={'text'}
-                color={'primary'}
-                startIcon={<EditIcon />}
-                onClick={() => {
-                  setShowSlider(true)
-                  setFieldValue('refferalBounty', 0)
-                }}
-              >
-                Edit
-              </Button>
-            </Box>
-            <Typography className={classes.mainText} color={'textSecondary'}>
-              dArtflex rewards 1% to registered affiliates who refer your buyer.
-            </Typography>
-          </>
-        )}
-
-        <Divider className={classes.divider} />
         <Typography className={classes.sectionTitle}>Fees</Typography>
         <Box pb={1}>
           <Typography className={classes.mainText} color={'textSecondary'}>
@@ -90,7 +44,7 @@ export default function Aside(props: IAsideProps) {
 
         <Divider className={classes.divider} />
         <Typography className={classes.sectionTitle}>Listing</Typography>
-        {form === IN_AUCTION ? (
+        {form === AUCTION ? (
           <Box pb={5}>
             <Typography className={classes.textListing}>
               Your item will be auctioned. The highest bidder will win it on Mon, May 10, 2021 11:18 AM, as long as
@@ -108,7 +62,13 @@ export default function Aside(props: IAsideProps) {
             )}
           </Box>
         )}
-        <Button variant={'contained'} color={'primary'} endIcon={<ArrowRightIcon />} fullWidth>
+        <Button
+          onClick={() => handleSubmit()}
+          variant={'contained'}
+          color={'primary'}
+          endIcon={<ArrowRightIcon />}
+          fullWidth
+        >
           Post Your Listing
         </Button>
       </Card>

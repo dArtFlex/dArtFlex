@@ -32,9 +32,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     userName: {
       fontSize: 24,
       fontWeight: 700,
-      color: theme.palette.primary.main,
+      color: theme.palette.lightViolet,
       paddingBottom: theme.spacing(1),
       textAlign: 'center',
+    },
+    actionText: {
+      color: theme.palette.lightViolet,
     },
     text: {
       fontSize: 16,

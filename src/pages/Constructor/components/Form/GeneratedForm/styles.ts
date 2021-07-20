@@ -15,7 +15,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['500'],
       padding: theme.spacing(20, 3),
       borderRadius: 12,
     },
@@ -30,13 +30,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       margin: 'auto',
       maxWidth: 325,
+      color: theme.palette.text.primary,
     },
     btnBack: {
       alignSelf: 'flex-start',
     },
     btnDownload: {
       background: theme.palette.text.primary,
-      color: theme.palette.white,
+      color: theme.palette.background.default,
       marginBottom: theme.spacing(6),
       '&:hover': {
         background: theme.palette.text.primary,

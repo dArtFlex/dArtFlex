@@ -15,9 +15,9 @@ function FormDatePicker(props: IFormDatePickerProps & FieldRenderProps<string>) 
 
   const handleChange = useCallback(
     (date: MaterialUiPickersDate | null, value?: string | null) => {
-      form.setFieldValue(field.name, date?.toJSON() ?? value)
       // By default field is set touched on blur.
       // Datepicker can be changed via date selector, without focusing/blurring input.
+      form.setFieldValue(field.name, date?.toJSON() ?? value)
       form.setFieldTouched(field.name, true)
     },
     [field.name, form]

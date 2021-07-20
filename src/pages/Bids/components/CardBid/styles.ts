@@ -3,15 +3,15 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardBid: {
-      background: theme.palette.white,
+      background: theme.palette.background.paper,
       padding: theme.spacing(5, 6),
       display: 'flex',
-      justifyContent: 'space-between',
-      gap: 24,
+      // justifyContent: 'space-between',
+      // gap: 24,
       flexWrap: 'wrap',
     },
     cardBidImage: {
-      flex: '1',
+      // flex: '1',
       minWidth: 150,
       minHeight: 150,
     },
@@ -21,26 +21,31 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 5,
     },
     cardBidInfo: {
-      flex: '2',
+      // flex: '2',
       display: 'flex',
       justifyContent: 'space-between',
       flexDirection: 'column',
+      marginLeft: theme.spacing(6),
     },
     cardBidBids: {
-      flex: '1',
+      // flex: '1',
       alignSelf: 'center',
+      marginLeft: 'auto',
       display: 'flex',
-      gap: 16,
+      // gap: 16,
     },
     cardBidAction: {
-      flex: '1',
+      // flex: '1',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
       minWidth: 200,
     },
     timer: {
-      backgroundColor: theme.palette.greyPale,
+      display: 'flex',
+      alignItems: 'center',
+      paddingLeft: 0,
+      backgroundColor: theme.palette.grey['50'],
       '&.burn': {
         backgroundColor: theme.palette.lightPink,
       },
@@ -51,8 +56,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       padding: theme.spacing(4),
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['50'],
+      marginRight: theme.spacing(4),
       borderRadius: theme.spacing(3),
+      width: 150,
     },
     bidsAmount: {
       fontSize: 18,
@@ -88,11 +95,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.primary.main,
       },
     },
-    btnClaneNFT: {
+    btnClaimNFT: {
       color: theme.palette.white,
-      background: theme.palette.text.primary,
+      background: theme.palette.blackDark,
       '&:hover': {
-        background: theme.palette.text.primary,
+        opacity: '80%',
+        background: theme.palette.blackDark,
       },
     },
   })

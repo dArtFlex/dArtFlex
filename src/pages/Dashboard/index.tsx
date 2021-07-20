@@ -1,76 +1,92 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import moment from 'moment'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
 import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
-import { selectAssets } from 'stores/selectors'
+import { selectUser } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
+import { getUserAssetsRequest } from 'stores/reducers/user'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
+import { shortCutWallet } from 'utils'
+import { useSortedAssets } from './lib'
 
-const {
-  FILTER_VALUES: { IN_AUCTION, CREATED, COLLECTED, SOLD },
-} = appConst
+const { FILTER_VALUES } = appConst
 
 const filterItems = [
   {
     label: 'In Wallet',
-    value: IN_AUCTION,
+    value: FILTER_VALUES.IN_WALLET,
   },
   {
     label: 'Created',
-    value: CREATED,
+    value: FILTER_VALUES.CREATED,
   },
   {
     label: 'Collected',
-    value: COLLECTED,
+    value: FILTER_VALUES.COLLECTED,
   },
   {
     label: 'Sold',
-    value: SOLD,
+    value: FILTER_VALUES.SOLD,
   },
 ]
 
 export default function Dashboard() {
   const classes = useStyles()
-  const [filter, setFilter] = useState(IN_AUCTION)
-  const { assets, fetching } = useSelector(selectAssets())
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
+  const { user, userAssets, fetching } = useSelector(selectUser())
+
+  const sortedAssets = useSortedAssets({ userAssets, filter })
+
+  if (!user) {
+    history.push(routes.home)
+    return null
+  }
+
+  useEffect(() => {
+    dispatch(getUserAssetsRequest())
+  }, [])
 
   const links = [
     {
-      link: 'instagram.com/tianadias',
+      link: user.instagram.length ? `instagram.com/${user.instagram}` : undefined,
       icon: <InstagramOutlinedIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://instagram.com/${user.instagram}`,
     },
     {
-      link: 'twitter.com/tianadias',
+      link: user.twitter.length ? `twitter.com/${user.twitter}` : undefined,
       icon: <TwitterIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://twitter.com/${user.twitter}`,
     },
     {
-      link: 'youtube.com/user/tianadias',
+      link: user.youtube.length ? `youtube.com/user/${user.youtube}` : undefined,
       icon: <YouTubeIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://youtube.com/user/${user.youtube}`,
     },
   ]
 
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={'https://picsum.photos/1500/500'}
+        coverURL={user.profile_image}
         aside={
           <Aside
-            avatar={'https://picsum.photos/200/300'}
-            name={'Tiana Dias'}
-            userName={'tianadias'}
-            walletAddress={'0x683a67...11d1e1334'}
-            content={
-              'Tiana is the Co-founder and Creative Director at Toast. She is a 3D artist that specializes in creating content.'
-            }
-            links={links}
-            joinedToArtworks={'Joined April, 2021'}
+            avatar={user.profile_image}
+            name={user.fullname}
+            userName={user.userid}
+            walletAddress={shortCutWallet(user.wallet)}
+            content={user.overview}
+            links={links.filter((l) => l.link !== undefined)}
+            joinedToArtworks={`Joined ${moment(user.created_at).format('MMMM, YYYY')}`}
           />
         }
       >
@@ -91,7 +107,7 @@ export default function Dashboard() {
             })}
           </ToggleButtonGroup>
 
-          {filter === SOLD && (
+          {filter === FILTER_VALUES.SOLD && (
             <Box className={classes.container}>
               <Box className={classes.inlineFlex}>
                 <ValuesInfo />
@@ -104,23 +120,16 @@ export default function Dashboard() {
               <CircularProgressLoader />
             ) : (
               <>
-                {filter === CREATED && <CardUploadNew />}
-                {assets
-                  ?.filter((el) => {
-                    if (filter === IN_AUCTION) {
-                      return true
-                    }
-                    return el._status === filter
-                  })
-                  .map((asset, i) => (
-                    <CardAsset
-                      key={i}
-                      asset={asset}
-                      withLabel
-                      withAction={Boolean(asset._currentBit || asset._priceReserve)}
-                    />
-                  ))}
-                {!assets?.length && <Empty />}
+                {filter === FILTER_VALUES.CREATED && <CardUploadNew />}
+                {sortedAssets.map((userAsset, i) => (
+                  <CardAsset
+                    key={i}
+                    asset={userAsset}
+                    withLabel
+                    withAction={Boolean(userAsset.type === appConst.TYPES.INSTANT_BY)}
+                  />
+                ))}
+                {!userAssets?.length && <Empty />}
               </>
             )}
           </Box>

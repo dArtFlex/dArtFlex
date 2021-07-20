@@ -22,9 +22,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     helperText: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: theme.palette.text.secondary,
+      '& > p': {
+        fontSize: 14,
+        fontWeight: 700,
+        color: theme.palette.text.secondary,
+      },
     },
     tooltip: {
       backgroundColor: theme.palette.background.default,

@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 325,
       width: '100%',
       height: 448,
-      background: theme.palette.background.default,
+      background: theme.palette.background.paper,
       borderRadius: theme.spacing(3),
     },
     cardImageContainer: {
@@ -23,12 +23,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardImage: {
       height: 242,
       width: 256,
-      '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: theme.spacing(3),
-      },
+      objectFit: 'cover',
+      borderRadius: theme.spacing(3),
     },
     cardContent: {
       padding: theme.spacing(6),
@@ -67,6 +63,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardForm: {
       maxWidth: 478,
       padding: theme.spacing(8, 13),
+      color: theme.palette.text.primary,
     },
     confirming: {
       maxWidth: 325,
@@ -76,10 +73,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     loader: {
       display: 'inline-box',
     },
-    empyName: {
+    emptyName: {
       height: 27,
       maxWidth: 216,
-      background: theme.palette.greyMid,
+      background: theme.palette.grey['200'],
       borderRadius: theme.spacing(1),
     },
     btnView: {
@@ -90,6 +87,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.background.default,
         background: theme.palette.greyMid,
       },
+    },
+    linkIcon: {
+      fill: theme.palette.text.primary,
+    },
+    inputField: {
+      backgroundColor: theme.palette.background.paper,
     },
   })
 )

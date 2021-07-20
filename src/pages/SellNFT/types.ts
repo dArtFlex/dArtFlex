@@ -1,16 +1,14 @@
-export interface ISellArtworkProps {}
-
+import { IDatedTimeEntity } from 'types'
 export interface ISellArtwork {
   price: number
   minimumBid: number
-  endingPrice: number
-  startingPrice: number
-  reservePrice: number
-  refferalBounty: number
+  startingPrice: string
+  reservePrice: string
+  fee: string
   futureTime: string
-  startDate: string
-  buyerAddress: string
+  expirationTime: string
+  startDate: IDatedTimeEntity['start_time']
+  endDate: IDatedTimeEntity['end_time']
   isEndingPrice: boolean
   isFutureTime: boolean
-  isPrivacy: boolean
 }

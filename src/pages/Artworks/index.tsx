@@ -1,8 +1,7 @@
-//@ts-nocheck
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
-import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
+import { selectAssets, selectWallet, selectPromotion } from 'stores/selectors'
+import clsx from 'clsx'
 import {
   Box,
   Typography,
@@ -15,11 +14,21 @@ import {
   Checkbox,
 } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { useStyles } from './styles'
-
+import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
+import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
+import Promotions from './components/Promotions'
+import {
+  useSortedAssets,
+  useCardStatusLiveAuction,
+  useCardStatusBuyNow,
+  useCardStatusReserveNotMet,
+  useCardStatusSold,
+  useCardStatusFeaturedArtworks,
+  usePromotionMultiplyData,
+} from './lib'
 import appConst from 'config/consts'
-import { selectAssets, selectWallet } from 'stores/selectors'
-import clsx from 'clsx'
+import { IArtworksFiltes } from './types'
+import { useStyles } from './styles'
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -74,16 +83,22 @@ export default function Artworks() {
   const classes = useStyles()
   const { assets, fetching } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
+  const { promotionAssets, promotionIds } = useSelector(selectPromotion())
 
   const [sortValue, setSortValue] = useState(ENDING_SOON)
-  const [filter, setFilter] = useState(LIVE_AUCTION)
+  const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
+
+  const sortedAssets = useSortedAssets({ assets, filter })
+
+  const promotionMultiply = usePromotionMultiplyData({ promotionIds, promotionAssets })
 
   return (
     <PageWrapper className={classes.wrapper}>
       <Box>
         <Typography variant={'h1'}>Artworks</Typography>
+        <Promotions artworks={promotionMultiply} />
         <Box mt={4} mb={6} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
           <Box style={{ minWidth: '180px' }}>
             <FormControl variant="outlined" color={'primary'}>
@@ -93,12 +108,14 @@ export default function Artworks() {
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
                   setSortValue(target.value as string)
                 }}
+                classes={{ select: classes.sortArtworksMenu }}
+                className={classes.sortArtworksMenu}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:
                 </Typography>
                 {sortItems.map(({ label, value }) => (
-                  <Select key={value} value={value}>
+                  <Select key={value} value={value} className={classes.sortItem}>
                     {label}
                   </Select>
                 ))}
@@ -111,14 +128,25 @@ export default function Artworks() {
             onChange={(_, value) => {
               if (value) setFilter(value)
             }}
+            classes={{ root: classes.sortArtworksMenu }}
           >
             {filterItems.map(({ label, value }) => {
               return wallet !== null ? (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton
+                  key={value}
+                  value={value}
+                  selected={filter === value}
+                  classes={{ selected: classes.toggleButtonSelected }}
+                >
                   {label}
                 </ToggleButton>
               ) : value === LIVE_AUCTION || value === RESERVE_NOT_MET ? (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton
+                  key={value}
+                  value={value}
+                  selected={filter === value}
+                  classes={{ selected: classes.toggleButtonSelected }}
+                >
                   {label}
                 </ToggleButton>
               ) : null
@@ -136,7 +164,7 @@ export default function Artworks() {
         </Box>
         {showCustomFilters && (
           <Box mb={7}>
-            <Divider />
+            <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
               <Box flex={'1 1 auto'} mr={10}>
                 {hashTags.map((ht) => {
@@ -165,9 +193,11 @@ export default function Artworks() {
                     InputProps={{
                       classes: {
                         input: classes.priceInput,
+                        notchedOutline: classes.priceInputBorder,
                       },
                       endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
                     }}
+                    className={classes.priceInput}
                   />
                   {Boolean(index === 0) && (
                     <Box ml={1.5} mr={1.5}>
@@ -187,25 +217,31 @@ export default function Artworks() {
                   }
                 />
               </Box>
-              <Button>
-                <RefreshIcon className={classes.buttomIcon} />
-                Clear Filters
-              </Button>
+              <Button startIcon={<RefreshIcon className={classes.buttomIcon} />}>Clear Filters</Button>
             </Box>
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {fetching ? (
+          {!assets?.length && fetching ? (
             <CircularProgressLoader />
           ) : (
-            assets
-              ?.filter((el) => {
-                if (filter === FEATURED_ARTWORKS) {
-                  return true
+            sortedAssets?.map((asset, i) => (
+              <CardAsset
+                key={i}
+                asset={asset}
+                useCardStatus={
+                  filter === LIVE_AUCTION
+                    ? useCardStatusLiveAuction
+                    : filter === BUY_NOW
+                    ? useCardStatusBuyNow
+                    : filter === RESERVE_NOT_MET
+                    ? useCardStatusReserveNotMet
+                    : filter === SOLD
+                    ? useCardStatusSold
+                    : useCardStatusFeaturedArtworks
                 }
-                return el._status === filter
-              })
-              .map((asset, i) => <CardAsset key={i} asset={asset} />)
+              />
+            ))
           )}
         </Box>
       </Box>
