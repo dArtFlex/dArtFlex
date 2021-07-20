@@ -52,8 +52,9 @@ export default function FormContainer() {
 
   const ckeckPromotion = () => {
     const isPromoted = promotionIds.findIndex(
-      (pId) => assetDetails.marketData && pId !== Number(assetDetails.marketData.item_id)
+      (pId) => assetDetails.marketData && Number(pId) === Number(assetDetails.marketData.item_id)
     )
+
     if (isPromoted !== -1) {
       setFieldValue('promotion', true)
     } else {

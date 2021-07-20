@@ -2,11 +2,13 @@ import React from 'react'
 import { IPromotion } from '../types'
 import { Box, Button, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
+import { Timer } from 'common'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Pagination, Navigation } from 'swiper/core'
+import { normalizeDate } from 'utils'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -23,6 +25,8 @@ export default function Promotions(props: IPromotion) {
         className={classes.sliderNext}
       >
         {props.artworks.map((item, index) => {
+          const nowTime = new Date().getTime()
+          const timeExpired = nowTime > normalizeDate(`${item.endDate}`).getTime()
           return (
             <SwiperSlide key={index}>
               <Box className={classes.promotionBox}>
@@ -49,7 +53,12 @@ export default function Promotions(props: IPromotion) {
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
                         Auction Ends In
                       </Typography>
-                      <span className={classes.promotionInfoText}>22d 10h 30m</span>
+                      {!timeExpired ? (
+                        <Timer
+                          endDate={normalizeDate(`${item.endDate}`).getTime()}
+                          className={classes.promotionInfoText}
+                        />
+                      ) : null}
                     </Box>
                   </Box>
                   <Box className={classes.promotionButtons}>
