@@ -15,6 +15,7 @@ export interface UserStateType {
   fetchingBids: boolean
   fetchingPromo: boolean
   error: string
+  search: string
   user: UserDataTypes | null
   role?: IUserRole
   userAssets: IUserAsset[] | []

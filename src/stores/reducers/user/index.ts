@@ -7,6 +7,7 @@ const initialState: UserStateType = {
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
+  search: '',
   error: '',
   user: null,
   fetching: false,
@@ -116,6 +117,10 @@ const userSlice = createSlice({
       state.error = payload
       state.fetchingPromo = false
     },
+
+    setSearch: (state, { payload }: PayloadAction<string>) => {
+      state.search = payload
+    },
   },
 })
 
@@ -144,6 +149,8 @@ export const {
   getPromotionRequest,
   getPromotionSuccess,
   getPromotionFailure,
+
+  setSearch,
 } = userSlice.actions
 
 export const { reducer } = userSlice
