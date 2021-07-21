@@ -4,7 +4,7 @@ import FormArtworkInfo from './FormArtworkInfo'
 import FormConfirmOffer from './FormConfirmOffer'
 import AuthorizeForm from './AuthorizeForm'
 import FormOfferSubmitted from './FormOfferSubmitted'
-import { Form } from '../../../common/Form/index'
+import { Form } from 'common/Form/index'
 
 export default function MakeOfferForm(props: IMakeOfferForm) {
   const values = {

@@ -24,7 +24,8 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
-import { selectWallet, selectUser } from 'stores/selectors'
+import { setSearch } from 'stores/reducers/user'
+import { selectWallet, selectUser, selectUserRole } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -41,6 +42,7 @@ import {
 } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
+import appConst from 'config/consts'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -48,6 +50,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   const { pathname } = useLocation()
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+
+  const { role } = useSelector(selectUserRole())
+  const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
   const bids: Array<string> = []
 
@@ -73,77 +78,81 @@ export default function Header({ toggleTheme }: HeaderType) {
     },
   ]
 
+  const handleSearch = (value: string) => {
+    dispatch(setSearch(value))
+  }
+
   return (
     <>
       <AppBar position="static" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} />
-          {isMobile ? (
-            <Box className={classes.mobileToolBar}>
-              <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                <SmileyFaceIcon />
-              </IconButton>
-              <IconButton className={classes.borderedIcon}>
-                <SearchIcon />
-              </IconButton>
-              <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                <BurgerMenuIcon />
-              </IconButton>
-            </Box>
-          ) : (
-            <>
-              <Tabs
-                aria-label="navigation"
-                value={pathname !== routes.blog ? 0 : 1}
-                className={classes.navTabsContainer}
-                classes={{ indicator: classes.indicator }}
-              >
-                {MenuItems.map(({ title, to }) => (
-                  <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
-                ))}
-              </Tabs>
-              <Box className={classes.buttonContainer}>
-                {Boolean(bids.length) && (
-                  <Chip avatar={`${bids.length}`} endIcon>
-                    Bids
-                  </Chip>
-                )}
-                <SearchField />
-                <Button
+            {isMobile ? (
+                <Box className={classes.mobileToolBar}>
+                    <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
+                        <SmileyFaceIcon />
+                    </IconButton>
+                    <IconButton className={classes.borderedIcon}>
+                        <SearchIcon />
+                    </IconButton>
+                    <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        <BurgerMenuIcon />
+                    </IconButton>
+                </Box>
+            ) : (
+                <>
+          <Tabs
+            aria-label="navigation"
+            value={pathname !== routes.blog ? 0 : 1}
+            className={classes.navTabsContainer}
+            classes={{ indicator: classes.indicator }}
+          >
+            {MenuItems.map(({ title, to }) => (
+              <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
+            ))}
+          </Tabs>
+          <Box className={classes.buttonContainer}>
+            {Boolean(bids.length) && (
+              <Chip avatar={`${bids.length}`} endIcon>
+                Bids
+              </Chip>
+            )}
+            <SearchField onSearch={handleSearch} />
+            <Button
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElCreateLink(target)
+              }}
+              variant={'outlined'}
+              disableElevation
+              classes={{ root: classes.createButton }}
+              endIcon={<CurrentDownIcon />}
+            >
+              Create
+            </Button>
+            {wallet === null ? (
+              <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
+                Connect wallet
+              </Button>
+            ) : (
+              <>
+                <IconButton
+                  aria-label="notification"
                   onClick={(event: React.SyntheticEvent<EventTarget>) => {
                     const target = event.currentTarget as HTMLElement
-                    setAnchorElCreateLink(target)
+                    setAnchorElNotification(target)
                   }}
-                  variant={'outlined'}
-                  disableElevation
-                  classes={{ root: classes.createButton }}
-                  endIcon={<CurrentDownIcon />}
                 >
-                  Create
-                </Button>
-                {wallet === null ? (
-                  <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
-                    Connect wallet
-                  </Button>
-                ) : (
-                  <>
-                    <IconButton
-                      aria-label="notification"
-                      onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                        const target = event.currentTarget as HTMLElement
-                        setAnchorElNotification(target)
-                      }}
-                    >
-                      <Badge
-                        color={'primary'}
-                        variant="dot"
-                        invisible={false}
-                        className={classes.notification}
-                        classes={{ badge: classes.notificationBadge }}
-                      >
-                        <BellIcon className={classes.notificationIcon} />
-                      </Badge>
-                    </IconButton>
+                  <Badge
+                    color={'primary'}
+                    variant="dot"
+                    invisible={false}
+                    className={classes.notification}
+                    classes={{ badge: classes.notificationBadge }}
+                  >
+                    <BellIcon className={classes.notificationIcon} />
+                  </Badge>
+                </IconButton>
 
                     <Button
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
@@ -255,7 +264,11 @@ export default function Header({ toggleTheme }: HeaderType) {
         </Popper>
       )}
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
-      <ProfileActionMenu anchor={anchorElProfileLink} setAnchor={setAnchorElProfileLink} />
+      <ProfileActionMenu
+        anchor={anchorElProfileLink}
+        setAnchor={setAnchorElProfileLink}
+        isUserSuperAdmin={isUserSuperAdmin}
+      />
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )

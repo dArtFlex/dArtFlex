@@ -33,13 +33,13 @@ export default function CardActions(props: ICardActionsProps) {
     ? new BigNumber(startPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
+        .toFixed(7)
     : startPrice
   const currentBitToCoin = endPrice
     ? new BigNumber(endPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
+        .toFixed(7)
     : endPrice
 
   const now_time = new Date().getTime()

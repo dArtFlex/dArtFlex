@@ -42,7 +42,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
   const {
-    assetDetails: { creatorData, ownerData, marketData, imageData },
+    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
 
@@ -97,7 +97,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>@{creatorData?.userid}</span>
             </Box>
           </Box>
-          {marketData && marketData?.type === 'auction' && (
+          {tokenData && tokenData.creator !== tokenData.owner && (
             <Box>
               <Typography variant={'body1'} className={classes.infoTitle}>
                 Owned by

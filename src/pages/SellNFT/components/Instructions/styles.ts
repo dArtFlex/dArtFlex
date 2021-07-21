@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     rootAccordion: {
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['500'],
       borderRadius: theme.spacing(3),
       marginBottom: theme.spacing(20),
       boxShadow: 'none',

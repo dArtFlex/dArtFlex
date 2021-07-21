@@ -27,7 +27,28 @@ export const selectAssetTokenRates = () =>
 export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { user } }: stateType) => ({ user })
+    ({ user: { user, userAssets, userBids, fetching, fetchingBids } }: stateType) => ({
+      user,
+      userAssets,
+      userBids,
+      fetching,
+      fetchingBids,
+    })
+  )
+export const selectUserRole = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { role } }: stateType) => ({ role })
+  )
+export const selectPromotion = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
+  )
+export const selectSearch = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { search } }: stateType) => ({ search })
   )
 
 // Wallet

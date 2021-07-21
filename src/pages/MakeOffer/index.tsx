@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Box, IconButton } from '@material-ui/core'
-import { CardAsset, PageWrapper } from '../../common'
+import { CardAsset, PageWrapper } from 'common'
 import clsx from 'clsx'
-import { ArrowExpandIcon } from '../../common/icons'
+import { ArrowExpandIcon } from 'common/icons'
 import { useStyles } from './styles'
 import MakeOfferForm from './components/MakeOfferForm'
+import ImageViewer from '../../common/ImageViewer'
 
 export default function MakeOffer() {
   const [formId, setFormId] = useState<number>(2)
+  const [isZoomOpen, setZoomOpen] = useState<boolean>(false)
 
   const asset = {
     status: 'sold',
@@ -67,15 +69,30 @@ export default function MakeOffer() {
               <CardAsset asset={asset} />
             ) : (
               <>
-                <img
-                  src={
-                    'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650'
-                  }
-                  className={classes.offerPhoto}
-                />
-                <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
-                  <ArrowExpandIcon />
-                </IconButton>
+                {isZoomOpen ? (
+                  <ImageViewer
+                    open={isZoomOpen}
+                    onClose={() => setZoomOpen(false)}
+                    images={[
+                      'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650',
+                    ]}
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={
+                        'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650'
+                      }
+                      className={classes.offerPhoto}
+                    />
+                    <IconButton
+                      className={clsx(classes.expandBtb, classes.borderdIconButton)}
+                      onClick={() => setZoomOpen(true)}
+                    >
+                      <ArrowExpandIcon />
+                    </IconButton>
+                  </>
+                )}
               </>
             )}
           </Box>

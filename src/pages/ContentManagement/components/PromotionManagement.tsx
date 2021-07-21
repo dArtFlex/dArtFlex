@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { IPromotionAsset } from 'stores/reducers/user/types'
+import { selectPromotion } from 'stores/selectors'
 import { Box, Button, Icon, List, ListItem, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
 import { PlusSmallIcon } from '../../../common/icons'
@@ -8,34 +11,8 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 export default function PromotionManagement() {
   const classes = useStyles()
 
-  const NFTs = [
-    {
-      id: 1,
-      name: 'H74 Golden Panther',
-      link: 'https://dartflex.app/h74goldenpartner',
-      url: 'https://thedefiant.io/wp-content/uploads/2021/01/Screen-Shot-2021-01-13-at-12.39.11-PM.png',
-    },
-    {
-      id: 2,
-      name: 'H74 Golden Panther',
-      link: 'https://dartflex.app/h74goldenpartner',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUwL1z_VJT5ROiPYtxh6NVhXNZbDqgGQUQGA&usqp=CAU',
-    },
-    {
-      id: 3,
-      name: 'H74 Golden Panther',
-      link: 'https://dartflex.app/h74goldenpartner',
-      url: 'https://i1.sndcdn.com/avatars-000583389681-ryc31l-t240x240.jpg',
-    },
-    {
-      id: 4,
-      name: 'H74 Golden Panther',
-      link: 'https://dartflex.app/h74goldenpartner',
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH71-pLZowvl0KEETWvj_ceNOjtjbd4DLsVg&usqp=CAU',
-    },
-  ]
-
-  const [artworks, setArtworks] = useState(NFTs)
+  const { promotionAssets, promotionIds } = useSelector(selectPromotion())
+  const [artworks, setArtworks] = useState(promotionAssets)
 
   function handleOnDragEnd(res: DropResult) {
     if (!res.destination) return
@@ -49,7 +26,7 @@ export default function PromotionManagement() {
     <Box className={classes.managementWrapper}>
       <Box display="flex" alignItems="center" ml={7}>
         <Typography component="span" variant={'h4'}>
-          {NFTs.length} NFTs&nbsp;
+          {promotionIds.length} NFTs&nbsp;
         </Typography>
         <Typography className={classes.textSecondary}>(6 recommended)</Typography>
       </Box>
@@ -58,9 +35,9 @@ export default function PromotionManagement() {
           {(provided) => {
             return (
               <List {...provided.droppableProps} ref={provided.innerRef}>
-                {artworks.map((item, index) => {
+                {artworks.map((item: IPromotionAsset, index: number) => {
                   return (
-                    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                    <Draggable key={item.tokenData.id} draggableId={item.tokenData.toString()} index={index}>
                       {(provided) => {
                         return (
                           <ListItem
@@ -69,7 +46,7 @@ export default function PromotionManagement() {
                             ref={provided.innerRef}
                             classes={{ root: classes.listItem }}
                           >
-                            <NFTCard url={item.url} name={item.name} />
+                            <NFTCard url={item.imageData.image} name={item.imageData.name} />
                           </ListItem>
                         )
                       }}

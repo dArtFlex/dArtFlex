@@ -141,14 +141,20 @@ export default function SetPriceForm() {
             <Typography className={classes.mainText} color={'textPrimary'}>
               Schedule for a future time
             </Typography>
-            <Field type="switch" name="isFutureTime" fullWidth={false} />
+            <Field type="switch" name="isFutureTime" fullWidth={false} className={classes.switcher} />
           </Box>
           <Typography className={classes.mainText} color={'textSecondary'}>
             You can schedule this listing to only be buyable at a future date
           </Typography>
           {values.isFutureTime && (
             <Box pt={6} className={classes.flexBox}>
-              <Field type="select" options={schedule} name="futureTime" fullWidth={false} />
+              <Field
+                type="select"
+                options={schedule}
+                name="futureTime"
+                fullWidth={false}
+                className={classes.switcher}
+              />
               {values.futureTime === SPECIFIC && <Field type="pickerTime" name="startDate" fullWidth={false} />}
             </Box>
           )}

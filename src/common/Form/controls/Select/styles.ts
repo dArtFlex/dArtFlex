@@ -1,9 +1,15 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export const useStyles = makeStyles(() =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     formControl: {
       minWidth: 188,
+    },
+    select: {
+      backgroundColor: theme.palette.background.paper,
+      '&:focus': {
+        backgroundColor: theme.palette.background.paper,
+      },
     },
     inputLabel: {},
   })

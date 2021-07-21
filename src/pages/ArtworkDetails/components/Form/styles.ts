@@ -277,5 +277,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontWeight: 400,
       },
     },
+    switcher: {
+      backgroundColor: 'transparent',
+      position: 'absolute',
+      bottom: theme.spacing(7.25),
+      right: theme.spacing(24),
+      '& .MuiSwitch-root': {
+        backgroundColor: 'transparent',
+      },
+    },
   })
 )

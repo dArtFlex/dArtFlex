@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['100'],
       borderRadius: theme.spacing(3),
       minHeight: 680,
       '&>img': {
@@ -70,6 +70,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     makeOfferBlockContent: {
       marginTop: theme.spacing(3),
     },
+    tabsTextColor: {
+      '&.Mui-selected': {
+        color: theme.palette.text.primary,
+      },
+    },
     userAvatar: {
       height: 24,
       width: 24,
@@ -96,12 +101,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto 0',
     },
     formConfirmOfferWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       borderRadius: 12,
       padding: theme.spacing(8, 6, 6, 6),
       margin: 'auto 0',
     },
     infoIcon: {
+      color: theme.palette.text.primary,
       marginLeft: theme.spacing(2.5),
     },
     textBold: {
@@ -114,7 +120,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(4),
     },
     historyCardWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(3.5, 4),
       borderRadius: 12,
       marginTop: theme.spacing(4),
@@ -129,7 +135,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     backIcon: {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.paper,
       border: `1px solid ${theme.palette.greyLight}`,
       color: theme.palette.text.primary,
       marginRight: theme.spacing(4),
@@ -155,7 +161,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
     },
     makeOfferInput: {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.default,
       marginTop: theme.spacing(6),
       height: 62,
       fontSize: 30,
@@ -214,13 +220,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.greyDark,
     },
     authorizeFormWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(10, 6, 17, 7),
       borderRadius: 12,
       margin: 'auto 0',
     },
     submittedFormWrapper: {
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(10, 6),
       borderRadius: 12,
       margin: 'auto 0',

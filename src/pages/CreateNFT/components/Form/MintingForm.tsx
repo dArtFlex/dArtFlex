@@ -27,6 +27,8 @@ export default function MintingForm(props: IMintingForm) {
 
   const { wallet } = useSelector(selectWallet())
 
+  console.log(minting)
+
   switch (minting) {
     case 'none':
     case 'failed':
@@ -53,10 +55,25 @@ export default function MintingForm(props: IMintingForm) {
                 information.
               </Typography>
             </Box>
-            <Field type="input" name="name" variant={'outlined'} label="Title" />
+            <Field type="input" name="name" variant={'outlined'} label="Title" className={classes.inputField} />
             {/* Royalty - type number - max 100 */}
-            <Field type="input" name="royalties" variant={'outlined'} label="Royalties" helperText={'Suggested: 10%'} />
-            <Field type="input" name="description" variant={'outlined'} label="Description" multiline rows={4} />
+            <Field
+              type="input"
+              name="royalties"
+              variant={'outlined'}
+              label="Royalties"
+              helperText={'Suggested: 10%'}
+              className={classes.inputField}
+            />
+            <Field
+              type="input"
+              name="description"
+              variant={'outlined'}
+              label="Description"
+              multiline
+              rows={4}
+              className={classes.inputField}
+            />
             <Button
               variant={'contained'}
               color={'primary'}

@@ -1,17 +1,35 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put } from 'redux-saga/effects'
+import { call, put, select, all } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import {
   getUserDataFailure,
   getUserDataSuccess,
   createNewUserSuccess,
   createNewUserFailure,
+  getUserAssetsSuccess,
+  getUserAssetsFailure,
+  getUserBidsSuccess,
+  getUserBidsFailure,
+  setPromotionSuccess,
+  setPromotionFailure,
+  getPromotionSuccess,
+  getPromotionFailure,
 } from 'stores/reducers/user'
+import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { UserDataTypes } from 'types'
+import {
+  UserDataTypes,
+  IUserRole,
+  AssetTypes,
+  AssetDataTypes,
+  AssetMarketplaceTypes,
+  AssetDataTypesWithStatus,
+  IBidsHistory,
+} from 'types'
 import APP_CONFIG from 'config'
+import appConst from 'config/consts'
 import { getIdFromString } from 'utils'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -19,7 +37,13 @@ export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: str
     const userData: UserStateType['user'][] = yield call(api, {
       url: APP_CONFIG.getUserByWallet(payload.wallet),
     })
-    yield put(getUserDataSuccess({ userData: userData[0] }))
+    const userRole: IUserRole = appConst.USER.SECRET_KEYS.some(
+      (i) => i.toLocaleLowerCase() === payload.wallet.toLocaleLowerCase()
+    )
+      ? 'ROLE_SUPER_ADMIN'
+      : 'ROLE_COMMON'
+
+    yield put(getUserDataSuccess({ userData: userData[0], role: userRole }))
   } catch ({ message = '' }) {
     history.push('/')
     yield put(getUserDataFailure(message))
@@ -116,5 +140,136 @@ export function* createNewUser(
     yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch ({ message = '' }) {
     yield put(createNewUserFailure(message))
+  }
+}
+
+function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataTypes) {
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: asset.uri,
+  })
+  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
+  // We need to use dummy marketplace data in order to use common cards component
+  const dummyMarketplaceData = {
+    id: 0,
+    item_id: '',
+    type: appConst.TYPES.INSTANT_BY,
+    start_price: '',
+    end_price: '',
+    start_time: '',
+    end_time: '',
+    platform_fee: '',
+    sales_token_contract: '',
+    sold: false,
+    created_at: '',
+    updated_at: '',
+  }
+
+  return { ...(marketplaceData || dummyMarketplaceData), imageData: imageData[0], userData, tokenData: asset }
+}
+
+export function* getUserAssets(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const getAllItemByOwnerId: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemsByOwnerId(user.id),
+    })
+    const getAssetsListAllData: Array<
+      AssetDataTypes & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllItemByOwnerId.map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListAllWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset)))
+
+    yield put(getUserAssetsSuccess({ userAssets: getAssetsListAllWithStatuses }))
+  } catch (e) {
+    yield put(getUserAssetsFailure(e.message || e))
+  }
+}
+
+export function* getUserBids(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const userBids: IBidsHistory[] = yield call(api, {
+      url: APP_CONFIG.getBidsByUserId(user.id),
+    })
+
+    const composeUserBidsData: UserStateType['userBids'] = yield all(
+      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid))
+    )
+    yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
+  } catch (e) {
+    yield put(getUserBidsFailure(e.message || e))
+  }
+}
+
+function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, userBids: IBidsHistory) {
+  const assetById: AssetTypes[] = yield call(api, {
+    url: APP_CONFIG.getItemByItemId(Number(item_id)),
+  })
+  const userByOwner: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+  })
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: assetById[0].uri,
+  })
+  const marketData: AssetMarketplaceTypes[] = yield call(api, {
+    url: APP_CONFIG.getMarketplaceItemById(Number(market_id)),
+  })
+
+  return { ...userBids, imageData: imageData[0], ownerData: userByOwner[0], marketData: marketData[0] }
+}
+
+export function* setPromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: UserStateType['promotionIds'] }>) {
+  try {
+    localStorage.setItem('promotionIds', JSON.stringify(payload.promotionIds))
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      payload.promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+    )
+    yield put(setPromotionSuccess({ promotionAssets, promotionIds: payload.promotionIds }))
+  } catch (e) {
+    yield put(setPromotionFailure(e.message || e))
+  }
+}
+
+export function* getPromotion(api: IApi) {
+  try {
+    const promotionIdsData = localStorage.getItem('promotionIds')
+    const promotionIds: UserStateType['promotionIds'] = promotionIdsData ? JSON.parse(promotionIdsData) : []
+    if (!promotionIds.length) {
+      yield put(setPromotionSuccess({ promotionIds, promotionAssets: [] }))
+      return
+    }
+
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+    )
+
+    yield put(getPromotionSuccess({ promotionAssets, promotionIds }))
+  } catch (e) {
+    yield put(getPromotionFailure(e.message || e))
+  }
+}
+
+function* getPromotionAssetById(api: IApi, assetId: number) {
+  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
+  const assetById: AssetTypes[] = yield call(api, {
+    url: APP_CONFIG.getItemByItemId(Number(assetId)),
+  })
+  const userByOwner: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+  })
+  const imageData: AssetDataTypes['imageData'][] = yield call(api, {
+    url: assetById[0].uri,
+  })
+  return {
+    marketData: marketplaceData ? marketplaceData : null,
+    ownerData: userByOwner[0],
+    imageData: imageData[0],
+    tokenData: assetById[0],
   }
 }

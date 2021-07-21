@@ -53,7 +53,10 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>Artwork {status}</Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+              </Link>
             </Box>
           }
         />
@@ -74,7 +77,10 @@ export default function CardHistory(props: ICardHistoryProps) {
               <Typography className={classes.subheader}>
                 Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+              </Link>
             </Box>
           }
         >
@@ -123,7 +129,10 @@ export default function CardHistory(props: ICardHistoryProps) {
                 </span>{' '}
                 canceled
               </Typography>
-              by <Link underline="none">{+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}</Link>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+              </Link>
             </Box>
           }
         />

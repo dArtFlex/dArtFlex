@@ -21,16 +21,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       '&:hover': {
         backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
       },
     },
     cardImage: {
       padding: theme.spacing(21),
-      '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: theme.spacing(3),
-      },
+      width: 630,
+      height: 630,
+      objectFit: 'cover',
+      borderRadius: theme.spacing(3),
     },
   })
 )

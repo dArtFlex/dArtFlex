@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
-import { CardAsset } from 'common'
-import { useSelector } from 'react-redux'
+import { CardAsset, Field } from 'common'
+import { useSelector, useDispatch } from 'react-redux'
 import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
 import { AssetDataTypesWithStatus } from 'types'
-import { selectAssetDetails } from 'stores/selectors'
+import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
+import { setPromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 
@@ -18,9 +19,11 @@ const {
 
 export default function FormContainer() {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { assetDetails } = useSelector(selectAssetDetails())
+  const { promotionIds } = useSelector(selectPromotion())
 
-  const { values } = useFormikContext<ApprovedFormState>()
+  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
   const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
     ? {
@@ -31,12 +34,58 @@ export default function FormContainer() {
       }
     : null
 
+  const { role } = useSelector(selectUserRole())
+  const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
+
+  // eslint-disable-next-line
+  const handleAddPromotion = (e: any) => {
+    if (e.target.checked) {
+      dispatch(setPromotionRequest({ promotionIds: [...promotionIds, assetDetails.marketData?.item_id] }))
+    } else {
+      const excludePromotion = promotionIds.filter(
+        (pId) => assetDetails.marketData && Number(pId) !== Number(assetDetails.marketData.item_id)
+      )
+      dispatch(setPromotionRequest({ promotionIds: excludePromotion }))
+    }
+    setFieldValue('promotion', e.target.checked)
+  }
+
+  const ckeckPromotion = () => {
+    const isPromoted = promotionIds.findIndex(
+      (pId) => assetDetails.marketData && Number(pId) === Number(assetDetails.marketData.item_id)
+    )
+
+    if (isPromoted !== -1) {
+      setFieldValue('promotion', true)
+    } else {
+      setFieldValue('promotion', false)
+    }
+  }
+
+  useEffect(() => {
+    ckeckPromotion()
+    return () => {
+      ckeckPromotion()
+    }
+  }, [promotionIds, assetDetails])
+
   return (
     <Box className={classes.root}>
       <Box className={classes.outerContainer}>
         {values.formProgress === 'details' ? (
           <Box className={classes.previewContainer}>
             <img src={assetDetails.imageData?.image} />
+            {isUserSuperAdmin && (
+              <Field
+                type="switch"
+                name="promotion"
+                label={'Promotion'}
+                fullWidth={false}
+                className={classes.switcher}
+                onChange={handleAddPromotion}
+                checked={Boolean(values.promotion)}
+              />
+            )}
             <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
               <ArrowExpandIcon />
             </IconButton>

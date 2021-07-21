@@ -1,7 +1,7 @@
 import React from 'react'
 import { useStyles } from '../styles'
 import { Box, IconButton, Typography } from '@material-ui/core'
-import { CircleSuccessIcon, ExternalLinkIcon } from '../../../common/icons'
+import { CircleSuccessIcon, ExternalLinkIcon } from 'common/icons'
 
 export default function FormOfferSubmitted() {
   const classes = useStyles()

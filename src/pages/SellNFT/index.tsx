@@ -29,10 +29,10 @@ const formVariant = [
 ]
 
 const initialData = {
-  price: 0.01,
-  minimumBid: 0.01,
-  reservePrice: '1',
-  startingPrice: '0.01',
+  price: '',
+  minimumBid: '',
+  reservePrice: '',
+  startingPrice: '',
   fee: '2.5',
   futureTime: '',
   expirationTime: '',
@@ -47,17 +47,17 @@ export default function SellNFT() {
   const [form, setForm] = useState(INSTANT_BY)
   const dispatch = useDispatch()
 
-  const onSubmit = (state: ISellArtwork) => {
+  const onSubmit = (values: ISellArtwork) => {
     const type = form === 'instant_buy' ? 'instant_buy' : 'auction'
     dispatch(
       listingRequest({
         data: {
           type,
-          startPrice: state.startingPrice,
-          endPrice: state.reservePrice,
-          start_time: state.startDate,
-          end_time: state.endDate,
-          platfromFee: state.fee,
+          startPrice: form === 'instant_buy' ? values.price : values.minimumBid,
+          endPrice: values.reservePrice,
+          start_time: values.startDate,
+          end_time: values.endDate,
+          platfromFee: values.fee,
         },
       })
     )

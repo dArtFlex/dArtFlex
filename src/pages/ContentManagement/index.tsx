@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PageWrapper } from '../../common'
+import { PageWrapper } from 'common'
 import { Box, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
 import PromotionManagement from './components/PromotionManagement'
@@ -13,7 +13,7 @@ export default function ContentManagement() {
   return (
     <PageWrapper className={classes.contentManagementWrapper}>
       <>
-        <Typography variant={'h1'}>Content Management</Typography>
+        <Typography variant={'h1'}>Management</Typography>
 
         <Box display="flex" flexDirection="row" mt={8}>
           <Paper classes={{ root: classes.tabWrapperRoot }}>
