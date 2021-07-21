@@ -15,6 +15,12 @@ import {
   Badge,
   Avatar,
   useMediaQuery,
+  Collapse,
+  Paper,
+  Popper,
+  Fade,
+  Icon,
+  Typography,
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
@@ -23,7 +29,16 @@ import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
-import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon, SearchIcon, BurgerMenuIcon } from 'common/icons'
+import {
+  CurrentDownIcon,
+  LogoIcon,
+  CoolIcon,
+  SmileyFaceIcon,
+  BellIcon,
+  SearchIcon,
+  BurgerMenuIcon,
+  CloseIcon,
+} from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 
@@ -40,6 +55,8 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
   const [anchorElNotification, setAnchorElNotification] = useState<null | HTMLElement>(null)
   const [isSearchFieldOpen, setSearchFieldOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
 
   const [open, setOpen] = useState<boolean>(false)
 
@@ -63,13 +80,13 @@ export default function Header({ toggleTheme }: HeaderType) {
           <LogoIcon className={classes.logo} />
           {isMobile ? (
             <Box className={classes.mobileToolBar}>
-              <IconButton className={classes.iconButton}>
+              <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
                 <SmileyFaceIcon />
               </IconButton>
-              <IconButton className={classes.searchIcon}>
+              <IconButton className={classes.borderedIcon}>
                 <SearchIcon />
               </IconButton>
-              <IconButton className={classes.searchIcon}>
+              <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                 <BurgerMenuIcon />
               </IconButton>
             </Box>
@@ -150,7 +167,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     </Button>
                   </>
                 )}
-                <ButtonBase onClick={toggleTheme}>
+                <ButtonBase onClick={toggleTheme} className={classes.borderedIcon}>
                   <CoolIcon />
                 </ButtonBase>
               </Box>
@@ -168,6 +185,75 @@ export default function Header({ toggleTheme }: HeaderType) {
         body={<WalletConnect onClose={() => setOpen(false)} />}
         withAside
       />
+      {isMobileMenuOpen && (
+        <Popper open={isMobileMenuOpen} transition className={classes.mobileMenuWrapper}>
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={600}>
+              <Paper className={classes.mobileMenuContent}>
+                <Box className={classes.mobileMenuActionButtons}>
+                  <IconButton className={classes.borderedIcon} onClick={toggleTheme}>
+                    <CoolIcon />
+                  </IconButton>
+                  <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(false)}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+                <Box className={classes.navTabsBlock}>
+                  {MenuItems.map(({ title, to }) => (
+                    <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabsMobile} />
+                  ))}
+                </Box>
+                <Box className={classes.mobileMenuProfileButtons}>
+                  <Button
+                    onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                      const target = event.currentTarget as HTMLElement
+                      setAnchorElCreateLink(target)
+                    }}
+                    variant={'outlined'}
+                    disableElevation
+                    classes={{ root: classes.createButton }}
+                    endIcon={<CurrentDownIcon />}
+                    fullWidth
+                  >
+                    Create
+                  </Button>
+                  {wallet === null && (
+                    <Button
+                      onClick={() => setOpen(true)}
+                      variant={'contained'}
+                      color={'primary'}
+                      disableElevation
+                      fullWidth
+                    >
+                      Connect wallet
+                    </Button>
+                  )}
+                </Box>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
+      )}
+
+      {isMobileUserStatsOpen && (
+        <Popper open={isMobileUserStatsOpen} transition className={classes.mobileMenuWrapper}>
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={600}>
+              <Paper className={classes.mobileMenuUserInfo}>
+                <Box className={classes.mobileMenuActionButtons}>
+                  <Icon className={classes.profileIcon}>
+                    <SmileyFaceIcon />
+                  </Icon>
+                  <Typography>2.435 ETH</Typography>
+                  <IconButton className={classes.borderedIcon} onClick={() => setIsMobileUserStatsOpen(false)}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
+      )}
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
       <ProfileActionMenu anchor={anchorElProfileLink} setAnchor={setAnchorElProfileLink} />
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />

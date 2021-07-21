@@ -28,6 +28,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         maxHeight: '100%',
         objectFit: 'contain',
       },
+      [theme.breakpoints.down(600)]: {
+        width: 80,
+      },
     },
     modalBtnClose: {
       border: `1px solid ${theme.palette.grey['200']}`,
@@ -42,6 +45,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& svg': {
         width: 14,
         height: 14,
+      },
+      [theme.breakpoints.down(600)]: {
+        right: theme.spacing(2),
       },
     },
   })

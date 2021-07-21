@@ -26,7 +26,7 @@ export default function PopoverLinks(props: IPopoverLinksProps) {
   }
 
   return (
-    <Popover anchorEl={anchor} onClose={() => setAnchor(null)}>
+    <Popover anchorEl={anchor} onClose={() => setAnchor(null)} className={classes.externalLinkMenuWrapper}>
       <Box className={classes.externalLinkMenu}>
         {title}
         <Grid container direction="column">

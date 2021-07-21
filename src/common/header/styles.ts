@@ -15,13 +15,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       marginRight: theme.spacing(4),
+      position: 'relative',
       '& span': {
         width: 32,
       },
     },
-    searchIcon: {
+    borderedIcon: {
       color: theme.palette.text.primary,
-      marginRight: theme.spacing(4),
+      marginLeft: theme.spacing(4),
       border: `1px solid ${theme.palette.greyMid}`,
     },
     toolbar: {
@@ -30,6 +31,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     navTabs: {
       padding: theme.spacing(5, 0),
+      color: `${theme.palette.text.primary} !important`,
+    },
+    navTabsMobile: {
+      fontSize: 30,
+      fontWeight: 700,
       color: `${theme.palette.text.primary} !important`,
     },
     navTabsContainer: {
@@ -117,6 +123,47 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     createButton: {
       border: `2px solid ${theme.palette.grey.A100}`,
+    },
+    mobileMenuWrapper: {
+      zIndex: 1100,
+    },
+    mobileMenuContent: {
+      width: '100vw',
+      height: '100vh',
+      padding: theme.spacing(6, 4, 8, 4),
+    },
+    mobileMenuUserInfo: {
+      width: '100vw',
+      height: '100vh',
+      padding: theme.spacing(6, 4, 6, 6),
+    },
+    mobileMenuActionButtons: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+    },
+    navTabsBlock: {
+      marginTop: theme.spacing(24),
+      marginLeft: theme.spacing(4),
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    mobileMenuProfileButtons: {
+      marginTop: theme.spacing(20),
+      '& button': {
+        marginBottom: theme.spacing(4),
+      },
+    },
+    profileIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      width: 40,
+      height: 40,
+    },
+    textSmallBold: {
+      fontSize: 14,
+      fontWeight: 700,
+      marginLeft: theme.spacing(4),
     },
   })
 )
