@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal } from 'stores/reducers/wallet'
+import { setSearch } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -45,6 +46,10 @@ export default function Header({ toggleTheme }: HeaderType) {
     },
   ]
 
+  const handleSearch = (value: string) => {
+    dispatch(setSearch(value))
+  }
+
   return (
     <>
       <AppBar position="static" elevation={0}>
@@ -66,7 +71,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                 Bids
               </Chip>
             )}
-            <SearchField />
+            <SearchField onSearch={handleSearch} />
             <Button
               onClick={(event: React.SyntheticEvent<EventTarget>) => {
                 const target = event.currentTarget as HTMLElement

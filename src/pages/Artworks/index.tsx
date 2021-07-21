@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { selectAssets, selectWallet, selectPromotion } from 'stores/selectors'
+import { selectAssets, selectWallet, selectPromotion, selectSearch } from 'stores/selectors'
 import clsx from 'clsx'
 import {
   Box,
@@ -18,6 +18,8 @@ import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
+  useSearchAssets,
+  useInnerAssetsFilter,
   useSortedAssets,
   useCardStatusLiveAuction,
   useCardStatusBuyNow,
@@ -77,22 +79,57 @@ const filterItems = [
   },
 ]
 
-const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
+// const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
 export default function Artworks() {
   const classes = useStyles()
   const { assets, fetching } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
+  const { search } = useSelector(selectSearch())
 
-  const [sortValue, setSortValue] = useState(ENDING_SOON)
+  const [sortValue, setSortValue] = useState<'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low'>(
+    'ending_soon'
+  )
   const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
-  const [activeHashTags, setActiveHashTags] = useState<string[]>([])
+  // const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
-  const sortedAssets = useSortedAssets({ assets, filter })
+  const [priceFrom, setPriceFrom] = useState('')
+  const [priceTo, setPriceTo] = useState('')
+  const [hotOnly, setHotOnly] = useState(false)
 
+  const searchAssets = useSearchAssets({ assets, search })
+  const innerSearchAssets = useInnerAssetsFilter({
+    assets: searchAssets,
+    sortBy: sortValue,
+    price: { from: priceFrom, to: priceTo },
+    hotOnly,
+  })
+  const sortedAssets = useSortedAssets({ assets: innerSearchAssets, filter })
   const promotionMultiply = usePromotionMultiplyData({ promotionIds, promotionAssets })
+
+  const handleSetPrice = (value: string, selector: 'from' | 'to') => {
+    if (!value.length) {
+      return selector === 'from' ? setPriceFrom('') : setPriceTo('')
+    }
+
+    const match = value.match(/^\d+(\.+(\d{1,6})?)?$/m)
+    if (match === null) {
+      return selector === 'from' ? setPriceFrom(priceFrom) : setPriceTo(priceTo)
+    }
+    if (match) {
+      if (selector === 'from') setPriceFrom(match[0])
+      if (selector === 'to') setPriceTo(match[0])
+    }
+  }
+
+  const handleResetFilter = () => {
+    setSortValue('ending_soon')
+    setPriceFrom('')
+    setPriceTo('')
+    setHotOnly(false)
+  }
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -105,8 +142,12 @@ export default function Artworks() {
               <MUISelect
                 style={{ minWidth: '148px' }}
                 value={sortValue}
-                onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
-                  setSortValue(target.value as string)
+                onChange={({
+                  target,
+                }: React.ChangeEvent<{
+                  value: unknown
+                }>) => {
+                  setSortValue(target.value as 'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low')
                 }}
                 classes={{ select: classes.sortArtworksMenu }}
                 className={classes.sortArtworksMenu}
@@ -167,21 +208,27 @@ export default function Artworks() {
             <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
               <Box flex={'1 1 auto'} mr={10}>
-                {hashTags.map((ht) => {
-                  const isActive = Boolean(activeHashTags.find((h) => h === ht))
-                  return (
-                    <Button
-                      key={ht}
-                      variant={'outlined'}
-                      className={clsx(classes.hashTagBtn, isActive && classes.hashTagBtnActive)}
-                      onClick={() =>
-                        setActiveHashTags(isActive ? activeHashTags.filter((a) => a !== ht) : [...activeHashTags, ht])
-                      }
-                    >
-                      {ht}
-                    </Button>
-                  )
-                })}
+                {/* 
+                  ************************************************
+                  Todo: Tags should be implemented in next version
+                  ************************************************
+                  
+                    {hashTags.map((ht) => {
+                      const isActive = Boolean(activeHashTags.find((h) => h === ht))
+                      return (
+                        <Button
+                          key={ht}
+                          variant={'outlined'}
+                          className={clsx(classes.hashTagBtn, isActive && classes.hashTagBtnActive)}
+                          onClick={() =>
+                            setActiveHashTags(isActive ? activeHashTags.filter((a) => a !== ht) : [...activeHashTags, ht])
+                          }
+                        >
+                          {ht}
+                        </Button>
+                      )
+                    })}
+                  */}
               </Box>
               <Typography variant={'body1'} color={'textSecondary'} className={classes.priceTitle}>
                 Price
@@ -190,6 +237,8 @@ export default function Artworks() {
                 <>
                   <TextField
                     variant={'outlined'}
+                    value={p === 'from' ? priceFrom : priceTo}
+                    onChange={(e) => handleSetPrice(e.target.value, p as 'from' | 'to')}
                     InputProps={{
                       classes: {
                         input: classes.priceInput,
@@ -208,7 +257,7 @@ export default function Artworks() {
               ))}
               <Box ml={11}>
                 <FormControlLabel
-                  control={<Checkbox name="burn" color={'primary'} />}
+                  control={<Checkbox onChange={(e) => setHotOnly(e.target.checked)} name="burn" color={'primary'} />}
                   label={
                     <Typography className={classes.burnLabel}>
                       <BurnIcon />
@@ -217,7 +266,9 @@ export default function Artworks() {
                   }
                 />
               </Box>
-              <Button startIcon={<RefreshIcon className={classes.buttomIcon} />}>Clear Filters</Button>
+              <Button onClick={handleResetFilter} startIcon={<RefreshIcon className={classes.buttomIcon} />}>
+                Clear Filters
+              </Button>
             </Box>
           </Box>
         )}
