@@ -36,8 +36,6 @@ export default function AccountSettings() {
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
 
-  console.log(user)
-
   const onSubmit = (values: IAccountSettings) => {
     dispatch(createNewUserRequest({ accountSettings: values, wallet: wallet?.accounts[0] as string }))
   }
