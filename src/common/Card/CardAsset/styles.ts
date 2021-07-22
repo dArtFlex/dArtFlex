@@ -5,6 +5,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       minWidth: 325,
       boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      position: 'relative',
     },
     card: {
       display: 'flex',
@@ -12,12 +16,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
     },
     artContainer: {
-      position: 'relative',
       padding: theme.spacing(1),
       height: '242px',
       color: theme.palette.blackMain,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
       '&>img': {
@@ -39,7 +42,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 24px',
+      padding: '16px 20px',
       background: theme.palette.accentGradient,
       color: theme.palette.white,
     },
