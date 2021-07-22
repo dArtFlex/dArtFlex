@@ -24,6 +24,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     filterContainer: {
       display: 'flex',
       justifyContent: 'space-between',
+      flexWrap: 'wrap',
+    },
+    tradingHistorySelect: {
+      margin: theme.spacing(4, 0),
     },
   })
 )
