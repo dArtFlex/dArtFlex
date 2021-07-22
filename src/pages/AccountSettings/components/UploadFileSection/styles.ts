@@ -42,7 +42,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: 115,
       height: 115,
-      borderRadius: '50%',
+      borderRadius: '100%',
+      objectFit: 'cover',
       alignSelf: 'flex-start',
     },
     cover: {

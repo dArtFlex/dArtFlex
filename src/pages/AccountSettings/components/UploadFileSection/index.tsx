@@ -11,10 +11,11 @@ interface IUploadFileSectionProps {
   description?: string
   variant?: 'cover' | 'avatar'
   className?: string
+  photoUrl?: string
 }
 
 export default function UploadFileSection(props: IUploadFileSectionProps) {
-  const { name, label, description, variant = 'avatar', className } = props
+  const { name, label, description, variant = 'avatar', className, photoUrl } = props
   const classes = useStyles()
 
   const { values, setFieldValue } = useFormikContext<IAccountSettings>()
@@ -25,13 +26,7 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
       <Box className={classes.box}>
         <Box className={classes.image}>
           {variant === 'avatar' ? (
-            <Image
-              file={values[name] as File}
-              className={classes.avatar}
-              src={
-                'https://ath2.unileverservices.com/wp-content/uploads/sites/7/2018/07/dark-brown-man-bun-500x500.jpg'
-              }
-            />
+            <Image file={values[name] as File} className={classes.avatar} src={photoUrl} />
           ) : (
             <Image
               file={values[name] as File}
