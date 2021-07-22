@@ -34,6 +34,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginLeft: theme.spacing(12),
       },
       [theme.breakpoints.down('md')]: {
+        width: '100%',
+        textAlign: 'center',
         '& a': {
           marginLeft: theme.spacing(3),
         },

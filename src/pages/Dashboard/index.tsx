@@ -100,7 +100,7 @@ export default function Dashboard() {
           >
             {filterItems.map(({ label, value }) => {
               return (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton key={value} value={value} selected={filter === value} className={classes.toggleButton}>
                   {label}
                 </ToggleButton>
               )
