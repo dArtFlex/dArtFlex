@@ -5,6 +5,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     wrapper: {
       flex: '1 1 auto',
       backgroundColor: theme.palette.grey['50'],
+      [theme.breakpoints.down(768)]: {
+        padding: theme.spacing(2, 6),
+      },
+    },
+    toggleButton: {
+      [theme.breakpoints.down(768)]: {
+        padding: theme.spacing(2),
+      },
     },
     linkIcon: {
       fill: theme.palette.text.primary,

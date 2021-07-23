@@ -10,8 +10,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       [theme.breakpoints.down('md')]: {
-        flexWrap: 'wrap',
         padding: theme.spacing(0, 2),
+      },
+      [theme.breakpoints.down(800)]: {
+        flexWrap: 'wrap',
       },
     },
     logo: {
@@ -21,6 +23,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.grey5,
       '& a': {
         marginRight: theme.spacing(12),
+        [theme.breakpoints.down('md')]: {
+          marginRight: theme.spacing(8),
+        },
       },
       [theme.breakpoints.down('md')]: {
         '& a': {
@@ -34,6 +39,13 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginLeft: theme.spacing(12),
       },
       [theme.breakpoints.down('md')]: {
+        width: '100%',
+        textAlign: 'center',
+        '& a': {
+          marginLeft: theme.spacing(4),
+        },
+      },
+      [theme.breakpoints.between(800, 815)]: {
         '& a': {
           marginLeft: theme.spacing(3),
         },
