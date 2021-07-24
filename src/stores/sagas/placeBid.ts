@@ -85,9 +85,10 @@ export function* getBidsHistory(api: IApi) {
   try {
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const getHistory = yield call(api, {
-      url: APP_CONFIG.getHistory(+marketData.id),
+      url: APP_CONFIG.getNFTHistory(+marketData.item_id),
     })
-    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.from)))
     const composeData = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
 
     yield put(getBidsHistorySuccess(composeData))
