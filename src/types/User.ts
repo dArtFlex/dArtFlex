@@ -25,3 +25,8 @@ interface ISocial {
 }
 
 export type IUserRole = 'ROLE_SUPER_ADMIN' | 'ROLE_COMMON'
+
+export interface ISuperAdminEntities {
+  message: string
+  id: number[]
+}

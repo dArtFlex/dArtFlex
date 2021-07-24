@@ -23,7 +23,6 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
   try {
     const chainId: IChainId = walletService.getChainId()
     const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
-
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
@@ -32,7 +31,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     const order = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
-        tokenId: marketData.id,
+        tokenId: tokenData.token_id,
         maker: accounts[0],
         taker: accounts[0],
         price: endPrice,
@@ -68,7 +67,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
       method: 'POST',
       data: {
         orderId: getIdFromString(orderId),
-        itemId: marketData.id,
+        itemId: tokenData.id,
         userId,
         marketId: Number(marketData.id),
         bidAmount: endPrice,
@@ -85,7 +84,7 @@ export function* getBidsHistory(api: IApi) {
   try {
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const getHistory = yield call(api, {
-      url: APP_CONFIG.getNFTHistory(+marketData.item_id),
+      url: APP_CONFIG.getHistoryNFT(+marketData.item_id),
     })
 
     const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.from)))
@@ -97,13 +96,20 @@ export function* getBidsHistory(api: IApi) {
   }
 }
 
-export function* acceptBid(api: IApi, { payload }: PayloadAction<{ creatorId: string; buyerId: string }>) {
+export function* acceptBid(
+  api: IApi,
+  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string }>
+) {
   try {
+    const marketData = yield call(api, {
+      url: 'https://dartflex-dev.ml:8887/api/bid/get_by_market/' + payload.market_id,
+    })
+
     const creatorOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(payload.creatorId),
+      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
     })
     const buyerOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
+      url: APP_CONFIG.getOrderByOrderId(marketData[1].order_id), // should be the last element of array
     })
 
     yield acceptBidService.performMint(creatorOrder, buyerOrder)

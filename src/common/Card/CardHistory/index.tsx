@@ -62,7 +62,7 @@ export default function CardHistory(props: ICardHistoryProps) {
         />
       )
 
-    case 'pending':
+    case 'bidded':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
