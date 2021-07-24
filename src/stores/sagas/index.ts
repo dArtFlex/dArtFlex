@@ -6,8 +6,9 @@ import {
   createNewUserRequest,
   getUserAssetsRequest,
   getUserBidsRequest,
-  setPromotionRequest,
   getPromotionRequest,
+  addPromotionRequest,
+  deletePromotionRequest,
 } from '../reducers/user'
 import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
 import { connectMetaMaskRequest, connnectWalletConnectRequest, getTokensBalancesRequest } from '../reducers/wallet'
@@ -15,7 +16,15 @@ import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
 import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
 
-import { getUserData, createNewUser, getUserAssets, getUserBids, setPromotion, getPromotion } from '../sagas/user'
+import {
+  getUserData,
+  createNewUser,
+  getUserAssets,
+  getUserBids,
+  getPromotion,
+  addPromotion,
+  deletePromotion,
+} from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect, getTokensBalances } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
@@ -34,8 +43,9 @@ export default function* root() {
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
     takeLatest(getUserAssetsRequest.type, getUserAssets, apiMiddleware),
     takeLatest(getUserBidsRequest.type, getUserBids, apiMiddleware),
-    takeLatest(setPromotionRequest.type, setPromotion, apiMiddleware),
     takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
+    takeLatest(addPromotionRequest.type, addPromotion, apiMiddleware),
+    takeLatest(deletePromotionRequest.type, deletePromotion, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

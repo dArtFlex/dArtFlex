@@ -76,10 +76,10 @@ const userSlice = createSlice({
       state.fetchingBids = false
     },
 
-    setPromotionRequest: (state, i) => {
+    addPromotionRequest: (state, i) => {
       state.fetchingPromo = true
     },
-    setPromotionSuccess: (
+    addPromotionSuccess: (
       state,
       {
         payload,
@@ -92,7 +92,28 @@ const userSlice = createSlice({
       state.promotionAssets = payload.promotionAssets
       state.promotionIds = payload.promotionIds
     },
-    setPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+    addPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
+    },
+
+    deletePromotionRequest: (state, i) => {
+      state.fetchingPromo = true
+    },
+    deletePromotionSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        promotionIds: UserStateType['promotionIds']
+        promotionAssets: UserStateType['promotionAssets']
+      }>
+    ) => {
+      state.fetchingPromo = false
+      state.promotionAssets = payload.promotionAssets
+      state.promotionIds = payload.promotionIds
+    },
+    deletePromotionFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingPromo = false
     },
@@ -142,13 +163,17 @@ export const {
   getUserBidsSuccess,
   getUserBidsFailure,
 
-  setPromotionRequest,
-  setPromotionSuccess,
-  setPromotionFailure,
+  addPromotionRequest,
+  addPromotionSuccess,
+  addPromotionFailure,
 
   getPromotionRequest,
   getPromotionSuccess,
   getPromotionFailure,
+
+  deletePromotionRequest,
+  deletePromotionSuccess,
+  deletePromotionFailure,
 
   setSearch,
 } = userSlice.actions

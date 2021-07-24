@@ -9,7 +9,7 @@ import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
 import { AssetDataTypesWithStatus } from 'types'
 import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
-import { setPromotionRequest } from 'stores/reducers/user'
+import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 
@@ -40,12 +40,12 @@ export default function FormContainer() {
   // eslint-disable-next-line
   const handleAddPromotion = (e: any) => {
     if (e.target.checked) {
-      dispatch(setPromotionRequest({ promotionIds: [...promotionIds, assetDetails.marketData?.item_id] }))
+      dispatch(addPromotionRequest({ promotionId: assetDetails.marketData?.item_id }))
     } else {
       const excludePromotion = promotionIds.filter(
         (pId) => assetDetails.marketData && Number(pId) !== Number(assetDetails.marketData.item_id)
       )
-      dispatch(setPromotionRequest({ promotionIds: excludePromotion }))
+      dispatch(deletePromotionRequest({ promotionId: excludePromotion }))
     }
     setFieldValue('promotion', e.target.checked)
   }
