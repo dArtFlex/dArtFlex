@@ -5,7 +5,7 @@ const {
   FILTER_VALUES: { LIVE_AUCTION, MINTED, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
 } = appConst
 
-export interface ICardActionsProps {
+export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus' | 'button'> {
   status: IAssetStatus
   type: IAssetType
   startPrice?: AssetDataTypes['start_price']
@@ -14,7 +14,6 @@ export interface ICardActionsProps {
   endTime?: AssetDataTypes['end_time']
   burnTime?: number
   timer?: string
-  useCardStatus: ICardAssetProps['useCardStatus']
   onAction?: () => void
 }
 
@@ -32,6 +31,9 @@ export interface ICardAssetProps {
   asset: AssetDataTypesWithStatus
   withLabel?: boolean
   withAction?: boolean
+  button?: {
+    onListed?: () => void
+  }
   useCardStatus?: (
     data: IUseCardStatus
   ) =>

@@ -12,7 +12,7 @@ import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, withLabel, withAction, useCardStatus } = props
+  const { asset, withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
   const classes = useStyles()
   const history = useHistory()
 
@@ -26,7 +26,7 @@ export default function CardAsset(props: ICardAssetProps) {
       <Card key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}>
           <img src={asset.imageData.image} className={classes.cardImage} />
-          {withLabel && <CardBadge status={asset.type} />}
+          {withLabel && <CardBadge status={asset.status} />}
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
@@ -61,6 +61,7 @@ export default function CardAsset(props: ICardAssetProps) {
           endTime={asset.end_time}
           burnTime={burnTime}
           timer={timer}
+          button={button}
         />
       </Card>
 

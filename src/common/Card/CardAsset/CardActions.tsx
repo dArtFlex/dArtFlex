@@ -25,6 +25,7 @@ export default function CardActions(props: ICardActionsProps) {
     type,
     status,
     useCardStatus = useDefaultCardStatus,
+    button,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
@@ -47,7 +48,7 @@ export default function CardActions(props: ICardActionsProps) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
-          <Button variant={'contained'} fullWidth className={classes.listBtn}>
+          <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
             List
           </Button>
         </Box>
