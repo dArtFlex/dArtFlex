@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardUpload: {
-      width: 325,
+      minWidth: 325,
       height: 460,
       padding: theme.spacing(1),
       display: 'flex',

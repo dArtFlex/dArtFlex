@@ -6,7 +6,7 @@ import { ICardBadgeProps } from './types'
 import { useStyles } from './styles'
 
 const {
-  STATUSES: { MINTED, UNLISTED },
+  STATUSES: { MINTED, UNLISTED, LISTED },
   FILTER_VALUES: { LIVE_AUCTION, BUY_NOW },
 } = appConst
 
@@ -22,6 +22,7 @@ export default function CardBadge(props: ICardBadgeProps) {
           <Typography variant={'body1'}>Minted</Typography>
         </Box>
       )
+    case LISTED:
     case LIVE_AUCTION:
     case BUY_NOW:
       return (
