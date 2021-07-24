@@ -9,6 +9,7 @@ import {
   getPromotionRequest,
   addPromotionRequest,
   deletePromotionRequest,
+  getAllUsersRequest,
 } from '../reducers/user'
 import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
 import { connectMetaMaskRequest, connnectWalletConnectRequest, getTokensBalancesRequest } from '../reducers/wallet'
@@ -24,6 +25,7 @@ import {
   getPromotion,
   addPromotion,
   deletePromotion,
+  getAllUsers,
 } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect, getTokensBalances } from '../sagas/wallet'
@@ -46,6 +48,7 @@ export default function* root() {
     takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
     takeLatest(addPromotionRequest.type, addPromotion, apiMiddleware),
     takeLatest(deletePromotionRequest.type, deletePromotion, apiMiddleware),
+    takeLatest(getAllUsersRequest.type, getAllUsers, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

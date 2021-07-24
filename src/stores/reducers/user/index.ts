@@ -142,6 +142,18 @@ const userSlice = createSlice({
     setSearch: (state, { payload }: PayloadAction<string>) => {
       state.search = payload
     },
+
+    getAllUsersRequest: (state) => {
+      state.fetching = true
+    },
+    getAllUsersSuccess: (state, { payload }: PayloadAction<{ userAll: UserStateType['userAll'] }>) => {
+      state.fetching = true
+      state.userAll = payload.userAll
+    },
+    getAllUsersFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -176,6 +188,10 @@ export const {
   deletePromotionFailure,
 
   setSearch,
+
+  getAllUsersRequest,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

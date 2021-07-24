@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectUserRole } from 'stores/selectors'
 import { Box, FormControl, InputAdornment, OutlinedInput, Select as MUISelect, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
@@ -6,10 +8,29 @@ import ContentManagementWorks from './ContentManagementWorks'
 import { Select } from 'common'
 import { SearchIcon } from 'common/icons'
 import ContentManagementUsers from './ContentManagementUsers'
+import { getAllUsersRequest } from 'stores/reducers/user'
 
 export default function ContentManagementTab() {
-  const [value, setValue] = useState('works')
+  const [selectTable, setSelectTable] = useState('works')
   const classes = useStyles()
+  const { role } = useSelector(selectUserRole())
+  const dispatch = useDispatch()
+
+  const fetchAllUser = () => {
+    dispatch(getAllUsersRequest())
+  }
+
+  const fetchAllAssets = () => {
+    console.log('fetchAllAssets')
+  }
+
+  useEffect(() => {
+    if (role === 'ROLE_SUPER_ADMIN' && selectTable === 'works') {
+      fetchAllAssets()
+    } else if (role === 'ROLE_SUPER_ADMIN' && selectTable === 'users') {
+      fetchAllUser()
+    }
+  }, [role, selectTable])
 
   const sortItems = [
     {
@@ -33,13 +54,13 @@ export default function ContentManagementTab() {
   const [sortValue, setSortValue] = useState('statusASC')
 
   const handleChange = (event: React.MouseEvent<HTMLElement, MouseEvent>, newValue: string) => {
-    setValue(newValue)
+    setSelectTable(newValue)
   }
 
   return (
     <Box className={classes.managementWrapperSmall}>
       <Box className={classes.flexBox}>
-        <ToggleButtonGroup exclusive onChange={handleChange} value={value} className={classes.toggleButtons}>
+        <ToggleButtonGroup exclusive onChange={handleChange} value={selectTable} className={classes.toggleButtons}>
           <ToggleButton value="works" classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}>
             Works
           </ToggleButton>
@@ -82,8 +103,8 @@ export default function ContentManagementTab() {
           />
         </FormControl>
       </Box>
-      {Boolean(value === 'works') && <ContentManagementWorks />}
-      {Boolean(value === 'users') && <ContentManagementUsers />}
+      {Boolean(selectTable === 'works') && <ContentManagementWorks />}
+      {Boolean(selectTable === 'users') && <ContentManagementUsers />}
     </Box>
   )
 }

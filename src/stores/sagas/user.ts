@@ -17,6 +17,8 @@ import {
   addPromotionFailure,
   deletePromotionSuccess,
   deletePromotionFailure,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -305,5 +307,17 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
+  }
+}
+
+export function* getAllUsers(api: IApi) {
+  try {
+    const userAll: UserStateType['userAll'] = yield call(api, {
+      url: APP_CONFIG.getUserAll,
+    })
+
+    yield put(getAllUsersSuccess({ userAll }))
+  } catch (e) {
+    yield put(getAllUsersFailure(e.message || e))
   }
 }

@@ -22,6 +22,7 @@ export interface UserStateType {
   userBids: IUserBid[] | []
   promotionAssets: IPromotionAsset[] | []
   promotionIds: number[] | []
+  userAll?: UserDataTypes[]
 }
 
 export interface IUserAsset extends AssetDataTypesWithStatus {
