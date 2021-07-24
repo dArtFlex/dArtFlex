@@ -10,6 +10,7 @@ const APP_CONFIG = {
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,
   getMarketplaceAll: `${STAGE_URL}/marketplace/get_all`,
+  getUserAll: `${STAGE_URL}/user/getAll`,
 
   // GET User
   getUserProfileByUserId: (id: number) => `${STAGE_URL}/user/get/${id}`,
