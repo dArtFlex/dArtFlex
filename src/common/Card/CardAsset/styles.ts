@@ -102,7 +102,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(3.5),
       alignItems: 'center',
       padding: theme.spacing(3),
-      background: theme.palette.background.default,
+      background: theme.palette.white,
       borderRadius: '50% / 100%',
     },
     badgeIcon: {

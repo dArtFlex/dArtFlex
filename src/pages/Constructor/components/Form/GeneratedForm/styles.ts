@@ -8,8 +8,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridGap: 40,
       alignItems: 'start',
       justifyContent: 'center',
-      gridTemplateRows: 'minmax(100%, auto)',
-      gridTemplateColumns: '777px 1fr',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(900)]: {
+        gridTemplateColumns: 'auto',
+      },
     },
     imageBox: {
       display: 'flex',
@@ -18,6 +20,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.grey['500'],
       padding: theme.spacing(20, 3),
       borderRadius: 12,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 2,
+      },
     },
     image: {
       width: 463,
@@ -31,6 +36,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto',
       maxWidth: 325,
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 1,
+      },
     },
     btnBack: {
       alignSelf: 'flex-start',

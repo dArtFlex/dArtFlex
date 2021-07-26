@@ -203,9 +203,10 @@ export default function FormDetails(props: IDetailsFormProps) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
+          classes={{ indicator: classes.indicator }}
         >
           {tabsItems.map(({ title }) => (
-            <Tab key={title} label={title} />
+            <Tab key={title} label={title} classes={{ selected: classes.tabSelected }} />
           ))}
         </Tabs>
         {tab === 0 && (

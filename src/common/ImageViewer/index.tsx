@@ -6,7 +6,7 @@ import { IImageViewer } from './types'
 import { useStyles } from './styles'
 
 export default function ImageViewer(props: IImageViewer) {
-  const { asFiles = false, images = [], open = false, onClose } = props
+  const { asFiles = false, images, open = false, onClose } = props
   const classes = useStyles()
 
   if (!open) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import DucolLayout from 'layouts/DucolLayout'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, useMediaQuery } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
 import { Form, PageWrapper } from 'common'
 import { Aside } from './components'
@@ -63,10 +63,17 @@ export default function SellNFT() {
     )
   }
 
+  const isTabletResolution = useMediaQuery('(max-width:1024px)')
+
   return (
     <PageWrapper className={classes.wrapper}>
       <Form initialValues={initialData} onSubmit={onSubmit}>
-        <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
+        <DucolLayout
+          aside={<Aside form={form} />}
+          containerSize={'minmax(270px, 554px)'}
+          asideSize={'325px'}
+          gap={isTabletResolution ? 60 : 135}
+        >
           <Box>
             <Typography variant={'h1'} className={classes.formTitle}>
               Sell Artwork

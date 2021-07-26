@@ -16,6 +16,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     containerCardForm: {
       display: 'flex',
       flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'center',
       gap: 20,
     },
     mainTitle: {
