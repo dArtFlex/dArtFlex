@@ -8,8 +8,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridGap: 40,
       alignItems: 'start',
       justifyContent: 'center',
-      gridTemplateRows: 'minmax(100%, auto)',
-      gridTemplateColumns: '777px 1fr',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(900)]: {
+        gridTemplateColumns: 'auto',
+      },
     },
     imageBox: {
       display: 'flex',
