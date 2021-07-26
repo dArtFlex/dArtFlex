@@ -2,10 +2,18 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    mintFormWrapper: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(980)]: {
+        gridTemplateColumns: '1fr',
+      },
+    },
     flexBox: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: theme.spacing(4),
     },
     card: {
       display: 'flex',

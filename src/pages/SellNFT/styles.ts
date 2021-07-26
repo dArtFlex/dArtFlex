@@ -13,6 +13,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(4),
       paddingBottom: theme.spacing(6),
       backgroundColor: theme.palette.background.default,
+      [theme.breakpoints.down(680)]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
     },
     toggleBtnRoot: {
       padding: theme.spacing(6, 0),

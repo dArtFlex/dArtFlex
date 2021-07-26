@@ -30,6 +30,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-start',
       gap: theme.spacing(3),
+      [theme.breakpoints.down(480)]: {
+        flexWrap: 'wrap',
+      },
     },
     uploadBtn: {
       lineHeight: '21.6px',

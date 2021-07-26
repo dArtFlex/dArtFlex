@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
-import { Grid } from 'layouts'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { lazyMintingRequest } from 'stores/reducers/minting'
@@ -39,7 +38,7 @@ export default function Form() {
   const handleViewArtwork = () => history.push(`${routes.artworks}/${lazyMintItemId}`)
 
   return (
-    <Grid columns={2}>
+    <Box className={classes.mintFormWrapper}>
       <Box className={classes.flexBox}>
         <Card className={classes.card}>
           <Box className={classes.cardImageContainer}>
@@ -95,6 +94,6 @@ export default function Form() {
       ) : (
         <ListingForm onViewArtwork={handleViewArtwork} />
       )}
-    </Grid>
+    </Box>
   )
 }

@@ -4,6 +4,9 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       background: 'transparent',
+      [theme.breakpoints.down(360)]: {
+        padding: theme.spacing(6, 0),
+      },
       '& .MuiStepLabel-horizontal': {
         flexDirection: 'column',
         textAlign: 'center',
