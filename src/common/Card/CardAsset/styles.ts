@@ -17,7 +17,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: '242px',
       color: theme.palette.blackMain,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
       '&>img': {
@@ -91,7 +91,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(3.5),
       alignItems: 'center',
       padding: theme.spacing(3),
-      background: theme.palette.background.default,
+      background: theme.palette.white,
       borderRadius: '50% / 100%',
     },
     badgeIcon: {

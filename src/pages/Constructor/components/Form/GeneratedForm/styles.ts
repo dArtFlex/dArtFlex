@@ -20,6 +20,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.grey['500'],
       padding: theme.spacing(20, 3),
       borderRadius: 12,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 2,
+      },
     },
     image: {
       width: 463,
@@ -33,6 +36,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto',
       maxWidth: 325,
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 1,
+      },
     },
     btnBack: {
       alignSelf: 'flex-start',

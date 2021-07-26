@@ -22,12 +22,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['100'],
       borderRadius: theme.spacing(3),
       minHeight: 680,
       '&>img': {
-        maxWidth: '100%',
-        maxHeight: '100%',
+        height: 520,
+        maxWidth: '96%',
         objectFit: 'contain',
       },
     },
@@ -90,6 +90,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     tabContant: {
       overflow: 'auto',
+    },
+    indicator: {
+      backgroundColor: theme.palette.text.primary,
+    },
+    tabSelected: {
+      color: `${theme.palette.text.primary} !important`,
     },
     infoRowIcon: {
       display: 'flex',
