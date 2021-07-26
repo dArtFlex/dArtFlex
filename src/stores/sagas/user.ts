@@ -11,10 +11,14 @@ import {
   getUserAssetsFailure,
   getUserBidsSuccess,
   getUserBidsFailure,
-  setPromotionSuccess,
-  setPromotionFailure,
   getPromotionSuccess,
   getPromotionFailure,
+  addPromotionSuccess,
+  addPromotionFailure,
+  deletePromotionSuccess,
+  deletePromotionFailure,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -27,10 +31,12 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
   IBidsHistory,
+  ISuperAdminEntities,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { getIdFromString } from 'utils'
+import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
@@ -224,15 +230,45 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
   return { ...userBids, imageData: imageData[0], ownerData: userByOwner[0], marketData: marketData[0] }
 }
 
-export function* setPromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: UserStateType['promotionIds'] }>) {
+export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
-    localStorage.setItem('promotionIds', JSON.stringify(payload.promotionIds))
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+    const response: ISuperAdminEntities = yield call(api, {
+      url: APP_CONFIG.addPromotion,
+      method: 'POST',
+      data: {
+        itemId: Number(payload.promotionId),
+        ...signature,
+      },
+    })
+
     const promotionAssets: UserStateType['promotionAssets'] = yield all(
-      payload.promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+      response.id.map((pId: number) => call(getPromotionAssetById, api, pId))
     )
-    yield put(setPromotionSuccess({ promotionAssets, promotionIds: payload.promotionIds }))
+    yield put(addPromotionSuccess({ promotionAssets, promotionIds: response.id }))
   } catch (e) {
-    yield put(setPromotionFailure(e.message || e))
+    yield put(addPromotionFailure(e.message || e))
+  }
+}
+
+export function* deletePromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
+  try {
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+    const response: ISuperAdminEntities = yield call(api, {
+      url: APP_CONFIG.deletePromotion,
+      method: 'POST',
+      data: {
+        itemId: Number(payload.promotionId),
+        ...signature,
+      },
+    })
+
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      response.id.map((pId: number) => call(getPromotionAssetById, api, pId))
+    )
+    yield put(deletePromotionSuccess({ promotionAssets, promotionIds: response.id }))
+  } catch (e) {
+    yield put(deletePromotionFailure(e.message || e))
   }
 }
 
@@ -241,7 +277,7 @@ export function* getPromotion(api: IApi) {
     const promotionIdsData = localStorage.getItem('promotionIds')
     const promotionIds: UserStateType['promotionIds'] = promotionIdsData ? JSON.parse(promotionIdsData) : []
     if (!promotionIds.length) {
-      yield put(setPromotionSuccess({ promotionIds, promotionAssets: [] }))
+      yield put(addPromotionSuccess({ promotionIds, promotionAssets: [] }))
       return
     }
 
@@ -261,7 +297,7 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
     url: APP_CONFIG.getItemByItemId(Number(assetId)),
   })
   const userByOwner: UserDataTypes[] = yield call(api, {
-    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+    url: APP_CONFIG.getUserProfileByUserId(Number(assetById[0].owner)),
   })
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
@@ -271,5 +307,17 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
+  }
+}
+
+export function* getAllUsers(api: IApi) {
+  try {
+    const userAll: UserStateType['userAll'] = yield call(api, {
+      url: APP_CONFIG.getUserAll,
+    })
+
+    yield put(getAllUsersSuccess({ userAll }))
+  } catch (e) {
+    yield put(getAllUsersFailure(e.message || e))
   }
 }

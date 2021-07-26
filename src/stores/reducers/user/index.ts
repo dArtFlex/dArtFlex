@@ -7,6 +7,7 @@ const initialState: UserStateType = {
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
+  search: '',
   error: '',
   user: null,
   fetching: false,
@@ -75,10 +76,10 @@ const userSlice = createSlice({
       state.fetchingBids = false
     },
 
-    setPromotionRequest: (state, i) => {
+    addPromotionRequest: (state, i) => {
       state.fetchingPromo = true
     },
-    setPromotionSuccess: (
+    addPromotionSuccess: (
       state,
       {
         payload,
@@ -91,7 +92,28 @@ const userSlice = createSlice({
       state.promotionAssets = payload.promotionAssets
       state.promotionIds = payload.promotionIds
     },
-    setPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+    addPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
+    },
+
+    deletePromotionRequest: (state, i) => {
+      state.fetchingPromo = true
+    },
+    deletePromotionSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        promotionIds: UserStateType['promotionIds']
+        promotionAssets: UserStateType['promotionAssets']
+      }>
+    ) => {
+      state.fetchingPromo = false
+      state.promotionAssets = payload.promotionAssets
+      state.promotionIds = payload.promotionIds
+    },
+    deletePromotionFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingPromo = false
     },
@@ -116,6 +138,22 @@ const userSlice = createSlice({
       state.error = payload
       state.fetchingPromo = false
     },
+
+    setSearch: (state, { payload }: PayloadAction<string>) => {
+      state.search = payload
+    },
+
+    getAllUsersRequest: (state) => {
+      state.fetching = true
+    },
+    getAllUsersSuccess: (state, { payload }: PayloadAction<{ userAll: UserStateType['userAll'] }>) => {
+      state.fetching = true
+      state.userAll = payload.userAll
+    },
+    getAllUsersFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -137,13 +175,23 @@ export const {
   getUserBidsSuccess,
   getUserBidsFailure,
 
-  setPromotionRequest,
-  setPromotionSuccess,
-  setPromotionFailure,
+  addPromotionRequest,
+  addPromotionSuccess,
+  addPromotionFailure,
 
   getPromotionRequest,
   getPromotionSuccess,
   getPromotionFailure,
+
+  deletePromotionRequest,
+  deletePromotionSuccess,
+  deletePromotionFailure,
+
+  setSearch,
+
+  getAllUsersRequest,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

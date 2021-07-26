@@ -10,6 +10,7 @@ const APP_CONFIG = {
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,
   getMarketplaceAll: `${STAGE_URL}/marketplace/get_all`,
+  getUserAll: `${STAGE_URL}/user/getAll`,
 
   // GET User
   getUserProfileByUserId: (id: number) => `${STAGE_URL}/user/get/${id}`,
@@ -19,12 +20,14 @@ const APP_CONFIG = {
   // GET Asset
   getItemByTokenId: (token_id: number) => `${STAGE_URL}/item/get_by_token_id/${token_id}`,
   getItemByItemId: (id: number) => `${STAGE_URL}/item/get/${id}`,
+  getItemsByOwnerId: (owner_id: number) => `${STAGE_URL}/item/get_by_owner/${owner_id}`,
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
+  getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,
+  getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
-  getItemsByOwnerId: (owner_id: number) => `${STAGE_URL}/item/get_by_owner/${owner_id}`,
 
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,
@@ -37,6 +40,8 @@ const APP_CONFIG = {
   bidListItem: `${STAGE_URL}/bid/list_item`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,
+  addPromotion: `${STAGE_URL}/super_admin/add_promotion`,
+  deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
 } as const
 
 export default APP_CONFIG

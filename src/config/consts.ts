@@ -49,7 +49,6 @@ const appConst = {
   ACTIVE_WALLET_STORAGE: 'active.wallet',
   WALLET_CONNECT_STORAGE: {
     METAMASK: 'metamask.connect',
-    TRUST: 'trust.connect',
   },
   WALLET_CONNECT: 'walletconnect',
 

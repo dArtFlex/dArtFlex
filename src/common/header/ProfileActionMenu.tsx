@@ -7,10 +7,11 @@ interface IProfileActionMenuProps {
   anchor: null | HTMLElement
   setAnchor: (target: null) => void
   isUserSuperAdmin: boolean
+  onDisconnect: () => void
 }
 
 export default function ProfileActionMenu(props: IProfileActionMenuProps) {
-  const { anchor, setAnchor, isUserSuperAdmin } = props
+  const { anchor, setAnchor, isUserSuperAdmin, onDisconnect } = props
   const history = useHistory()
 
   const mainLinks = [
@@ -59,7 +60,7 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Disconnect',
           icon: <DisconnectIcon />,
-          onClick: () => console.log('Disconnect'),
+          onClick: onDisconnect,
         },
       ]}
     />
