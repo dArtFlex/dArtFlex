@@ -61,6 +61,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       lineHeight: 1.3,
       fontWeight: 600,
+      width: 162,
     },
     actionBtnBurn: {
       color: theme.palette.warning.main,
