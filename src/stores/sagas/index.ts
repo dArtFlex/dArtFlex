@@ -12,7 +12,12 @@ import {
   getAllUsersRequest,
 } from '../reducers/user'
 import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
-import { connectMetaMaskRequest, connnectWalletConnectRequest, getTokensBalancesRequest } from '../reducers/wallet'
+import {
+  connectMetaMaskRequest,
+  connnectWalletConnectRequest,
+  getTokensBalancesRequest,
+  walletsDisconetRequest,
+} from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
 import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
@@ -28,7 +33,7 @@ import {
   getAllUsers,
 } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
-import { connectMetaMask, connectWalletConnect, getTokensBalances } from '../sagas/wallet'
+import { connectMetaMask, connectWalletConnect, getTokensBalances, walletsDisconet } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid } from '../sagas/placeBid'
@@ -54,6 +59,7 @@ export default function* root() {
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
+    takeLatest(walletsDisconetRequest, walletsDisconet),
 
     /** Minting **/
     takeLatest(lazyMintingRequest.type, minting, apiMiddleware),

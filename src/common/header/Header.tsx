@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
-import { closeWarningModal } from 'stores/reducers/wallet'
+import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
 import { setSearch } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole } from 'stores/selectors'
 import SearchField from './SearchField'
@@ -48,6 +48,10 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   const handleSearch = (value: string) => {
     dispatch(setSearch(value))
+  }
+
+  const handleDisconnect = () => {
+    dispatch(walletsDisconetRequest())
   }
 
   return (
@@ -151,6 +155,7 @@ export default function Header({ toggleTheme }: HeaderType) {
         anchor={anchorElProfileLink}
         setAnchor={setAnchorElProfileLink}
         isUserSuperAdmin={isUserSuperAdmin}
+        onDisconnect={handleDisconnect}
       />
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>

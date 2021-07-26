@@ -96,6 +96,7 @@ class PlaceBidService {
   async encodeOrder(form, taker) {
     const makeAsset = form.make.assetType
     const takeAsset = form.take.assetType
+
     return {
       data: web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
       dataType: '0x4c234266',
@@ -160,11 +161,17 @@ class PlaceBidService {
   }
 
   async approveToken(wallet) {
-    return await new web3.eth.Contract(STANDART_TOKEN_ABI, '0x2fce8435f0455edc702199741411dbcd1b7606ca').methods
-      .approve(AUCTION_CONTRACT_ADDRESS, appConst.APPROVE_AMOUNT)
+    return await new web3.eth.Contract(STANDART_TOKEN_ABI, '0xc778417E063141139Fce010982780140Aa0cD5Ab').methods
+      .approve('0x2fce8435f0455edc702199741411dbcd1b7606ca', appConst.APPROVE_AMOUNT) // Todo: This address should be defined and need to dicuss with solidity dev.
       .send({
         from: wallet,
       })
+  }
+
+  async checkAllowance(wallet, token, contractAddress) {
+    const tokenContract = new web3.eth.Contract(human_standard_token_abi, token)
+    const tokenResp = await tokenContract.methods.allowance(wallet, contractAddress).call()
+    return Number(tokenResp) > 0
   }
 }
 

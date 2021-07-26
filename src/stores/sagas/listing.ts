@@ -109,21 +109,6 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       },
     })
 
-    // Push bid to list item with bids
-    // const bidListItemId = yield call(api, {
-    //   url: APP_CONFIG.bidListItem,
-    //   method: 'POST',
-    //   data: {
-    //     itemId: lazyMintItemId,
-    //     orderId: getIdFromString(orderId),
-    //     userId,
-    //     bidAmount: startPrice,
-    //     marketId: getIdFromString(marketId),
-    //     // 0x only ETH
-    //     bidContract: tokenContract,
-    //   },
-    // })
-
     yield put(
       listingSuccess({
         orderId: getIdFromString(orderId),
