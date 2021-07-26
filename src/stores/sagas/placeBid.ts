@@ -7,6 +7,8 @@ import {
   placeBidFailure,
   getBidsHistoryFailure,
   getBidsHistorySuccess,
+  acceptBidSuccess,
+  acceptBidFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 // import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
@@ -16,6 +18,7 @@ import { acceptBidService } from 'services/accept_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
+import { UserDataTypes, IAcceptBidTransaction } from 'types'
 
 // const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 
@@ -28,11 +31,18 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     const accounts = walletService.getAccoutns()
     const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
 
+    // Todo: Should only be once, so we need to check if it's approved
+    yield placeBidService.approveToken(accounts[0])
+
+    const tokenCreatorData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
+    })
+
     const order = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
         tokenId: tokenData.token_id,
-        maker: accounts[0],
+        maker: tokenCreatorData[0].wallet,
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,
@@ -87,7 +97,12 @@ export function* getBidsHistory(api: IApi) {
       url: APP_CONFIG.getHistoryNFT(+marketData.item_id),
     })
 
-    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.from)))
+    const userData: UserDataTypes[] = yield all(
+      getHistory.map((h) => {
+        const userDataId = h.from !== '0' ? h.from : h.to
+        return call(getUserDataById, api, userDataId)
+      })
+    )
     const composeData = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
 
     yield put(getBidsHistorySuccess(composeData))
@@ -104,16 +119,14 @@ export function* acceptBid(
     const marketData = yield call(api, {
       url: 'https://dartflex-dev.ml:8887/api/bid/get_by_market/' + payload.market_id,
     })
-
     const creatorOrder = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
     })
     const buyerOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[1].order_id), // should be the last element of array
+      url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
     })
 
-    yield acceptBidService.performMint(creatorOrder, buyerOrder)
-
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
@@ -121,7 +134,8 @@ export function* acceptBid(
         id: payload.buyerId,
       },
     })
+    yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
-    throw new Error(e.message || e)
+    yield put(acceptBidFailure(e.message || e))
   }
 }

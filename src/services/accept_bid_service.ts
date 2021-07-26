@@ -49,11 +49,12 @@ class AcceptBidService {
     )
 
     const chainId: IChainId = walletService.getChainId()
+    const chaingIdNumber = chainId.match(/^0x(.+)/)
     return await this.web3.eth.sendTransaction({
       data: invocation.encodeABI(),
       to: AUCTION_CONTRACT_ADDRESS,
       from: creator.maker,
-      chainId,
+      chainId: chaingIdNumber ? +chaingIdNumber[1] : 4, // Default network Rinkeby
       gasPrice: '6000000000',
       gas: '10000000',
       // only for WETH
