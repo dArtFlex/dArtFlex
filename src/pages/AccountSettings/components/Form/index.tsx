@@ -40,12 +40,14 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
           photoUrl={user?.profile_image}
+          variant="avatar"
         />
         <UploadFileSection
           name="cover_image"
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
+          photoUrl={user?.cover_image}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field

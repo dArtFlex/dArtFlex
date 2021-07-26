@@ -52,6 +52,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       objectFit: 'cover',
       borderRadius: 4,
       alignSelf: 'flex-start',
+      backgroundColor: theme.palette.grey['50'],
     },
   })
 )
