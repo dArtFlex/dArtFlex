@@ -5,6 +5,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     container: {
       background: theme.palette.grey['50'],
       paddingBottom: theme.spacing(16),
+      [theme.breakpoints.down(641)]: {
+        padding: theme.spacing(4),
+      },
     },
     selectBackgroundColor: {
       background: theme.palette.background.paper,

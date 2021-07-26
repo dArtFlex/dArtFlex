@@ -9,6 +9,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'space-between',
       position: 'relative',
+      [theme.breakpoints.down(640)]: {
+        minWidth: 'unset',
+        width: '90vw',
+      },
     },
     card: {
       display: 'flex',
@@ -42,9 +46,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 20px',
+      padding: theme.spacing(4, 5),
       background: theme.palette.accentGradient,
       color: theme.palette.white,
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(4, 3),
+      },
     },
     cardActionNotMet: {
       background: 'transparent',

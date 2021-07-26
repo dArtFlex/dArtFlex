@@ -4,8 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     logo: {
       marginRight: theme.spacing(16),
-      [theme.breakpoints.down(760)]: {
-        marginRight: theme.spacing(8),
+      [theme.breakpoints.down(840)]: {
+        marginRight: theme.spacing(4),
       },
     },
     mobileToolBar: {
@@ -25,6 +25,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(4),
       border: `1px solid ${theme.palette.greyMid}`,
     },
+    rightBlock: {
+      marginLeft: 'auto',
+    },
     toolbar: {
       backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.grey['100']}`,
@@ -32,6 +35,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     navTabs: {
       padding: theme.spacing(5, 0),
       color: `${theme.palette.text.primary} !important`,
+      [theme.breakpoints.down(740)]: {
+        padding: theme.spacing(2, 0),
+      },
     },
     navTabsMobile: {
       fontSize: 30,
@@ -53,12 +59,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3, 0),
       '&>button+button': {
         marginLeft: theme.spacing(4),
+        [theme.breakpoints.down(780)]: {
+          marginLeft: theme.spacing(2),
+        },
       },
     },
     buttonWallet: {
       borderColor: theme.palette.grey['200'],
       backgroundColor: theme.palette.background.default,
       color: theme.palette.primary.contrastText,
+      [theme.breakpoints.down(690)]: {
+        padding: theme.spacing(2, 3),
+      },
     },
     notification: {
       margin: theme.spacing(0, 6),
@@ -82,6 +94,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `2px solid ${theme.palette.white}`,
       top: 5,
       right: 3,
+    },
+    notificationButton: {
+      [theme.breakpoints.down(690)]: {
+        marginRight: theme.spacing(2),
+        padding: theme.spacing(2),
+      },
     },
     notificationCard: {
       minWidth: 428,
@@ -123,6 +141,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     createButton: {
       border: `2px solid ${theme.palette.grey.A100}`,
+      [theme.breakpoints.down(741)]: {
+        padding: theme.spacing(2),
+      },
     },
     mobileMenuWrapper: {
       zIndex: 1100,
@@ -135,18 +156,42 @@ export const useStyles = makeStyles((theme: Theme) =>
     mobileMenuUserInfo: {
       width: '100vw',
       height: '100vh',
-      padding: theme.spacing(6, 4, 6, 6),
+      borderRadius: 'unset',
     },
     mobileMenuActionButtons: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
     },
+    mobileUserStatsWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(6, 4, 6, 6),
+      borderBottom: `1px solid ${theme.palette.grey['200']}`,
+    },
+    mobileActionButtonsWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.palette.grey['200']}`,
+    },
+    profileTabsWrapper: {
+      padding: theme.spacing(4, 0),
+      width: '100%',
+    },
+    bidsCount: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.white,
+      borderRadius: '100%',
+      marginLeft: theme.spacing(3),
+      minWidth: 24,
+      textAlign: 'center',
+    },
     navTabsBlock: {
       marginTop: theme.spacing(24),
       marginLeft: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
     },
     mobileMenuProfileButtons: {
       marginTop: theme.spacing(20),

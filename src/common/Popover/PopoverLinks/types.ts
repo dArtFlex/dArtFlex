@@ -1,10 +1,11 @@
 export interface IPopoverLinksProps {
-  anchor: HTMLElement | null
-  setAnchor: (target: null) => void
+  anchor?: HTMLElement | null
+  setAnchor?: (target: null) => void
   links: ILinks[]
   subLinks?: ILinks[]
   title?: JSX.Element | null
   subTitle?: JSX.Element | null
+  isMobile?: boolean
 }
 
 export interface ILinks {
@@ -15,4 +16,5 @@ export interface ILinks {
 
 export interface IButtonLink extends ILinks {
   subLinks?: boolean
+  isMobile?: boolean
 }

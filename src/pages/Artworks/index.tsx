@@ -136,7 +136,7 @@ export default function Artworks() {
       <Box>
         <Typography variant={'h1'}>Artworks</Typography>
         <Promotions artworks={promotionMultiply} />
-        <Box mt={4} mb={6} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+        <Box className={classes.sortButtons}>
           <Box style={{ minWidth: '180px' }}>
             <FormControl variant="outlined" color={'primary'}>
               <MUISelect
@@ -178,6 +178,7 @@ export default function Artworks() {
                   value={value}
                   selected={filter === value}
                   classes={{ selected: classes.toggleButtonSelected }}
+                  className={classes.toggleButton}
                 >
                   {label}
                 </ToggleButton>

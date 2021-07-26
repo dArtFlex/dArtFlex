@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(768)]: {
         margin: theme.spacing(10, 0),
       },
+      [theme.breakpoints.down(640)]: {
+        width: 280,
+      },
     },
     box: {
       maxWidth: 370,

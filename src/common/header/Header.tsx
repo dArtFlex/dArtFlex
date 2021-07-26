@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import {
   AppBar,
@@ -39,10 +39,18 @@ import {
   SearchIcon,
   BurgerMenuIcon,
   CloseIcon,
+  ManIcon,
+  ListIcon,
+  BidsIcon,
+  SellIcon,
+  SettingsIcon,
+  ContentIcon,
+  DisconnectIcon,
 } from 'common/icons'
 import { HeaderType } from './types'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import clsx from 'clsx'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -62,10 +70,57 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [isSearchFieldOpen, setSearchFieldOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
+  const history = useHistory()
+
+  const mainLinks = [
+    {
+      lable: 'Dashboard',
+      icon: <ManIcon />,
+      onClick: () => history.push(routes.dashboard),
+    },
+    {
+      lable: 'Trading History',
+      icon: <ListIcon />,
+      onClick: () => history.push(routes.tradingHistory),
+    },
+    {
+      lable: 'My Bids',
+      icon: <BidsIcon />,
+      onClick: () => history.push(routes.bids),
+    },
+    {
+      lable: 'My Sales',
+      icon: <SellIcon />,
+      onClick: () => history.push(routes.sales),
+    },
+    {
+      lable: 'Account Settings',
+      icon: <SettingsIcon />,
+      onClick: () => history.push(routes.artworkAccountSettings),
+    },
+  ]
+
+  const adminLinks = [
+    {
+      lable: 'Management',
+      icon: <ContentIcon />,
+      onClick: () => history.push(routes.contentManagement),
+    },
+  ]
+
+  const subLinks = [
+    {
+      lable: 'Disconnect',
+      icon: <DisconnectIcon />,
+      onClick: () => console.log('Disconnect'),
+    },
+  ]
+
+  const combineLinks = isUserSuperAdmin ? [...mainLinks, ...adminLinks] : mainLinks
 
   const [open, setOpen] = useState<boolean>(false)
 
-  const isMobile = useMediaQuery('(max-width: 740px)')
+  const isMobile = useMediaQuery('(max-width: 680px)')
 
   const MenuItems = [
     {
@@ -87,72 +142,83 @@ export default function Header({ toggleTheme }: HeaderType) {
       <AppBar position="static" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} />
-            {isMobile ? (
-                <Box className={classes.mobileToolBar}>
-                    <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                        <SmileyFaceIcon />
-                    </IconButton>
-                    <IconButton className={classes.borderedIcon}>
-                        <SearchIcon />
-                    </IconButton>
-                    <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                        <BurgerMenuIcon />
-                    </IconButton>
-                </Box>
-            ) : (
+          {isMobile ? (
+            <Box className={classes.mobileToolBar}>
+              {isSearchFieldOpen ? (
+                <SearchField onSearch={handleSearch} isMobile={isMobile} setSearchFieldOpen={setSearchFieldOpen} />
+              ) : (
                 <>
-          <Tabs
-            aria-label="navigation"
-            value={pathname !== routes.blog ? 0 : 1}
-            className={classes.navTabsContainer}
-            classes={{ indicator: classes.indicator }}
-          >
-            {MenuItems.map(({ title, to }) => (
-              <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
-            ))}
-          </Tabs>
-          <Box className={classes.buttonContainer}>
-            {Boolean(bids.length) && (
-              <Chip avatar={`${bids.length}`} endIcon>
-                Bids
-              </Chip>
-            )}
-            <SearchField onSearch={handleSearch} />
-            <Button
-              onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                const target = event.currentTarget as HTMLElement
-                setAnchorElCreateLink(target)
-              }}
-              variant={'outlined'}
-              disableElevation
-              classes={{ root: classes.createButton }}
-              endIcon={<CurrentDownIcon />}
-            >
-              Create
-            </Button>
-            {wallet === null ? (
-              <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
-                Connect wallet
-              </Button>
-            ) : (
-              <>
-                <IconButton
-                  aria-label="notification"
+                  {wallet !== null && (
+                    <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
+                      <SmileyFaceIcon />
+                    </IconButton>
+                  )}
+
+                  <IconButton className={classes.borderedIcon} onClick={() => setSearchFieldOpen(true)}>
+                    <SearchIcon />
+                  </IconButton>
+                </>
+              )}
+
+              <IconButton className={classes.borderedIcon} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                <BurgerMenuIcon />
+              </IconButton>
+            </Box>
+          ) : (
+            <>
+              <Tabs
+                aria-label="navigation"
+                value={pathname !== routes.blog ? 0 : 1}
+                className={classes.navTabsContainer}
+                classes={{ indicator: classes.indicator }}
+              >
+                {MenuItems.map(({ title, to }) => (
+                  <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
+                ))}
+              </Tabs>
+              <Box className={classes.buttonContainer}>
+                {Boolean(bids.length) && (
+                  <Chip avatar={`${bids.length}`} endIcon>
+                    Bids
+                  </Chip>
+                )}
+                <SearchField onSearch={handleSearch} />
+                <Button
                   onClick={(event: React.SyntheticEvent<EventTarget>) => {
                     const target = event.currentTarget as HTMLElement
-                    setAnchorElNotification(target)
+                    setAnchorElCreateLink(target)
                   }}
+                  variant={'outlined'}
+                  disableElevation
+                  classes={{ root: classes.createButton }}
+                  endIcon={<CurrentDownIcon />}
                 >
-                  <Badge
-                    color={'primary'}
-                    variant="dot"
-                    invisible={false}
-                    className={classes.notification}
-                    classes={{ badge: classes.notificationBadge }}
-                  >
-                    <BellIcon className={classes.notificationIcon} />
-                  </Badge>
-                </IconButton>
+                  Create
+                </Button>
+                {wallet === null ? (
+                  <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
+                    Connect wallet
+                  </Button>
+                ) : (
+                  <>
+                    <IconButton
+                      aria-label="notification"
+                      onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                        const target = event.currentTarget as HTMLElement
+                        setAnchorElNotification(target)
+                      }}
+                      className={classes.notificationButton}
+                    >
+                      <Badge
+                        color={'primary'}
+                        variant="dot"
+                        invisible={false}
+                        className={classes.notification}
+                        classes={{ badge: classes.notificationBadge }}
+                      >
+                        <BellIcon className={classes.notificationIcon} />
+                      </Badge>
+                    </IconButton>
 
                     <Button
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
@@ -249,14 +315,41 @@ export default function Header({ toggleTheme }: HeaderType) {
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={600}>
               <Paper className={classes.mobileMenuUserInfo}>
-                <Box className={classes.mobileMenuActionButtons}>
+                <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
                     <SmileyFaceIcon />
                   </Icon>
                   <Typography>2.435 ETH</Typography>
+                  <IconButton
+                    aria-label="notification"
+                    // onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    //   const target = event.currentTarget as HTMLElement
+                    //   setAnchorElNotification(target)
+                    // }}
+                    className={clsx(classes.rightBlock, classes.borderedIcon)}
+                  >
+                    <Badge
+                      color={'primary'}
+                      variant="dot"
+                      invisible={false}
+                      className={classes.notification}
+                      classes={{ badge: classes.notificationBadge }}
+                    >
+                      <BellIcon className={classes.notificationIcon} />
+                    </Badge>
+                  </IconButton>
                   <IconButton className={classes.borderedIcon} onClick={() => setIsMobileUserStatsOpen(false)}>
                     <CloseIcon />
                   </IconButton>
+                </Box>
+                <Box className={classes.mobileUserStatsWrapper}>
+                  <Typography variant={'h4'}>Bids</Typography>
+                  <Box className={classes.bidsCount}>1</Box>
+                </Box>
+                <Box className={classes.mobileActionButtonsWrapper}>
+                  <Box className={classes.profileTabsWrapper}>
+                    <ProfileActionMenu isMobile={isMobile} links={combineLinks} subLinks={subLinks} />
+                  </Box>
                 </Box>
               </Paper>
             </Fade>
@@ -267,7 +360,8 @@ export default function Header({ toggleTheme }: HeaderType) {
       <ProfileActionMenu
         anchor={anchorElProfileLink}
         setAnchor={setAnchorElProfileLink}
-        isUserSuperAdmin={isUserSuperAdmin}
+        links={combineLinks}
+        subLinks={subLinks}
       />
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>

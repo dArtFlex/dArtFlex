@@ -4,20 +4,23 @@ import { Box, Grid, Button, Divider } from '@material-ui/core'
 import Popover from '../Popover'
 import { IPopoverLinksProps, IButtonLink } from './types'
 import { useStyles } from './styles'
+import { BidsIcon, ContentIcon, DisconnectIcon, ListIcon, ManIcon, SellIcon, SettingsIcon } from '../../icons'
+import routes from '../../../routes'
+import { useHistory } from 'react-router-dom'
 
 export default function PopoverLinks(props: IPopoverLinksProps) {
   const classes = useStyles()
-  const { anchor, setAnchor, links, subLinks = [], title = null, subTitle = null } = props
+  const { anchor, setAnchor, title = null, subTitle = null, isMobile, links, subLinks } = props
 
   const ButtonLink = (props: IButtonLink) => {
-    const { onClick, lable, icon = null, subLinks } = props
+    const { onClick, lable, icon = null, subLinks, isMobile } = props
     return (
       <Button
         key={lable}
         onClick={onClick}
         variant={'text'}
         disableElevation
-        className={clsx(classes.btnTitle, subLinks && classes.btnSubTitle)}
+        className={clsx(isMobile ? classes.btnTitleMobile : classes.btnTitle, subLinks && classes.btnSubTitle)}
         startIcon={icon}
       >
         {lable}
@@ -26,22 +29,41 @@ export default function PopoverLinks(props: IPopoverLinksProps) {
   }
 
   return (
-    <Popover anchorEl={anchor} onClose={() => setAnchor(null)} className={classes.externalLinkMenuWrapper}>
-      <Box className={classes.externalLinkMenu}>
-        {title}
-        <Grid container direction="column">
-          {links.map((props, i) => (
-            <ButtonLink key={i} {...props} />
-          ))}
-        </Grid>
-        <Divider />
-        {subTitle}
-        <Grid container direction="column">
-          {subLinks.map((props, i) => (
-            <ButtonLink key={i} {...props} subLinks />
-          ))}
-        </Grid>
-      </Box>
-    </Popover>
+    <>
+      {!isMobile ? (
+        <Popover anchorEl={anchor} onClose={() => setAnchor!(null)} className={classes.externalLinkMenuWrapper}>
+          <Box className={classes.externalLinkMenu}>
+            {title}
+            <Grid container direction="column">
+              {links.map((props, i) => (
+                <ButtonLink key={i} {...props} />
+              ))}
+            </Grid>
+            <Divider />
+            {subTitle}
+            <Grid container direction="column">
+              {subLinks?.map((props, i) => (
+                <ButtonLink key={i} {...props} subLinks />
+              ))}
+            </Grid>
+          </Box>
+        </Popover>
+      ) : (
+        <>
+          <Grid container direction="column" className={classes.mobileButtonWrapper}>
+            {links.map((props, i) => (
+              <ButtonLink key={i} {...props} isMobile={isMobile} />
+            ))}
+          </Grid>
+          <Divider />
+          {subTitle}
+          <Grid container direction="column" className={classes.mobileButtonWrapper}>
+            {subLinks?.map((props, i) => (
+              <ButtonLink key={i} {...props} subLinks isMobile />
+            ))}
+          </Grid>
+        </>
+      )}
+    </>
   )
 }

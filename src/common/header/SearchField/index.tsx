@@ -1,9 +1,17 @@
-import React from 'react'
-import { Icon, TextField } from '@material-ui/core'
-import { SearchIcon } from 'common/icons'
+import React, { Dispatch, SetStateAction } from 'react'
+import { Icon, IconButton, TextField } from '@material-ui/core'
+import { CloseIcon, SearchIcon } from 'common/icons'
 import { useStyles } from './styles'
 
-export default function SearchField({ onSearch }: { onSearch: (value: string) => void }) {
+export default function SearchField({
+  onSearch,
+  isMobile,
+  setSearchFieldOpen,
+}: {
+  onSearch: (value: string) => void
+  isMobile?: boolean
+  setSearchFieldOpen?: Dispatch<SetStateAction<boolean>>
+}) {
   const classes = useStyles()
 
   return (
@@ -20,9 +28,17 @@ export default function SearchField({ onSearch }: { onSearch: (value: string) =>
           notchedOutline: classes.inputWrapper,
         },
         startAdornment: (
-          <Icon className={classes.searchIcon}>
-            <SearchIcon />
-          </Icon>
+          <>
+            {isMobile ? (
+              <Icon className={classes.searchIcon} onClick={() => setSearchFieldOpen!(false)}>
+                <CloseIcon />
+              </Icon>
+            ) : (
+              <Icon className={classes.searchIcon}>
+                <SearchIcon />
+              </Icon>
+            )}
+          </>
         ),
       }}
     />

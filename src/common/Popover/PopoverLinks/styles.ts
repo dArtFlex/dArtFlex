@@ -13,6 +13,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+    mobileButtonWrapper: {
+      padding: theme.spacing(6),
+    },
     externalLinkMenuItem: {
       paddingLeft: theme.spacing(8),
       paddingRight: theme.spacing(8),
@@ -22,6 +25,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnTitle: {
       padding: theme.spacing(3, 8),
+      minWidth: 'auto',
+      justifyContent: 'flex-start',
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: theme.palette.text.primary,
+      borderRadius: 'unset',
+    },
+    btnTitleMobile: {
+      padding: theme.spacing(4, 0),
       minWidth: 'auto',
       justifyContent: 'flex-start',
       fontSize: 16,

@@ -5,6 +5,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     wrapper: {
       flex: '1 1 auto',
       backgroundColor: theme.palette.grey['50'],
+      [theme.breakpoints.down(640)]: {
+        padding: theme.spacing(4),
+      },
     },
     menuTitle: {
       padding: theme.spacing(2, 4, 2, 7.5),
@@ -24,6 +27,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     customFiltersContainer: {
       whiteSpace: 'nowrap',
       flexWrap: 'wrap',
+      rowGap: 10,
     },
     hashTagContainer: {
       flex: '1 1 auto',
@@ -35,8 +39,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     hotOnlyBtn: {
       marginLeft: theme.spacing(11),
-      [theme.breakpoints.between(320, 1025)]: {
+      [theme.breakpoints.between(461, 1025)]: {
         marginLeft: 'auto',
+      },
+      [theme.breakpoints.down(461)]: {
+        marginLeft: 0,
       },
     },
     hashTagBtn: {
@@ -63,6 +70,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       borderRadius: 12,
       width: 120,
+      [theme.breakpoints.down(425)]: {
+        width: 100,
+      },
     },
     priceInputBorder: {
       border: `1px solid ${theme.palette.grey['200']}`,
@@ -200,11 +210,29 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:focus': {
         backgroundColor: theme.palette.background.paper,
       },
+      [theme.breakpoints.down(560)]: {
+        overflow: 'scroll',
+      },
+    },
+    sortButtons: {
+      margin: theme.spacing(4, 0, 6, 0),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: 10,
     },
     toggleButtonSelected: {
       backgroundColor: `${theme.palette.text.primary} !important`,
       color: `${theme.palette.background.paper} !important`,
     },
+    toggleButton: {
+      whiteSpace: 'nowrap',
+      [theme.breakpoints.down(680)]: {
+        padding: theme.spacing(1, 2),
+      },
+    },
+
     sortItem: {
       '&:hover': {
         backgroundColor: theme.palette.type === 'dark' && theme.palette.blackDark,

@@ -8,10 +8,19 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(768)]: {
         padding: theme.spacing(2, 6),
       },
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(2),
+      },
     },
     toggleButton: {
       [theme.breakpoints.down(768)]: {
         padding: theme.spacing(2),
+      },
+      [theme.breakpoints.down(640)]: {
+        width: '25%',
+      },
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(1),
       },
     },
     linkIcon: {
@@ -32,6 +41,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiToggleButton-root.Mui-selected': {
         backgroundColor: theme.palette.text.primary,
         color: theme.palette.background.paper,
+      },
+      [theme.breakpoints.down(640)]: {
+        width: '100%',
       },
     },
     inlineFlex: {

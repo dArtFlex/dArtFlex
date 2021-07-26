@@ -10,6 +10,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     container: {
       display: 'flex',
       gap: theme.spacing(5),
+      [theme.breakpoints.down(640)]: {
+        flexDirection: 'column',
+      },
     },
     aside: {
       maxWidth: 325,
