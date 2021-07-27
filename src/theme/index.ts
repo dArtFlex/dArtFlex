@@ -56,6 +56,9 @@ const lightPalette = {
     main: palette.greyLight,
     light: PrimaryLight,
   },
+  info: {
+    main: PrimaryMain,
+  },
   warning: { main: '#FF5C00', light: PrimaryLight },
   success: { main: palette.yellowLight },
   text: { primary: TextPrimary, secondary: palette.greyDark },
@@ -85,6 +88,9 @@ const DarkPalette = {
   secondary: {
     main: palette.white,
     light: PrimaryLight,
+  },
+  info: {
+    main: palette.lightViolet,
   },
   text: { primary: '#fff', secondary: palette.greyMid },
   background: {

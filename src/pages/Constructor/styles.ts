@@ -8,6 +8,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       padding: theme.spacing(8),
+      [theme.breakpoints.down(480)]: {
+        padding: theme.spacing(4),
+      },
     },
     clear: {
       background: 'transparent',

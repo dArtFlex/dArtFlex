@@ -29,6 +29,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: 463,
       borderRadius: 12,
       objectFit: 'cover',
+      [theme.breakpoints.down(640)]: {
+        width: '90vw',
+        height: '90vw',
+      },
     },
     genetatedForm: {
       display: 'flex',
@@ -59,6 +63,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       gap: 20,
+      [theme.breakpoints.down(480)]: {
+        gap: 8,
+      },
     },
     btnSecondary: {
       maxWidth: 153,
@@ -66,6 +73,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `2px solid ${theme.palette.text.primary}`,
       padding: theme.spacing(3.5),
       whiteSpace: 'nowrap',
+      [theme.breakpoints.down(480)]: {
+        maxWidth: 142,
+        padding: theme.spacing(2),
+      },
     },
   })
 )

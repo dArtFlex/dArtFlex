@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { Box, Typography, Divider } from '@material-ui/core'
+import { Box, Typography, Divider, useMediaQuery } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
 import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
 import { daysInMonth } from 'utils'
+import clsx from 'clsx'
 
 const {
   SCHEDULE: { DAYS5, DAYS3, WEEK, MONTH, SPECIFIC, NEVER },
@@ -59,6 +60,8 @@ export default function SetPriceForm() {
         return setFieldValue('startDate', new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * days))
     }
   }, [values.futureTime])
+
+  const isMobile = useMediaQuery('(max-width: 480px)')
 
   return (
     <>
@@ -147,15 +150,15 @@ export default function SetPriceForm() {
             You can schedule this listing to only be buyable at a future date
           </Typography>
           {values.isFutureTime && (
-            <Box pt={6} className={classes.flexBox}>
+            <Box pt={6} className={clsx(classes.flexBox, classes.flexContent)}>
               <Field
                 type="select"
                 options={schedule}
                 name="futureTime"
-                fullWidth={false}
+                fullWidth={isMobile}
                 className={classes.switcher}
               />
-              {values.futureTime === SPECIFIC && <Field type="pickerTime" name="startDate" fullWidth={false} />}
+              {values.futureTime === SPECIFIC && <Field type="pickerTime" name="startDate" fullWidth={isMobile} />}
             </Box>
           )}
         </>

@@ -6,6 +6,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       minWidth: 322,
       minHeight: 322,
+      [theme.breakpoints.down(480)]: {
+        minWidth: 300,
+        minHeight: 300,
+      },
     },
     image: {
       width: '100%',

@@ -15,6 +15,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         cursor: 'pointer',
         backgroundColor: 'rgba(34, 42, 44, 0.05)',
       },
+      [theme.breakpoints.down(480)]: {
+        minWidth: 310,
+        minHeight: 314,
+      },
     },
   })
 )

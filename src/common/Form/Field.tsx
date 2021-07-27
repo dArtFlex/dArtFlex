@@ -28,6 +28,8 @@ export type IFieldProps = IFormSelectProps &
 export default function Field(props: IFieldProps) {
   const { name, type, ...rest } = props
 
+  console.log(rest)
+
   return (
     <FormikField key={name} name={name}>
       {({ form, field }: FieldRenderProps) => {

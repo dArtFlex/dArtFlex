@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, IconButton, Paper, TextField, Typography } from '@material-ui/core'
+import { Box, IconButton, Paper, TextField, Typography, useMediaQuery } from '@material-ui/core'
 import { CheckedIcon, CloseIcon, DragIcon, EditIcon, TrashIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import { INFTCard } from '../types'
@@ -8,6 +8,8 @@ export default function NFTCard(props: INFTCard) {
   const classes = useStyles()
 
   const [isEdit, setIsEdit] = useState(false)
+
+  const isMobile = useMediaQuery('(max-width: 460px)')
 
   return (
     <Box mt={4}>

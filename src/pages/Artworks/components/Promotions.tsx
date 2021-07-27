@@ -9,6 +9,7 @@ import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Pagination, Navigation } from 'swiper/core'
 import { normalizeDate } from 'utils'
+import clsx from 'clsx'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -56,7 +57,7 @@ export default function Promotions(props: IPromotion) {
                       {!timeExpired ? (
                         <Timer
                           endDate={normalizeDate(`${item.endDate}`).getTime()}
-                          className={classes.promotionInfoText}
+                          className={clsx(classes.promotionInfoText, classes.promotionTimer)}
                         />
                       ) : null}
                     </Box>

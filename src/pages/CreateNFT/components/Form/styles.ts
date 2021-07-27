@@ -72,6 +72,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 478,
       padding: theme.spacing(8, 13),
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(480)]: {
+        padding: theme.spacing(4, 6),
+      },
     },
     confirming: {
       maxWidth: 325,

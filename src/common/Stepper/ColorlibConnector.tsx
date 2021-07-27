@@ -5,8 +5,11 @@ export const ColorlibConnector = withStyles({
   alternativeLabel: {
     top: 10,
     left: '-50%',
-    '@media(max-width:640px)': {
+    '@media(max-width:680px)': {
       left: '-70%',
+    },
+    '@media(max-width:560px)': {
+      left: '-90%',
     },
     '@media(max-width:520px)': {
       left: '-110%',
@@ -14,8 +17,14 @@ export const ColorlibConnector = withStyles({
     '@media(max-width:480px)': {
       left: '-130%',
     },
-    '@media(max-width:400px)': {
+    '@media(max-width:440px)': {
       left: '-150%',
+    },
+    '@media(max-width:410px)': {
+      left: '-160%',
+    },
+    '@media(max-width:380px)': {
+      left: '-155wv',
     },
     right: '50%',
   },

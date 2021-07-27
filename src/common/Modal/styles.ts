@@ -14,6 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       minHeight: 424,
       backgroundColor: theme.palette.background.paper,
       borderRadius: theme.spacing(3),
+      outline: 'none',
     },
     aside: {
       height: 424,

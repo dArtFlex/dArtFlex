@@ -94,7 +94,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     grid: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(322px, 1fr))',
     },
     promotionBox: {
       display: 'flex',
@@ -162,6 +162,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 700,
       minWidth: 190,
       marginTop: theme.spacing(3),
+    },
+    promotionTimer: {
+      backgroundColor: theme.palette.background.paper,
     },
     promotionInfo: {
       display: 'grid',

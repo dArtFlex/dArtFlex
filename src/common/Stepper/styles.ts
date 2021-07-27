@@ -34,5 +34,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       background: theme.palette.background.default,
     },
+    step: {
+      [theme.breakpoints.down(320)]: {
+        paddingLeft: 0,
+      },
+    },
   })
 )
