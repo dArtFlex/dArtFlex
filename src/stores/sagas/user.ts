@@ -31,7 +31,8 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
   IBidsHistory,
-  ISuperAdminEntities,
+  IAddPromotionEntities,
+  IPromotionId,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
@@ -232,8 +233,9 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
+    debugger
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
-    const response: ISuperAdminEntities = yield call(api, {
+    const promotionData: IAddPromotionEntities = yield call(api, {
       url: APP_CONFIG.addPromotion,
       method: 'POST',
       data: {
@@ -241,32 +243,27 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
         ...signature,
       },
     })
-
-    const promotionAssets: UserStateType['promotionAssets'] = yield all(
-      response.id.map((pId: number) => call(getPromotionAssetById, api, pId))
-    )
-    yield put(addPromotionSuccess({ promotionAssets, promotionIds: response.id }))
+    yield put(addPromotionSuccess({ promotionIdLastAdded: promotionData.id[0] }))
   } catch (e) {
     yield put(addPromotionFailure(e.message || e))
   }
 }
 
-export function* deletePromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
+export function* deletePromotion(
+  api: IApi,
+  { payload }: PayloadAction<{ promotionItemId: number; promotionId: number }>
+) {
   try {
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
-    const response: ISuperAdminEntities = yield call(api, {
+    yield call(api, {
       url: APP_CONFIG.deletePromotion,
       method: 'POST',
       data: {
-        itemId: Number(payload.promotionId),
+        itemId: Number(payload.promotionItemId),
         ...signature,
       },
     })
-
-    const promotionAssets: UserStateType['promotionAssets'] = yield all(
-      response.id.map((pId: number) => call(getPromotionAssetById, api, pId))
-    )
-    yield put(deletePromotionSuccess({ promotionAssets, promotionIds: response.id }))
+    yield put(deletePromotionSuccess({ promotionIdLastDelete: payload.promotionId }))
   } catch (e) {
     yield put(deletePromotionFailure(e.message || e))
   }
@@ -274,15 +271,9 @@ export function* deletePromotion(api: IApi, { payload }: PayloadAction<{ promoti
 
 export function* getPromotion(api: IApi) {
   try {
-    const promotionIdsData = localStorage.getItem('promotionIds')
-    const promotionIds: UserStateType['promotionIds'] = promotionIdsData ? JSON.parse(promotionIdsData) : []
-    if (!promotionIds.length) {
-      yield put(addPromotionSuccess({ promotionIds, promotionAssets: [] }))
-      return
-    }
-
+    const promotionIds: UserStateType['promotionIds'] = yield call(api, { url: APP_CONFIG.getPromotionAll })
     const promotionAssets: UserStateType['promotionAssets'] = yield all(
-      promotionIds.map((pId: number) => call(getPromotionAssetById, api, pId))
+      promotionIds.map((promo: IPromotionId) => call(getPromotionAssetById, api, Number(promo.item_id)))
     )
 
     yield put(getPromotionSuccess({ promotionAssets, promotionIds }))

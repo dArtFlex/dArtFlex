@@ -26,7 +26,14 @@ interface ISocial {
 
 export type IUserRole = 'ROLE_SUPER_ADMIN' | 'ROLE_COMMON'
 
-export interface ISuperAdminEntities {
+export interface IAddPromotionEntities {
   message: string
   id: number[]
+}
+
+export interface IPromotionId {
+  created_at: string
+  id: number
+  item_id: string
+  updated_at: string
 }

@@ -7,7 +7,7 @@ import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
-import { AssetDataTypesWithStatus } from 'types'
+import { AssetDataTypesWithStatus, IPromotionId } from 'types'
 import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
 import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
@@ -38,23 +38,27 @@ export default function FormContainer() {
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
   // eslint-disable-next-line
-  const handleAddPromotion = (e: any) => {
+  const handlePromotion = (e: React.ChangeEvent<any>) => {
     if (e.target.checked) {
       dispatch(addPromotionRequest({ promotionId: assetDetails.marketData?.item_id }))
     } else {
-      const excludePromotion = promotionIds.filter(
-        (pId) => assetDetails.marketData && Number(pId) !== Number(assetDetails.marketData.item_id)
+      const promotionId: IPromotionId | undefined = promotionIds.find(
+        (promo) => assetDetails.marketData && Number(promo.item_id) === Number(assetDetails.marketData.item_id)
       )
-      dispatch(deletePromotionRequest({ promotionId: excludePromotion }))
+      dispatch(
+        deletePromotionRequest({
+          promotionItemId: assetDetails.marketData?.item_id,
+          promotionId,
+        })
+      )
     }
     setFieldValue('promotion', e.target.checked)
   }
 
   const ckeckPromotion = () => {
     const isPromoted = promotionIds.findIndex(
-      (pId) => assetDetails.marketData && Number(pId) === Number(assetDetails.marketData.item_id)
+      (promo) => assetDetails.marketData && Number(promo.item_id) === Number(assetDetails.marketData.item_id)
     )
-
     if (isPromoted !== -1) {
       setFieldValue('promotion', true)
     } else {
@@ -82,7 +86,7 @@ export default function FormContainer() {
                 label={'Promotion'}
                 fullWidth={false}
                 className={classes.switcher}
-                onChange={handleAddPromotion}
+                onChange={handlePromotion}
                 checked={Boolean(values.promotion)}
               />
             )}
