@@ -1,7 +1,7 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
@@ -21,9 +21,10 @@ export default function FormAuction(props: IFormAuctionProps) {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { tokensBalances } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const { user } = useSelector(selectUser())
 
   const {
-    assetDetails: { marketData },
+    assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
   const minBid = marketData
@@ -45,7 +46,11 @@ export default function FormAuction(props: IFormAuctionProps) {
       ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
       : 0
   const isValidBidValueAmount = Number(tokenBalanceWETH) > Number(values.bid) && Number(values.bid) >= Number(minBid)
-  const disabledBid = isValidBidValueAmount && Boolean(values.acknowledge) && Boolean(values.agreeTerms)
+  const disabledBid =
+    isValidBidValueAmount &&
+    Boolean(values.acknowledge) &&
+    Boolean(values.agreeTerms) &&
+    Number(tokenData?.owner) !== user?.id
 
   return (
     <>

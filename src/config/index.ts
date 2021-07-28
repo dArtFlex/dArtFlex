@@ -40,6 +40,7 @@ const APP_CONFIG = {
   updateUserProfile: `${STAGE_URL}/user/update`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
+  buy: `${STAGE_URL}/bid/buy`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,
   addPromotion: `${STAGE_URL}/super_admin/add_promotion`,
   deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
