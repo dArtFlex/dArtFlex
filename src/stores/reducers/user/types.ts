@@ -7,6 +7,7 @@ import {
   IImageData,
   AssetMarketplaceTypes,
   AssetDataTypes,
+  IPromotionId,
 } from 'types'
 
 export interface UserStateType {
@@ -21,7 +22,9 @@ export interface UserStateType {
   userAssets: IUserAsset[] | []
   userBids: IUserBid[] | []
   promotionAssets: IPromotionAsset[] | []
-  promotionIds: number[] | []
+  promotionIds: IPromotionId[] | []
+  promotionIdLastAdded?: number
+  promotionIdLastDelete?: number
   userAll?: UserDataTypes[]
 }
 

@@ -11,6 +11,7 @@ const APP_CONFIG = {
   getItemAll: `${STAGE_URL}/item/get_all`,
   getMarketplaceAll: `${STAGE_URL}/marketplace/get_all`,
   getUserAll: `${STAGE_URL}/user/getAll`,
+  getPromotionAll: `${STAGE_URL}/promotion/get_all`,
 
   // GET User
   getUserProfileByUserId: (id: number) => `${STAGE_URL}/user/get/${id}`,
@@ -39,6 +40,7 @@ const APP_CONFIG = {
   updateUserProfile: `${STAGE_URL}/user/update`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
+  buy: `${STAGE_URL}/bid/buy`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,
   addPromotion: `${STAGE_URL}/super_admin/add_promotion`,
   deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
