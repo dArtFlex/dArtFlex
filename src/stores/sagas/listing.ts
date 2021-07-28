@@ -24,7 +24,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const accounts = walletService.getAccoutns()
 
     const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
-    const endPrice = yield web3.utils.toWei(data.endPrice, 'ether')
+    const endPrice = yield web3.utils.toWei(data.endPrice.length ? data.endPrice : '0', 'ether')
 
     const chainId: IChainId = walletService.getChainId()
     const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id

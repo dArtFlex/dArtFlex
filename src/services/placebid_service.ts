@@ -1,49 +1,11 @@
 //@ts-nocheck
-import { web3Service } from 'services/web3_service'
+import { CommonService } from 'services/common_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
-import { signTypedData_v4 } from 'eth-sig-util'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
 
-class PlaceBidService {
-  async signTypedData(data) {
-    const resp = await web3Service.connectMetaMaskWallet()
-    const from = resp[0]
-
-    if (web3.currentProvider.isMetaMask) {
-      const msgData = JSON.stringify(data)
-      return (
-        await new Promise((resolve, reject) => {
-          function cb(err, result) {
-            if (err) return reject(err)
-            if (result.error) return reject(result.error)
-            const sig = result.result
-            const sig0 = sig.substring(2)
-            const r = '0x' + sig0.substring(0, 64)
-            const s = '0x' + sig0.substring(64, 128)
-            const v = parseInt(sig0.substring(128, 130), 16)
-            resolve({ data, sig, v, r, s })
-          }
-
-          // @ts-ignore
-          return web3.currentProvider.sendAsync(
-            {
-              jsonrpc: '2.0',
-              method: 'eth_signTypedData_v4',
-              params: [from, msgData],
-              from,
-              id: new Date().getTime(),
-            },
-            cb
-          )
-        })
-      ).sig
-    } else {
-      return signTypedData_v4(web3.currentProvider.wallets[from.toLowerCase()].privateKey, { data })
-    }
-  }
-
+class PlaceBidService extends CommonService {
   random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
   }
@@ -136,9 +98,8 @@ class PlaceBidService {
     }
   }
 
-  // maket is creater nft
-  // taker is ZERO
-  // price = '100000000000000000'
+  // Maket is creater Nft
+  // Taker is ZERO
   async generateOrder(request) {
     const { contract, tokenId, uri, maker, taker, erc20, price, signature } = request.body
 

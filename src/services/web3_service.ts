@@ -9,8 +9,8 @@ declare global {
     web3: Web3
   }
 }
-class Web3Service {
-  private web3!: Web3
+export class Web3Service {
+  public web3!: Web3
 
   constructor() {
     if (window?.ethereum) {
