@@ -12,10 +12,12 @@ import { selectUser } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import { getUserAssetsRequest } from 'stores/reducers/user'
+import { setZazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
+import { IUserAssets } from './types'
 
 const { FILTER_VALUES } = appConst
 
@@ -74,6 +76,25 @@ export default function Dashboard() {
     },
   ]
 
+  const handleListed = (userAsset: IUserAssets) => {
+    dispatch(
+      setZazyMintingData({
+        data: {
+          ...userAsset.imageData,
+          royalties: String(userAsset.tokenData.royalty),
+        },
+        lazyMintItemId: userAsset.tokenData.id,
+        lazyMintData: {
+          contract: userAsset.tokenData.contract,
+          tokenId: userAsset.tokenData.token_id,
+          uri: userAsset.tokenData.uri,
+          signatures: [userAsset.tokenData.signature],
+        },
+      })
+    )
+    history.push(routes.sellNFT)
+  }
+
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
@@ -120,13 +141,18 @@ export default function Dashboard() {
               <CircularProgressLoader />
             ) : (
               <>
-                {filter === FILTER_VALUES.CREATED && <CardUploadNew />}
+                {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
                 {sortedAssets.map((userAsset, i) => (
                   <CardAsset
                     key={i}
                     asset={userAsset}
                     withLabel
-                    withAction={Boolean(userAsset.type === appConst.TYPES.INSTANT_BY)}
+                    withAction={Boolean(
+                      userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
+                    )}
+                    button={{
+                      onListed: () => handleListed(userAsset),
+                    }}
                   />
                 ))}
                 {!userAssets?.length && <Empty />}
