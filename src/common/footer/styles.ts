@@ -24,9 +24,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     logo: {
-      marginRight: theme.spacing(12),
-      [theme.breakpoints.down(641)]: {
-        marginRight: theme.spacing(6),
+      [theme.breakpoints.up(640)]: {
+        marginRight: theme.spacing(12),
       },
     },
     social: {
@@ -35,7 +34,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       [theme.breakpoints.down(641)]: {
-        width: '100%',
+        gap: 20,
       },
       [theme.breakpoints.up(641)]: {
         '& a': {

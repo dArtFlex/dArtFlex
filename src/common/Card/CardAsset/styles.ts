@@ -11,7 +11,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       [theme.breakpoints.down(640)]: {
         minWidth: 'unset',
-        width: '90vw',
+        width: '88vw',
       },
     },
     card: {

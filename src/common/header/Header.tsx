@@ -15,7 +15,6 @@ import {
   Badge,
   Avatar,
   useMediaQuery,
-  Collapse,
   Paper,
   Popper,
   Fade,
@@ -242,9 +241,9 @@ export default function Header({ toggleTheme }: HeaderType) {
                     </Button>
                   </>
                 )}
-                <ButtonBase onClick={toggleTheme} className={classes.borderedIcon}>
+                <IconButton onClick={toggleTheme} className={classes.notificationIcon}>
                   <CoolIcon />
-                </ButtonBase>
+                </IconButton>
               </Box>
             </>
           )}

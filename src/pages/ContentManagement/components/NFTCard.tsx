@@ -3,23 +3,27 @@ import { Box, IconButton, Paper, TextField, Typography, useMediaQuery } from '@m
 import { CheckedIcon, CloseIcon, DragIcon, EditIcon, TrashIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import { INFTCard } from '../types'
+import clsx from 'clsx'
 
 export default function NFTCard(props: INFTCard) {
   const classes = useStyles()
 
   const [isEdit, setIsEdit] = useState(false)
 
-  const isMobile = useMediaQuery('(max-width: 460px)')
+  const isMobile = useMediaQuery('(max-width: 680px)')
 
   return (
     <Box mt={4}>
       <Box display="flex" alignItems="center">
-        <IconButton className={classes.dragIcon}>
-          <DragIcon />
-        </IconButton>
-        <Box ml={5}>
+        {!isMobile && (
+          <IconButton className={classes.dragIcon}>
+            <DragIcon />
+          </IconButton>
+        )}
+
+        <Box className={classes.NFTCard}>
           <Paper classes={{ root: classes.NFTWrapper }} elevation={1}>
-            <Box display="flex" alignItems="center">
+            <Box className={clsx(classes.flexBoxInit, isMobile && isEdit && classes.mobileEditableNFT)}>
               <div style={{ backgroundImage: `url(${props.url})` }} className={classes.NFTPhoto} />
               {isEdit ? (
                 <>
@@ -37,12 +41,14 @@ export default function NFTCard(props: INFTCard) {
                       },
                     }}
                   />
-                  <IconButton className={classes.CheckedIcon} onClick={() => setIsEdit(false)}>
-                    <CheckedIcon />
-                  </IconButton>
-                  <IconButton className={classes.CloseIcon} onClick={() => setIsEdit(false)}>
-                    <CloseIcon />
-                  </IconButton>
+                  <Box className={clsx(classes.flexBoxInit, classes.actionButtonsContainer)}>
+                    <IconButton className={classes.CheckedIcon} onClick={() => setIsEdit(false)}>
+                      <CheckedIcon />
+                    </IconButton>
+                    <IconButton className={classes.CloseIcon} onClick={() => setIsEdit(false)}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
                 </>
               ) : (
                 <>
@@ -52,7 +58,7 @@ export default function NFTCard(props: INFTCard) {
                   </IconButton>
                   <IconButton className={classes.DeleteIcon}>
                     <TrashIcon />
-                  </IconButton>{' '}
+                  </IconButton>
                 </>
               )}
             </Box>

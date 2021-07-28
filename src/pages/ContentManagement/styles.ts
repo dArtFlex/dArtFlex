@@ -71,6 +71,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       [theme.breakpoints.down(961)]: {
         padding: theme.spacing(2),
+        overflow: 'unset !important',
       },
     },
     flexContainer: {
@@ -111,27 +112,53 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(1025)]: {
         width: 280,
       },
+      [theme.breakpoints.down(680)]: {
+        width: '100%',
+        marginLeft: 0,
+      },
+    },
+    NFTCard: {
+      [theme.breakpoints.up(680)]: {
+        marginLeft: theme.spacing(5),
+      },
     },
     borderedInput: {
       border: `1px solid ${theme.palette.greyMid}`,
+    },
+    mobileEditableNFT: {
+      flexDirection: 'column',
+      alignItems: 'flex-start !important',
+      rowGap: 16,
+      '&>div:first-child': {
+        margin: '0 auto',
+      },
     },
     NFTPhoto: {
       backgroundSize: '100% 100%',
       width: theme.spacing(22),
       height: theme.spacing(20.5),
       borderRadius: theme.spacing(1.5),
+      [theme.breakpoints.down(480)]: {
+        width: 68,
+        height: 62,
+      },
     },
     NFTWrapper: {
       padding: theme.spacing(3, 6),
       width: theme.spacing(165),
       [theme.breakpoints.down(1025)]: {
-        width: 600,
+        width: 580,
+      },
+      [theme.breakpoints.down(680)]: {
+        padding: theme.spacing(3),
+        width: '90vw',
       },
     },
     NFTName: {
       fontWeight: 700,
       marginLeft: theme.spacing(4.5),
       fontSize: 16,
+      overflow: 'hidden',
     },
     NFTLink: {
       fontSize: 14,
@@ -188,6 +215,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         borderRadius: theme.spacing(4),
         backgroundColor: theme.palette.type === 'dark' && theme.palette.accent,
+        [theme.breakpoints.down(960)]: {
+          backgroundColor: 'unset',
+        },
       },
       [theme.breakpoints.down(961)]: {
         paddingLeft: 0,
@@ -250,6 +280,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(10),
       textAlign: 'center',
     },
+    flexBoxInit: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     flexBox: {
       display: 'flex',
       alignItems: 'center',
@@ -293,6 +327,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up(960)]: {
         margin: theme.spacing(6, 0, 0, 6),
       },
+    },
+    actionButtonsContainer: {
+      margin: '0 auto',
     },
   })
 )
