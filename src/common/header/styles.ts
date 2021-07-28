@@ -78,7 +78,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     notificationIcon: {
       fill: theme.palette.text.primary,
     },
-
+    themeIcon: {
+      color: theme.palette.text.primary,
+    },
     notificationContainer: {
       padding: theme.spacing(6),
       display: 'flex',

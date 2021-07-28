@@ -99,32 +99,50 @@ export const useStyles = makeStyles((theme: Theme) =>
     promotionBox: {
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
       padding: `${theme.spacing(15, 0, 15, 0)}`,
-      height: theme.spacing(112),
-      '@media (min-width:1025px)': {
-        height: theme.spacing(135),
+      height: '36vw',
+      '@media (max-width:1152px)': {
+        height: '44vw',
       },
       [theme.breakpoints.down(1024)]: {
-        display: 'grid',
+        flexDirection: 'column',
         height: 'unset',
         marginBottom: theme.spacing(6),
       },
+      [theme.breakpoints.down(481)]: {
+        width: '90vw',
+      },
     },
     promotionPhoto: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      borderRadius: theme.spacing(1.5),
+      maxHeight: '26vw',
+      maxWidth: '40vw',
+      color: theme.palette.blackMain,
+      display: 'flex',
+      justifyContent: 'space-around',
+      cursor: 'pointer',
+      '&>img': {
+        maxWidth: '100%',
+        maxHeight: 'inherit',
+        objectFit: 'contain',
+        borderRadius: 10,
+      },
+      [theme.breakpoints.down(1024)]: {
+        maxHeight: '40vw',
+        maxWidth: '60vw',
+      },
+      [theme.breakpoints.down(641)]: {
+        maxHeight: '48vw',
+        maxWidth: '72vw',
+      },
     },
     sliderNext: {
       '&.swiper-button-next, .swiper-button-prev': {
         width: '20px',
         height: '20px',
+      },
+      '&.swiper-button-next': {
+        right: 0,
       },
       '--swiper-navigation-size': '32px',
       '--swiper-theme-color': theme.palette.text.primary,
@@ -141,7 +159,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontWeight: 700,
         border: `2px solid ${theme.palette.text.secondary}`,
         [theme.breakpoints.down(1024)]: {
-          marginLeft: '45%',
+          marginLeft: '43vw',
+        },
+        [theme.breakpoints.down(481)]: {
+          marginLeft: '35vw',
         },
       },
     },
@@ -157,46 +178,76 @@ export const useStyles = makeStyles((theme: Theme) =>
     promotionTextSecondary: {
       color: theme.palette.text.secondary,
     },
+    promotionCardName: {
+      [theme.breakpoints.down(601)]: {
+        textAlign: 'center',
+        overflowWrap: 'anywhere',
+      },
+    },
     promotionInfoText: {
       fontSize: 24,
       fontWeight: 700,
       minWidth: 190,
       marginTop: theme.spacing(3),
+      [theme.breakpoints.down(481)]: {
+        alignItems: 'center',
+      },
     },
     promotionTimer: {
       backgroundColor: theme.palette.background.paper,
     },
     promotionInfo: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      width: '100%',
+      display: 'flex',
+      gap: 20,
+      rowGap: 20,
+      justifyContent: 'space-between',
+
       gridGap: theme.spacing(5),
+      [theme.breakpoints.down(481)]: {
+        flexDirection: 'column',
+      },
     },
     promotionButtons: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gridGap: theme.spacing(5),
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'space-between',
+      gap: theme.spacing(5),
+      rowGap: 20,
       marginTop: theme.spacing(6),
+      [theme.breakpoints.down(601)]: {
+        width: '100%',
+      },
+      [theme.breakpoints.down(481)]: {
+        flexDirection: 'column',
+      },
+      '&>button': {
+        width: '100%',
+      },
     },
     promotionInfoWrapper: {
       marginLeft: theme.spacing(20),
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      '@media (min-width:1025px)': {
-        marginLeft: theme.spacing(40),
-      },
-      [theme.breakpoints.down(1024)]: {
-        marginLeft: 'unset',
+      [theme.breakpoints.down(1025)]: {
+        marginLeft: theme.spacing(4),
         marginTop: theme.spacing(4),
+      },
+      [theme.breakpoints.down(481)]: {
+        alignItems: 'center',
+        width: '96%',
+        marginLeft: 0,
+      },
+    },
+    promotionInfoBox: {
+      [theme.breakpoints.down(481)]: {
+        textAlign: 'center',
       },
     },
     promotionSlide: {
-      height: theme.spacing(76),
-      width: theme.spacing(110),
-      '@media (min-width:1025px)': {
-        height: theme.spacing(95),
-        width: theme.spacing(137),
-      },
+      height: 380,
+      maxWidth: 440,
     },
     promotionButtonWhite: {
       border: `${theme.spacing(0.5)}px solid ${theme.palette.text.primary}`,

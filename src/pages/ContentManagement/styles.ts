@@ -159,6 +159,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(4.5),
       fontSize: 16,
       overflow: 'hidden',
+      [theme.breakpoints.down(480)]: {
+        maxWidth: 100,
+      },
+      [theme.breakpoints.down(320)]: {
+        marginLeft: theme.spacing(2),
+        maxWidth: 80,
+      },
     },
     NFTLink: {
       fontSize: 14,

@@ -47,6 +47,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(6),
       paddingRight: theme.spacing(6),
       borderBottom: 'none',
+      [theme.breakpoints.down(768)]: {
+        padding: theme.spacing(2),
+      },
     },
     tableCellControls: {
       minWidth: 55,

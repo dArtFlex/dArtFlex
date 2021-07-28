@@ -72,7 +72,7 @@ export default function SellNFT() {
           aside={<Aside form={form} />}
           containerSize={'minmax(270px, 554px)'}
           asideSize={'325px'}
-          gap={isTabletResolution ? 60 : 135}
+          gap={isTabletResolution ? 20 : 135}
         >
           <Box>
             <Typography variant={'h1'} className={classes.formTitle}>

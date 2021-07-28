@@ -32,7 +32,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     borderdIconButton: {
-      border: `1px solid ${theme.palette.greyPale}`,
+      color: theme.palette.text.primary,
+      background: theme.palette.background.paper,
+      border: `1px solid ${theme.palette.grey['200']}`,
     },
     expandBtb: {
       position: 'absolute',

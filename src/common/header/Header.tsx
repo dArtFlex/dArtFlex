@@ -111,7 +111,7 @@ export default function Header({ toggleTheme }: HeaderType) {
     {
       lable: 'Disconnect',
       icon: <DisconnectIcon />,
-      onClick: () => console.log('Disconnect'),
+      onClick: () => handleDisconnect(),
     },
   ]
 
@@ -126,10 +126,10 @@ export default function Header({ toggleTheme }: HeaderType) {
       title: 'Artworks',
       to: routes.artworks,
     },
-    {
-      title: 'Blog',
-      to: routes.blog,
-    },
+    // {
+    //   title: 'Blog',
+    //   to: routes.blog,
+    // },
   ]
 
   const handleSearch = (value: string) => {
@@ -170,8 +170,8 @@ export default function Header({ toggleTheme }: HeaderType) {
           ) : (
             <>
               <Tabs
-                aria-label="navigation"
-                value={pathname !== routes.blog ? 0 : 1}
+                aria-label="clicked"
+                value={pathname === routes.artworks ? 0 : null}
                 className={classes.navTabsContainer}
                 classes={{ indicator: classes.indicator }}
               >
@@ -245,7 +245,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     </Button>
                   </>
                 )}
-                <IconButton onClick={toggleTheme} className={classes.notificationIcon}>
+                <IconButton onClick={toggleTheme} className={classes.themeIcon}>
                   <CoolIcon />
                 </IconButton>
               </Box>
@@ -363,8 +363,6 @@ export default function Header({ toggleTheme }: HeaderType) {
       <ProfileActionMenu
         anchor={anchorElProfileLink}
         setAnchor={setAnchorElProfileLink}
-        isUserSuperAdmin={isUserSuperAdmin}
-        onDisconnect={handleDisconnect}
         links={combineLinks}
         subLinks={subLinks}
       />

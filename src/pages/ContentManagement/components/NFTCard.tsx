@@ -52,7 +52,9 @@ export default function NFTCard(props: INFTCard) {
                 </>
               ) : (
                 <>
-                  <Typography className={classes.NFTName}>{props.name}</Typography>
+                  <Typography component={'span'} className={classes.NFTName}>
+                    {props.name}
+                  </Typography>
                   <IconButton className={classes.EditIcon} onClick={() => setIsEdit(true)}>
                     <EditIcon />
                   </IconButton>

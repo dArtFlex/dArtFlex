@@ -7,13 +7,15 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
-import SwiperCore, { Pagination, Navigation } from 'swiper/core'
+import SwiperCore, { Pagination, Navigation, Autoplay } from 'swiper/core'
 import { normalizeDate } from 'utils'
 import clsx from 'clsx'
+import routes from '../../../routes'
+import CardBadge from '../../../common/Card/CardAsset/CardBadge'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
-  SwiperCore.use([Pagination, Navigation])
+  SwiperCore.use([Pagination, Navigation, Autoplay])
 
   return (
     <React.Fragment>
@@ -21,8 +23,10 @@ export default function Promotions(props: IPromotion) {
         pagination={{
           type: 'fraction',
         }}
-        navigation={props.artworks.length > 1}
-        autoplay={true}
+        autoplay={{
+          delay: 4000,
+        }}
+        loop={true}
         className={classes.sliderNext}
       >
         {props.artworks.map((item, index) => {
@@ -31,8 +35,8 @@ export default function Promotions(props: IPromotion) {
           return (
             <SwiperSlide key={index}>
               <Box className={classes.promotionBox}>
-                <Box position="relative" className={classes.promotionSlide}>
-                  <div style={{ backgroundImage: `url(${item.url})` }} className={classes.promotionPhoto} />
+                <Box className={classes.promotionPhoto}>
+                  <img src={item.url} />
                 </Box>
                 <Box className={classes.promotionInfoWrapper}>
                   <Box display="flex" alignItems="center" mb={2}>
@@ -42,15 +46,17 @@ export default function Promotions(props: IPromotion) {
                     />
                     <Typography variant={'h4'}>@{item.author.name}</Typography>
                   </Box>
-                  <Typography variant={'h2'}>{item.name}</Typography>
+                  <Typography variant={'h2'} className={classes.promotionCardName}>
+                    {item.name}
+                  </Typography>
                   <Box className={classes.promotionInfo} mt={6}>
-                    <Box flexDirection="row">
+                    <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
                         Current Bid
                       </Typography>
-                      <span className={classes.promotionInfoText}>{item.bid} ETH</span>
+                      <div className={classes.promotionInfoText}>{item.bid} ETH</div>
                     </Box>
-                    <Box flexDirection="row">
+                    <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
                         Auction Ends In
                       </Typography>

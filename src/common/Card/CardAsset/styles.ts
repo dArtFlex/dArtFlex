@@ -11,7 +11,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       [theme.breakpoints.down(640)]: {
         minWidth: 'unset',
-        width: '88vw',
+        width: '92vw',
       },
     },
     card: {
@@ -20,17 +20,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
     },
     artContainer: {
-      padding: theme.spacing(1),
       height: '242px',
+      width: '100%',
       color: theme.palette.blackMain,
       display: 'flex',
       alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
       '&>img': {
-        maxWidth: '100%',
-        maxHeight: '100%',
-        objectFit: 'contain',
+        width: '100%',
+        height: '100%',
       },
     },
     artInfoContainer: {
