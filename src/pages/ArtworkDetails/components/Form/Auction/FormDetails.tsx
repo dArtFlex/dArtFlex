@@ -109,7 +109,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Box>
           )}
         </Box>
-        <Box className={classes.infoRow} mb={6}>
+        <Box className={clsx(classes.infoRowMobile, classes.infoRow)} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
@@ -203,7 +203,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
-          classes={{ indicator: classes.indicator }}
+          classes={{ indicator: classes.indicator, fixed: classes.tabsOverflow }}
         >
           {tabsItems.map(({ title }) => (
             <Tab key={title} label={title} classes={{ selected: classes.tabSelected }} />
