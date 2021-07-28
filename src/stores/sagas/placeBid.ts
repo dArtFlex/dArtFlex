@@ -11,7 +11,6 @@ import {
   acceptBidFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
-// import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import { acceptBidService } from 'services/accept_bid_service'
@@ -19,8 +18,6 @@ import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
 import { UserDataTypes, IAcceptBidTransaction } from 'types'
-
-// const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
 
 export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {

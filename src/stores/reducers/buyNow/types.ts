@@ -4,5 +4,5 @@ export interface BuyNowStateType {
   fetching: boolean
   transacting: boolean
   error: string
-  data?: unknown
+  buyItemId?: number
 }

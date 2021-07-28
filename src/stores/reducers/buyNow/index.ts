@@ -14,8 +14,8 @@ const userSlice = createSlice({
     buyNowRequest: (state, i) => {
       state.transacting = true
     },
-    buyNowSuccess: (state, { payload }: PayloadAction<{ data: unknown }>) => {
-      state.data = payload.data
+    buyNowSuccess: (state, { payload }: PayloadAction<{ buyItemId: number }>) => {
+      state.buyItemId = payload.buyItemId
       state.transacting = false
     },
     buyNowFailure: (state, { payload }: PayloadAction<string>) => {

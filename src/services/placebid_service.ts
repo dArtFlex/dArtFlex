@@ -5,7 +5,7 @@ import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
 
-class PlaceBidService extends CommonService {
+export class PlaceBidService extends CommonService {
   random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
   }

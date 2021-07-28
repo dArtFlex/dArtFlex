@@ -5,19 +5,25 @@ import { useFormikContext } from 'formik'
 import clsx from 'clsx'
 import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } from 'stores/selectors'
 import { Field, Tooltip } from 'common'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
 
-export default function FormBuyApprove() {
+interface IFormBuyApproveProps {
+  onSubmit: () => void
+}
+
+export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const classes = useStyles()
-  const { values, handleSubmit, setFieldValue } = useFormikContext<ApprovedFormState>()
+  const { onSubmit } = props
+  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const { user } = useSelector(selectUser())
 
   const {
-    assetDetails: { marketData },
+    assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
@@ -33,7 +39,11 @@ export default function FormBuyApprove() {
     startPriceToToken && tokenInfo ? new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(2) : 0
 
   const isValidValueAmount = Number(tokenBalanceETH) >= Number(startPriceToToken)
-  const disabledBid = isValidValueAmount && Boolean(values.acknowledge) && Boolean(values.agreeTerms)
+  const disabledBuy =
+    isValidValueAmount &&
+    Boolean(values.acknowledge) &&
+    Boolean(values.agreeTerms) &&
+    Number(tokenData?.owner) !== user?.id
 
   return (
     <>
@@ -100,13 +110,13 @@ export default function FormBuyApprove() {
             />
           </Box>
           <Button
-            onClick={() => handleSubmit()}
+            onClick={onSubmit}
             variant={'contained'}
             color={'primary'}
             fullWidth
             disableElevation
-            className={clsx(classes.bitBtn, !disabledBid && classes.bitBtnDisabled)}
-            disabled={!disabledBid}
+            className={clsx(classes.bitBtn, !disabledBuy && classes.bitBtnDisabled)}
+            disabled={!disabledBuy}
           >
             {!isValidValueAmount ? (
               <Typography className={classes.bitBtnDisabledText}>You don’t have enough ETH</Typography>
