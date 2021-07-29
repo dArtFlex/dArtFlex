@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateRows: 'minmax(100%, auto)',
       gridGap: theme.spacing(10),
       alignItems: 'start',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1024)]: {
         gridTemplateColumns: '1fr',
         gridTemplateRows: '1fr',
       },
@@ -58,6 +58,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: '1fr 1fr',
       gridGap: theme.spacing(2),
     },
+    infoRowMobile: {
+      [theme.breakpoints.down(421)]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr 1fr',
+        rowGap: 16,
+      },
+    },
     infoTitle: {
       marginBottom: theme.spacing(2),
       color: theme.palette.text.secondary,
@@ -95,6 +102,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     indicator: {
       backgroundColor: theme.palette.text.primary,
+    },
+    tabsOverflow: {
+      [theme.breakpoints.down(320)]: {
+        overflow: 'scroll',
+      },
     },
     tabSelected: {
       color: `${theme.palette.text.primary} !important`,
@@ -156,7 +168,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'right',
     },
     outerContainer: {
-      position: 'sticky',
       top: theme.spacing(4),
     },
     formContainer: {
