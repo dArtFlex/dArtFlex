@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: 'repeat(2, 1fr)',
       [theme.breakpoints.down(980)]: {
         gridTemplateColumns: '1fr',
+        gap: 20,
       },
     },
     flexBox: {

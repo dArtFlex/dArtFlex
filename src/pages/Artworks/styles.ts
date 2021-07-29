@@ -295,5 +295,22 @@ export const useStyles = makeStyles((theme: Theme) =>
     filterDivider: {
       backgroundColor: theme.palette.text.secondary,
     },
+    paginationWrapper: {
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+      width: 'fit-content',
+      borderRadius: 12,
+      border: `2px solid ${theme.palette.text.secondary}`,
+      padding: theme.spacing(0, 2),
+      display: 'flex',
+      alignItems: 'center',
+      margin: '0 auto',
+    },
+    leftArrow: {
+      marginRight: theme.spacing(1),
+    },
+    rightArrow: {
+      marginLeft: theme.spacing(1),
+    },
   })
 )

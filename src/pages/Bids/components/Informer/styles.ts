@@ -12,9 +12,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(4, 6),
         width: 250,
       },
-      [theme.breakpoints.down(1025)]: {
-        padding: theme.spacing(4, 4),
-        width: 210,
+      [theme.breakpoints.down(380)]: {
+        width: 280,
+      },
+      [theme.breakpoints.down(330)]: {
+        width: 250,
+      },
+      [theme.breakpoints.down(300)]: {
+        width: 230,
       },
     },
     informerHead: {

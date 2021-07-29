@@ -14,7 +14,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
     },
     iconButton: {
-      marginRight: theme.spacing(4),
       position: 'relative',
       '& span': {
         width: 32,
@@ -153,7 +152,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     mobileMenuContent: {
       width: '100vw',
       height: '100vh',
-      padding: theme.spacing(6, 4, 8, 4),
+      padding: theme.spacing(2, 4, 8, 4),
     },
     mobileMenuUserInfo: {
       width: '100vw',

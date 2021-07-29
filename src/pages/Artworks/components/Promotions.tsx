@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { IPromotion } from '../types'
-import { Box, Button, Typography } from '@material-ui/core'
+import { Box, Button, IconButton, Typography } from '@material-ui/core'
 import { useStyles } from '../styles'
 import { Timer } from 'common'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -12,28 +12,35 @@ import { normalizeDate } from 'utils'
 import clsx from 'clsx'
 import routes from '../../../routes'
 import CardBadge from '../../../common/Card/CardAsset/CardBadge'
+import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
   SwiperCore.use([Pagination, Navigation, Autoplay])
+  const prevSlideRef = useRef<HTMLDivElement>(null)
+  const nextSlideRef = useRef<HTMLDivElement>(null)
+  const [currentSlide, setCurrentSlide] = useState(1)
 
   return (
     <React.Fragment>
       <Swiper
-        pagination={{
-          type: 'fraction',
-        }}
         autoplay={{
           delay: 4000,
+          disableOnInteraction: false,
         }}
-        loop={true}
+        navigation={{
+          nextEl: nextSlideRef.current,
+          prevEl: prevSlideRef.current,
+        }}
+        loop={props.artworks.length > 1}
         className={classes.sliderNext}
+        onSlideChange={(slide) => setCurrentSlide(slide.realIndex + 1)}
       >
         {props.artworks.map((item, index) => {
           const nowTime = new Date().getTime()
           const timeExpired = nowTime > normalizeDate(`${item.endDate}`).getTime()
           return (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} tabIndex={index}>
               <Box className={classes.promotionBox}>
                 <Box className={classes.promotionPhoto}>
                   <img src={item.url} />
@@ -82,6 +89,23 @@ export default function Promotions(props: IPromotion) {
           )
         })}
       </Swiper>
+      <Box className={classes.paginationWrapper}>
+        <IconButton className={classes.leftArrow}>
+          <div ref={prevSlideRef}>
+            <ArrowLeftIcon />
+          </div>
+        </IconButton>
+        <Box>
+          <Typography variant={'h4'}>
+            {currentSlide}/{props.artworks.length}
+          </Typography>
+        </Box>
+        <IconButton className={classes.rightArrow}>
+          <div ref={nextSlideRef}>
+            <ArrowRightIcon />
+          </div>
+        </IconButton>
+      </Box>
     </React.Fragment>
   )
 }

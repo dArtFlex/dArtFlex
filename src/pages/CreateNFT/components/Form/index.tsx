@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
-import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
+import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-ui/core'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { lazyMintingRequest } from 'stores/reducers/minting'
@@ -28,6 +28,8 @@ export default function Form() {
   const { user } = useSelector(selectUser())
 
   const [openViewImage, setOpenViewImage] = useState<boolean>(false)
+
+  const isTabletMobile = useMediaQuery('(max-width: 980px)')
 
   const handleMinting = () => {
     dispatch(lazyMintingRequest({ name: values.name, description: values.description, royalties: values.royalties }))
@@ -90,9 +92,14 @@ export default function Form() {
       </Box>
 
       {listing !== 'done' ? (
-        <MintingForm onMinting={handleMinting} onList={handleList} onViewArtwork={handleViewArtwork} />
+        <MintingForm
+          onMinting={handleMinting}
+          onList={handleList}
+          onViewArtwork={handleViewArtwork}
+          isTabletMobile={isTabletMobile}
+        />
       ) : (
-        <ListingForm onViewArtwork={handleViewArtwork} />
+        <ListingForm onViewArtwork={handleViewArtwork} isTabletMobile={isTabletMobile} />
       )}
     </Box>
   )
