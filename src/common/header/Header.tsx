@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
-import { NavLink } from 'react-router-dom'
 import { useRouteMatch } from 'react-router-dom'
-import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { NavLink, useHistory } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -31,7 +28,6 @@ import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
-import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon } from 'common/icons'
 import { HeaderType, IMenuItems } from './types'
 import {
   CurrentDownIcon,
@@ -50,7 +46,6 @@ import {
   ContentIcon,
   DisconnectIcon,
 } from 'common/icons'
-import { HeaderType } from './types'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 import clsx from 'clsx'
@@ -116,14 +111,16 @@ export default function Header({ toggleTheme }: HeaderType) {
     {
       lable: 'Disconnect',
       icon: <DisconnectIcon />,
-      onClick: () => handleDisconnect(),
+      onClick: () => {
+        setAnchorElProfileLink(null)
+        handleDisconnect()
+      },
     },
   ]
 
   const combineLinks = isUserSuperAdmin ? [...mainLinks, ...adminLinks] : mainLinks
 
   const [open, setOpen] = useState<boolean>(false)
-
 
   const isMobile = useMediaQuery('(max-width: 680px)')
 
