@@ -89,23 +89,25 @@ export default function Promotions(props: IPromotion) {
           )
         })}
       </Swiper>
-      <Box className={classes.paginationWrapper}>
-        <IconButton className={classes.leftArrow}>
-          <div ref={prevSlideRef}>
-            <ArrowLeftIcon />
-          </div>
-        </IconButton>
-        <Box>
-          <Typography variant={'h4'}>
-            {currentSlide}/{props.artworks.length}
-          </Typography>
+      {props.artworks.length > 1 && (
+        <Box className={classes.paginationWrapper}>
+          <IconButton className={classes.leftArrow}>
+            <div ref={prevSlideRef}>
+              <ArrowLeftIcon />
+            </div>
+          </IconButton>
+          <Box>
+            <Typography variant={'h4'}>
+              {currentSlide}/{props.artworks.length}
+            </Typography>
+          </Box>
+          <IconButton className={classes.rightArrow}>
+            <div ref={nextSlideRef}>
+              <ArrowRightIcon />
+            </div>
+          </IconButton>
         </Box>
-        <IconButton className={classes.rightArrow}>
-          <div ref={nextSlideRef}>
-            <ArrowRightIcon />
-          </div>
-        </IconButton>
-      </Box>
+      )}
     </React.Fragment>
   )
 }
