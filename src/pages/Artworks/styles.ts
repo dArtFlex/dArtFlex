@@ -101,22 +101,23 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       padding: `${theme.spacing(15, 0, 15, 0)}`,
-      // height: '36vw',
-      // '@media (max-width:1152px)': {
-      //   height: '44vw',
-      // },
       [theme.breakpoints.down(1024)]: {
+        padding: `${theme.spacing(8, 0)}`,
         flexDirection: 'column',
-        height: 'unset',
+        height: 900,
         marginBottom: theme.spacing(6),
+        justifyContent: 'space-between',
+      },
+      [theme.breakpoints.down(841)]: {
+        height: 800,
       },
       [theme.breakpoints.down(481)]: {
-        width: '90vw',
+        height: 900,
       },
     },
     promotionPhoto: {
-      maxHeight: '26vw',
-      maxWidth: '40vw',
+      maxHeight: 575,
+      maxWidth: 700,
       color: theme.palette.blackMain,
       display: 'flex',
       justifyContent: 'space-around',
@@ -127,14 +128,19 @@ export const useStyles = makeStyles((theme: Theme) =>
         borderRadius: 10,
       },
       [theme.breakpoints.down(1024)]: {
-        // maxHeight: '40vw',
-        // maxWidth: '60vw',
-        maxHeight: 'unset',
-        maxWidth: 'unset',
+        maxHeight: 500,
+        maxWidth: 800,
       },
-      [theme.breakpoints.down(641)]: {
-        // maxHeight: '48vw',
-        // maxWidth: '72vw',
+      [theme.breakpoints.down(841)]: {
+        maxWidth: 600,
+        maxHeight: 450,
+      },
+      [theme.breakpoints.down(681)]: {
+        maxWidth: 540,
+        maxHeight: 450,
+      },
+      [theme.breakpoints.down(521)]: {
+        maxHeight: 400,
       },
     },
     sliderNext: {
@@ -146,27 +152,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&.swiper-button-next': {
         right: 0,
       },
-      '--swiper-navigation-size': '32px',
-      '--swiper-theme-color': theme.palette.text.primary,
-      '&.swiper-pagination, .swiper-pagination-fraction': {
-        display: 'flex',
-        backgroundColor: theme.palette.background.default,
-        width: theme.spacing(20),
-        height: theme.spacing(12.5),
-        justifyContent: 'center',
+      '&>div': {
         alignItems: 'center',
-        marginLeft: '50%',
-        borderRadius: theme.spacing(3),
-        boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
-        fontWeight: 700,
-        border: `2px solid ${theme.palette.text.secondary}`,
-        [theme.breakpoints.down(1024)]: {
-          marginLeft: '43vw',
-        },
-        [theme.breakpoints.down(481)]: {
-          marginLeft: '35vw',
-        },
       },
+      '--swiper-theme-color': theme.palette.text.primary,
     },
     promotionAuthorAva: {
       backgroundRepeat: 'no-repeat',
@@ -307,11 +296,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       margin: '0 auto',
+      justifyContent: 'space-between',
     },
     leftArrow: {
+      cursor: 'pointer',
       marginRight: theme.spacing(1),
     },
     rightArrow: {
+      cursor: 'pointer',
       marginLeft: theme.spacing(1),
     },
   })

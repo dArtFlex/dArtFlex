@@ -11,8 +11,7 @@ import SwiperCore, { Pagination, Navigation, Autoplay } from 'swiper/core'
 import { normalizeDate } from 'utils'
 import clsx from 'clsx'
 import routes from '../../../routes'
-import CardBadge from '../../../common/Card/CardAsset/CardBadge'
-import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
+import { ArrowLeftIcon, ArrowRightIcon } from 'common/icons'
 import { useHistory } from 'react-router-dom'
 
 export default function Promotions(props: IPromotion) {
@@ -26,10 +25,10 @@ export default function Promotions(props: IPromotion) {
   return (
     <React.Fragment>
       <Swiper
-        // autoplay={{
-        //   delay: 4000,
-        //   disableOnInteraction: false,
-        // }}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
         navigation={{
           nextEl: nextSlideRef.current,
           prevEl: prevSlideRef.current,
@@ -97,21 +96,21 @@ export default function Promotions(props: IPromotion) {
       </Swiper>
       {props.artworks.length > 1 && (
         <Box className={classes.paginationWrapper}>
-          <IconButton className={classes.leftArrow}>
-            <div ref={prevSlideRef}>
+          <div ref={prevSlideRef}>
+            <IconButton className={classes.leftArrow}>
               <ArrowLeftIcon />
-            </div>
-          </IconButton>
+            </IconButton>
+          </div>
           <Box>
             <Typography variant={'h4'}>
               {currentSlide}/{props.artworks.length}
             </Typography>
           </Box>
-          <IconButton className={classes.rightArrow}>
-            <div ref={nextSlideRef}>
+          <div ref={nextSlideRef}>
+            <IconButton className={classes.rightArrow}>
               <ArrowRightIcon />
-            </div>
-          </IconButton>
+            </IconButton>
+          </div>
         </Box>
       )}
     </React.Fragment>
