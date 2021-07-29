@@ -121,7 +121,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               setOpen(true)
             }
           }}
-          variant={!marketData?.sold ? 'outlined' : 'contained'}
+          variant={'contained'}
           color={'primary'}
           fullWidth
           disableElevation
@@ -136,9 +136,10 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
+          classes={{ indicator: classes.indicator }}
         >
           {tabsItems.map(({ title }) => (
-            <Tab key={title} label={title} />
+            <Tab key={title} label={title} classes={{ selected: classes.activeTabColor }} />
           ))}
         </Tabs>
         {tab === 0 && (

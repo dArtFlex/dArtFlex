@@ -103,9 +103,19 @@ export const useStyles = makeStyles((theme: Theme) =>
     indicator: {
       backgroundColor: theme.palette.text.primary,
     },
+    activeTabColor: {
+      color: `${theme.palette.text.primary} !important`,
+    },
     tabsOverflow: {
       [theme.breakpoints.down(320)]: {
         overflow: 'scroll',
+      },
+    },
+    navTabs: {
+      padding: theme.spacing(5, 0),
+      color: `${theme.palette.text.primary} !important`,
+      [theme.breakpoints.down(740)]: {
+        padding: theme.spacing(2, 0),
       },
     },
     tabSelected: {
