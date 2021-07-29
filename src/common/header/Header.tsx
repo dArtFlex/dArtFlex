@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { NavLink } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 import { AppBar, Toolbar, Tabs, Tab, Box, Button, ButtonBase, IconButton, Badge, Avatar } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
@@ -13,14 +13,15 @@ import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
 import { CurrentDownIcon, LogoIcon, CoolIcon, SmileyFaceIcon, BellIcon } from 'common/icons'
-import { HeaderType } from './types'
+import { HeaderType, IMenuItems } from './types'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { pathname } = useLocation()
+  const { path } = useRouteMatch()
+
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
 
@@ -35,16 +36,24 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   const [open, setOpen] = useState<boolean>(false)
 
-  const MenuItems = [
+  const MenuItems: IMenuItems[] = [
     {
       title: 'Artworks',
       to: routes.artworks,
+      id: 0,
     },
-    {
-      title: 'Blog',
-      to: routes.blog,
-    },
+    // Todo: Would be implemented in next version
+    // {
+    //   title: 'Blog',
+    //   to: routes.blog,
+    //   id: 1,
+    // },
   ]
+
+  const defaultTabValue =
+    MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id : -1
+  const [tabValue, setTabValue] = React.useState(defaultTabValue)
+  const handleChangeTab = (_: React.ChangeEvent<unknown>, newValue: number) => setTabValue(newValue)
 
   const handleSearch = (value: string) => {
     dispatch(setSearch(value))
@@ -61,11 +70,12 @@ export default function Header({ toggleTheme }: HeaderType) {
           <LogoIcon className={classes.logo} />
           <Tabs
             aria-label="navigation"
-            value={pathname !== routes.blog ? 0 : 1}
+            value={MenuItems.some((mi) => mi.to === path) ? tabValue : -1}
+            onChange={handleChangeTab}
             className={classes.navTabsContainer}
             classes={{ indicator: classes.indicator }}
           >
-            {MenuItems.map(({ title, to }) => (
+            {MenuItems.map(({ title, to }, index) => (
               <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
             ))}
           </Tabs>

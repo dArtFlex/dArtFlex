@@ -233,7 +233,6 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
-    debugger
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
     const promotionData: IAddPromotionEntities = yield call(api, {
       url: APP_CONFIG.addPromotion,

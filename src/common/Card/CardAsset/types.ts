@@ -10,6 +10,7 @@ export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus'
   type: IAssetType
   startPrice?: AssetDataTypes['start_price']
   endPrice?: AssetDataTypes['end_price']
+  currentPrice?: AssetDataTypes['current_price']
   sold?: AssetDataTypes['sold']
   endTime?: AssetDataTypes['end_time']
   burnTime?: number

@@ -21,6 +21,7 @@ export interface IDatedTimeEntity {
 export interface IPriceEntity {
   start_price: string
   end_price: string
+  current_price: string
 }
 export interface IImageEntity extends IDatedEntity, IEntity {
   image: string
