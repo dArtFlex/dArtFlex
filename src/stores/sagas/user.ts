@@ -19,6 +19,8 @@ import {
   deletePromotionFailure,
   getAllUsersSuccess,
   getAllUsersFailure,
+  getTradingHistorySuccess,
+  getTradingHistoryFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -33,6 +35,7 @@ import {
   IBidsHistory,
   IAddPromotionEntities,
   IPromotionId,
+  ITradingHistory,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
@@ -295,5 +298,32 @@ export function* getAllUsers(api: IApi) {
     yield put(getAllUsersSuccess({ userAll }))
   } catch (e) {
     yield put(getAllUsersFailure(e.message || e))
+  }
+}
+
+export function* tradingHistory(api: IApi, { payload }: PayloadAction<{ userId: number }>) {
+  try {
+    const tradingHistoryByUser: ITradingHistory[] = yield call(api, {
+      url: APP_CONFIG.getHistoryTradingByUserId(payload.userId),
+    })
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      tradingHistoryByUser.map((th) => call(getPromotionAssetById, api, Number(th.item_id)))
+    )
+    const fromUser: UserDataTypes[] = yield all(
+      tradingHistoryByUser.map((th) => call(getUserDataById, api, parseFloat(th.from) ? th.from : th.to))
+    )
+    const toUser: UserDataTypes[] = yield all(
+      tradingHistoryByUser.map((th) => call(getUserDataById, api, parseFloat(th.to) ? th.to : th.from))
+    )
+
+    const composeData = tradingHistoryByUser.flatMap((h, i) => ({
+      ...h,
+      imageData: promotionAssets[i].imageData,
+      fromUserData: fromUser[i],
+      toUserData: toUser[i],
+    }))
+    yield put(getTradingHistorySuccess({ tradingHistoryAll: composeData }))
+  } catch (e) {
+    yield put(getTradingHistoryFailure(e.message || e))
   }
 }

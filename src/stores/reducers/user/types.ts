@@ -8,6 +8,7 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypes,
   IPromotionId,
+  ITradingHistory,
 } from 'types'
 
 export interface UserStateType {
@@ -26,6 +27,9 @@ export interface UserStateType {
   promotionIdLastAdded?: number
   promotionIdLastDelete?: number
   userAll?: UserDataTypes[]
+  tradingHistoryAll?: Array<
+    ITradingHistory & { imageData: IImageData; fromUserData: UserDataTypes; toUserData: UserDataTypes }
+  >
 }
 
 export interface IUserAsset extends AssetDataTypesWithStatus {

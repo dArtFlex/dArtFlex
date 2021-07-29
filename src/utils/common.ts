@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { FORMATS } from 'constant'
 
 export const acceptFileTypes = (fileExt: string) =>
@@ -15,4 +16,8 @@ export function getIdFromString(v: string): number | null {
 export function normalizeDate(date: string): Date {
   const isTimestamp = new Date(date).getTime() > 0
   return isTimestamp ? new Date(date) : new Date(Number(date))
+}
+
+export function tabelTimeFormat(date: string) {
+  return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(false).format('hh:mm')}`
 }
