@@ -53,3 +53,21 @@ export function getAssetStatus({
     return LISTED
   }
 }
+
+export function createDummyMarketplaceData() {
+  return {
+    id: 0,
+    item_id: '',
+    type: INSTANT_BY,
+    start_price: '',
+    end_price: '',
+    current_price: '',
+    start_time: '',
+    end_time: '',
+    platform_fee: '',
+    sales_token_contract: '',
+    sold: false,
+    created_at: '',
+    updated_at: '',
+  }
+}

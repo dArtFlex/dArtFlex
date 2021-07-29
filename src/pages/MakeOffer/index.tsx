@@ -33,6 +33,7 @@ export default function MakeOffer() {
     end_time: '20:00',
     start_price: '1',
     end_price: '100',
+    current_price: '0',
     sold: true,
     sales_token_contract: 'ether',
     userData: {

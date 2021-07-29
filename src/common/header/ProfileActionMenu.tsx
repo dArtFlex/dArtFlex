@@ -13,4 +13,23 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
   const { anchor, setAnchor, isMobile, links, subLinks } = props
 
   return <PopoverLinks anchor={anchor} setAnchor={setAnchor} links={links} isMobile={isMobile} subLinks={subLinks} />
+  const combineLinks = isUserSuperAdmin ? [...mainLinks, ...adminLinks] : mainLinks
+
+  return (
+    <PopoverLinks
+      anchor={anchor}
+      setAnchor={setAnchor}
+      links={combineLinks}
+      subLinks={[
+        {
+          lable: 'Disconnect',
+          icon: <DisconnectIcon />,
+          onClick: () => {
+            setAnchor(null)
+            onDisconnect()
+          },
+        },
+      ]}
+    />
+  )
 }

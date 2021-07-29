@@ -1,9 +1,11 @@
 import React from 'react'
+import BigNumber from 'bignumber.js'
 import { Box, IconButton, Link, Button } from '@material-ui/core'
 import { Table, Image } from 'common'
 import { ExternalLinkIcon } from 'common/icons'
 import { ITradingHistory } from '../../types'
 import { ITradingHistoryTable } from './types'
+import { tabelTimeFormat } from 'utils'
 import { useStyles } from './styles'
 
 export default function TradingHistoryTable(props: ITradingHistoryTable) {
@@ -40,7 +42,7 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => (
         <Link href={'#'} underline={'none'}>
-          {cell.from}
+          {'@' + cell.from}
         </Link>
       ),
     },
@@ -51,7 +53,7 @@ function useColumns() {
       render: (cell: ITradingHistory) => {
         return cell.to.length ? (
           <Link href={'#'} underline={'none'}>
-            {cell.to}
+            {'@' + cell.to}
           </Link>
         ) : (
           '-'
@@ -61,10 +63,16 @@ function useColumns() {
     {
       accessor: 'date',
       header: 'Date and time',
+      render: (cell: ITradingHistory) => {
+        return cell.date.length ? tabelTimeFormat(cell.date) : '-'
+      },
     },
     {
       accessor: 'amount',
       header: 'Amount',
+      render: (cell: ITradingHistory) => {
+        return new BigNumber(cell.amount).dividedBy(`10e${18 - 1}`).toNumber() + ' ETH'
+      },
     },
     {
       accessor: 'expDate',

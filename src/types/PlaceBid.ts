@@ -44,6 +44,7 @@ export interface IOrderData {
   end: string
   salt: string
   signature: string
+  signatureOrder?: string
 }
 
 export interface IAcceptBidTransaction {

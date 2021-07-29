@@ -5,6 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       minWidth: 325,
       boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      cursor: 'pointer',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',

@@ -37,3 +37,15 @@ export interface IPromotionId {
   item_id: string
   updated_at: string
 }
+
+export interface ITradingHistory extends IDatedEntity, IEntity {
+  from: string
+  to: string
+  item_id: string
+  market_id: string
+  order_id: string
+  bid_id: string
+  bid_amount: string
+  sales_token_contract: string
+  status: 'minted' | 'listed' | 'bidded' | 'canceled' | 'transferred'
+}

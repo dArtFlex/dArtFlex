@@ -32,7 +32,14 @@ export default function Form() {
   const isTabletMobile = useMediaQuery('(max-width: 980px)')
 
   const handleMinting = () => {
-    dispatch(lazyMintingRequest({ name: values.name, description: values.description, royalties: values.royalties }))
+    dispatch(
+      lazyMintingRequest({
+        name: values.name,
+        description: values.description,
+        royalties: values.royalties,
+        tags: values.tags,
+      })
+    )
   }
 
   const handleList = () => history.push(routes.sellNFT)

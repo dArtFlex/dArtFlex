@@ -281,6 +281,7 @@ export default function Artworks() {
               <CardAsset
                 key={i}
                 asset={asset}
+                userWallet={wallet?.accounts[0]}
                 useCardStatus={
                   filter === LIVE_AUCTION
                     ? useCardStatusLiveAuction
