@@ -15,6 +15,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(480)]: {
         gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
       },
+      [theme.breakpoints.down(319)]: {
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+      },
     },
   })
 )

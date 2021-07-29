@@ -22,6 +22,7 @@ export default function PopoverLinks(props: IPopoverLinksProps) {
         disableElevation
         className={clsx(isMobile ? classes.btnTitleMobile : classes.btnTitle, subLinks && classes.btnSubTitle)}
         startIcon={icon}
+        classes={{ startIcon: classes.btnIcon }}
       >
         {lable}
       </Button>

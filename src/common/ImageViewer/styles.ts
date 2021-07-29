@@ -23,6 +23,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
       },
+      [theme.breakpoints.down(600)]: {
+        top: 10,
+        right: 10,
+      },
     },
     cardImage: {
       width: 'inherit',

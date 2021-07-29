@@ -19,6 +19,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         minWidth: 310,
         minHeight: 314,
       },
+      [theme.breakpoints.down(375)]: {
+        minWidth: 270,
+        minHeight: 273,
+      },
     },
   })
 )
