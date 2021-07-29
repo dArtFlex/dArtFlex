@@ -42,7 +42,7 @@ export default function Promotions(props: IPromotion) {
           const nowTime = new Date().getTime()
           const timeExpired = nowTime > normalizeDate(`${item.endDate}`).getTime()
           return (
-            <SwiperSlide key={index} tabIndex={index}>
+            <SwiperSlide key={index} tabIndex={index} style={{ outline: 'none' }}>
               <Box className={classes.promotionBox}>
                 <Box className={classes.promotionPhoto}>
                   <img src={item.url} onClick={() => history.push(`${routes.artworks}/${item.id}`)} />
