@@ -6,6 +6,8 @@ const {
 } = appConst
 
 export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus' | 'button'> {
+  userWallet: string
+  ownerWallet: string
   status: IAssetStatus
   type: IAssetType
   startPrice?: AssetDataTypes['start_price']
@@ -32,6 +34,7 @@ export interface ICardAssetProps {
   asset: AssetDataTypesWithStatus
   withLabel?: boolean
   withAction?: boolean
+  userWallet?: string
   button?: {
     onListed?: () => void
   }

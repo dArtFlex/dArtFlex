@@ -12,7 +12,7 @@ import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
+  const { asset, userWallet = '', withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
   const classes = useStyles()
   const history = useHistory()
 
@@ -68,6 +68,8 @@ export default function CardAsset(props: ICardAssetProps) {
           burnTime={burnTime}
           timer={timer}
           button={button}
+          userWallet={userWallet}
+          ownerWallet={asset.userData.wallet}
         />
       </Card>
 

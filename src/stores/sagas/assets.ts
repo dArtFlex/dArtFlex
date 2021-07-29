@@ -8,7 +8,7 @@ import {
   getExchangeRateTokensSuccess,
   getExchangeRateTokensFailure,
 } from 'stores/reducers/assets'
-import { getUserDataByOwner } from 'stores/sagas/user'
+import { getUserDataById } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
 import { walletService } from 'services/wallet_service'
 import {
@@ -20,7 +20,7 @@ import {
   IChainId,
 } from 'types'
 import tokensAll from 'core/tokens'
-import { getAssetStatus } from 'utils'
+import { getAssetStatus, createDummyMarketplaceData } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 
@@ -28,14 +28,11 @@ const {
   STATUSES: { MINTED },
 } = appConst
 
-function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
+function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: { owner: string; uri: string }) {
   try {
-    const assetById: AssetTypes[] = yield call(api, {
-      url: APP_CONFIG.getItemByItemId(parseFloat(asset.item_id)),
-    })
-    const userData: UserDataTypes = yield call(getUserDataByOwner, api, assetById[0].owner)
+    const userData: UserDataTypes = yield call(getUserDataById, api, owner)
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
-      url: assetById[0].uri,
+      url: uri,
     })
 
     return { ...asset, imageData: imageData[0], userData }
@@ -46,11 +43,18 @@ function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imag
 
 export function* getAssetsAllData(api: IApi) {
   try {
-    const getAssetsListAll: AssetMarketplaceTypes[] = yield call(api, {
-      url: APP_CONFIG.getMarketplaceAll,
+    const getItemAssetsAll: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemAll,
     })
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = yield all(
+      getItemAssetsAll.map((item) => call(getMarketplaceData, api, item.id))
+    )
     const getAssetsListAllData: AssetDataTypes[] = yield all(
-      getAssetsListAll.map((asset) => call(getAssetData, api, asset))
+      getMarketplactAssetsAll
+        .map((mpD) => (mpD ? mpD : createDummyMarketplaceData()))
+        .map((asset, index) =>
+          call(getAssetData, api, asset, { owner: getItemAssetsAll[index].owner, uri: getItemAssetsAll[index].uri })
+        )
     )
 
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(

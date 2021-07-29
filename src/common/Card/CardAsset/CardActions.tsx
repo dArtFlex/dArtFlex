@@ -16,6 +16,8 @@ const {
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
   const {
+    userWallet,
+    ownerWallet,
     endPrice,
     startPrice,
     currentPrice,
@@ -49,9 +51,15 @@ export default function CardActions(props: ICardActionsProps) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
-          <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-            List
-          </Button>
+          {userWallet === ownerWallet ? (
+            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+              List
+            </Button>
+          ) : (
+            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+              Make offer
+            </Button>
+          )}
         </Box>
       )
     case LIVE_AUCTION:
