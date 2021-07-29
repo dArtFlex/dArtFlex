@@ -19,6 +19,8 @@ import {
   deletePromotionFailure,
   getAllUsersSuccess,
   getAllUsersFailure,
+  getTradingHistorySuccess,
+  getTradingHistoryFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -33,10 +35,11 @@ import {
   IBidsHistory,
   IAddPromotionEntities,
   IPromotionId,
+  ITradingHistory,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
-import { getIdFromString } from 'utils'
+import { getIdFromString, createDummyMarketplaceData } from 'utils'
 import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -155,23 +158,9 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
     url: asset.uri,
   })
   const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
-  // We need to use dummy marketplace data in order to use common cards component
-  const dummyMarketplaceData = {
-    id: 0,
-    item_id: '',
-    type: appConst.TYPES.INSTANT_BY,
-    start_price: '',
-    end_price: '',
-    start_time: '',
-    end_time: '',
-    platform_fee: '',
-    sales_token_contract: '',
-    sold: false,
-    created_at: '',
-    updated_at: '',
-  }
 
-  return { ...(marketplaceData || dummyMarketplaceData), imageData: imageData[0], userData, tokenData: asset }
+  // We need to use dummy marketplace data in order to use common cards component
+  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -233,7 +222,6 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
-    debugger
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
     const promotionData: IAddPromotionEntities = yield call(api, {
       url: APP_CONFIG.addPromotion,
@@ -310,5 +298,32 @@ export function* getAllUsers(api: IApi) {
     yield put(getAllUsersSuccess({ userAll }))
   } catch (e) {
     yield put(getAllUsersFailure(e.message || e))
+  }
+}
+
+export function* tradingHistory(api: IApi, { payload }: PayloadAction<{ userId: number }>) {
+  try {
+    const tradingHistoryByUser: ITradingHistory[] = yield call(api, {
+      url: APP_CONFIG.getHistoryTradingByUserId(payload.userId),
+    })
+    const promotionAssets: UserStateType['promotionAssets'] = yield all(
+      tradingHistoryByUser.map((th) => call(getPromotionAssetById, api, Number(th.item_id)))
+    )
+    const fromUser: UserDataTypes[] = yield all(
+      tradingHistoryByUser.map((th) => call(getUserDataById, api, parseFloat(th.from) ? th.from : th.to))
+    )
+    const toUser: UserDataTypes[] = yield all(
+      tradingHistoryByUser.map((th) => call(getUserDataById, api, parseFloat(th.to) ? th.to : th.from))
+    )
+
+    const composeData = tradingHistoryByUser.flatMap((h, i) => ({
+      ...h,
+      imageData: promotionAssets[i].imageData,
+      fromUserData: fromUser[i],
+      toUserData: toUser[i],
+    }))
+    yield put(getTradingHistorySuccess({ tradingHistoryAll: composeData }))
+  } catch (e) {
+    yield put(getTradingHistoryFailure(e.message || e))
   }
 }
