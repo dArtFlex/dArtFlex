@@ -34,11 +34,12 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
 export function* minting(
   api: IApi,
   {
-    payload: { name, description, royalties },
+    payload: { name, description, royalties, tags },
   }: PayloadAction<{
     data: MintingStateType['data']['name']
     description: MintingStateType['data']['description']
     royalties: MintingStateType['data']['royalties']
+    tags: MintingStateType['tags']
   }>
 ) {
   try {
@@ -49,6 +50,7 @@ export function* minting(
       ...data,
       name,
       description,
+      tags,
     }
 
     const createMetadataId = yield call(api, {

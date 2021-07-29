@@ -60,7 +60,10 @@ export default function ProfileActionMenu(props: IProfileActionMenuProps) {
         {
           lable: 'Disconnect',
           icon: <DisconnectIcon />,
-          onClick: onDisconnect,
+          onClick: () => {
+            setAnchor(null)
+            onDisconnect()
+          },
         },
       ]}
     />

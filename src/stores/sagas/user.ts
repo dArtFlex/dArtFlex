@@ -36,7 +36,7 @@ import {
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
-import { getIdFromString } from 'utils'
+import { getIdFromString, createDummyMarketplaceData } from 'utils'
 import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -155,23 +155,9 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
     url: asset.uri,
   })
   const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
-  // We need to use dummy marketplace data in order to use common cards component
-  const dummyMarketplaceData = {
-    id: 0,
-    item_id: '',
-    type: appConst.TYPES.INSTANT_BY,
-    start_price: '',
-    end_price: '',
-    start_time: '',
-    end_time: '',
-    platform_fee: '',
-    sales_token_contract: '',
-    sold: false,
-    created_at: '',
-    updated_at: '',
-  }
 
-  return { ...(marketplaceData || dummyMarketplaceData), imageData: imageData[0], userData, tokenData: asset }
+  // We need to use dummy marketplace data in order to use common cards component
+  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -233,7 +219,6 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
-    debugger
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
     const promotionData: IAddPromotionEntities = yield call(api, {
       url: APP_CONFIG.addPromotion,

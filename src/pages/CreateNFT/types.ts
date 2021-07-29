@@ -18,4 +18,5 @@ export interface ICreateNFT {
   royalties: MintingStateType['data']['royalties']
   description: MintingStateType['data']['description']
   step: IStepNFT
+  tags: string[]
 }

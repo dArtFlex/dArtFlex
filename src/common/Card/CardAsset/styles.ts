@@ -5,6 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       minWidth: 325,
       boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      cursor: 'pointer',
     },
     card: {
       display: 'flex',
@@ -13,16 +14,18 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     artContainer: {
       position: 'relative',
-      padding: theme.spacing(1),
+      padding: theme.spacing(0),
       height: '242px',
+      width: '100%',
       color: theme.palette.blackMain,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
+      borderRadius: 10,
+      overflow: 'hidden',
       '&>img': {
-        maxWidth: '100%',
-        maxHeight: '100%',
+        width: '100%',
         objectFit: 'contain',
       },
     },
