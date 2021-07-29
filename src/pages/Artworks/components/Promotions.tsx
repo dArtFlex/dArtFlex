@@ -26,10 +26,10 @@ export default function Promotions(props: IPromotion) {
   return (
     <React.Fragment>
       <Swiper
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 4000,
+        //   disableOnInteraction: false,
+        // }}
         navigation={{
           nextEl: nextSlideRef.current,
           prevEl: prevSlideRef.current,
@@ -45,7 +45,7 @@ export default function Promotions(props: IPromotion) {
             <SwiperSlide key={index} tabIndex={index} style={{ outline: 'none' }}>
               <Box className={classes.promotionBox}>
                 <Box className={classes.promotionPhoto}>
-                  <img src={item.url} onClick={() => history.push(`${routes.artworks}/${item.id}`)} />
+                  <img src={item.url} />
                 </Box>
                 <Box className={classes.promotionInfoWrapper}>
                   <Box display="flex" alignItems="center" mb={2}>
@@ -81,7 +81,11 @@ export default function Promotions(props: IPromotion) {
                     <Button variant={'contained'} disableElevation classes={{ root: classes.promotionButtonContained }}>
                       Place a Bid
                     </Button>
-                    <Button variant="outlined" classes={{ root: classes.promotionButtonWhite }}>
+                    <Button
+                      variant="outlined"
+                      classes={{ root: classes.promotionButtonWhite }}
+                      onClick={() => history.push(`${routes.artworks}/${item.id}`)}
+                    >
                       View Artwork
                     </Button>
                   </Box>

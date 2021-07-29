@@ -101,10 +101,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       padding: `${theme.spacing(15, 0, 15, 0)}`,
-      height: '36vw',
-      '@media (max-width:1152px)': {
-        height: '44vw',
-      },
+      // height: '36vw',
+      // '@media (max-width:1152px)': {
+      //   height: '44vw',
+      // },
       [theme.breakpoints.down(1024)]: {
         flexDirection: 'column',
         height: 'unset',
@@ -120,7 +120,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.blackMain,
       display: 'flex',
       justifyContent: 'space-around',
-      cursor: 'pointer',
       '&>img': {
         maxWidth: '100%',
         maxHeight: 'inherit',
@@ -128,15 +127,18 @@ export const useStyles = makeStyles((theme: Theme) =>
         borderRadius: 10,
       },
       [theme.breakpoints.down(1024)]: {
-        maxHeight: '40vw',
-        maxWidth: '60vw',
+        // maxHeight: '40vw',
+        // maxWidth: '60vw',
+        maxHeight: 'unset',
+        maxWidth: 'unset',
       },
       [theme.breakpoints.down(641)]: {
-        maxHeight: '48vw',
-        maxWidth: '72vw',
+        // maxHeight: '48vw',
+        // maxWidth: '72vw',
       },
     },
     sliderNext: {
+      maxHeight: 930,
       '&.swiper-button-next, .swiper-button-prev': {
         width: '20px',
         height: '20px',
