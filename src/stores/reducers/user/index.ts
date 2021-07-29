@@ -150,6 +150,21 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getTradingHistoryRequest: (state, i) => {
+      state.fetching = true
+    },
+    getTradingHistorySuccess: (
+      state,
+      { payload }: PayloadAction<{ tradingHistoryAll: UserStateType['tradingHistoryAll'] }>
+    ) => {
+      state.fetching = true
+      state.tradingHistoryAll = payload.tradingHistoryAll
+    },
+    getTradingHistoryFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -188,6 +203,10 @@ export const {
   getAllUsersRequest,
   getAllUsersSuccess,
   getAllUsersFailure,
+
+  getTradingHistoryRequest,
+  getTradingHistorySuccess,
+  getTradingHistoryFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice
