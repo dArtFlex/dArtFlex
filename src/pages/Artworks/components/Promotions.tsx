@@ -13,6 +13,7 @@ import clsx from 'clsx'
 import routes from '../../../routes'
 import CardBadge from '../../../common/Card/CardAsset/CardBadge'
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
+import { useHistory } from 'react-router-dom'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -20,6 +21,7 @@ export default function Promotions(props: IPromotion) {
   const prevSlideRef = useRef<HTMLDivElement>(null)
   const nextSlideRef = useRef<HTMLDivElement>(null)
   const [currentSlide, setCurrentSlide] = useState(1)
+  const history = useHistory()
 
   return (
     <React.Fragment>
@@ -43,7 +45,7 @@ export default function Promotions(props: IPromotion) {
             <SwiperSlide key={index} tabIndex={index}>
               <Box className={classes.promotionBox}>
                 <Box className={classes.promotionPhoto}>
-                  <img src={item.url} />
+                  <img src={item.url} onClick={() => history.push(`${routes.artworks}/${item.id}`)} />
                 </Box>
                 <Box className={classes.promotionInfoWrapper}>
                   <Box display="flex" alignItems="center" mb={2}>
