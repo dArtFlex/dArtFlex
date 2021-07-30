@@ -34,7 +34,7 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
 export function* minting(
   api: IApi,
   {
-    payload: { name, description, royalties, tags },
+    payload: { name, description, royalties },
   }: PayloadAction<{
     data: MintingStateType['data']['name']
     description: MintingStateType['data']['description']
@@ -50,7 +50,6 @@ export function* minting(
       ...data,
       name,
       description,
-      tags,
     }
 
     const createMetadataId = yield call(api, {
@@ -85,6 +84,7 @@ export function* minting(
         royaltyFee: '',
         lazymint: true,
         signature: lm.signatures[0],
+        hashtagIdList: [4],
       },
     })
     const lazyMintItemId: number = getIdFromString(createItemId)

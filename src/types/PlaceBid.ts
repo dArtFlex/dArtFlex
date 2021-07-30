@@ -5,6 +5,7 @@ export interface IBidsHistory {
   item_id: string
   market_id: string
   order_id: string
+  bid_id: string
   status: HistoryStatusType
   updated_at: Date | string
   user_id: string
