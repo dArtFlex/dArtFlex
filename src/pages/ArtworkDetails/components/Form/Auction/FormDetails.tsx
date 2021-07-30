@@ -113,12 +113,10 @@ export default function FormDetails(props: IDetailsFormProps) {
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
-              {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>
               {!isAuctionExpired ? `${startPriceToToken} ETH` : null}
               {isAuctionExpired ? (marketData?.end_price ? `${startPriceToToken} ETH` : '-') : ''}
-              {marketData?.sold && `${startPriceToToken} ETH`}
             </Typography>
             <span>
               {!isAuctionExpired
@@ -131,11 +129,21 @@ export default function FormDetails(props: IDetailsFormProps) {
                   ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                   : ''
                 : ''}
-              {marketData?.sold &&
-                marketData?.end_price &&
-                `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
             </span>
           </Box>
+          {marketData?.sold && (
+            <Box>
+              <Typography variant={'body1'} className={classes.infoTitle}>
+                <span>Sold For</span>
+              </Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${startPriceToToken} ETH`}</Typography>
+              <span>
+                {marketData?.sold &&
+                  marketData?.end_price &&
+                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
+              </span>
+            </Box>
+          )}
           {!isAuctionExpired && marketData?.end_time ? (
             <Box>
               <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
@@ -192,6 +200,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           fullWidth
           disableElevation
           className={classes.bitBtn}
+          classes={{ disabled: classes.bitBtnDisabled }}
           disabled={Boolean(isAuctionExpired)}
         >
           {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
