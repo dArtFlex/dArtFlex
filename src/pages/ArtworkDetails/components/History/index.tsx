@@ -31,7 +31,7 @@ export default function History() {
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { ownerData, marketData },
+    assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
@@ -47,7 +47,14 @@ export default function History() {
   }
 
   const handleAcceptOffer = () => {
-    dispatch(acceptBidRequest({ creatorId: bidHistory[0].order_id, buyerId: bidHistoryReverse[0].order_id }))
+    dispatch(
+      acceptBidRequest({
+        creatorId: bidHistory[0].order_id,
+        market_id: bidHistoryReverse[0].market_id,
+        buyerId: bidHistoryReverse[0].order_id,
+        bid_id: bidHistoryReverse[0].bid_id,
+      })
+    )
   }
 
   const handleCancelOffer = ({
@@ -76,7 +83,7 @@ export default function History() {
               {...props}
               {...getBidAmountToTokenAndUsd(props.bid_amount)}
               userWalletId={user?.id}
-              onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
+              onAccept={handleAcceptOffer}
               onCancel={
                 user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
                   ? handleCancelOffer
@@ -100,20 +107,31 @@ export default function History() {
 
   return (
     <Box mt={3} mb={3}>
-      {bidHistoryReverse.map((props, i) => (
-        <CardHistory
-          key={i}
-          {...props}
-          {...getBidAmountToTokenAndUsd(props.bid_amount)}
-          userWalletId={user?.id}
-          onAccept={!i && user?.id === ownerData?.id ? handleAcceptOffer : undefined}
-          onCancel={
-            user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
-              ? handleCancelOffer
-              : undefined
-          }
-        />
-      ))}
+      {bidHistoryReverse.map((props, i) => {
+        return (
+          <CardHistory
+            key={i}
+            {...props}
+            {...getBidAmountToTokenAndUsd(props.bid_amount)}
+            userWalletId={user?.id}
+            onAccept={
+              i === 0 &&
+              tokenData &&
+              user?.id === +tokenData.owner &&
+              !expireTime &&
+              marketData &&
+              marketData?.type === 'auction'
+                ? handleAcceptOffer
+                : undefined
+            }
+            onCancel={
+              user?.id === +props.userData?.id && expireTime && marketData && marketData?.type === 'auction'
+                ? handleCancelOffer
+                : undefined
+            }
+          />
+        )
+      })}
     </Box>
   )
 }

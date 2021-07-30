@@ -4,6 +4,9 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(4, 10),
+      [theme.breakpoints.down(681)]: {
+        padding: theme.spacing(4),
+      },
       flex: '1 1 auto',
     },
   })

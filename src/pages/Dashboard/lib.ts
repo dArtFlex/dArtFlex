@@ -1,5 +1,5 @@
 import { IDashboardArtworksFiltes } from './types'
-import { AssetDataTypesWithStatus, AssetTypes } from 'types'
+import { IUserAssets } from './types'
 import appConst from 'config/consts'
 
 const {
@@ -10,13 +10,7 @@ export function useSortedAssets({
   userAssets,
   filter,
 }: {
-  userAssets:
-    | Array<
-        AssetDataTypesWithStatus & {
-          tokenData: AssetTypes
-        }
-      >
-    | []
+  userAssets: IUserAssets[] | []
   filter: IDashboardArtworksFiltes
 }) {
   if (userAssets.length == 0) {

@@ -50,6 +50,16 @@ export const selectSearch = () =>
     (store: stateType) => store,
     ({ user: { search } }: stateType) => ({ search })
   )
+export const selectAllUsers = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { userAll } }: stateType) => ({ userAll })
+  )
+export const selectAllTradingHistory = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { tradingHistoryAll } }: stateType) => ({ tradingHistoryAll })
+  )
 
 // Wallet
 export const selectWallet = () =>

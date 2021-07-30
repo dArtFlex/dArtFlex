@@ -10,7 +10,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateRows: 'minmax(100%, auto)',
       gridGap: theme.spacing(10),
       alignItems: 'start',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(940)]: {
         gridTemplateColumns: '1fr',
         gridTemplateRows: '1fr',
       },
@@ -27,6 +27,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         maxWidth: '100%',
         maxHeight: '100%',
         objectFit: 'contain',
+      },
+      '&>div': {
+        display: 'block',
+      },
+      [theme.breakpoints.down(480)]: {
+        padding: theme.spacing(0, 2),
       },
     },
     expandBtb: {
@@ -54,6 +60,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     spaceContent: {
       justifyContent: 'space-between',
     },
+    formHeader: {
+      marginBottom: theme.spacing(4),
+    },
     moreIcon: {
       border: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.text.primary,
@@ -63,6 +72,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     artworkInfoWrapper: {
       paddingTop: theme.spacing(14),
+      [theme.breakpoints.down(940)]: {
+        paddingTop: theme.spacing(4),
+      },
     },
     makeOfferBlock: {
       marginTop: theme.spacing(6),
@@ -105,6 +117,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 12,
       padding: theme.spacing(8, 6, 6, 6),
       margin: 'auto 0',
+      [theme.breakpoints.down(640)]: {
+        padding: theme.spacing(4),
+      },
     },
     infoIcon: {
       color: theme.palette.text.primary,
@@ -124,6 +139,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3.5, 4),
       borderRadius: 12,
       marginTop: theme.spacing(4),
+      [theme.breakpoints.down(480)]: {
+        padding: theme.spacing(3.5, 2),
+      },
     },
     textViolet: {
       color: theme.palette.lightViolet,

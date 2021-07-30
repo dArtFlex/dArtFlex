@@ -10,6 +10,8 @@ import {
   connnectWalletConnectFailure,
   getTokensBalancesSuccess,
   getTokensBalancesFailure,
+  walletsDisconeSuccess,
+  walletsDisconeFailure,
 } from '../reducers/wallet'
 import { IChainId, ITokenBalances, IBaseTokens } from 'types'
 import { storageActiveWallet, createWalletInstance } from 'utils'
@@ -131,5 +133,24 @@ function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
     }
   } catch (e) {
     throw new Error(e.message || `getBalance: ${e}`)
+  }
+}
+
+export function* walletsDisconet() {
+  try {
+    if (ethereum.isConnected()) {
+      ethereum.on('disconnect', (error) => console.log(error))
+      localStorage.removeItem(appConst.WALLET_CONNECT_STORAGE.METAMASK)
+    }
+    if (window.connector) {
+      connector.on('disconnect', (error) => console.log(error))
+      localStorage.removeItem(appConst.WALLET_CONNECT)
+    }
+    localStorage.removeItem(appConst.ACTIVE_WALLET_STORAGE)
+
+    yield put(walletsDisconeSuccess())
+    window.location.reload()
+  } catch (e) {
+    yield put(walletsDisconeFailure())
   }
 }

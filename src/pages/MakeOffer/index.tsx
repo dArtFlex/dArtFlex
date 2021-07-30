@@ -33,6 +33,7 @@ export default function MakeOffer() {
     end_time: '20:00',
     start_price: '1',
     end_price: '100',
+    current_price: '0',
     sold: true,
     sales_token_contract: 'ether',
     userData: {
@@ -69,35 +70,33 @@ export default function MakeOffer() {
               <CardAsset asset={asset} />
             ) : (
               <>
-                {isZoomOpen ? (
-                  <ImageViewer
-                    open={isZoomOpen}
-                    onClose={() => setZoomOpen(false)}
-                    images={[
-                      'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650',
-                    ]}
-                  />
-                ) : (
-                  <>
-                    <img
-                      src={
-                        'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650'
-                      }
-                      className={classes.offerPhoto}
-                    />
-                    <IconButton
-                      className={clsx(classes.expandBtb, classes.borderdIconButton)}
-                      onClick={() => setZoomOpen(true)}
-                    >
-                      <ArrowExpandIcon />
-                    </IconButton>
-                  </>
-                )}
+                <img
+                  src={
+                    'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650'
+                  }
+                  className={classes.offerPhoto}
+                  alt="make-offer-image"
+                />
+                <IconButton
+                  className={clsx(classes.expandBtb, classes.borderdIconButton)}
+                  onClick={() => setZoomOpen(true)}
+                >
+                  <ArrowExpandIcon />
+                </IconButton>
               </>
             )}
           </Box>
         </Box>
         <MakeOfferForm formId={formId} setFormId={setFormId} />
+        {isZoomOpen && (
+          <ImageViewer
+            open={isZoomOpen}
+            onClose={() => setZoomOpen(false)}
+            images={[
+              'https://ik.imagekit.io/theartling/p/original_images/fb348158589d4d89bb97988c295d52ca.jpg?tr=w-1650',
+            ]}
+          />
+        )}
       </Box>
     </PageWrapper>
   )

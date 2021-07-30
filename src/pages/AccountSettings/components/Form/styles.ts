@@ -9,12 +9,18 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontWeight: 'bold',
         lineHeight: '125%',
         marginBottom: theme.spacing(8),
+        [theme.breakpoints.down(480)]: {
+          textAlign: 'center',
+        },
       },
       '& h3': {
         fontSize: 24,
         fontWeight: 'bold',
         lineHeight: '125%',
         marginBottom: theme.spacing(8),
+        [theme.breakpoints.down(480)]: {
+          textAlign: 'center',
+        },
       },
       '& input::placeholder': {
         fontWeight: 700,

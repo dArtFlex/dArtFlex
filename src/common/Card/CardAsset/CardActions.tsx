@@ -16,8 +16,11 @@ const {
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
   const {
+    userWallet,
+    ownerWallet = '',
     endPrice,
     startPrice,
+    currentPrice,
     sold,
     endTime = '0',
     burnTime = 0,
@@ -25,6 +28,7 @@ export default function CardActions(props: ICardActionsProps) {
     type,
     status,
     useCardStatus = useDefaultCardStatus,
+    button,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
@@ -33,23 +37,29 @@ export default function CardActions(props: ICardActionsProps) {
     ? new BigNumber(startPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(7)
+        .toFixed(4)
     : startPrice
-  const currentBitToCoin = endPrice
-    ? new BigNumber(endPrice)
+  const currentBitToCoin = currentPrice
+    ? new BigNumber(currentPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(7)
-    : endPrice
+        .toFixed(4)
+    : currentPrice
 
   const now_time = new Date().getTime()
   switch (cardStatus) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
-          <Button variant={'contained'} fullWidth className={classes.listBtn}>
-            List
-          </Button>
+          {userWallet === ownerWallet ? (
+            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+              List
+            </Button>
+          ) : (
+            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+              Make offer
+            </Button>
+          )}
         </Box>
       )
     case LIVE_AUCTION:
@@ -57,7 +67,11 @@ export default function CardActions(props: ICardActionsProps) {
         <Box className={classes.cardAction}>
           <Section
             text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={now_time < normalizeDate(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
+            value={
+              now_time < normalizeDate(endTime).getTime()
+                ? `${parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin} ETH`
+                : '-'
+            }
           />
           {now_time < normalizeDate(endTime).getTime() ? (
             <ButtonBase

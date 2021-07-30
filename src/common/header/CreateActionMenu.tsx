@@ -17,16 +17,16 @@ export default function CreateActionMenu(props: ICreateActionMenuProps) {
       setAnchor={setAnchor}
       links={[
         {
-          lable: 'Constructor',
+          lable: 'Create NFT - mint',
+          onClick: () => history.push(routes.createNFT),
+        },
+        {
+          lable: 'Constructor AI',
           onClick: () => history.push(routes.constructor),
         },
         {
           lable: 'My Album',
           onClick: () => console.log('My Album'),
-        },
-        {
-          lable: 'Create NFT - mint',
-          onClick: () => history.push(routes.createNFT),
         },
       ]}
     />

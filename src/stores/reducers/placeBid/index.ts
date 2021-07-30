@@ -42,8 +42,12 @@ const userSlice = createSlice({
     acceptBidRequest: (state, i) => {
       state.fetching = true
     },
-    acceptBidSuccess: (state) => {
+    acceptBidSuccess: (
+      state,
+      { payload }: PayloadAction<{ acceptBidTransaction: PlaceBidStateType['acceptBidTransaction'] }>
+    ) => {
       state.fetching = false
+      state.acceptBidTransaction = payload.acceptBidTransaction
     },
     acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload

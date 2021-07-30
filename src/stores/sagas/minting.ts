@@ -39,6 +39,7 @@ export function* minting(
     data: MintingStateType['data']['name']
     description: MintingStateType['data']['description']
     royalties: MintingStateType['data']['royalties']
+    tags: MintingStateType['tags']
   }>
 ) {
   try {
@@ -83,6 +84,7 @@ export function* minting(
         royaltyFee: '',
         lazymint: true,
         signature: lm.signatures[0],
+        hashtagIdList: [4],
       },
     })
     const lazyMintItemId: number = getIdFromString(createItemId)

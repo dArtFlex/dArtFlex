@@ -3,8 +3,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardUpload: {
-      width: 325,
-      height: 460,
+      minWidth: 325,
+      minHeight: 460,
       padding: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
@@ -12,6 +12,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       flexDirection: 'column',
       gap: theme.spacing(10),
+      [theme.breakpoints.down(640)]: {
+        minWidth: 'unset',
+        width: '94vw',
+      },
     },
     text: {
       fontSize: 16,

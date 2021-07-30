@@ -2,12 +2,13 @@ import React from 'react'
 import { Box, Button, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
 
-interface IMintingForm {
+interface IListingForm {
   onViewArtwork: () => void
+  isTabletMobile: boolean
 }
 
-export default function ListingForm(props: IMintingForm) {
-  const { onViewArtwork } = props
+export default function ListingForm(props: IListingForm) {
+  const { onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
 
   return (
@@ -20,7 +21,7 @@ export default function ListingForm(props: IMintingForm) {
           Congratulations! Your artwork has officially been listed as an NFT on the Blockchain
         </Typography>
       </Box>
-      <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork}>
+      <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork} fullWidth={isTabletMobile}>
         View Artwork
       </Button>
     </Box>

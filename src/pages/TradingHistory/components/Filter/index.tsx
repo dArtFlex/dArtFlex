@@ -27,17 +27,17 @@ export default function Filter() {
           Filter By
         </Button>
 
-        <Box className={classes.filtersBtnBox}>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Minted
-          </Button>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Place a bid
-          </Button>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Sold
-          </Button>
-        </Box>
+        {/*<Box className={classes.filtersBtnBox}>*/}
+        <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
+          Minted
+        </Button>
+        <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
+          Place a bid
+        </Button>
+        <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
+          Sold
+        </Button>
+        {/*</Box>*/}
 
         <Button className={classes.btnRefreshIcon} startIcon={<RefreshIcon />}>
           Clear Filters

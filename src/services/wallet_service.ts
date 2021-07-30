@@ -1,9 +1,14 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
 import { web3Service } from 'services/web3_service'
+import { listingService } from 'services/listing_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
+import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import appConst from 'config/consts'
 
+const signTypes = {
+  Sign: [],
+}
 class WalletService {
   async getMetaMaskAccount() {
     const web3 = await web3Service.setWeb3EthProvider()
@@ -46,6 +51,26 @@ class WalletService {
 
   getTokenContract(tokenId) {
     return new web3.eth.Contract(STANDART_TOKEN_ABI, tokenId)
+  }
+
+  async generateSignature() {
+    const data = listingService.createTypeData(
+      {
+        name: 'sign',
+        version: '1',
+        chainId: Number(this.chainId),
+        verifyingContract: AUCTION_CONTRACT_ADDRESS,
+      },
+      'Sign',
+      {},
+      signTypes
+    )
+
+    const signature = await listingService.signTypedData(data)
+    return {
+      data: JSON.stringify(data),
+      signature,
+    }
   }
 }
 

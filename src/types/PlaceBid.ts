@@ -5,6 +5,7 @@ export interface IBidsHistory {
   item_id: string
   market_id: string
   order_id: string
+  bid_id: string
   status: HistoryStatusType
   updated_at: Date | string
   user_id: string
@@ -19,6 +20,7 @@ export type HistoryStatusType =
   | 'listed'
   | 'canceled'
   | 'pending'
+  | 'bidded'
 
 export interface IOrderData {
   data: string
@@ -43,4 +45,22 @@ export interface IOrderData {
   end: string
   salt: string
   signature: string
+  signatureOrder?: string
+}
+
+export interface IAcceptBidTransaction {
+  blockHash: string
+  blockNumber: number
+  contractAddress: null | string
+  cumulativeGasUsed: number
+  effectiveGasPrice: string
+  from: string
+  gasUsed: number
+  logs: unknown[]
+  logsBloom: string
+  status: boolean
+  to: string
+  transactionHash: string
+  transactionIndex: number
+  type: string
 }

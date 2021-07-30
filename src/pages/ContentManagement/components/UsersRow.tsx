@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { IUsersRow } from '../types'
 import { StyledTableRow, useStyles } from '../styles'
 import { Box, Button, TableCell } from '@material-ui/core'
+import clsx from 'clsx'
 
 interface IUsersRowInterface {
   row: IUsersRow
@@ -26,7 +27,7 @@ export default function UsersRow(props: IUsersRowInterface) {
         </Box>
       </TableCell>
       <TableCell classes={{ root: classes.tableTextItem }}>@{props.row.username}</TableCell>
-      <TableCell>
+      <TableCell className={clsx(classes.tableCellRoot, classes.userStatus)}>
         {isBanned ? (
           <span className={classes.statusTextActive}>Active</span>
         ) : (
@@ -35,11 +36,11 @@ export default function UsersRow(props: IUsersRowInterface) {
       </TableCell>
       <TableCell>
         {isBanned ? (
-          <Button className={classes.statusTextBanned} onClick={handleStatusChange}>
+          <Button className={clsx(classes.statusTextBanned, classes.worksRowActionButton)} onClick={handleStatusChange}>
             Ban
           </Button>
         ) : (
-          <Button className={classes.statusTextUnban} onClick={handleStatusChange}>
+          <Button className={clsx(classes.statusTextUnban, classes.worksRowActionButton)} onClick={handleStatusChange}>
             Unban
           </Button>
         )}

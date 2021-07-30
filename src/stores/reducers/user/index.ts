@@ -76,23 +76,40 @@ const userSlice = createSlice({
       state.fetchingBids = false
     },
 
-    setPromotionRequest: (state, i) => {
+    addPromotionRequest: (state, i) => {
       state.fetchingPromo = true
     },
-    setPromotionSuccess: (
+    addPromotionSuccess: (
       state,
       {
         payload,
       }: PayloadAction<{
-        promotionIds: UserStateType['promotionIds']
-        promotionAssets: UserStateType['promotionAssets']
+        promotionIdLastAdded: UserStateType['promotionIdLastAdded']
       }>
     ) => {
       state.fetchingPromo = false
-      state.promotionAssets = payload.promotionAssets
-      state.promotionIds = payload.promotionIds
+      state.promotionIdLastAdded = payload.promotionIdLastAdded
     },
-    setPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+    addPromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
+    },
+
+    deletePromotionRequest: (state, i) => {
+      state.fetchingPromo = true
+    },
+    deletePromotionSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        promotionIdLastDelete: UserStateType['promotionIdLastDelete']
+      }>
+    ) => {
+      state.fetchingPromo = false
+      state.promotionIdLastDelete = payload.promotionIdLastDelete
+    },
+    deletePromotionFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingPromo = false
     },
@@ -121,6 +138,33 @@ const userSlice = createSlice({
     setSearch: (state, { payload }: PayloadAction<string>) => {
       state.search = payload
     },
+
+    getAllUsersRequest: (state) => {
+      state.fetching = true
+    },
+    getAllUsersSuccess: (state, { payload }: PayloadAction<{ userAll: UserStateType['userAll'] }>) => {
+      state.fetching = true
+      state.userAll = payload.userAll
+    },
+    getAllUsersFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    getTradingHistoryRequest: (state, i) => {
+      state.fetching = true
+    },
+    getTradingHistorySuccess: (
+      state,
+      { payload }: PayloadAction<{ tradingHistoryAll: UserStateType['tradingHistoryAll'] }>
+    ) => {
+      state.fetching = true
+      state.tradingHistoryAll = payload.tradingHistoryAll
+    },
+    getTradingHistoryFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -142,15 +186,27 @@ export const {
   getUserBidsSuccess,
   getUserBidsFailure,
 
-  setPromotionRequest,
-  setPromotionSuccess,
-  setPromotionFailure,
+  addPromotionRequest,
+  addPromotionSuccess,
+  addPromotionFailure,
 
   getPromotionRequest,
   getPromotionSuccess,
   getPromotionFailure,
 
+  deletePromotionRequest,
+  deletePromotionSuccess,
+  deletePromotionFailure,
+
   setSearch,
+
+  getAllUsersRequest,
+  getAllUsersSuccess,
+  getAllUsersFailure,
+
+  getTradingHistoryRequest,
+  getTradingHistorySuccess,
+  getTradingHistoryFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

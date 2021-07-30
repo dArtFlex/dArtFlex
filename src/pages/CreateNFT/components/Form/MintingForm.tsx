@@ -12,10 +12,11 @@ interface IMintingForm {
   onMinting: () => void
   onList: () => void
   onViewArtwork: () => void
+  isTabletMobile: boolean
 }
 
 export default function MintingForm(props: IMintingForm) {
-  const { onMinting, onList, onViewArtwork } = props
+  const { onMinting, onList, onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
 
   const { values, setFieldValue } = useFormikContext<ICreateNFT>()
@@ -26,8 +27,6 @@ export default function MintingForm(props: IMintingForm) {
   } = useSelector(selectMinting())
 
   const { wallet } = useSelector(selectWallet())
-
-  console.log(minting)
 
   switch (minting) {
     case 'none':
@@ -128,11 +127,11 @@ export default function MintingForm(props: IMintingForm) {
             </Typography>
           </Box>
           <Box pb={4}>
-            <Button variant={'contained'} color={'primary'} onClick={onList}>
+            <Button variant={'contained'} color={'primary'} onClick={onList} fullWidth={isTabletMobile}>
               List your NFT
             </Button>
           </Box>
-          <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork}>
+          <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork} fullWidth={isTabletMobile}>
             View Artwork
           </Button>
         </Box>

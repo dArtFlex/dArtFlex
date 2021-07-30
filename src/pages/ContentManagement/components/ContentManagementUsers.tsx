@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+// import { useSelector } from 'react-redux'
+// import { selectAllUsers } from 'stores/selectors'
 import {
   Box,
   IconButton,
@@ -13,16 +15,16 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import UsersRow from './UsersRow'
+import clsx from 'clsx'
+// import { UserDataTypes } from 'types'
 
 export default function ContentManagementUsers() {
   const classes = useStyles()
-
+  // const { userAll } = useSelector(selectAllUsers())
   const [page, setPage] = useState(1)
-
   const rowsPerPage = 10
 
   const handleNextPage = () => setPage(page + 1)
-
   const handlePreviousPage = () => setPage(page - 1)
 
   const usersContent = [
@@ -224,7 +226,7 @@ export default function ContentManagementUsers() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box className={classes.flexBox} mt={4}>
+      <Box className={clsx(classes.flexBox, classes.paginationContent)} mt={4}>
         <Paper elevation={3} className={classes.paginationWrapper}>
           <Box className={classes.flexBox}>
             <IconButton onClick={handlePreviousPage} disabled={page === 1} className={classes.disabledButton}>
@@ -246,3 +248,7 @@ export default function ContentManagementUsers() {
     </Box>
   )
 }
+
+// function useUsersContent(userAll: UserDataTypes) {
+//   return userAll
+// }

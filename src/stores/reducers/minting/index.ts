@@ -14,7 +14,7 @@ const initialState: MintingStateType = {
     attribute: '', // unnecessary field
     description: '',
   },
-  lazyMintData: null,
+  tags: [],
   lazyMintItemId: null,
 }
 
@@ -45,16 +45,18 @@ const userSlice = createSlice({
     lazyMintingRequest: (
       state,
       {
-        payload: { name, description, royalties },
+        payload: { name, description, royalties, tags },
       }: PayloadAction<{
         name: MintingStateType['data']['name']
         description: MintingStateType['data']['description']
         royalties: MintingStateType['data']['royalties']
+        tags: MintingStateType['tags']
       }>
     ) => {
       state.data.name = name
       state.data.description = description
       state.data.royalties = royalties
+      state.tags = tags
       state.minting = 'in progress'
     },
     lazyMintingSuccess: (
@@ -74,6 +76,32 @@ const userSlice = createSlice({
       state.error = payload
       state.minting = 'failed'
     },
+
+    setZazyMintingData: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        data: MintingStateType['data']
+        lazyMintItemId: number
+        lazyMintData: {
+          contract: string
+          tokenId: string
+          uri: string
+          signatures: string[]
+        }
+      }>
+    ) => {
+      state.minting = 'done'
+      state.data = payload.data
+      state.lazyMintItemId = payload.lazyMintItemId
+      state.lazyMintData = {
+        contract: payload.lazyMintData.contract,
+        tokenId: payload.lazyMintData.tokenId,
+        uri: payload.lazyMintData.uri,
+        signatures: payload.lazyMintData.signatures,
+      }
+    },
   },
 })
 
@@ -85,6 +113,8 @@ export const {
   lazyMintingRequest,
   lazyMintingSuccess,
   lazyMintingFailure,
+
+  setZazyMintingData,
 } = userSlice.actions
 
 export const { reducer } = userSlice

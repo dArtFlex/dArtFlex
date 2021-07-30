@@ -13,8 +13,9 @@ export interface MintingStateType {
     description: string
     royalties: string
   }
-  lazyMintData: null | ILazyMintData
+  lazyMintData?: ILazyMintData
   lazyMintItemId: null | number
+  tags: string[]
 }
 
 export type IProcess = 'none' | 'in progress' | 'done' | 'failed'

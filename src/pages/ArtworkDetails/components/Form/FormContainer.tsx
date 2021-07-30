@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
 import { CardAsset, Field } from 'common'
@@ -7,11 +7,12 @@ import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
-import { AssetDataTypesWithStatus } from 'types'
+import { AssetDataTypesWithStatus, IPromotionId } from 'types'
 import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
-import { setPromotionRequest } from 'stores/reducers/user'
+import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import ImageViewer from '../../../../common/ImageViewer'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -22,6 +23,7 @@ export default function FormContainer() {
   const dispatch = useDispatch()
   const { assetDetails } = useSelector(selectAssetDetails())
   const { promotionIds } = useSelector(selectPromotion())
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
@@ -38,23 +40,27 @@ export default function FormContainer() {
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
   // eslint-disable-next-line
-  const handleAddPromotion = (e: any) => {
+  const handlePromotion = (e: React.ChangeEvent<any>) => {
     if (e.target.checked) {
-      dispatch(setPromotionRequest({ promotionIds: [...promotionIds, assetDetails.marketData?.item_id] }))
+      dispatch(addPromotionRequest({ promotionId: assetDetails.marketData?.item_id }))
     } else {
-      const excludePromotion = promotionIds.filter(
-        (pId) => assetDetails.marketData && Number(pId) !== Number(assetDetails.marketData.item_id)
+      const promotionId: IPromotionId | undefined = promotionIds.find(
+        (promo) => assetDetails.marketData && Number(promo.item_id) === Number(assetDetails.marketData.item_id)
       )
-      dispatch(setPromotionRequest({ promotionIds: excludePromotion }))
+      dispatch(
+        deletePromotionRequest({
+          promotionItemId: assetDetails.marketData?.item_id,
+          promotionId,
+        })
+      )
     }
     setFieldValue('promotion', e.target.checked)
   }
 
   const ckeckPromotion = () => {
     const isPromoted = promotionIds.findIndex(
-      (pId) => assetDetails.marketData && Number(pId) === Number(assetDetails.marketData.item_id)
+      (promo) => assetDetails.marketData && Number(promo.item_id) === Number(assetDetails.marketData.item_id)
     )
-
     if (isPromoted !== -1) {
       setFieldValue('promotion', true)
     } else {
@@ -82,11 +88,14 @@ export default function FormContainer() {
                 label={'Promotion'}
                 fullWidth={false}
                 className={classes.switcher}
-                onChange={handleAddPromotion}
+                onChange={handlePromotion}
                 checked={Boolean(values.promotion)}
               />
             )}
-            <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
+            <IconButton
+              className={clsx(classes.expandBtb, classes.borderdIconButton)}
+              onClick={() => setIsZoomOpen(true)}
+            >
               <ArrowExpandIcon />
             </IconButton>
           </Box>
@@ -98,6 +107,13 @@ export default function FormContainer() {
       </Box>
       {assetDetails.marketData?.type === AUCTION ? <FormAuction /> : null}
       {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
+      {isZoomOpen && (
+        <ImageViewer
+          open={isZoomOpen}
+          onClose={() => setIsZoomOpen(false)}
+          images={[`${assetDetails.imageData?.image}`]}
+        />
+      )}
     </Box>
   )
 }

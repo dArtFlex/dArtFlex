@@ -25,3 +25,27 @@ interface ISocial {
 }
 
 export type IUserRole = 'ROLE_SUPER_ADMIN' | 'ROLE_COMMON'
+
+export interface IAddPromotionEntities {
+  message: string
+  id: number[]
+}
+
+export interface IPromotionId {
+  created_at: string
+  id: number
+  item_id: string
+  updated_at: string
+}
+
+export interface ITradingHistory extends IDatedEntity, IEntity {
+  from: string
+  to: string
+  item_id: string
+  market_id: string
+  order_id: string
+  bid_id: string
+  bid_amount: string
+  sales_token_contract: string
+  status: 'minted' | 'listed' | 'bidded' | 'canceled' | 'transferred'
+}

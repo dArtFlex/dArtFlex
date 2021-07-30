@@ -136,7 +136,7 @@ export default function Artworks() {
       <Box>
         <Typography variant={'h1'}>Artworks</Typography>
         <Promotions artworks={promotionMultiply} />
-        <Box mt={4} mb={6} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+        <Box className={classes.sortButtons}>
           <Box style={{ minWidth: '180px' }}>
             <FormControl variant="outlined" color={'primary'}>
               <MUISelect
@@ -178,6 +178,7 @@ export default function Artworks() {
                   value={value}
                   selected={filter === value}
                   classes={{ selected: classes.toggleButtonSelected }}
+                  className={classes.toggleButton}
                 >
                   {label}
                 </ToggleButton>
@@ -207,12 +208,12 @@ export default function Artworks() {
           <Box mb={7}>
             <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
-              <Box flex={'1 1 auto'} mr={10}>
-                {/* 
+              <Box className={classes.hashTagContainer}>
+                {/*
                   ************************************************
                   Todo: Tags should be implemented in next version
                   ************************************************
-                  
+
                     {hashTags.map((ht) => {
                       const isActive = Boolean(activeHashTags.find((h) => h === ht))
                       return (
@@ -255,7 +256,7 @@ export default function Artworks() {
                   )}
                 </>
               ))}
-              <Box ml={11}>
+              <Box className={classes.hotOnlyBtn}>
                 <FormControlLabel
                   control={<Checkbox onChange={(e) => setHotOnly(e.target.checked)} name="burn" color={'primary'} />}
                   label={
@@ -280,6 +281,7 @@ export default function Artworks() {
               <CardAsset
                 key={i}
                 asset={asset}
+                userWallet={wallet?.accounts[0]}
                 useCardStatus={
                   filter === LIVE_AUCTION
                     ? useCardStatusLiveAuction

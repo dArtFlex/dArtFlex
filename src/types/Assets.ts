@@ -63,3 +63,18 @@ export interface IBaseTokens {
   decimals: number
   logoURI: string
 }
+
+export interface IAssetMarketData {
+  id: number
+  item_id: string
+  type: string
+  start_price: string
+  end_price: string
+  start_time: string
+  end_time: string
+  platform_fee: string
+  sales_token_contract: string
+  sold: false
+  created_at: string
+  updated_at: string
+}
