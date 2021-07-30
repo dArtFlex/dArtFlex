@@ -28,13 +28,7 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
           {variant === 'avatar' ? (
             <Image file={values[name] as File} className={classes.avatar} src={photoUrl} />
           ) : (
-            <Image
-              file={values[name] as File}
-              className={classes.cover}
-              // src={
-              //   'https://capturetheatlas.com/wp-content/uploads/2020/04/Long-exposure-photograph-1415x540-1585936962.jpg'
-              // }
-            />
+            <Image file={values[name] as File} className={classes.cover} src={photoUrl} />
           )}
         </Box>
         <Box>
