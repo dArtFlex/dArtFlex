@@ -69,7 +69,7 @@ export default function CardAsset(props: ICardAssetProps) {
           timer={timer}
           button={button}
           userWallet={userWallet}
-          ownerWallet={asset.userData.wallet}
+          ownerWallet={asset.userData?.wallet}
         />
       </Card>
 

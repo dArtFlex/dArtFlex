@@ -17,7 +17,7 @@ export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
   const {
     userWallet,
-    ownerWallet,
+    ownerWallet = '',
     endPrice,
     startPrice,
     currentPrice,
