@@ -47,5 +47,10 @@ export interface ITradingHistory extends IDatedEntity, IEntity {
   bid_id: string
   bid_amount: string
   sales_token_contract: string
-  status: 'minted' | 'listed' | 'bidded' | 'canceled' | 'transferred'
+  status: 'minted' | 'listed' | 'bidded' | 'canceled' | 'transferred' | 'sold'
+}
+
+export interface IComposeHistory {
+  history: ITradingHistory[]
+  type: 'owner' | 'buyer'
 }

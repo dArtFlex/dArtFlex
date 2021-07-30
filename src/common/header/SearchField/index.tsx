@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react'
-import { Icon, IconButton, TextField } from '@material-ui/core'
+import { Icon, TextField } from '@material-ui/core'
 import { CloseIcon, SearchIcon } from 'common/icons'
 import { useStyles } from './styles'
 

@@ -4,9 +4,6 @@ import { Box, Grid, Button, Divider } from '@material-ui/core'
 import Popover from '../Popover'
 import { IPopoverLinksProps, IButtonLink } from './types'
 import { useStyles } from './styles'
-import { BidsIcon, ContentIcon, DisconnectIcon, ListIcon, ManIcon, SellIcon, SettingsIcon } from '../../icons'
-import routes from '../../../routes'
-import { useHistory } from 'react-router-dom'
 
 export default function PopoverLinks(props: IPopoverLinksProps) {
   const classes = useStyles()
