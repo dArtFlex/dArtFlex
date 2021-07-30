@@ -12,8 +12,6 @@ export default function ContentManagement() {
 
   const tabletMobileVersion = useMediaQuery('(max-width: 961px)')
 
-  console.log(tabletMobileVersion)
-
   return (
     <PageWrapper className={classes.contentManagementWrapper}>
       <>

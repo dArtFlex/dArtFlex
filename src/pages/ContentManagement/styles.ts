@@ -19,7 +19,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tabsRoot: {
-      overflow: 'scroll',
+      [theme.breakpoints.down(1024)]: {
+        overflow: 'scroll',
+      },
     },
     tabIndicator: {
       backgroundColor: theme.palette.primary.main,
