@@ -128,7 +128,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: 45,
       height: 45,
       borderRadius: theme.spacing(2),
-      padding: theme.spacing(3),
     },
     notificationContent: {
       display: 'flex',
