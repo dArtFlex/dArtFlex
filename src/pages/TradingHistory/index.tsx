@@ -52,7 +52,7 @@ export default function TradingHistory() {
           <Box className={classes.filterContainer}>
             <Filter />
 
-            <FormControl variant="outlined" color={'primary'}>
+            <FormControl variant="outlined" color={'primary'} classes={{ root: classes.tradingHistorySelect }}>
               <MUISelect
                 style={{ minWidth: '148px' }}
                 value={sortValue}

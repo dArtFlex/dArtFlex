@@ -17,7 +17,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         margin: 0,
       },
       '&.Mui-expanded:last-child': {
-        marginBottom: theme.spacing(20),
+        [theme.breakpoints.up(1025)]: {
+          marginBottom: theme.spacing(20),
+        },
       },
     },
     expandedAccordion: {

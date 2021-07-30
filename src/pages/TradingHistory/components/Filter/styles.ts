@@ -23,7 +23,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     btnRefreshIcon: {
-      width: '100%',
       whiteSpace: 'nowrap',
     },
     filtersBtn: {
@@ -41,7 +40,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     flex: {
       display: 'flex',
       alignItems: 'center',
+      flexWrap: 'wrap',
       gap: 16,
+      padding: theme.spacing(4, 0),
     },
   })
 )

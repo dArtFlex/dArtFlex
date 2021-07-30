@@ -15,6 +15,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       gap: 16,
       marginBottom: theme.spacing(8),
+      flexWrap: 'wrap',
     },
     btnGenerate: {
       alignSelf: 'center',

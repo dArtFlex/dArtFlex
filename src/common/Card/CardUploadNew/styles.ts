@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardUpload: {
       minWidth: 325,
-      height: 460,
+      minHeight: 460,
       padding: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
@@ -12,6 +12,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       flexDirection: 'column',
       gap: theme.spacing(10),
+      [theme.breakpoints.down(640)]: {
+        minWidth: 'unset',
+        width: '94vw',
+      },
     },
     text: {
       fontSize: 16,

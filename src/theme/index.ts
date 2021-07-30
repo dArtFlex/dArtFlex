@@ -56,6 +56,9 @@ const lightPalette = {
     main: palette.greyLight,
     light: PrimaryLight,
   },
+  info: {
+    main: PrimaryMain,
+  },
   warning: { main: '#FF5C00', light: PrimaryLight },
   success: { main: palette.yellowLight },
   text: { primary: TextPrimary, secondary: palette.greyDark },
@@ -86,6 +89,9 @@ const DarkPalette = {
     main: palette.white,
     light: PrimaryLight,
   },
+  info: {
+    main: palette.lightViolet,
+  },
   text: { primary: '#fff', secondary: palette.greyMid },
   background: {
     default: '#141717',
@@ -107,6 +113,18 @@ const DarkPalette = {
 
 const theme = {
   spacing: 4,
+  breakpoints: {
+    values: {
+      mobileS: 320,
+      mobileM: 375,
+      mobileL: 425,
+      tabletS: 640,
+      tabletM: 800,
+      tabletL: 960,
+      laptop: 1024,
+      desktop: 1280,
+    },
+  },
   typography: {
     htmlFontSize: 16,
     fontFamily: ['Archivo', 'sans-serif'].join(','),

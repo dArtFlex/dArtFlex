@@ -15,13 +15,14 @@ function App() {
   const [themeType, setTheme] = useState(LIGHT)
   const toggleTheme = () => {
     setTheme(themeType === LIGHT ? DARK : LIGHT)
+    localStorage.setItem('paletteType', themeType === LIGHT ? DARK : LIGHT)
   }
   return (
     <StoreProvider store={store}>
       <MuiThemeProvider
         theme={createMuiTheme({
           /*@ts-ignore*/
-          palette: themeType === LIGHT ? lightPalette : DarkPalette,
+          palette: localStorage.getItem('paletteType') === DARK ? DarkPalette : lightPalette,
           ...theme,
         })}
       >

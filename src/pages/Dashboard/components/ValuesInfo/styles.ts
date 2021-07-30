@@ -9,6 +9,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     box: {
       padding: theme.spacing(0, 17),
+      [theme.breakpoints.down(840)]: {
+        padding: theme.spacing(0, 6),
+      },
     },
     infoRowIcon: {
       display: 'flex',

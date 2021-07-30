@@ -7,7 +7,20 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.success.main,
       borderRadius: theme.spacing(3),
       width: 310,
-      marginRight: theme.spacing(6),
+      // marginRight: theme.spacing(6),
+      [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(4, 6),
+        width: 250,
+      },
+      [theme.breakpoints.down(380)]: {
+        width: 280,
+      },
+      [theme.breakpoints.down(330)]: {
+        width: 250,
+      },
+      [theme.breakpoints.down(300)]: {
+        width: 230,
+      },
     },
     informerHead: {
       display: 'flex',
@@ -19,6 +32,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         height: 22,
         width: 22,
       },
+    },
+    informerTitle: {
+      textAlign: 'center',
     },
   })
 )

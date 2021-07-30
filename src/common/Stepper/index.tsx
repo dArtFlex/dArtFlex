@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { Stepper as MUIStepper, StepIconProps, Step } from '@material-ui/core'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -33,7 +33,7 @@ export default function Stepper(props: IStepperProps) {
     >
       {steps.map(({ label, state }) => {
         return (
-          <Step key={label}>
+          <Step key={label} className={classes.step}>
             {Boolean(label.length) ? (
               <StepStateLabel label={label} state={state} />
             ) : (

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { Box, IconButton } from '@material-ui/core'
 import { CardAsset, Field } from 'common'
@@ -12,6 +12,7 @@ import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/sele
 import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import ImageViewer from '../../../../common/ImageViewer'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -22,6 +23,7 @@ export default function FormContainer() {
   const dispatch = useDispatch()
   const { assetDetails } = useSelector(selectAssetDetails())
   const { promotionIds } = useSelector(selectPromotion())
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
@@ -90,7 +92,10 @@ export default function FormContainer() {
                 checked={Boolean(values.promotion)}
               />
             )}
-            <IconButton className={clsx(classes.expandBtb, classes.borderdIconButton)}>
+            <IconButton
+              className={clsx(classes.expandBtb, classes.borderdIconButton)}
+              onClick={() => setIsZoomOpen(true)}
+            >
               <ArrowExpandIcon />
             </IconButton>
           </Box>
@@ -102,6 +107,13 @@ export default function FormContainer() {
       </Box>
       {assetDetails.marketData?.type === AUCTION ? <FormAuction /> : null}
       {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
+      {isZoomOpen && (
+        <ImageViewer
+          open={isZoomOpen}
+          onClose={() => setIsZoomOpen(false)}
+          images={[`${assetDetails.imageData?.image}`]}
+        />
+      )}
     </Box>
   )
 }
