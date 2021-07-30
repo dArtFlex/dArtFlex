@@ -12,7 +12,7 @@ const LIGHT = 'light'
 const DARK = 'dark'
 
 function App() {
-  const [themeType, setTheme] = useState(LIGHT)
+  const [themeType, setTheme] = useState(localStorage.getItem('paletteType') === DARK ? DARK : LIGHT)
   const toggleTheme = () => {
     setTheme(themeType === LIGHT ? DARK : LIGHT)
     localStorage.setItem('paletteType', themeType === LIGHT ? DARK : LIGHT)
