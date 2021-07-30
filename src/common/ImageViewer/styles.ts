@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: 'inherit',
       objectFit: 'contain',
       borderRadius: theme.spacing(3),
-      minHeight: '96%',
+      maxHeight: '96vh',
       maxWidth: '96%',
     },
   })

@@ -37,6 +37,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.ghostWhite,
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>div': {
+        maxWidth: 'min-content',
+      },
       '&>img': {
         maxWidth: '100%',
         maxHeight: '100%',

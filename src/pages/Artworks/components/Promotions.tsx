@@ -77,7 +77,12 @@ export default function Promotions(props: IPromotion) {
                     </Box>
                   </Box>
                   <Box className={classes.promotionButtons}>
-                    <Button variant={'contained'} disableElevation classes={{ root: classes.promotionButtonContained }}>
+                    <Button
+                      variant={'contained'}
+                      disableElevation
+                      classes={{ root: classes.promotionButtonContained }}
+                      onClick={() => history.push(`${routes.artworks}/${item.id}`, 'auction')}
+                    >
                       Place a Bid
                     </Button>
                     <Button
