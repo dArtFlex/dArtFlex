@@ -93,3 +93,10 @@ export const selectBid = () =>
     (store: stateType) => store,
     ({ bid }: stateType) => ({ bid })
   )
+
+// Notifications
+export const selectNotifications = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ notifications: { notifications } }: stateType) => ({ notifications })
+  )
