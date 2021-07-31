@@ -9,6 +9,7 @@ import FormSelect, { IFormSelectProps } from './controls/Select'
 import FormDateTimePicker from './controls/DatePicker/DateTimePicker'
 import Autocomplete from './controls/Autocomplete'
 import FormDatePicker from './controls/DatePicker'
+import Slider from './controls/Slider'
 import { IFormDatePickerProps } from './controls/DatePicker/types'
 import {
   FieldRenderProps,
@@ -17,10 +18,20 @@ import {
   IFormSwitchProps,
   IFormCheckboxProps,
   IFormAutocompleteProps,
+  IBaseSliderProps,
 } from './types'
 import { FieldInputProps } from 'formik/dist/types'
 
-export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker' | 'pickerTime' | 'checkbox' | 'autocomplete'
+export type FieldType =
+  | 'input'
+  | 'upload'
+  | 'switch'
+  | 'select'
+  | 'picker'
+  | 'pickerTime'
+  | 'checkbox'
+  | 'autocomplete'
+  | 'slider'
 
 export type IFieldProps = IFormSelectProps &
   ITextInput &
@@ -29,6 +40,7 @@ export type IFieldProps = IFormSelectProps &
   IFormSwitchProps &
   IFormCheckboxProps &
   IFormAutocompleteProps &
+  IBaseSliderProps &
   IFormDatePickerProps & {
     name: string
     type: FieldType
@@ -64,6 +76,9 @@ export default function Field(props: IFieldProps) {
           }
           case 'autocomplete': {
             return <Autocomplete form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
+          }
+          case 'slider': {
+            return <Slider form={form} field={field as FieldInputProps<boolean>} name={name} {...rest} />
           }
           default: {
             return null

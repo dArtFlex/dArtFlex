@@ -30,3 +30,9 @@ export interface IFormAutocompleteProps {
   withMultiple?: boolean
   witChips?: boolean
 }
+
+export interface IBaseSliderProps {
+  defaultValue?: number
+  min?: number
+  max?: number
+}

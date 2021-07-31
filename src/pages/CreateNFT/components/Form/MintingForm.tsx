@@ -19,9 +19,9 @@ export default function MintingForm(props: IMintingForm) {
   const { onMinting, onList, onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
 
-  const { values, setFieldValue } = useFormikContext<ICreateNFT>()
+  const { values, setFieldValue, touched } = useFormikContext<ICreateNFT>()
   const [open, setOpen] = useState<boolean>(false)
-
+  console.log(touched)
   const {
     minting: { minting },
   } = useSelector(selectMinting())
@@ -68,14 +68,25 @@ export default function MintingForm(props: IMintingForm) {
                 { title: 'The Godfather', year: 1972 },
               ]}
             />
-            {/* Royalty - type number - max 100 */}
+
             <Field
-              type="input"
+              type="slider"
               name="royalties"
               variant={'outlined'}
               label="Royalties"
-              helperText={'Suggested: 10%'}
+              helperText={
+                <>
+                  <Typography component={'span'} className={classes.royaltiesAmount}>
+                    {values.royalties}{' '}
+                  </Typography>
+                  <Typography component={'span'} className={classes.royalties}>
+                    (Suggested: 10%)
+                  </Typography>
+                </>
+              }
               className={classes.inputField}
+              defaultValue={1}
+              min={1}
             />
             <Field
               type="input"

@@ -36,7 +36,7 @@ export default function Form() {
       lazyMintingRequest({
         name: values.name,
         description: values.description,
-        royalties: values.royalties,
+        royalties: String(values.royalties),
         tags: values.tags,
       })
     )

@@ -106,5 +106,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     inputField: {
       backgroundColor: theme.palette.background.paper,
     },
+    royaltiesAmount: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: theme.palette.text.primary,
+    },
+    royalties: {
+      fontWeight: 'normal',
+    },
   })
 )

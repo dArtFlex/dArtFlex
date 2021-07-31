@@ -21,7 +21,7 @@ const initialData: ICreateNFT = {
   name: '',
   description: '',
   hashtags: [],
-  royalties: '',
+  royalties: 1,
   step: STEPS_NFT.UPLOAD_FILE,
   tags: ['default'], // Todo: Should be changed after tags field has been implemented
 }

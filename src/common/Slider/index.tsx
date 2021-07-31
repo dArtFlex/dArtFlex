@@ -1,12 +1,15 @@
 import React from 'react'
 import { Slider as MUISlider, Box } from '@material-ui/core'
 import { useStyles } from './styles'
+import { ISliderProps } from './types'
 
-export default function Slider() {
+export default function Slider(props: ISliderProps) {
   const classes = useStyles()
+  const { defaultValue = 0, min = 0, max = 100 } = props
   return (
     <Box className={classes.containter}>
       <MUISlider
+        {...props}
         classes={{
           root: classes.root,
           thumb: classes.thumb,
@@ -15,8 +18,11 @@ export default function Slider() {
           track: classes.track,
           rail: classes.rail,
         }}
+        aria-labelledby="input-slider"
         aria-label="slider"
-        defaultValue={20}
+        defaultValue={defaultValue}
+        min={min}
+        max={max}
       />
     </Box>
   )

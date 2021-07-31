@@ -28,7 +28,7 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
   } = props
 
   const { errorText, hasError } = getFormikFieldError({ form, field })
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { values, setFieldValue } = useFormikContext<any>()
 
   return (
