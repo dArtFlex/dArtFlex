@@ -19,4 +19,5 @@ export interface ICreateNFT {
   description: MintingStateType['data']['description']
   step: IStepNFT
   tags: string[]
+  hashtags: string[]
 }

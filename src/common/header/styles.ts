@@ -51,6 +51,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     indicator: {
       backgroundColor: theme.palette.text.primary,
     },
+    indicatorNonActive: {
+      visibility: 'hidden',
+    },
     buttonContainer: {
       display: 'flex',
       alignItems: 'center',

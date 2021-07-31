@@ -24,3 +24,9 @@ export type IFormCheckboxProps = Omit<CheckboxProps, 'form'> & {
 }
 
 export type IFormSwitchProps = IFormCheckboxProps
+
+export interface IFormAutocompleteProps {
+  withClearOnBlur?: boolean
+  withMultiple?: boolean
+  witChips?: boolean
+}

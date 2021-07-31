@@ -31,9 +31,9 @@ export default function Stepper(props: IStepperProps) {
       activeStep={activeStep}
       connector={<ColorlibConnector />}
     >
-      {steps.map(({ label, state }) => {
+      {steps.map(({ label, state }, i) => {
         return (
-          <Step key={label} className={classes.step}>
+          <Step key={i} className={classes.step}>
             {Boolean(label.length) ? (
               <StepStateLabel label={label} state={state} />
             ) : (

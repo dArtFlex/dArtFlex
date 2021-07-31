@@ -55,6 +55,19 @@ export default function MintingForm(props: IMintingForm) {
               </Typography>
             </Box>
             <Field type="input" name="name" variant={'outlined'} label="Title" className={classes.inputField} />
+            <Field
+              type="autocomplete"
+              name="hashtags"
+              variant={'outlined'}
+              label="Hashtags"
+              className={classes.inputField}
+              withMultiple
+              witChips
+              options={[
+                { title: 'The Shawshank Redemption', year: 1994 },
+                { title: 'The Godfather', year: 1972 },
+              ]}
+            />
             {/* Royalty - type number - max 100 */}
             <Field
               type="input"
