@@ -155,7 +155,7 @@ export default function Header({ toggleTheme }: HeaderType) {
     <>
       <AppBar position="static" elevation={0}>
         <Toolbar className={classes.toolbar}>
-          <LogoIcon className={classes.logo} />
+          <LogoIcon className={classes.logo} onClick={() => history.push(routes.artworks)} />
           {isMobile ? (
             <Box className={classes.mobileToolBar}>
               {isSearchFieldOpen ? (
