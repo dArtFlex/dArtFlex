@@ -152,13 +152,13 @@ export function useSortedAssets({
   switch (filter) {
     case LIVE_AUCTION:
       return assets.filter(
-        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && Boolean(a.sold) === false
+        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && !Boolean(a.sold)
       )
     case BUY_NOW:
-      return assets.filter((a) => a.type === INSTANT_BY && Boolean(a.sold) === false)
+      return assets.filter((a) => a.type === INSTANT_BY && !Boolean(a.sold) && a.status !== 'minted')
     case RESERVE_NOT_MET:
       return assets.filter((a) => {
-        if (a.type === AUCTION && Boolean(a.sold) === false) {
+        if (a.type === AUCTION && !Boolean(a.sold)) {
           return normalizeDate(a.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
         }
         return a.type === BUY_NOW && normalizeDate(a.end_time).getTime() > now_time - 1000 * 60 * 60 * 24
