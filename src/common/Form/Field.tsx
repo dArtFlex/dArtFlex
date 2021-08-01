@@ -7,12 +7,31 @@ import FormSwitch from './controls/Switch'
 import FormCheckbox from './controls/Checkbox'
 import FormSelect, { IFormSelectProps } from './controls/Select'
 import FormDateTimePicker from './controls/DatePicker/DateTimePicker'
+import Autocomplete from './controls/Autocomplete'
 import FormDatePicker from './controls/DatePicker'
+import Slider from './controls/Slider'
 import { IFormDatePickerProps } from './controls/DatePicker/types'
-import { FieldRenderProps, ITextInput, IUploadInput, IFormSwitchProps, IFormCheckboxProps } from './types'
+import {
+  FieldRenderProps,
+  ITextInput,
+  IUploadInput,
+  IFormSwitchProps,
+  IFormCheckboxProps,
+  IFormAutocompleteProps,
+  IBaseSliderProps,
+} from './types'
 import { FieldInputProps } from 'formik/dist/types'
 
-export type FieldType = 'input' | 'upload' | 'switch' | 'select' | 'picker' | 'pickerTime' | 'checkbox'
+export type FieldType =
+  | 'input'
+  | 'upload'
+  | 'switch'
+  | 'select'
+  | 'picker'
+  | 'pickerTime'
+  | 'checkbox'
+  | 'autocomplete'
+  | 'slider'
 
 export type IFieldProps = IFormSelectProps &
   ITextInput &
@@ -20,6 +39,8 @@ export type IFieldProps = IFormSelectProps &
   TextFieldProps &
   IFormSwitchProps &
   IFormCheckboxProps &
+  IFormAutocompleteProps &
+  IBaseSliderProps &
   IFormDatePickerProps & {
     name: string
     type: FieldType
@@ -52,6 +73,12 @@ export default function Field(props: IFieldProps) {
           }
           case 'pickerTime': {
             return <FormDateTimePicker form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
+          }
+          case 'autocomplete': {
+            return <Autocomplete form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
+          }
+          case 'slider': {
+            return <Slider form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           default: {
             return null

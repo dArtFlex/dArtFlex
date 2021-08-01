@@ -30,7 +30,7 @@ export default function SearchField({
         startAdornment: (
           <>
             {isMobile ? (
-              <Icon className={classes.searchIcon} onClick={() => setSearchFieldOpen!(false)}>
+              <Icon className={classes.searchIcon} onClick={() => setSearchFieldOpen && setSearchFieldOpen(false)}>
                 <CloseIcon />
               </Icon>
             ) : (

@@ -19,6 +19,7 @@ import Select from './Select'
 import Table from './Table'
 import AvatarUser from './AvatarUser'
 import Timer from './Timer'
+import Slider from './Slider'
 
 export {
   Header,
@@ -49,4 +50,5 @@ export {
   Table,
   AvatarUser,
   Timer,
+  Slider,
 }

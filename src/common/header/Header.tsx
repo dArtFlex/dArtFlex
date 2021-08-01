@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import clsx from 'clsx'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
 import { useRouteMatch } from 'react-router-dom'
@@ -48,7 +49,6 @@ import {
 } from 'common/icons'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import clsx from 'clsx'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -139,7 +139,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   ]
 
   const defaultTabValue =
-    MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id : -1
+    MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id || 0 : 0
   const [tabValue, setTabValue] = React.useState(defaultTabValue)
   const handleChangeTab = (_: React.ChangeEvent<unknown>, newValue: number) => setTabValue(newValue)
 
@@ -182,10 +182,12 @@ export default function Header({ toggleTheme }: HeaderType) {
             <>
               <Tabs
                 aria-label="navigation"
-                value={MenuItems.some((mi) => mi.to === path) ? tabValue : -1}
+                value={tabValue}
                 onChange={handleChangeTab}
                 className={classes.navTabsContainer}
-                classes={{ indicator: classes.indicator }}
+                classes={{
+                  indicator: MenuItems[tabValue]?.to === path ? classes.indicator : classes.indicatorNonActive,
+                }}
               >
                 {MenuItems.map(({ title, to }) => (
                   <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />

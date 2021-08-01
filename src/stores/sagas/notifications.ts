@@ -71,7 +71,6 @@ export function* getNotifications(api: IApi) {
 }
 
 function* getImage(api: IApi, item_id: string) {
-  debugger
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(item_id)),
   })

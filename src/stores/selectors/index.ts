@@ -22,6 +22,11 @@ export const selectAssetTokenRates = () =>
     (store: stateType) => store,
     ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
   )
+export const selectHashtags = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { hashtags } }: stateType) => ({ hashtags })
+  )
 
 // User
 export const selectUser = () =>

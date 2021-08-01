@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { PageWrapper, Form } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
-import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
+import { getAssetByIdRequest } from 'stores/reducers/assets'
 import { getBidsHistoryRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
@@ -26,9 +26,6 @@ export default function ArtworkDetails() {
 
   useEffect(() => {
     dispatch(getAssetByIdRequest(Number(id)))
-    return () => {
-      dispatch(clearAssetDetails())
-    }
   }, [])
 
   const fetchBidsHistory = () => {

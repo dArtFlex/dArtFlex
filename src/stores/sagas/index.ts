@@ -12,7 +12,13 @@ import {
   getAllUsersRequest,
   getTradingHistoryRequest,
 } from '../reducers/user'
-import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
+import {
+  getAssetsAllRequest,
+  getAssetByIdRequest,
+  getExchangeRateTokensRequest,
+  getHashtagsAllRequest,
+  addHashtagsRequest,
+} from '../reducers/assets'
 import {
   connectMetaMaskRequest,
   connnectWalletConnectRequest,
@@ -36,7 +42,7 @@ import {
   getAllUsers,
   tradingHistory,
 } from '../sagas/user'
-import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
+import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect, getTokensBalances, walletsDisconet } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing } from '../sagas/listing'
@@ -50,6 +56,8 @@ export default function* root() {
     takeLatest(getAssetsAllRequest.type, getAssetsAllData, apiMiddleware),
     takeLatest(getAssetByIdRequest.type, getAssetById, apiMiddleware),
     takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
+    takeLatest(getHashtagsAllRequest.type, getHashtagsAll, apiMiddleware),
+    takeLatest(addHashtagsRequest.type, addHashtags, apiMiddleware),
 
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
