@@ -6,6 +6,8 @@ const APP_CONFIG = {
   rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
   ethereumProvider: 'http://mainnet.infura.io/v3/b55d5c248991487b915a693d9b0b11ad',
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
+  etherscanRinkeby: 'https://rinkeby.etherscan.io',
+  etherscanMainnet: 'https://etherscan.io',
 
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,

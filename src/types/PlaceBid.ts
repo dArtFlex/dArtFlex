@@ -9,6 +9,7 @@ export interface IBidsHistory {
   status: HistoryStatusType
   updated_at: Date | string
   user_id: string
+  tx_hash: string
 }
 
 export type HistoryStatusType =
@@ -21,6 +22,7 @@ export type HistoryStatusType =
   | 'canceled'
   | 'pending'
   | 'bidded'
+  | 'purchased'
 
 export interface IOrderData {
   data: string
