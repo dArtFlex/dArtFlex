@@ -25,6 +25,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.grey['100'],
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>div': {
+        maxWidth: 'min-content',
+      },
       '&>img': {
         height: 520,
         maxWidth: '96%',
@@ -153,7 +156,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     warningBox: {
       padding: theme.spacing(3, 6),
       marginBottom: theme.spacing(4),
-      background: theme.palette.yellowLight,
+      background: theme.palette.success.main,
       borderRadius: theme.spacing(2),
     },
     warningText: {
@@ -194,7 +197,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       borderRadius: 12,
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.background.paper,
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
     },
@@ -275,7 +278,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     backIcon: {
       backgroundColor: theme.palette.white,
       border: `1px solid ${theme.palette.greyLight}`,
-      color: theme.palette.text.primary,
+      color: theme.palette.blackMain,
       marginRight: theme.spacing(4),
     },
     formHead: {
