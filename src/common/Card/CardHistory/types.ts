@@ -21,7 +21,7 @@ export interface ICardHistoryProps extends IBidsHistory {
 
 export interface ICardContainerProps {
   avatar: JSX.Element
-  action: JSX.Element
+  action: JSX.Element | null
   subheader: JSX.Element
   title: string
   children?: JSX.Element
