@@ -2,14 +2,14 @@ import React from 'react'
 import clsx from 'clsx'
 import { useFormikContext } from 'formik'
 import { Typography } from '@material-ui/core'
-import { FieldRenderProps, IFormSwitchProps } from '../../types'
+import { FieldRenderProps, IBaseSliderProps } from '../../types'
 import { getFormikFieldError } from '../../lib'
 import FormControl from '../FormControl'
 import { Slider } from 'common'
 import { useStyles } from './styles'
 
-export default function FormSwitch(props: IFormSwitchProps & FieldRenderProps<boolean>) {
-  const { form, field, label, className, helperText, fullWidth, required, ...rest } = props
+export default function FormSlide(props: IBaseSliderProps & FieldRenderProps<string>) {
+  const { form, field, label, className, helperText, fullWidth, required, min, max, defaultValue, ...rest } = props
   const classes = useStyles()
   const { errorText, hasError } = getFormikFieldError({ form, field })
 
@@ -35,7 +35,13 @@ export default function FormSwitch(props: IFormSwitchProps & FieldRenderProps<bo
           {label}
         </Typography>
       )}
-      <Slider value={values[field.name]} onChange={handleSliderChange} />
+      <Slider
+        value={values[field.name]}
+        onChange={handleSliderChange}
+        min={min}
+        max={max}
+        defaultValue={defaultValue}
+      />
     </FormControl>
   )
 }

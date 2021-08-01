@@ -7,6 +7,10 @@ import {
   getAssetByIdFailure,
   getExchangeRateTokensSuccess,
   getExchangeRateTokensFailure,
+  getHashtagsAllSuccess,
+  getHashtagsAllFailure,
+  addHashtagsSuccess,
+  addHashtagsFailure,
 } from 'stores/reducers/assets'
 import { getUserDataById } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
@@ -18,11 +22,14 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
   IChainId,
+  IHashtag,
+  IHashtagNew,
 } from 'types'
 import tokensAll from 'core/tokens'
-import { getAssetStatus, createDummyMarketplaceData } from 'utils'
+import { getAssetStatus, createDummyMarketplaceData, getIdFromString } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
+import { AssetsStateType } from 'stores/reducers/assets/types'
 
 const {
   STATUSES: { MINTED },
@@ -189,4 +196,31 @@ export function* getExchangeRateTokens(api: IApi) {
   } catch (e) {
     yield put(getExchangeRateTokensFailure(e.message || e))
   }
+}
+
+export function* getHashtagsAll(api: IApi) {
+  try {
+    const hashtags: AssetsStateType['hashtags'] | undefined = yield call(api, {
+      url: APP_CONFIG.getHashtagAll,
+    })
+    yield put(getHashtagsAllSuccess({ hashtags }))
+  } catch (e) {
+    yield put(getHashtagsAllFailure(e.message || e))
+  }
+}
+
+export function* addHashtags(api: IApi, { payload }: PayloadAction<{ hashtags: IHashtagNew[] }>) {
+  const hashtagsIds: string[] = yield all(
+    payload.hashtags.map((ht) =>
+      call(api, {
+        url: APP_CONFIG.createHashtag,
+        method: 'POST',
+        data: {
+          name: ht.inputValue,
+        },
+      })
+    )
+  )
+
+  return hashtagsIds.map((ht) => getIdFromString(ht))
 }

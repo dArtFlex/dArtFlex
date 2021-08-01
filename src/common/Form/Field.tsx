@@ -78,7 +78,7 @@ export default function Field(props: IFieldProps) {
             return <Autocomplete form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           case 'slider': {
-            return <Slider form={form} field={field as FieldInputProps<boolean>} name={name} {...rest} />
+            return <Slider form={form} field={field as FieldInputProps<string>} name={name} {...rest} />
           }
           default: {
             return null

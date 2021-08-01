@@ -2,12 +2,13 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
+import { addHashtags } from 'stores/sagas/assets'
 import { uploadImageSuccess, uploadImageFailure, lazyMintingSuccess, lazyMintingFailure } from 'stores/reducers/minting'
 import { MintingStateType } from 'stores/reducers/minting/types'
 import { lazyMintService } from 'services/lazymint_service'
 import { walletService } from 'services/wallet_service'
 import { LAZY_MINT_ADDRESS } from 'core/contracts/lazy_mint_contract'
-import { ILazyMintData } from 'types'
+import { ILazyMintData, IHashtag, IHashtagNew } from 'types'
 import APP_CONFIG from 'config'
 
 function getIdFromString(v) {
@@ -34,17 +35,28 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
 export function* minting(
   api: IApi,
   {
-    payload: { name, description, royalties },
+    payload: { name, description, royalties, hashtags },
   }: PayloadAction<{
     data: MintingStateType['data']['name']
     description: MintingStateType['data']['description']
     royalties: MintingStateType['data']['royalties']
-    tags: MintingStateType['tags']
+    hashtags: Array<IHashtag | IHashtagNew>
   }>
 ) {
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+
+    const hashtagsIds = []
+    const newHashtagsIds = yield all(
+      hashtagsIds.map((ht) => {
+        if (ht.id) {
+          hashtagsIds.push(ht.id)
+        }
+        return call(addHashtags, api, { payload: ht })
+      })
+    )
+    debugger
 
     const preparedData = {
       ...data,
