@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { PageWrapper, Form } from 'common'
 import { FormAccountSettings, VerificationTwitter } from './components'
 import { createNewUserRequest } from 'stores/reducers/user'
-import { selectWallet } from 'stores/selectors'
+import { selectUser, selectWallet } from 'stores/selectors'
 import { IAccountSettings } from './types'
 import { useValidationSchema } from './lib'
 import { useStyles } from './styles'
@@ -34,6 +34,7 @@ export default function AccountSettings() {
   const [openVerification, setOpenVerification] = useState<boolean>(false)
 
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
 
   const onSubmit = (values: IAccountSettings) => {
     dispatch(createNewUserRequest({ accountSettings: values, wallet: wallet?.accounts[0] as string }))
@@ -43,7 +44,7 @@ export default function AccountSettings() {
     <PageWrapper className={classes.container}>
       <Form initialValues={data} onSubmit={onSubmit} validationSchema={useValidationSchema()}>
         <>
-          <FormAccountSettings setOpenVerification={() => setOpenVerification(true)} />
+          <FormAccountSettings setOpenVerification={() => setOpenVerification(true)} user={user} />
           <VerificationTwitter open={openVerification} setOpen={() => setOpenVerification(false)} />
         </>
       </Form>

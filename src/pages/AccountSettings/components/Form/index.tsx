@@ -18,14 +18,18 @@ import {
 import { UploadFileSection } from '../../components'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
+import { UserDataTypes } from '../../../../types'
+import image from 'common/icons/smiley_face.svg'
+import cover from 'common/icons/cover-default.svg'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
+  user: UserDataTypes | null
 }
 
 export default function FormAccountSettings(props: IFormAccountSettings) {
   const classes = useStyles()
-  const { setOpenVerification } = props
+  const { setOpenVerification, user } = props
   const { values, handleSubmit } = useFormikContext<IAccountSettings>()
 
   return (
@@ -37,12 +41,15 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
+          photoUrl={user?.profile_image ? user?.profile_image : image}
+          variant="avatar"
         />
         <UploadFileSection
           name="cover_image"
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
+          photoUrl={user?.cover_image ? user?.cover_image : cover}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field

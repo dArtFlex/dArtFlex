@@ -37,6 +37,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     uploadBtn: {
       lineHeight: '21.6px',
       border: `2px solid ${theme.palette.text.primary}`,
+      '&:hover': {
+        backgroundColor: theme.palette.background.default,
+      },
     },
     deleteBtn: {
       lineHeight: '21.6px',
@@ -45,7 +48,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: 115,
       height: 115,
-      borderRadius: '50%',
+      borderRadius: '100%',
+      objectFit: 'cover',
       alignSelf: 'flex-start',
     },
     cover: {
@@ -54,6 +58,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       objectFit: 'cover',
       borderRadius: 4,
       alignSelf: 'flex-start',
+      backgroundColor: theme.palette.grey['50'],
     },
   })
 )

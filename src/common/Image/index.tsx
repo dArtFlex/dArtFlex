@@ -13,7 +13,7 @@ export default function Image(props: IImageProps) {
 
   return file ? (
     <CardMedia className={className} title={title}>
-      <img src={URL.createObjectURL(file)} alt={file?.name} />
+      <img src={URL.createObjectURL(file)} alt={file?.name} className={className} />
     </CardMedia>
   ) : (
     <CardMedia className={className} image={src} title={title} component={'img'} />
