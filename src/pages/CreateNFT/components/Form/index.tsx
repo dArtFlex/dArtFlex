@@ -37,7 +37,7 @@ export default function Form() {
         name: values.name,
         description: values.description,
         royalties: String(values.royalties),
-        tags: values.tags,
+        hashtags: values.hashtags,
       })
     )
   }

@@ -9,8 +9,6 @@ import {
   getExchangeRateTokensFailure,
   getHashtagsAllSuccess,
   getHashtagsAllFailure,
-  addHashtagsSuccess,
-  addHashtagsFailure,
 } from 'stores/reducers/assets'
 import { getUserDataById } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
@@ -22,7 +20,6 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
   IChainId,
-  IHashtag,
   IHashtagNew,
 } from 'types'
 import tokensAll from 'core/tokens'

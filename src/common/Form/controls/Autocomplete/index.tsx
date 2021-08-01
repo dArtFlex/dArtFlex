@@ -68,9 +68,11 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params)
+          // Todo: Need to check as it redundant filter
+          const doubleCheck = options.filter((o) => o.title === params.inputValue)
 
           // Suggest the creation of a new value
-          if (params.inputValue !== '') {
+          if (params.inputValue !== '' && doubleCheck.length === 0) {
             filtered.push({
               inputValue: params.inputValue,
               title: `Add "${params.inputValue}"`,
