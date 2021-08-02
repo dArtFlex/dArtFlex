@@ -6,8 +6,8 @@ import { PageWrapper, Select } from 'common'
 import { TradingHistoryTable, Filter } from './components'
 import { getTradingHistoryRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
-import { ITradingHistory } from './types'
-import { useComposeTradingData } from './lib'
+import { ITradingHistory, IFilterTypes } from './types'
+import { useComposeTradingData, useTradingHistoryByFilter } from './lib'
 
 const sortItems = [
   {
@@ -20,11 +20,13 @@ export default function TradingHistory() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [sortValue, setSortValue] = useState('recent')
+  const [filterBy, setFilterBy] = useState<IFilterTypes[]>([])
 
   const { user } = useSelector(selectUser())
   const { tradingHistoryAll } = useSelector(selectAllTradingHistory())
 
   const tradingHistory: ITradingHistory[] = useComposeTradingData({ tradingHistoryAll })
+  const tradingHistoryByFilter: ITradingHistory[] = useTradingHistoryByFilter({ tradingHistory, filterBy })
 
   const getTradingHistory = useCallback(
     (id?: number) => {
@@ -50,7 +52,7 @@ export default function TradingHistory() {
         </Typography>
         <Box mt={6} mb={4}>
           <Box className={classes.filterContainer}>
-            <Filter />
+            <Filter onFilter={(filters) => setFilterBy(filters)} />
 
             <FormControl variant="outlined" color={'primary'} classes={{ root: classes.tradingHistorySelect }}>
               <MUISelect
@@ -74,7 +76,7 @@ export default function TradingHistory() {
             </FormControl>
           </Box>
         </Box>
-        <TradingHistoryTable data={tradingHistory} />
+        <TradingHistoryTable data={tradingHistoryByFilter} />
       </Box>
     </PageWrapper>
   )

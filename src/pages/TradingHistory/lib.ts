@@ -1,5 +1,5 @@
 import { UserStateType } from 'stores/reducers/user/types'
-import { ITradingHistory } from './types'
+import { ITradingHistory, IFilterTypes } from './types'
 
 export function useComposeTradingData({
   tradingHistoryAll,
@@ -25,4 +25,15 @@ export function useComposeTradingData({
       etherscanLink: '',
     }
   })
+}
+
+export function useTradingHistoryByFilter({
+  tradingHistory,
+  filterBy,
+}: {
+  tradingHistory: ITradingHistory[]
+  filterBy: IFilterTypes[]
+}) {
+  console.log(tradingHistory, filterBy)
+  return filterBy.length ? tradingHistory.filter((th) => filterBy.some((el) => el === th.action)) : tradingHistory
 }

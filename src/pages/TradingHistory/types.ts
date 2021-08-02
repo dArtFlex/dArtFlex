@@ -28,3 +28,11 @@ export interface ITradingHistory {
   cancelBid?: () => void
   etherscanLink: string
 }
+
+export interface ITradingHistoryFilter {
+  label: string
+  name: IFilterTypes
+  checked: boolean
+}
+
+export type IFilterTypes = 'minted' | 'listed' | 'bidded' | 'sold' | 'purchased'
