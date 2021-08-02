@@ -33,6 +33,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         maxWidth: '96%',
         objectFit: 'contain',
       },
+      '&>div>label>span': {
+        wordBreak: 'unset',
+      },
     },
     borderdIconButton: {
       color: theme.palette.text.primary,
