@@ -71,8 +71,6 @@ export default function FormDetails(props: IDetailsFormProps) {
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
 
-  console.log('Hello')
-
   return (
     <>
       <Box pt={14}>
