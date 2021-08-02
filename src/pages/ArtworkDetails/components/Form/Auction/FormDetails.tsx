@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUserRole } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
@@ -46,6 +46,8 @@ export default function FormDetails(props: IDetailsFormProps) {
   const history = useHistory()
   const dispatch = useDispatch()
   const { wallet } = useSelector(selectWallet())
+  const { role } = useSelector(selectUserRole())
+
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
@@ -329,17 +331,21 @@ export default function FormDetails(props: IDetailsFormProps) {
             >
               View on Opensea
             </Button>
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={clsx(classes.btnTitle, classes.btnTitleGreen)}
-              startIcon={<EyeIcon className={classes.linkIconGreen} />}
-            >
-              Unban Work
-            </Button>
+            {role === 'ROLE_SUPER_ADMIN' && (
+              <>
+                <Divider />
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
+                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
+                >
+                  Unban Work
+                </Button>
+              </>
+            )}
             <Divider />
             <Button
               onClick={() => console.log('todo')}
