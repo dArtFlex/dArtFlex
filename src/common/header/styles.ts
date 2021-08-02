@@ -128,7 +128,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'nowrap',
     },
     notificationImage: {
-      width: 45,
+      width: `45px !important`,
       height: 45,
       borderRadius: theme.spacing(2),
     },
