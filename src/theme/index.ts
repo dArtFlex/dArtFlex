@@ -24,6 +24,8 @@ const palette = {
   blackDark: '#141717',
   blackLight: '#4F4F4F',
   yellowBright: '#3E3807',
+  blue: '#2F80ED',
+  purple: '#BB6BD9',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 

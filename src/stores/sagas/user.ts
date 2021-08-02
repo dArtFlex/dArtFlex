@@ -166,6 +166,7 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
 export function* getUserAssets(api: IApi) {
   try {
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    // All User Assets
     const getAllItemByOwnerId: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemsByOwnerId(user.id),
     })
@@ -181,7 +182,36 @@ export function* getUserAssets(api: IApi) {
       }
     > = yield all(getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset)))
 
-    yield put(getUserAssetsSuccess({ userAssets: getAssetsListAllWithStatuses }))
+    // Purchased Assets
+    const userCollectedAssets: IBidsHistory[] = yield call(api, {
+      url: APP_CONFIG.getPurchasedHistoryByUser(user.id),
+    })
+    const getAllCollectedItemById: AssetTypes[] = yield all(
+      userCollectedAssets.map((asset) =>
+        call(api, {
+          url: APP_CONFIG.getItemByItemId(+asset.item_id),
+        })
+      )
+    )
+
+    const getAssetsListCollectedData: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllCollectedItemById.flat().map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListCollectedWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListCollectedData.map((asset) => call(getMainAssetStatus, api, asset)))
+
+    yield put(
+      getUserAssetsSuccess({
+        userAssets: getAssetsListAllWithStatuses,
+        userCollectedAssets: getAssetsListCollectedWithStatuses,
+      })
+    )
   } catch (e) {
     yield put(getUserAssetsFailure(e.message || e))
   }

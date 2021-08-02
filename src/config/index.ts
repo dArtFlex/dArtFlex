@@ -32,6 +32,7 @@ const APP_CONFIG = {
   getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
+  getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
 
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,

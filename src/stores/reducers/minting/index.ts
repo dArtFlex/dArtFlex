@@ -76,7 +76,7 @@ const userSlice = createSlice({
       state.minting = 'failed'
     },
 
-    setZazyMintingData: (
+    setLazyMintingData: (
       state,
       {
         payload,
@@ -113,7 +113,7 @@ export const {
   lazyMintingSuccess,
   lazyMintingFailure,
 
-  setZazyMintingData,
+  setLazyMintingData,
 } = userSlice.actions
 
 export const { reducer } = userSlice

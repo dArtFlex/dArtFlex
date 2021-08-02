@@ -4,6 +4,7 @@ import { UserStateType } from './types'
 const initialState: UserStateType = {
   isOpenSideBar: true,
   userAssets: [],
+  userCollectedAssets: [],
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
@@ -55,9 +56,18 @@ const userSlice = createSlice({
     getUserAssetsRequest: (state) => {
       state.fetching = true
     },
-    getUserAssetsSuccess: (state, { payload }: PayloadAction<{ userAssets: UserStateType['userAssets'] }>) => {
+    getUserAssetsSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        userAssets: UserStateType['userAssets']
+        userCollectedAssets: UserStateType['userCollectedAssets']
+      }>
+    ) => {
       state.fetching = false
       state.userAssets = payload.userAssets
+      state.userCollectedAssets = payload.userCollectedAssets
     },
     getUserAssetsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
