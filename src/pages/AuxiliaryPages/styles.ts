@@ -18,6 +18,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 24,
       fontWeight: 700,
     },
+    wrapSection: {
+      wordBreak: 'break-word',
+    },
     sectionList: {
       paddingLeft: theme.spacing(4),
     },
@@ -25,11 +28,25 @@ export const useStyles = makeStyles((theme: Theme) =>
       listStyleType: 'initial',
       paddingLeft: 0,
     },
+    unorderedListInitial: {
+      listStyleType: 'initial',
+      paddingLeft: theme.spacing(4),
+    },
     unorderedListItem: {
       marginTop: theme.spacing(3),
     },
     navLink: {
       color: theme.palette.lightViolet,
+    },
+    textBlockTight: {
+      margin: theme.spacing(2, 0, 4, 0),
+    },
+    textBlockMargin24: {
+      marginTop: theme.spacing(6),
+    },
+    dashedList: {
+      listStyleType: 'none',
+      paddingLeft: 0,
     },
   })
 )
