@@ -62,7 +62,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.userid.length) && (
+            Boolean(values.userid.length && values.userid.match(/[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>
