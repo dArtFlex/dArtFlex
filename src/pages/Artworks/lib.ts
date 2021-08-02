@@ -57,7 +57,10 @@ export function useInnerAssetsFilter({
     }
     let isPrice
     if (+price.from > 0 || +price.to > 0) {
-      const startPrice = new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
+      const startPrice =
+        +asset.current_price > 0
+          ? new BigNumber(asset.current_price).dividedBy(`10e${18 - 1}`).toNumber()
+          : new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       if (+price.from > 0 && +price.to > 0) {
         isPrice = +price.from <= startPrice && startPrice <= +price.to
       }
