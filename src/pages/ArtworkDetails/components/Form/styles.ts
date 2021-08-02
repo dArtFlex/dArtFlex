@@ -192,7 +192,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
-      backgroundColor: theme.palette.grey['50'],
     },
     formContant: {
       minWidth: 440,
@@ -200,7 +199,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       borderRadius: 12,
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
     },
