@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
@@ -41,6 +41,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
@@ -69,6 +70,8 @@ export default function FormDetails(props: IDetailsFormProps) {
     marketData?.start_price && tokenInfo?.decimals
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
+
+  console.log('Hello')
 
   return (
     <>
@@ -201,7 +204,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           disableElevation
           className={classes.bitBtn}
           classes={{ disabled: classes.bitBtnDisabled }}
-          disabled={Boolean(isAuctionExpired)}
+          disabled={Boolean(isAuctionExpired || Number(tokenData?.owner) === user?.id)}
         >
           {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
         </Button>
