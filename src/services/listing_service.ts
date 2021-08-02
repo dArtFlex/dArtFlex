@@ -41,14 +41,14 @@ class ListingService extends CommonService {
 
   enc(form) {
     if (form.assetClass == 'ERC721_LAZY')
-      return web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
+      return this.web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
         form.contract,
         [form.tokenId, form.uri, [[form.creator, '10000']], [], [form.signature]],
       ])
     if (form.assetClass == 'ERC721')
-      return web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
+      return this.web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
     if (form.assetClass == 'ERC20') {
-      return web3.eth.abi.encodeParameter('address', form.contract)
+      return this.web3.eth.abi.encodeParameter('address', form.contract)
     }
     return '0x'
   }
@@ -57,12 +57,12 @@ class ListingService extends CommonService {
     const makeAsset = form.make.assetType
     const takeAsset = form.take.assetType
     return {
-      data: web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
+      data: this.web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
       dataType: '0x4c234266',
       maker: form.maker,
       makeAsset: {
         assetType: {
-          assetClass: web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
+          assetClass: this.web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
           data: this.enc(makeAsset),
         },
         value: form.make.value,
@@ -70,7 +70,7 @@ class ListingService extends CommonService {
       taker: ZERO,
       takeAsset: {
         assetType: {
-          assetClass: web3.utils.keccak256(form.take.assetType.assetClass).substring(0, 10),
+          assetClass: this.web3.utils.keccak256(form.take.assetType.assetClass).substring(0, 10),
           data: this.enc(takeAsset),
         },
         value: form.take.value,

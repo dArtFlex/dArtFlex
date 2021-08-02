@@ -1,8 +1,8 @@
 //@ts-nocheck
 import Web3 from 'web3'
-// import detectEthereumProvider from '@metamask/detect-provider'
+import detectEthereumProvider from '@metamask/detect-provider'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import appConfig from 'config'
+import APP_CONFIG from 'config'
 
 declare global {
   interface Window {
@@ -13,11 +13,9 @@ export class Web3Service {
   public web3!: Web3
 
   constructor() {
-    if (window?.ethereum) {
-      const web3Provider = window.ethereum
-      window.web3 = new Web3(web3Provider)
-      this.web3 = window.web3
-    }
+    const web3Provider = window?.ethereum || Web3.givenProvider || APP_CONFIG.rinkebyProvider
+    window.web3 = new Web3(web3Provider)
+    this.web3 = window.web3
   }
 
   getNetworkType(): Promise<string> {
@@ -28,9 +26,11 @@ export class Web3Service {
     return Boolean(this.web3)
   }
 
-  connectMetaMaskWallet(): Promise<string[]> {
+  async connectMetaMaskWallet(): Promise<string[]> {
+    const provider = await detectEthereumProvider()
+
     return new Promise<string[]>((resolve, reject) => {
-      if (!window.ethereum) {
+      if (!provider) {
         this.message.create('error', 'Please install Metamask to proceed')
         throw Error('Metamask not found')
       }
@@ -49,25 +49,11 @@ export class Web3Service {
     })
   }
 
-  setWeb3OpenSeaProvider() {
-    const provider = new Web3.providers.HttpProvider(appConfig.rinkebyProvider)
-    const web3 = new Web3(provider)
-    this.web3 = web3
-    return web3
-  }
-
-  async setWeb3EthProvider() {
-    // const provider = await detectEthereumProvider()
-    const web3 = new Web3(Web3.givenProvider)
-    this.web3 = web3
-    return web3
-  }
-
   async setWeb3WalletConnectProvider() {
     const provider = new WalletConnectProvider({
       rpc: {
-        1: appConfig.baseURL,
-        2: appConfig.localURL,
+        1: APP_CONFIG.baseURL,
+        2: APP_CONFIG.localURL,
       },
     })
     await provider.enable()
