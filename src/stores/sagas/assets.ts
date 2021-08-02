@@ -80,10 +80,10 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
       url: APP_CONFIG.getItemByItemId(Number(payload)),
     })
     const userByOwner: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].owner),
     })
     const userByCreator: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].creator),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].creator),
     })
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,

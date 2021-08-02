@@ -20,7 +20,7 @@ export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus'
   onAction?: () => void
 }
 
-export type ICardBadgeProps = Pick<ICardActionsProps, 'status'>
+export type ICardBadgeProps = Pick<ICardActionsProps, 'status' | 'sold'>
 
 export interface IUseCardStatus {
   type: AssetDataTypes['type']
