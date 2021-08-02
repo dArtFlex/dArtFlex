@@ -16,7 +16,7 @@ import TradingHistory from '../pages/TradingHistory'
 import ArtworkDetails from '../pages/ArtworkDetails'
 import ContentManagement from '../pages/ContentManagement'
 import MakeOffer from '../pages/MakeOffer'
-import PrivacyPolicy from '../pages/PrivacyPolicy'
+import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 
 export const history = createBrowserHistory()
 

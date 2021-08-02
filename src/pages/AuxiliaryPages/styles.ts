@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    privacyPolicyWrapper: {
+    auxiliaryWrapper: {
       margin: 'auto',
       maxWidth: 900,
       padding: theme.spacing(14, 0, 20),
