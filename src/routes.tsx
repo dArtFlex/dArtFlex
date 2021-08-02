@@ -14,4 +14,5 @@ export default {
   sales: '/my-sales',
   contentManagement: '/content-management',
   makeOffer: '/make-offer',
+  privacyPolicy: '/privacy-policy',
 }

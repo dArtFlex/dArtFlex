@@ -2,6 +2,9 @@ import React from 'react'
 import { Link, Box } from '@material-ui/core'
 import { LogoIcon } from 'common/icons'
 import { useStyles } from './styles'
+import routes from '../../routes'
+import { NavLink } from 'react-router-dom'
+
 const social = [
   {
     title: 'Twitter',
@@ -36,7 +39,7 @@ const links = [
   },
   {
     title: 'Privacy Policy',
-    href: '#',
+    href: routes.privacyPolicy,
   },
 ]
 
@@ -55,9 +58,9 @@ export default function Footer() {
       </Box>
       <Box className={classes.linksWrapper}>
         {links.map((s) => (
-          <Link key={s.title} color={'inherit'} underline={'hover'} href={s.href}>
+          <NavLink key={s.title} to={s.href}>
             {s.title}
-          </Link>
+          </NavLink>
         ))}
       </Box>
     </footer>
