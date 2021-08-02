@@ -202,7 +202,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           disableElevation
           className={classes.bitBtn}
           classes={{ disabled: classes.bitBtnDisabled }}
-          disabled={Boolean(isAuctionExpired || Number(tokenData?.owner) === user?.id)}
+          disabled={Boolean(isAuctionExpired) || Number(tokenData?.owner) === user?.id}
         >
           {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
         </Button>
