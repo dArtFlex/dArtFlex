@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser, selectUserRole } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
@@ -20,6 +20,7 @@ import { History, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
+import appConst from 'config/consts'
 
 interface IDetailsFormProps {
   onSubmit: () => void
@@ -37,10 +38,18 @@ const tabsItems = [
   },
 ]
 
+const {
+  USER: {
+    ROLES: { ROLE_SUPER_ADMIN },
+  },
+} = appConst
+
 export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
   const { wallet } = useSelector(selectWallet())
+  const { role } = useSelector(selectUserRole())
+
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
@@ -288,17 +297,21 @@ export default function FormDetails(props: IDetailsFormProps) {
             >
               View on Opensea
             </Button>
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={clsx(classes.btnTitle, classes.btnTitleGreen)}
-              startIcon={<EyeIcon className={classes.linkIconGreen} />}
-            >
-              Unban Work
-            </Button>
+            {role === ROLE_SUPER_ADMIN && (
+              <>
+                <Divider />
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
+                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
+                >
+                  Unban Work
+                </Button>
+              </>
+            )}
             <Divider />
             <Button
               onClick={() => console.log('todo')}
