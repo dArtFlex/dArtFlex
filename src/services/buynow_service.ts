@@ -10,6 +10,9 @@ class BuyNowService {
 
   constructor() {
     const web3 = web3Service.getWeb3()
+    if (!web3) {
+      return
+    }
     this.web3 = web3
     this.contract = new web3.eth.Contract(ABI, AUCTION_CONTRACT_ADDRESS)
   }
