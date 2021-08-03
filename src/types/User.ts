@@ -1,5 +1,4 @@
 import { IEntity, IDatedEntity } from 'types'
-import appConst from 'config/consts'
 
 export interface UserDataTypes extends IEntity, IDatedEntity, ISocial {
   fullname: string

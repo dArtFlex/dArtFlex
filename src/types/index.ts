@@ -5,6 +5,7 @@ export * from './User'
 export * from './Wallet'
 export * from './PlaceBid'
 export * from './Notifications'
+export * from './Management'
 
 export interface IEntity {
   id: number
