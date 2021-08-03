@@ -216,15 +216,24 @@ export default function TermsOfService() {
         </ul>
         <Typography className={classes.sectionTitle}>4. Ownership</Typography>
         <ul className={classes.unorderedListInitial}>
-          <li className={classes.unorderedListItem}>
-            <Typography variant={'body2'}>
-              In such cases, dArtFlex, in its sole discretion, may pause or cancel your Auction transactions until such
-              additional information and documents are reviewed by dArtFlex and accepted as satisfying the requirements
-              of applicable law. If you do not provide complete and accurate information and documents in response to
-              such a request, dArtFlex may refuse to provide the Content (defined in Section 4(A) below) to you.
-            </Typography>
-          </li>
+          {ownership.map((item, index) => {
+            return (
+              <li className={classes.unorderedListItem} key={index}>
+                <Typography variant={'body2'}>{item}</Typography>
+              </li>
+            )
+          })}
         </ul>
+        <Typography className={classes.sectionTitle}>5. License to Access and Use Our Service and Content</Typography>
+        <Typography variant={'body2'}>
+          You are hereby granted a limited, nonexclusive, non transferable, non sublicensable, and personal license to
+          access and use the Service and Content; provided, however, that such license is subject to these Terms and
+          does not include any right to (a) sell, resell or use commercially the Service or Content, (b) distribute,
+          publicly perform or publicly display any Content, (c) modify or otherwise make any derivative uses of the
+          Service or Content, or any portion thereof, (d) use any data mining, robots or similar data gathering or
+          extraction methods, (e) download (other than page caching) any portion of the Service or Content, except as
+          expressly permitted by us, and (f) use the Service or Content other than for their intended purposes.
+        </Typography>
       </>
     </AuxiliaryPage>
   )
