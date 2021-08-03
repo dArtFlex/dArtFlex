@@ -17,6 +17,7 @@ import ArtworkDetails from '../pages/ArtworkDetails'
 import ContentManagement from '../pages/ContentManagement'
 import MakeOffer from '../pages/MakeOffer'
 import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
+import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
 
 export const history = createBrowserHistory()
 
@@ -83,6 +84,14 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.privacyPolicy,
       component: <PrivacyPolicy />,
+    },
+    {
+      path: routes.aboutDAF,
+      component: <DAFPage />,
+    },
+    {
+      path: routes.communityGuidelines,
+      component: <CommunityGuidelines />,
     },
   ]
 
