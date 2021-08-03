@@ -60,9 +60,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       rowGap: 10,
       '& a': {
+        color: theme.palette.spanishGray,
+        textDecoration: 'none',
         marginLeft: theme.spacing(12),
         [theme.breakpoints.down(1280)]: {
           marginLeft: theme.spacing(4),
+        },
+        '&:hover': {
+          textDecoration: 'underline',
         },
       },
       [theme.breakpoints.down('md')]: {
