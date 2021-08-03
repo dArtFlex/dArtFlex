@@ -24,7 +24,7 @@ import {
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
 import { setSearch } from 'stores/reducers/user'
-import { selectWallet, selectUser, selectUserRole } from 'stores/selectors'
+import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
@@ -57,6 +57,7 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+  const { notifications } = useSelector(selectNotifications())
 
   const { role } = useSelector(selectUserRole())
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
@@ -222,14 +223,14 @@ export default function Header({ toggleTheme }: HeaderType) {
                       aria-label="notification"
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
                         const target = event.currentTarget as HTMLElement
-                        setAnchorElNotification(target)
+                        notifications.length && setAnchorElNotification(target)
                       }}
                       className={classes.notificationButton}
                     >
                       <Badge
                         color={'primary'}
                         variant="dot"
-                        invisible={false}
+                        invisible={!notifications.length}
                         className={classes.notification}
                         classes={{ badge: classes.notificationBadge }}
                       >

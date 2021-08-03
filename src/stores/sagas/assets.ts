@@ -64,8 +64,8 @@ export function* getAssetsAllData(api: IApi) {
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
-
-    yield put(getAssetsAllSuccess(getAssetsListAllWithStatuses))
+    const assets = getAssetsListAllWithStatuses.map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag }))
+    yield put(getAssetsAllSuccess(assets))
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }

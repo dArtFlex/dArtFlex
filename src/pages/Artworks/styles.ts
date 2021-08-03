@@ -25,7 +25,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
     },
     customFiltersContainer: {
-      whiteSpace: 'nowrap',
+      // whiteSpace: 'nowrap',
       flexWrap: 'wrap',
       rowGap: 10,
     },

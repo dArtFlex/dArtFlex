@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { selectAssets, selectWallet, selectPromotion, selectSearch } from 'stores/selectors'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectAssets, selectWallet, selectPromotion, selectSearch, selectHashtags } from 'stores/selectors'
+import { getHashtagsAllRequest } from 'stores/reducers/assets'
 import clsx from 'clsx'
 import {
   Box,
@@ -30,6 +31,7 @@ import {
 } from './lib'
 import appConst from 'config/consts'
 import { IArtworksFiltes } from './types'
+import { IHashtag } from 'types'
 import { useStyles } from './styles'
 
 const {
@@ -79,21 +81,32 @@ const filterItems = [
   },
 ]
 
+const ALL_HASHTAG = 'All'
+const allHashtag = {
+  id: 0,
+  name: ALL_HASHTAG,
+  title: '',
+  created_at: `${new Date()}`,
+  updated_at: `${new Date()}`,
+}
+
 // const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
 export default function Artworks() {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { assets, fetching } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
   const { search } = useSelector(selectSearch())
+  const { hashtags } = useSelector(selectHashtags())
 
   const [sortValue, setSortValue] = useState<'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low'>(
     'ending_soon'
   )
   const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
-  // const [activeHashTags, setActiveHashTags] = useState<string[]>([])
+  const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
   const [priceFrom, setPriceFrom] = useState('')
   const [priceTo, setPriceTo] = useState('')
@@ -105,6 +118,7 @@ export default function Artworks() {
     sortBy: sortValue,
     price: { from: priceFrom, to: priceTo },
     hotOnly,
+    activeHashTags,
   })
   const sortedAssets = useSortedAssets({ assets: innerSearchAssets, filter })
   const promotionMultiply = usePromotionMultiplyData({ promotionIds, promotionAssets })
@@ -130,6 +144,10 @@ export default function Artworks() {
     setPriceTo('')
     setHotOnly(false)
   }
+
+  useEffect(() => {
+    dispatch(getHashtagsAllRequest())
+  }, [])
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -209,27 +227,30 @@ export default function Artworks() {
             <Divider className={classes.filterDivider} />
             <Box mt={6} display={'flex'} alignItems={'center'} className={classes.customFiltersContainer}>
               <Box className={classes.hashTagContainer}>
-                {/*
-                  ************************************************
-                  Todo: Tags should be implemented in next version
-                  ************************************************
-
-                    {hashTags.map((ht) => {
-                      const isActive = Boolean(activeHashTags.find((h) => h === ht))
-                      return (
-                        <Button
-                          key={ht}
-                          variant={'outlined'}
-                          className={clsx(classes.hashTagBtn, isActive && classes.hashTagBtnActive)}
-                          onClick={() =>
-                            setActiveHashTags(isActive ? activeHashTags.filter((a) => a !== ht) : [...activeHashTags, ht])
+                {hashtags &&
+                  [allHashtag, ...hashtags].splice(0, 9).map((ht: IHashtag) => {
+                    const isAllActive = Boolean(activeHashTags.length && activeHashTags[0] === ALL_HASHTAG)
+                    const isActive = Boolean(activeHashTags.find((h) => h === ht.name))
+                    return (
+                      <Button
+                        key={ht.id}
+                        variant={'outlined'}
+                        className={clsx(classes.hashTagBtn, isActive && classes.hashTagBtnActive)}
+                        onClick={() => {
+                          if (ht.name === ALL_HASHTAG) {
+                            return isAllActive
+                              ? setActiveHashTags([])
+                              : setActiveHashTags([ht.name, ...hashtags.map((ht) => ht.name)])
                           }
-                        >
-                          {ht}
-                        </Button>
-                      )
-                    })}
-                  */}
+                          setActiveHashTags(
+                            isActive ? activeHashTags.filter((a) => a !== ht.name) : [...activeHashTags, ht.name]
+                          )
+                        }}
+                      >
+                        {ht.name}
+                      </Button>
+                    )
+                  })}
               </Box>
               <Typography variant={'body1'} color={'textSecondary'} className={classes.priceTitle}>
                 Price
