@@ -15,6 +15,7 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import UsersRow from './UsersRow'
+import clsx from 'clsx'
 // import { UserDataTypes } from 'types'
 
 export default function ContentManagementUsers() {
@@ -225,7 +226,7 @@ export default function ContentManagementUsers() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box className={classes.flexBox} mt={4}>
+      <Box className={clsx(classes.flexBox, classes.paginationContent)} mt={4}>
         <Paper elevation={3} className={classes.paginationWrapper}>
           <Box className={classes.flexBox}>
             <IconButton onClick={handlePreviousPage} disabled={page === 1} className={classes.disabledButton}>

@@ -5,6 +5,7 @@ import { reducer as mintingReducer } from './minting'
 import { reducer as listingReducer } from './listing'
 import { reducer as placeBidReducer } from './placeBid'
 import { reducer as buyNowReducer } from './buyNow'
+import { reducer as notificationsReducer } from './notifications'
 import { UserStateType } from './user/types'
 import { AssetsStateType } from './assets/types'
 import { WalletsStateType } from './wallet/types'
@@ -12,6 +13,7 @@ import { MintingStateType } from './minting/types'
 import { ListingStateType } from './listing/types'
 import { PlaceBidStateType } from './placeBid/types'
 import { BuyNowStateType } from './buyNow/types'
+import { NotificationsStateType } from './notifications/types'
 
 const rootReducer = {
   user: userReducer,
@@ -21,6 +23,7 @@ const rootReducer = {
   listing: listingReducer,
   bid: placeBidReducer,
   buy: buyNowReducer,
+  notifications: notificationsReducer,
 }
 
 export interface stateType {
@@ -31,6 +34,7 @@ export interface stateType {
   listing: ListingStateType
   bid: PlaceBidStateType
   buy: BuyNowStateType
+  notifications: NotificationsStateType
 }
 
 export default rootReducer

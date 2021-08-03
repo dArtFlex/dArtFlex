@@ -6,15 +6,36 @@ export const useStyles = makeStyles((theme: Theme) =>
     contentManagementWrapper: {
       padding: theme.spacing(8, 10),
       backgroundColor: theme.palette.grey['50'],
+      [theme.breakpoints.down(961)]: {
+        padding: theme.spacing(4, 5),
+      },
     },
     managementWrapperSmall: {
       padding: theme.spacing(0, 5),
       width: '80%',
+      [theme.breakpoints.down(961)]: {
+        width: '100%',
+        padding: 0,
+      },
+    },
+    tabsRoot: {
+      [theme.breakpoints.down(1024)]: {
+        overflow: 'scroll',
+      },
     },
     tabIndicator: {
-      backgroundColor: theme.palette.violet,
+      backgroundColor: theme.palette.primary.main,
       width: theme.spacing(1),
       left: 0,
+    },
+    contentWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+      rowGap: 16,
+      marginTop: theme.spacing(8),
+      [theme.breakpoints.down(961)]: {
+        flexDirection: 'column',
+      },
     },
     toggleButtons: {
       backgroundColor: theme.palette.background.paper,
@@ -40,9 +61,20 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     tabWrapperRoot: {
       height: 'fit-content',
+      width: 'fit-content',
+      [theme.breakpoints.down(420)]: {
+        width: '100%',
+      },
     },
     tabWrapper: {
       padding: theme.spacing(6, 7.5),
+      [theme.breakpoints.down(1025)]: {
+        padding: theme.spacing(6, 4),
+      },
+      [theme.breakpoints.down(961)]: {
+        padding: theme.spacing(2),
+        overflow: 'unset !important',
+      },
     },
     flexContainer: {
       borderBottom: 'none',
@@ -52,6 +84,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'baseline',
       margin: 0,
+      whiteSpace: 'nowrap',
     },
     tabButton: {
       width: 'unset',
@@ -63,6 +96,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     managementWrapper: {
       padding: theme.spacing(0, 18),
+      [theme.breakpoints.down(1025)]: {
+        padding: theme.spacing(0, 2),
+      },
+      [theme.breakpoints.down(961)]: {
+        padding: 0,
+      },
     },
     textSecondary: {
       fontSize: 18,
@@ -72,24 +111,63 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       width: theme.spacing(82),
       marginLeft: theme.spacing(3),
+      [theme.breakpoints.down(1025)]: {
+        width: 280,
+      },
+      [theme.breakpoints.down(680)]: {
+        width: '100%',
+        marginLeft: 0,
+      },
+    },
+    NFTCard: {
+      [theme.breakpoints.up(680)]: {
+        marginLeft: theme.spacing(5),
+      },
     },
     borderedInput: {
       border: `1px solid ${theme.palette.greyMid}`,
+    },
+    mobileEditableNFT: {
+      flexDirection: 'column',
+      alignItems: 'flex-start !important',
+      rowGap: 16,
+      '&>div:first-child': {
+        margin: '0 auto',
+      },
     },
     NFTPhoto: {
       backgroundSize: '100% 100%',
       width: theme.spacing(22),
       height: theme.spacing(20.5),
       borderRadius: theme.spacing(1.5),
+      [theme.breakpoints.down(480)]: {
+        width: 68,
+        height: 62,
+      },
     },
     NFTWrapper: {
       padding: theme.spacing(3, 6),
       width: theme.spacing(165),
+      [theme.breakpoints.down(1025)]: {
+        width: 580,
+      },
+      [theme.breakpoints.down(680)]: {
+        padding: theme.spacing(3),
+        width: '90vw',
+      },
     },
     NFTName: {
       fontWeight: 700,
       marginLeft: theme.spacing(4.5),
       fontSize: 16,
+      overflow: 'hidden',
+      [theme.breakpoints.down(480)]: {
+        maxWidth: 100,
+      },
+      [theme.breakpoints.down(320)]: {
+        marginLeft: theme.spacing(2),
+        maxWidth: 80,
+      },
     },
     NFTLink: {
       fontSize: 14,
@@ -107,6 +185,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     addButton: {
       display: 'flex',
       alignItems: 'center',
+    },
+    nftCountInfo: {
+      display: 'flex',
+      alignItems: 'center',
+      marginLeft: theme.spacing(7),
+      [theme.breakpoints.down(961)]: {
+        marginLeft: theme.spacing(2),
+      },
     },
     addNFTIcon: {
       color: theme.palette.text.primary,
@@ -138,6 +224,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         borderRadius: theme.spacing(4),
         backgroundColor: theme.palette.type === 'dark' && theme.palette.accent,
+        [theme.breakpoints.down(960)]: {
+          backgroundColor: 'unset',
+        },
+      },
+      [theme.breakpoints.down(961)]: {
+        paddingLeft: 0,
       },
     },
     photo: {
@@ -152,22 +244,37 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.white,
       borderBottom: 'none',
     },
+    tableCellRoot: {
+      [theme.breakpoints.down(1025)]: {
+        padding: theme.spacing(3),
+      },
+      [theme.breakpoints.down(641)]: {
+        padding: theme.spacing(2),
+      },
+    },
     photoWrapper: {
-      width: theme.spacing(25),
+      minWidth: 100,
       textAlign: 'center',
     },
     tableTextItem: {
       fontSize: '1rem',
       fontWeight: 400,
       color: theme.palette.lightViolet,
+      minWidth: 100,
     },
     statusTextActive: {
       fontSize: '1rem',
       color: theme.palette.text.primary,
     },
+    userStatus: {
+      minWidth: 90,
+    },
     statusTextBanned: {
       fontSize: '1rem',
       color: theme.palette.redMiddle,
+    },
+    worksRowActionButton: {
+      minWidth: 96,
     },
     statusTextUnban: {
       fontSize: '1rem',
@@ -182,13 +289,23 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(10),
       textAlign: 'center',
     },
+    flexBoxInit: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     flexBox: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      rowGap: 16,
+      gap: 16,
     },
     paginationWrapper: {
       width: 'fit-content',
+    },
+    paginationContent: {
+      justifyContent: 'center',
     },
     disabledButton: {
       color: theme.palette.text.primary,
@@ -201,10 +318,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(8),
     },
     sortDropDown: {
-      marginLeft: 'auto',
+      [theme.breakpoints.up(640)]: {
+        marginLeft: 'auto',
+      },
     },
     searchInput: {
-      marginLeft: theme.spacing(4),
       backgroundColor: theme.palette.background.paper,
     },
     userAvatar: {
@@ -213,6 +331,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
       borderRadius: '100%',
       marginRight: theme.spacing(6),
+    },
+    addNFTButton: {
+      [theme.breakpoints.up(960)]: {
+        margin: theme.spacing(6, 0, 0, 6),
+      },
+    },
+    actionButtonsContainer: {
+      margin: '0 auto',
     },
   })
 )

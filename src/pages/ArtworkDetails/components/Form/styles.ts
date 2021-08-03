@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridTemplateRows: 'minmax(100%, auto)',
       gridGap: theme.spacing(10),
       alignItems: 'start',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1024)]: {
         gridTemplateColumns: '1fr',
         gridTemplateRows: '1fr',
       },
@@ -22,17 +22,25 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.ghostWhite,
+      backgroundColor: theme.palette.grey['100'],
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>div': {
+        maxWidth: 'min-content',
+      },
       '&>img': {
-        maxWidth: '100%',
-        maxHeight: '100%',
+        height: 520,
+        maxWidth: '96%',
         objectFit: 'contain',
+      },
+      '&>div>label>span': {
+        wordBreak: 'unset',
       },
     },
     borderdIconButton: {
-      border: `1px solid ${theme.palette.greyPale}`,
+      color: theme.palette.text.primary,
+      background: theme.palette.background.paper,
+      border: `1px solid ${theme.palette.grey['200']}`,
     },
     expandBtb: {
       position: 'absolute',
@@ -55,6 +63,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
       gridGap: theme.spacing(2),
+    },
+    infoRowMobile: {
+      [theme.breakpoints.down(421)]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr 1fr',
+        rowGap: 16,
+      },
     },
     infoTitle: {
       marginBottom: theme.spacing(2),
@@ -91,6 +106,27 @@ export const useStyles = makeStyles((theme: Theme) =>
     tabContant: {
       overflow: 'auto',
     },
+    indicator: {
+      backgroundColor: theme.palette.text.primary,
+    },
+    activeTabColor: {
+      color: `${theme.palette.text.primary} !important`,
+    },
+    tabsOverflow: {
+      [theme.breakpoints.down(320)]: {
+        overflow: 'scroll',
+      },
+    },
+    navTabs: {
+      padding: theme.spacing(5, 0),
+      color: `${theme.palette.text.primary} !important`,
+      [theme.breakpoints.down(740)]: {
+        padding: theme.spacing(2, 0),
+      },
+    },
+    tabSelected: {
+      color: `${theme.palette.text.primary} !important`,
+    },
     infoRowIcon: {
       display: 'flex',
       alignItems: 'center',
@@ -123,7 +159,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     warningBox: {
       padding: theme.spacing(3, 6),
       marginBottom: theme.spacing(4),
-      background: theme.palette.yellowLight,
+      background: theme.palette.success.main,
       borderRadius: theme.spacing(2),
     },
     warningText: {
@@ -148,7 +184,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'right',
     },
     outerContainer: {
-      position: 'sticky',
       top: theme.spacing(4),
     },
     formContainer: {
@@ -164,7 +199,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       borderRadius: 12,
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['500'],
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
     },
@@ -245,7 +280,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     backIcon: {
       backgroundColor: theme.palette.white,
       border: `1px solid ${theme.palette.greyLight}`,
-      color: theme.palette.text.primary,
+      color: theme.palette.blackMain,
       marginRight: theme.spacing(4),
     },
     formHead: {

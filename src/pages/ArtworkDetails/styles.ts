@@ -5,13 +5,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       flex: '1 1 auto',
       display: 'grid',
-      gridTemplateColumns: '1fr 440px',
-      gridTemplateRows: 'minmax(100%, auto)',
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: '1fr',
       gridGap: theme.spacing(10),
       alignItems: 'start',
-      [theme.breakpoints.down('md')]: {
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr',
+      [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: '1fr 440px',
+        gridTemplateRows: 'minmax(100%, auto)',
       },
     },
     previewContainer: {
@@ -22,8 +22,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.ghostWhite,
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>div': {
+        maxWidth: 'min-content',
+      },
       '&>img': {
-        maxWidth: '100%',
+        maxWidth: '96%',
         maxHeight: '100%',
         objectFit: 'contain',
       },

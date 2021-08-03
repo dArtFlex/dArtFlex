@@ -26,9 +26,9 @@ export default function FormArtworkInfo(props: IMakeOfferForm) {
 
   return (
     <Box className={classes.artworkInfoWrapper}>
-      <Box className={clsx(classes.flexBox, classes.spaceContent)}>
+      <Box className={clsx(classes.flexBox, classes.spaceContent, classes.formHeader)}>
         <Typography variant={'h2'}>Over Indulgence 2</Typography>
-        <IconButton className={clsx(classes.makeOfferBlock, classes.moreIcon)}>
+        <IconButton className={classes.moreIcon}>
           <MoreHorizontalIcon />
         </IconButton>
       </Box>

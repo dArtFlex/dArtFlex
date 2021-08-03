@@ -7,9 +7,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: '6px 12px',
       color: theme.palette.greyDark,
       border: `1px solid ${theme.palette.greyMid}`,
-      '&+&': {
-        marginLeft: '8px',
-      },
     },
     hashTagBtnActive: {
       border: `1px solid ${theme.palette.primary.main}`,
@@ -20,6 +17,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `1px solid ${theme.palette.greyLight}`,
       marginLeft: theme.spacing(2),
       color: theme.palette.text.primary,
+    },
+    hashtagsWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      gap: 8,
+      rowGap: 16,
     },
   })
 )

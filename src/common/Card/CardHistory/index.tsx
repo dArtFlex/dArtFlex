@@ -15,6 +15,7 @@ import {
 import { ExternalLinkIcon, SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
+import APP_CONFIG from 'config'
 
 export default function CardHistory(props: ICardHistoryProps) {
   const {
@@ -22,6 +23,7 @@ export default function CardHistory(props: ICardHistoryProps) {
     order_id,
     market_id,
     user_id,
+    tx_hash,
     status,
     updated_at,
     userWalletId,
@@ -34,6 +36,7 @@ export default function CardHistory(props: ICardHistoryProps) {
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
 
   switch (status) {
     case 'owend':
@@ -45,9 +48,13 @@ export default function CardHistory(props: ICardHistoryProps) {
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
-            <IconButton className={classes.borderdIconButton}>
-              <ExternalLinkIcon />
-            </IconButton>
+            tx_hash ? (
+              <Link href={etherscanViewTx} target="_blank">
+                <IconButton className={classes.borderdIconButton}>
+                  <ExternalLinkIcon />
+                </IconButton>
+              </Link>
+            ) : null
           }
           title={updatedDate}
           subheader={
@@ -67,9 +74,13 @@ export default function CardHistory(props: ICardHistoryProps) {
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
-            <IconButton className={classes.borderdIconButton}>
-              <ExternalLinkIcon />
-            </IconButton>
+            tx_hash ? (
+              <Link href={etherscanViewTx} target="_blank">
+                <IconButton className={classes.borderdIconButton}>
+                  <ExternalLinkIcon />
+                </IconButton>
+              </Link>
+            ) : null
           }
           title={updatedDate}
           subheader={
@@ -116,9 +127,13 @@ export default function CardHistory(props: ICardHistoryProps) {
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
-            <IconButton className={classes.borderdIconButton}>
-              <ExternalLinkIcon />
-            </IconButton>
+            tx_hash ? (
+              <Link href={etherscanViewTx} target="_blank">
+                <IconButton className={classes.borderdIconButton}>
+                  <ExternalLinkIcon />
+                </IconButton>
+              </Link>
+            ) : null
           }
           title={updatedDate}
           subheader={
@@ -129,6 +144,31 @@ export default function CardHistory(props: ICardHistoryProps) {
                 </span>{' '}
                 canceled
               </Typography>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+              </Link>
+            </Box>
+          }
+        />
+      )
+    case 'purchased':
+      return (
+        <CardContainer
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
+          action={
+            tx_hash ? (
+              <Link href={etherscanViewTx} target="_blank">
+                <IconButton className={classes.borderdIconButton}>
+                  <ExternalLinkIcon />
+                </IconButton>
+              </Link>
+            ) : null
+          }
+          title={updatedDate}
+          subheader={
+            <Box>
+              <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
                 {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}

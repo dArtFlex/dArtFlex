@@ -6,6 +6,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       lineHeight: '21.6px',
       border: `2px solid ${theme.palette.text.primary}`,
+      '&:hover': {
+        backgroundColor: theme.palette.background.default,
+      },
     },
   })
 )

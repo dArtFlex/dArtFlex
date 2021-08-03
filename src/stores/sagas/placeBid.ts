@@ -110,11 +110,11 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string }>
+  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string }>
 ) {
   try {
     const marketData = yield call(api, {
-      url: 'https://dartflex-dev.ml:8887/api/bid/get_by_market/' + payload.market_id,
+      url: APP_CONFIG.getHistory(payload.market_id),
     })
     const creatorOrder = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
@@ -124,13 +124,16 @@ export function* acceptBid(
     })
 
     const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
       data: {
-        id: payload.buyerId,
+        id: payload.bid_id,
+        txHash: acceptBidTransaction.transactionHash,
       },
     })
+
     yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
     yield put(acceptBidFailure(e.message || e))

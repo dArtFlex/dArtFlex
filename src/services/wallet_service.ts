@@ -1,6 +1,6 @@
 //@ts-nocheck
 import BigNumber from 'bignumber.js'
-import { web3Service } from 'services/web3_service'
+import { Web3Service } from 'services/web3_service'
 import { listingService } from 'services/listing_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
@@ -9,12 +9,11 @@ import appConst from 'config/consts'
 const signTypes = {
   Sign: [],
 }
-class WalletService {
+class WalletService extends Web3Service {
   async getMetaMaskAccount() {
-    const web3 = await web3Service.setWeb3EthProvider()
     this.accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     this.balance = await new Promise((resolve) => {
-      web3.eth.getBalance(this.accounts[0], (err, balance) => {
+      this.web3.eth.getBalance(this.accounts[0], (err, balance) => {
         resolve(BigNumber(balance).dividedBy(10e17).toNumber())
       })
     })
@@ -23,7 +22,6 @@ class WalletService {
   }
 
   async getWalletConnectAccount() {
-    const web3 = await web3Service.setWeb3WalletConnectProvider()
     const wallet = localStorage.getItem(appConst.WALLET_CONNECT)
 
     if (wallet) {
@@ -33,11 +31,11 @@ class WalletService {
     }
 
     this.balance = await new Promise((resolve) => {
-      web3.eth.getBalance(this.accounts[0], (err, balance = 0) => {
+      this.web3.eth.getBalance(this.accounts[0], (err, balance = 0) => {
         resolve(BigNumber(balance).dividedBy(10e17).toNumber())
       })
     })
-    this.chainId = '0x1'
+    this.chainId = this.web3.eth.getChainId()
     return this
   }
 

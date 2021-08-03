@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { PageWrapper } from 'common'
-import { Box, Paper, Tab, Tabs, Typography } from '@material-ui/core'
+import { Box, Paper, Tab, Tabs, Typography, useMediaQuery } from '@material-ui/core'
 import { useStyles } from './styles'
 import PromotionManagement from './components/PromotionManagement'
 import ContentManagementTab from './components/ContentManagementTab'
@@ -10,12 +10,14 @@ export default function ContentManagement() {
 
   const [tab, setTab] = useState(0)
 
+  const tabletMobileVersion = useMediaQuery('(max-width: 961px)')
+
   return (
     <PageWrapper className={classes.contentManagementWrapper}>
       <>
         <Typography variant={'h1'}>Management</Typography>
 
-        <Box display="flex" flexDirection="row" mt={8}>
+        <Box className={classes.contentWrapper}>
           <Paper classes={{ root: classes.tabWrapperRoot }}>
             <Tabs
               value={tab}
@@ -23,8 +25,9 @@ export default function ContentManagement() {
                 setTab(newValue)
               }}
               textColor="primary"
-              orientation="vertical"
+              orientation={tabletMobileVersion ? 'horizontal' : 'vertical'}
               classes={{
+                root: classes.tabsRoot,
                 indicator: classes.tabIndicator,
                 scroller: classes.tabWrapper,
                 flexContainer: classes.flexContainer,

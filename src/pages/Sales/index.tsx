@@ -29,17 +29,17 @@ export default function Sales() {
         <Typography variant={'h1'} color={'textPrimary'}>
           Sales
         </Typography>
-        <Box className={classes.grid} mt={6} mb={4}>
+        <Box>
           {fetching && userAssets.length === 0 ? (
             <CircularProgressLoader />
           ) : (
-            <>
+            <Box className={classes.grid}>
               {userAssets
                 ?.filter((el) => !el.sold)
                 .map((userAsset, i) => (
                   <CardAsset key={i} asset={userAsset} withLabel withAction />
                 ))}
-            </>
+            </Box>
           )}
         </Box>
       </Box>

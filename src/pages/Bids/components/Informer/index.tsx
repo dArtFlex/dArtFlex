@@ -16,7 +16,7 @@ export default function Informer(props: IInformer) {
     <Box className={classes.informerBox}>
       <Box className={classes.informerHead}>
         {iconTitle}
-        <Typography variant={'h4'} noWrap>
+        <Typography variant={'h4'} className={classes.informerTitle}>
           {title}
         </Typography>
       </Box>

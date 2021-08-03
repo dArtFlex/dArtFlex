@@ -1,10 +1,7 @@
 //@ts-nocheck
 import HttpStatusCodes from 'http-status-codes'
-import { web3Service } from 'services/web3_service'
 import { CommonService } from 'services/common_service'
 import { DOMAIN_TYPE, ERC721Types } from 'constant'
-
-const web3 = web3Service.getWeb3()
 
 class LazyMintService extends CommonService {
   createTypeData(domainData, primaryType, message, types) {
@@ -22,8 +19,8 @@ class LazyMintService extends CommonService {
   }
 
   async generateTokenId(creator) {
-    const nonce = creator + web3.utils.randomHex(12).slice(2)
-    const tokenId = web3.utils.toBN(nonce).toString()
+    const nonce = creator + this.web3.utils.randomHex(12).slice(2)
+    const tokenId = this.web3.utils.toBN(nonce).toString()
     return tokenId
   }
 

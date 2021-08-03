@@ -1,6 +1,6 @@
 import { IArtworksFiltes } from './types'
 import BigNumber from 'bignumber.js'
-import { AssetDataTypesWithStatus } from 'types'
+import { AssetDataTypesWithStatus, IHashtag } from 'types'
 import { IUseCardStatus } from 'common/Card/CardAsset/types'
 import { UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { normalizeDate } from 'utils'
@@ -13,13 +13,9 @@ const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
 } = appConst
 
-export function useSearchAssets({
-  assets,
-  search,
-}: {
-  assets: AssetDataTypesWithStatus[] | null
-  search: IArtworksFiltes
-}) {
+type IAssetsBaseTypes = Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }> | null
+
+export function useSearchAssets({ assets, search }: { assets: IAssetsBaseTypes; search: IArtworksFiltes }) {
   if (!assets) {
     return null
   }
@@ -40,39 +36,58 @@ export function useInnerAssetsFilter({
   sortBy,
   price,
   hotOnly,
+  activeHashTags,
 }: {
-  assets: AssetDataTypesWithStatus[] | null
+  assets: IAssetsBaseTypes
   sortBy: 'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low'
   price: { from: string; to: string }
   hotOnly: boolean
+  activeHashTags: string[]
 }) {
   if (!assets) {
     return null
   }
   const _assets = assets.filter((asset) => {
+    // By Hot
     let isHotOnly
     if (hotOnly) {
       const now_time = new Date().getTime()
       isHotOnly = normalizeDate(asset.end_time).getTime() < now_time + 1000 * 60 * 60
     }
+
+    // By Price
     let isPrice
+    const startPrice =
+      +asset.current_price > 0
+        ? new BigNumber(asset.current_price).dividedBy(`10e${18 - 1}`).toNumber()
+        : new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
     if (+price.from > 0 || +price.to > 0) {
-      const startPrice = new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
-      if (+price.from > 0 && +price.to > 0) {
-        isPrice = +price.from <= startPrice && startPrice <= +price.to
-      }
       isPrice = +price.from > 0 ? +price.from <= startPrice : startPrice <= +price.to
+    } else if (+price.from > 0 && +price.to > 0) {
+      isPrice = +price.from <= startPrice && startPrice <= +price.to
     }
-    if (hotOnly && (+price.from > 0 || +price.to > 0)) {
-      return isHotOnly && isPrice
+
+    // By Hashtags
+    let isHashtags
+    if (activeHashTags.length) {
+      isHashtags = asset.hashtag.length
+        ? asset.hashtag.some((ht) => activeHashTags.some((aht) => aht === ht.name))
+        : false
     }
-    if (hotOnly) {
-      return isHotOnly
+
+    // Checking
+    let isTrue = true
+    if (isHotOnly !== undefined) {
+      isTrue = isHotOnly
     }
-    if (+price.from > 0 || +price.to > 0) {
-      return isPrice
+    if (isPrice !== undefined) {
+      isTrue = isPrice
     }
-    return true
+    if (isHashtags !== undefined) {
+      isTrue = isHashtags
+    }
+
+    return isTrue
   })
 
   const compare =
@@ -152,13 +167,13 @@ export function useSortedAssets({
   switch (filter) {
     case LIVE_AUCTION:
       return assets.filter(
-        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && Boolean(a.sold) === false
+        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && !Boolean(a.sold)
       )
     case BUY_NOW:
-      return assets.filter((a) => a.type === INSTANT_BY && Boolean(a.sold) === false)
+      return assets.filter((a) => a.type === INSTANT_BY && !Boolean(a.sold) && a.status !== 'minted')
     case RESERVE_NOT_MET:
       return assets.filter((a) => {
-        if (a.type === AUCTION && Boolean(a.sold) === false) {
+        if (a.type === AUCTION && !Boolean(a.sold)) {
           return normalizeDate(a.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
         }
         return a.type === BUY_NOW && normalizeDate(a.end_time).getTime() > now_time - 1000 * 60 * 60 * 24

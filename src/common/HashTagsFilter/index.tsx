@@ -15,7 +15,7 @@ export default function HashTagsFilter(props: IHashTagsFilter) {
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
   return (
-    <Box flex={'1 1 auto'} mr={10}>
+    <Box className={classes.hashtagsWrapper}>
       {tags.map((tag) => {
         const isActive = Boolean(activeHashTags.find((h) => h === tag))
         return (

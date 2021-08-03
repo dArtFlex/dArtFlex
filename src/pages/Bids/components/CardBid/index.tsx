@@ -39,6 +39,13 @@ export default function CardBid(props: ICardBidProps) {
         {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
+        {/*<Informer*/}
+        {/*  iconTitle={<CupIcon />}*/}
+        {/*  title={'You are the winner!'}*/}
+        {/*  message={*/}
+        {/*    'Congratulations, you won the auction for this artwork. Now claim your NFT and add it to your collection!'*/}
+        {/*  }*/}
+        {/*/>*/}
         {currentBid && yourBid ? (
           <>
             <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
@@ -63,6 +70,10 @@ export default function CardBid(props: ICardBidProps) {
             </Typography>
           </Box>
         )}
+
+        <Button className={clsx(classes.btnAction, classes.btnView)} variant={'outlined'} fullWidth>
+          View Artwork
+        </Button>
 
         {status === LIVE_AUCTION && (
           <Button className={clsx(classes.btnAction, classes.btnView)} variant={'outlined'}>

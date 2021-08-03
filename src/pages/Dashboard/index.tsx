@@ -12,7 +12,7 @@ import { selectUser } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import { getUserAssetsRequest } from 'stores/reducers/user'
-import { setZazyMintingData } from 'stores/reducers/minting'
+import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { shortCutWallet } from 'utils'
@@ -45,9 +45,12 @@ export default function Dashboard() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { user, userAssets, fetching } = useSelector(selectUser())
+  const { user, userAssets, userCollectedAssets, fetching } = useSelector(selectUser())
 
-  const sortedAssets = useSortedAssets({ userAssets, filter })
+  const sortedAssets = useSortedAssets({
+    userAssets: filter === FILTER_VALUES.COLLECTED ? userCollectedAssets : userAssets,
+    filter,
+  })
 
   if (!user) {
     history.push(routes.home)
@@ -78,7 +81,7 @@ export default function Dashboard() {
 
   const handleListed = (userAsset: IUserAssets) => {
     dispatch(
-      setZazyMintingData({
+      setLazyMintingData({
         data: {
           ...userAsset.imageData,
           royalties: String(userAsset.tokenData.royalty),
@@ -98,7 +101,7 @@ export default function Dashboard() {
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={user.profile_image}
+        coverURL={user.cover_image}
         aside={
           <Aside
             avatar={user.profile_image}
@@ -121,7 +124,7 @@ export default function Dashboard() {
           >
             {filterItems.map(({ label, value }) => {
               return (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton key={value} value={value} selected={filter === value} className={classes.toggleButton}>
                   {label}
                 </ToggleButton>
               )

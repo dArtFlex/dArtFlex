@@ -9,6 +9,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 336,
       height: '100%',
       flexDirection: 'column',
+      [theme.breakpoints.down(600)]: {
+        padding: theme.spacing(0, 2),
+      },
     },
     walletConnectText: {
       color: theme.palette.text.primary,

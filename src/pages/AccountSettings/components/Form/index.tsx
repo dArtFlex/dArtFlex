@@ -18,14 +18,18 @@ import {
 import { UploadFileSection } from '../../components'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
+import { UserDataTypes } from '../../../../types'
+import image from 'common/icons/smiley_face.svg'
+import cover from 'common/icons/cover-default.svg'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
+  user: UserDataTypes | null
 }
 
 export default function FormAccountSettings(props: IFormAccountSettings) {
+  const { setOpenVerification, user } = props
   const classes = useStyles()
-  const { setOpenVerification } = props
   const { values, handleSubmit } = useFormikContext<IAccountSettings>()
 
   return (
@@ -37,17 +41,20 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
+          photoUrl={user?.profile_image ? user?.profile_image : image}
+          variant="avatar"
         />
         <UploadFileSection
           name="cover_image"
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
+          photoUrl={user?.cover_image ? user?.cover_image : cover}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
-          name="userid"
+          name="id"
           label="User Name"
           variant="outlined"
           className={classes.formField}
@@ -55,7 +62,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.userid.length) && (
+            Boolean(values.id.length && values.id.match(/[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>
@@ -168,7 +175,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         />
         <Field
           type="input"
-          name="otherUrl"
+          name="other_url"
           label="Other"
           variant="outlined"
           placeholder={'URL'}
@@ -197,7 +204,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         </Button>
       </Box>
       <Button
-        disabled={!Boolean(values.userid.length)}
+        disabled={!Boolean(values.id.length)}
         variant={'contained'}
         onClick={() => handleSubmit()}
         className={classes.btnSubmit}

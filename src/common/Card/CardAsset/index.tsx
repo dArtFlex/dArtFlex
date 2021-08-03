@@ -31,7 +31,7 @@ export default function CardAsset(props: ICardAssetProps) {
       >
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
-          {withLabel && <CardBadge status={asset.status} />}
+          {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
@@ -69,7 +69,7 @@ export default function CardAsset(props: ICardAssetProps) {
           timer={timer}
           button={button}
           userWallet={userWallet}
-          ownerWallet={asset.userData.wallet}
+          ownerWallet={asset.userData?.wallet}
         />
       </Card>
 

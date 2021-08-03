@@ -22,14 +22,20 @@ export const selectAssetTokenRates = () =>
     (store: stateType) => store,
     ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
   )
+export const selectHashtags = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ assets: { hashtags } }: stateType) => ({ hashtags })
+  )
 
 // User
 export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { user, userAssets, userBids, fetching, fetchingBids } }: stateType) => ({
+    ({ user: { user, userAssets, userCollectedAssets, userBids, fetching, fetchingBids } }: stateType) => ({
       user,
       userAssets,
+      userCollectedAssets,
       userBids,
       fetching,
       fetchingBids,
@@ -92,4 +98,11 @@ export const selectBid = () =>
   createSelector(
     (store: stateType) => store,
     ({ bid }: stateType) => ({ bid })
+  )
+
+// Notifications
+export const selectNotifications = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ notifications: { notifications } }: stateType) => ({ notifications })
   )

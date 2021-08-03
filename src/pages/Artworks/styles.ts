@@ -5,6 +5,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     wrapper: {
       flex: '1 1 auto',
       backgroundColor: theme.palette.grey['50'],
+      [theme.breakpoints.down(640)]: {
+        padding: theme.spacing(4),
+      },
     },
     menuTitle: {
       padding: theme.spacing(2, 4, 2, 7.5),
@@ -22,7 +25,26 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
     },
     customFiltersContainer: {
-      whiteSpace: 'nowrap',
+      // whiteSpace: 'nowrap',
+      flexWrap: 'wrap',
+      rowGap: 10,
+    },
+    hashTagContainer: {
+      flex: '1 1 auto',
+      marginRight: theme.spacing(10),
+      [theme.breakpoints.between(320, 1025)]: {
+        width: '100%',
+        marginBottom: theme.spacing(4),
+      },
+    },
+    hotOnlyBtn: {
+      marginLeft: theme.spacing(11),
+      [theme.breakpoints.between(461, 1025)]: {
+        marginLeft: 'auto',
+      },
+      [theme.breakpoints.down(461)]: {
+        marginLeft: 0,
+      },
     },
     hashTagBtn: {
       minWidth: 'auto',
@@ -48,6 +70,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       borderRadius: 12,
       width: 120,
+      [theme.breakpoints.down(425)]: {
+        width: 100,
+      },
     },
     priceInputBorder: {
       border: `1px solid ${theme.palette.grey['200']}`,
@@ -69,48 +94,68 @@ export const useStyles = makeStyles((theme: Theme) =>
     grid: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(322px, 1fr))',
     },
     promotionBox: {
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
       padding: `${theme.spacing(15, 0, 15, 0)}`,
-      height: theme.spacing(112),
-      '@media (min-width:1025px)': {
-        height: theme.spacing(135),
+      [theme.breakpoints.down(1024)]: {
+        padding: `${theme.spacing(8, 0)}`,
+        flexDirection: 'column',
+        height: 900,
+        marginBottom: theme.spacing(6),
+        justifyContent: 'space-between',
+      },
+      [theme.breakpoints.down(841)]: {
+        height: 800,
+      },
+      [theme.breakpoints.down(481)]: {
+        height: 900,
       },
     },
     promotionPhoto: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      borderRadius: theme.spacing(1.5),
+      maxHeight: 575,
+      maxWidth: 700,
+      color: theme.palette.blackMain,
+      display: 'flex',
+      justifyContent: 'space-around',
+      '&>img': {
+        maxWidth: '100%',
+        maxHeight: 'inherit',
+        objectFit: 'contain',
+        borderRadius: 10,
+      },
+      [theme.breakpoints.down(1024)]: {
+        maxHeight: 500,
+        maxWidth: 800,
+      },
+      [theme.breakpoints.down(841)]: {
+        maxWidth: 600,
+        maxHeight: 450,
+      },
+      [theme.breakpoints.down(681)]: {
+        maxWidth: 540,
+        maxHeight: 450,
+      },
+      [theme.breakpoints.down(521)]: {
+        maxHeight: 400,
+      },
     },
     sliderNext: {
+      maxHeight: 930,
       '&.swiper-button-next, .swiper-button-prev': {
         width: '20px',
         height: '20px',
       },
-      '--swiper-navigation-size': '32px',
-      '--swiper-theme-color': theme.palette.text.primary,
-      '&.swiper-pagination, .swiper-pagination-fraction': {
-        display: 'flex',
-        backgroundColor: theme.palette.background.default,
-        width: theme.spacing(20),
-        height: theme.spacing(12.5),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: '50%',
-        borderRadius: theme.spacing(3),
-        boxShadow: '0px 7px 20px -1px rgb(19 27 56 / 6%)',
-        fontWeight: 700,
-        border: `2px solid ${theme.palette.text.secondary}`,
+      '&.swiper-button-next': {
+        right: 0,
       },
+      '&>div': {
+        alignItems: 'center',
+      },
+      '--swiper-theme-color': theme.palette.text.primary,
     },
     promotionAuthorAva: {
       backgroundRepeat: 'no-repeat',
@@ -124,39 +169,76 @@ export const useStyles = makeStyles((theme: Theme) =>
     promotionTextSecondary: {
       color: theme.palette.text.secondary,
     },
+    promotionCardName: {
+      [theme.breakpoints.down(601)]: {
+        textAlign: 'center',
+        overflowWrap: 'anywhere',
+      },
+    },
     promotionInfoText: {
       fontSize: 24,
       fontWeight: 700,
       minWidth: 190,
       marginTop: theme.spacing(3),
+      [theme.breakpoints.down(481)]: {
+        alignItems: 'center',
+      },
+    },
+    promotionTimer: {
+      backgroundColor: theme.palette.background.paper,
     },
     promotionInfo: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      width: '100%',
+      display: 'flex',
+      gap: 20,
+      rowGap: 20,
+      justifyContent: 'space-between',
+
       gridGap: theme.spacing(5),
+      [theme.breakpoints.down(481)]: {
+        flexDirection: 'column',
+      },
     },
     promotionButtons: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gridGap: theme.spacing(5),
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'space-between',
+      gap: theme.spacing(5),
+      rowGap: 20,
       marginTop: theme.spacing(6),
+      [theme.breakpoints.down(601)]: {
+        width: '100%',
+      },
+      [theme.breakpoints.down(481)]: {
+        flexDirection: 'column',
+      },
+      '&>button': {
+        width: '100%',
+      },
     },
     promotionInfoWrapper: {
       marginLeft: theme.spacing(20),
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      '@media (min-width:1025px)': {
-        marginLeft: theme.spacing(40),
+      [theme.breakpoints.down(1025)]: {
+        marginLeft: theme.spacing(4),
+        marginTop: theme.spacing(4),
+      },
+      [theme.breakpoints.down(481)]: {
+        alignItems: 'center',
+        width: '96%',
+        marginLeft: 0,
+      },
+    },
+    promotionInfoBox: {
+      [theme.breakpoints.down(481)]: {
+        textAlign: 'center',
       },
     },
     promotionSlide: {
-      height: theme.spacing(76),
-      width: theme.spacing(110),
-      '@media (min-width:1025px)': {
-        height: theme.spacing(95),
-        width: theme.spacing(137),
-      },
+      height: 380,
+      maxWidth: 440,
     },
     promotionButtonWhite: {
       border: `${theme.spacing(0.5)}px solid ${theme.palette.text.primary}`,
@@ -173,11 +255,29 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:focus': {
         backgroundColor: theme.palette.background.paper,
       },
+      [theme.breakpoints.down(560)]: {
+        overflow: 'scroll',
+      },
+    },
+    sortButtons: {
+      margin: theme.spacing(4, 0, 6, 0),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: 10,
     },
     toggleButtonSelected: {
       backgroundColor: `${theme.palette.text.primary} !important`,
       color: `${theme.palette.background.paper} !important`,
     },
+    toggleButton: {
+      whiteSpace: 'nowrap',
+      [theme.breakpoints.down(680)]: {
+        padding: theme.spacing(1, 2),
+      },
+    },
+
     sortItem: {
       '&:hover': {
         backgroundColor: theme.palette.type === 'dark' && theme.palette.blackDark,
@@ -185,6 +285,26 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     filterDivider: {
       backgroundColor: theme.palette.text.secondary,
+    },
+    paginationWrapper: {
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+      width: 'fit-content',
+      borderRadius: 12,
+      border: `2px solid ${theme.palette.text.secondary}`,
+      padding: theme.spacing(0, 2),
+      display: 'flex',
+      alignItems: 'center',
+      margin: '0 auto',
+      justifyContent: 'space-between',
+    },
+    leftArrow: {
+      cursor: 'pointer',
+      marginRight: theme.spacing(1),
+    },
+    rightArrow: {
+      cursor: 'pointer',
+      marginLeft: theme.spacing(1),
     },
   })
 )

@@ -6,6 +6,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       minWidth: 325,
       boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
       cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      position: 'relative',
+      [theme.breakpoints.down(640)]: {
+        minWidth: 'unset',
+        width: '88vw',
+      },
     },
     card: {
       display: 'flex',
@@ -13,8 +21,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
     },
     artContainer: {
-      position: 'relative',
-      padding: theme.spacing(0),
       height: '242px',
       width: '100%',
       color: theme.palette.blackMain,
@@ -22,11 +28,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
-      borderRadius: 10,
-      overflow: 'hidden',
       '&>img': {
         width: '100%',
-        objectFit: 'contain',
+        height: '100%',
       },
     },
     artInfoContainer: {
@@ -42,9 +46,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 24px',
+      flexWrap: 'wrap',
+      rowGap: 16,
+      gap: 12,
+      padding: theme.spacing(4, 5),
       background: theme.palette.accentGradient,
       color: theme.palette.white,
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(4, 3),
+      },
     },
     cardActionNotMet: {
       background: 'transparent',
@@ -61,6 +71,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       lineHeight: 1.3,
       fontWeight: 600,
+      width: 159,
     },
     actionBtnBurn: {
       color: theme.palette.warning.main,
@@ -94,7 +105,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(3.5),
       alignItems: 'center',
       padding: theme.spacing(3),
-      background: theme.palette.background.default,
+      background: theme.palette.background.paper,
+      color: theme.palette.text.primary,
       borderRadius: '50% / 100%',
     },
     badgeIcon: {
@@ -111,6 +123,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     red: {
       background: theme.palette.warning.main,
+    },
+    blue: {
+      background: theme.palette.blue,
+    },
+    purple: {
+      background: theme.palette.purple,
     },
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,

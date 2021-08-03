@@ -77,6 +77,29 @@ const assetsSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getHashtagsAllRequest: (state) => {
+      state.fetching = true
+    },
+    getHashtagsAllSuccess: (state, { payload }: PayloadAction<{ hashtags: AssetsStateType['hashtags'] }>) => {
+      state.hashtags = payload.hashtags
+      state.fetching = false
+    },
+    getHashtagsAllFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    addHashtagsRequest: (state, i) => {
+      state.fetching = true
+    },
+    addHashtagsSuccess: (state) => {
+      state.fetching = false
+    },
+    addHashtagsFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -94,6 +117,14 @@ export const {
   getExchangeRateTokensRequest,
   getExchangeRateTokensSuccess,
   getExchangeRateTokensFailure,
+
+  getHashtagsAllRequest,
+  getHashtagsAllSuccess,
+  getHashtagsAllFailure,
+
+  addHashtagsRequest,
+  addHashtagsSuccess,
+  addHashtagsFailure,
 } = assetsSlice.actions
 
 export const { reducer } = assetsSlice

@@ -4,6 +4,7 @@ export * from './Assets'
 export * from './User'
 export * from './Wallet'
 export * from './PlaceBid'
+export * from './Notifications'
 
 export interface IEntity {
   id: number

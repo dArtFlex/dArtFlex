@@ -12,7 +12,13 @@ import {
   getAllUsersRequest,
   getTradingHistoryRequest,
 } from '../reducers/user'
-import { getAssetsAllRequest, getAssetByIdRequest, getExchangeRateTokensRequest } from '../reducers/assets'
+import {
+  getAssetsAllRequest,
+  getAssetByIdRequest,
+  getExchangeRateTokensRequest,
+  getHashtagsAllRequest,
+  addHashtagsRequest,
+} from '../reducers/assets'
 import {
   connectMetaMaskRequest,
   connnectWalletConnectRequest,
@@ -23,6 +29,7 @@ import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest } from '../reducers/listing'
 import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
+import { getNotificationsRequest } from '../reducers/notifications'
 
 import {
   getUserData,
@@ -35,12 +42,13 @@ import {
   getAllUsers,
   tradingHistory,
 } from '../sagas/user'
-import { getAssetsAllData, getAssetById, getExchangeRateTokens } from '../sagas/assets'
+import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
 import { connectMetaMask, connectWalletConnect, getTokensBalances, walletsDisconet } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
+import { getNotifications } from '../sagas/notifications'
 
 export default function* root() {
   yield all([
@@ -48,6 +56,8 @@ export default function* root() {
     takeLatest(getAssetsAllRequest.type, getAssetsAllData, apiMiddleware),
     takeLatest(getAssetByIdRequest.type, getAssetById, apiMiddleware),
     takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
+    takeLatest(getHashtagsAllRequest.type, getHashtagsAll, apiMiddleware),
+    takeLatest(addHashtagsRequest.type, addHashtags, apiMiddleware),
 
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
@@ -80,5 +90,8 @@ export default function* root() {
 
     /** Buy Now **/
     takeLatest(buyNowRequest.type, buyNow, apiMiddleware),
+
+    /** Notifications **/
+    takeLatest(getNotificationsRequest.type, getNotifications, apiMiddleware),
   ])
 }

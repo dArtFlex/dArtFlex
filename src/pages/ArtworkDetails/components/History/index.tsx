@@ -50,8 +50,9 @@ export default function History() {
     dispatch(
       acceptBidRequest({
         creatorId: bidHistory[0].order_id,
+        market_id: bidHistoryReverse[0].market_id,
         buyerId: bidHistoryReverse[0].order_id,
-        market_id: bidHistory[1].market_id,
+        bid_id: bidHistoryReverse[0].bid_id,
       })
     )
   }

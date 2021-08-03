@@ -1,5 +1,6 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
+import { IHashtag } from 'types'
 
 const { TYPES, STATUSES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
@@ -21,6 +22,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   signature: string
   lazymint: boolean
   ban: boolean
+  hashtag: IHashtag[]
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {

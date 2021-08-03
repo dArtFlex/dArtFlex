@@ -24,7 +24,7 @@ export default function PromotionManagement() {
 
   return (
     <Box className={classes.managementWrapper}>
-      <Box display="flex" alignItems="center" ml={7}>
+      <Box className={classes.nftCountInfo}>
         <Typography component="span" variant={'h4'}>
           {promotionIds.length} NFTs&nbsp;
         </Typography>
@@ -58,7 +58,7 @@ export default function PromotionManagement() {
           }}
         </Droppable>
       </DragDropContext>
-      <Box mt={6} ml={6}>
+      <Box className={classes.addNFTButton}>
         <Box display="flex">
           <Button classes={{ label: classes.addButton }}>
             <Icon classes={{ root: classes.addNFTIcon }}>

@@ -13,6 +13,7 @@ import {
 import WorksRow from './WorksRow'
 import { useStyles } from '../styles'
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
+import clsx from 'clsx'
 
 export default function ContentManagementWorks() {
   const classes = useStyles()
@@ -206,7 +207,7 @@ export default function ContentManagementWorks() {
             <TableRow>
               {worksHeaders.map((item, index) => {
                 return (
-                  <TableCell key={index} className={classes.tableHeadCell}>
+                  <TableCell key={index} className={clsx(classes.tableHeadCell, classes.tableCellRoot)}>
                     {item}
                   </TableCell>
                 )
@@ -220,7 +221,7 @@ export default function ContentManagementWorks() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box className={classes.flexBox} mt={4}>
+      <Box className={clsx(classes.flexBox, classes.paginationContent)} mt={4}>
         <Paper elevation={3} className={classes.paginationWrapper}>
           <Box className={classes.flexBox}>
             <IconButton onClick={handlePreviousPage} disabled={page === 1} className={classes.disabledButton}>
