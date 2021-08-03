@@ -29,7 +29,9 @@ export default function CommunityGuidelines() {
   return (
     <AuxiliaryPage title="Community Guidelines">
       <>
-        <Typography variant={'body2'}>MAY 2, 2021</Typography>
+        <Typography variant={'body2'} className={classes.textBlock}>
+          MAY 2, 2021
+        </Typography>
         <Typography variant={'body2'}>
           Creating a new system of support for digital art requires mutual respect between creators, collectors, and
           curators. So while we provide an unprecedentedly open cultural community, we also want everyone to agree on a
