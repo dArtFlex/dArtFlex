@@ -124,6 +124,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     red: {
       background: theme.palette.warning.main,
     },
+    blue: {
+      background: theme.palette.blue,
+    },
+    purple: {
+      background: theme.palette.purple,
+    },
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.text.primary,

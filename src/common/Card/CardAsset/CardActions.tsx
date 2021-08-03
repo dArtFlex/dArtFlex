@@ -102,7 +102,7 @@ export default function CardActions(props: ICardActionsProps) {
     case SOLD:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
-          <Section text={'Sold for'} value={`${sold} ETH`} />
+          <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
         </Box>
       )
     case COLLECTED:

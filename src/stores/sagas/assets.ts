@@ -64,8 +64,8 @@ export function* getAssetsAllData(api: IApi) {
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
-
-    yield put(getAssetsAllSuccess(getAssetsListAllWithStatuses))
+    const assets = getAssetsListAllWithStatuses.map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag }))
+    yield put(getAssetsAllSuccess(assets))
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }
@@ -80,10 +80,10 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
       url: APP_CONFIG.getItemByItemId(Number(payload)),
     })
     const userByOwner: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].owner),
     })
     const userByCreator: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].creator),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].creator),
     })
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,

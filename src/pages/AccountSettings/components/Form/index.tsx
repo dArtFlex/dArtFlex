@@ -28,8 +28,8 @@ interface IFormAccountSettings {
 }
 
 export default function FormAccountSettings(props: IFormAccountSettings) {
-  const classes = useStyles()
   const { setOpenVerification, user } = props
+  const classes = useStyles()
   const { values, handleSubmit } = useFormikContext<IAccountSettings>()
 
   return (
@@ -54,7 +54,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
-          name="userid"
+          name="id"
           label="User Name"
           variant="outlined"
           className={classes.formField}
@@ -62,7 +62,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.userid.length) && (
+            Boolean(values.id.length && values.id.match(/[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>
@@ -175,7 +175,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         />
         <Field
           type="input"
-          name="otherUrl"
+          name="other_url"
           label="Other"
           variant="outlined"
           placeholder={'URL'}
@@ -204,7 +204,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         </Button>
       </Box>
       <Button
-        disabled={!Boolean(values.userid.length)}
+        disabled={!Boolean(values.id.length)}
         variant={'contained'}
         onClick={() => handleSubmit()}
         className={classes.btnSubmit}

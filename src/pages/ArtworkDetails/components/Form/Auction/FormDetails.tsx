@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUserRole } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
+import { setLazyMintingData } from 'stores/reducers/minting'
 import {
   MoreHorizontalIcon,
   TwitterIcon,
@@ -20,6 +22,7 @@ import { History, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
+import routes from 'routes'
 
 interface IDetailsFormProps {
   onSubmit: () => void
@@ -40,11 +43,17 @@ const tabsItems = [
 export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+  const history = useHistory()
+  const dispatch = useDispatch()
   const { wallet } = useSelector(selectWallet())
+  const { role } = useSelector(selectUserRole())
+
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+
+  const isSamePerson = wallet?.accounts[0] === ownerData?.wallet
 
   const endTime = marketData?.end_time ? normalizeDate(marketData?.end_time).getTime() : 0
   const { timer } = useTimer(endTime)
@@ -69,6 +78,32 @@ export default function FormDetails(props: IDetailsFormProps) {
     marketData?.start_price && tokenInfo?.decimals
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
+
+  const handleListed = () => {
+    if (!tokenData || !imageData) {
+      return
+    }
+    dispatch(
+      setLazyMintingData({
+        data: {
+          name: imageData.name as string,
+          image: imageData.image as string,
+          image_data: imageData.image_data as string,
+          attribute: imageData.attribute as string,
+          description: imageData.description as string,
+          royalties: String(tokenData.royalty),
+        },
+        lazyMintItemId: tokenData.id,
+        lazyMintData: {
+          contract: tokenData.contract,
+          tokenId: tokenData.token_id,
+          uri: tokenData.uri,
+          signatures: [tokenData.signature],
+        },
+      })
+    )
+    history.push(routes.sellNFT)
+  }
 
   return (
     <>
@@ -189,6 +224,10 @@ export default function FormDetails(props: IDetailsFormProps) {
 
         <Button
           onClick={() => {
+            if (isSamePerson) {
+              // Secondary sell
+              return handleListed()
+            }
             if (wallet) {
               onSubmit()
             } else {
@@ -201,9 +240,13 @@ export default function FormDetails(props: IDetailsFormProps) {
           disableElevation
           className={classes.bitBtn}
           classes={{ disabled: classes.bitBtnDisabled }}
-          disabled={Boolean(isAuctionExpired)}
+          disabled={!isSamePerson && Boolean(isAuctionExpired)}
         >
-          {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
+          {ifAuctionEnds && !isAuctionExpired
+            ? 'I understand, let me bid anyway'
+            : isSamePerson
+            ? 'Sell'
+            : 'Place a Bid'}
         </Button>
 
         <Tabs
@@ -288,17 +331,21 @@ export default function FormDetails(props: IDetailsFormProps) {
             >
               View on Opensea
             </Button>
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={clsx(classes.btnTitle, classes.btnTitleGreen)}
-              startIcon={<EyeIcon className={classes.linkIconGreen} />}
-            >
-              Unban Work
-            </Button>
+            {role === 'ROLE_SUPER_ADMIN' && (
+              <>
+                <Divider />
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
+                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
+                >
+                  Unban Work
+                </Button>
+              </>
+            )}
             <Divider />
             <Button
               onClick={() => console.log('todo')}
