@@ -101,7 +101,7 @@ export default function Dashboard() {
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={user.profile_image}
+        coverURL={user.cover_image}
         aside={
           <Aside
             avatar={user.profile_image}

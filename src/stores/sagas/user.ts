@@ -103,8 +103,8 @@ export function* createNewUser(
   { payload: { accountSettings, wallet } }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
 ) {
   try {
-    const { profile_image, cover_image, fullname, userid, email, overview, socials } = accountSettings
-    const { website, twitter, instagram, discord, facebook, youtube, tiktok, otherUrl } = socials
+    const { profile_image, cover_image, fullname, id: userid, email, overview, ...socials } = accountSettings
+    const { website, twitter, instagram, discord, facebook, youtube, tiktok, other_url: otherUrl } = socials
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
