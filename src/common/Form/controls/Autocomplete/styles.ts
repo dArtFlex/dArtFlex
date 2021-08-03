@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme) =>
     },
     rootAutocomplete: {
       padding: theme.spacing(0),
+      backgroundColor: theme.palette.background.paper,
       '&.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]': {
         padding: theme.spacing(0),
       },
