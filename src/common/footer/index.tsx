@@ -21,21 +21,29 @@ const social = [
 ]
 
 const links = [
+  // {
+  //   title: 'FAQ',
+  //   href: '#',
+  // },
   {
-    title: 'FAQ',
-    href: '#',
+    title: 'DAF',
+    href: routes.aboutDAF,
   },
   {
     title: 'Help',
     href: '#',
   },
   {
-    title: 'Terms of Use',
-    href: '#',
+    title: 'Terms of Service',
+    href: routes.termsOfService,
   },
+  // {
+  //   title: 'Cookie Policy',
+  //   href: '#',
+  // },
   {
-    title: 'Cookie Policy',
-    href: '#',
+    title: 'Community Guidelines',
+    href: routes.communityGuidelines,
   },
   {
     title: 'Privacy Policy',

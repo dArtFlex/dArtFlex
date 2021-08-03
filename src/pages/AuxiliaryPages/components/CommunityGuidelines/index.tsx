@@ -2,6 +2,8 @@ import React from 'react'
 import AuxiliaryPage from '../../index'
 import { Box, Link, Typography } from '@material-ui/core'
 import { useStyles } from '../../styles'
+import { NavLink } from 'react-router-dom'
+import routes from '../../../../routes'
 
 export default function CommunityGuidelines() {
   const classes = useStyles()
@@ -42,8 +44,16 @@ export default function CommunityGuidelines() {
         </Typography>
         <Typography variant={'body2'}>
           Anyone who is interested in joining our community on a deeper level is welcome to become a member of the
-          dArtFlex Discord. There you’ll find creators and collectors engaging in meaningful conversations about
-          creative work and process. We also support and learn from each other in shared online spaces like Twitter.
+          dArtFlex{' '}
+          <Link href={'#'} className={classes.navLink} target="_blank">
+            Discord
+          </Link>
+          . There you’ll find creators and collectors engaging in meaningful conversations about creative work and
+          process. We also support and learn from each other in shared online spaces like{' '}
+          <Link href={'https://twitter.com/dartflexart'} className={classes.navLink} target="_blank">
+            Twitter
+          </Link>
+          .
         </Typography>
         <Typography variant={'body2'}>
           These spaces are also crucial to our belief in community-led curation. Our curatorial team selected the first
@@ -122,11 +132,19 @@ export default function CommunityGuidelines() {
         </Typography>
         <Typography variant={'body2'} component={'div'} className={classes.textBlockTight}>
           The short version is: Don’t lie, spam, steal, cause harm, or be hateful. If you see any of these behaviors on
-          dArtFlex, let us know via Intercom or mail@dartflex.art.
+          dArtFlex, let us know via Intercom or{' '}
+          <Link href={'mailto:mail@dartflex.art'} className={classes.navLink}>
+            mail@dartflex.art
+          </Link>
+          .
         </Typography>
         <Typography variant={'body2'} component={'div'} className={classes.textBlockTight}>
           If we determine a creator is doing any of these things, we will mediate the situation which may include
-          account suspension. Full details are in our Terms of Service.
+          account suspension. Full details are in our{' '}
+          <NavLink to={routes.termsOfService} className={classes.navLink}>
+            Terms of Service
+          </NavLink>
+          .
         </Typography>
       </>
     </AuxiliaryPage>

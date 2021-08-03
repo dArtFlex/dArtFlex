@@ -2,6 +2,8 @@ import React from 'react'
 import AuxiliaryPage from '../../index'
 import { Box, Link, Typography } from '@material-ui/core'
 import { useStyles } from '../../styles'
+import { NavLink } from 'react-router-dom'
+import routes from '../../../../routes'
 
 export default function DAFPage() {
   const classes = useStyles()
@@ -43,9 +45,9 @@ export default function DAFPage() {
       <>
         <Typography variant={'body2'} component={'div'}>
           DAF token information is an essential part of the{' '}
-          <Link href={'#'} className={classes.navLink}>
+          <NavLink to={routes.termsOfService} className={classes.navLink}>
             Terms of Use
-          </Link>
+          </NavLink>
         </Typography>
         <Typography variant={'body2'} component={'div'}>
           It covers the following offerings, including:
