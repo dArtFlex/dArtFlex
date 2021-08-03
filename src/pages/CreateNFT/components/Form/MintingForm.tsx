@@ -34,8 +34,6 @@ export default function MintingForm(props: IMintingForm) {
     dispatch(getHashtagsAllRequest())
   }, [])
 
-  console.log(values)
-
   switch (minting) {
     case 'none':
     case 'failed':
@@ -113,7 +111,7 @@ export default function MintingForm(props: IMintingForm) {
                 onMinting()
               }}
               className={classes.btnMint}
-              disabled={Boolean(values.name.length) === false || Boolean(values.description.length) === false}
+              disabled={!Boolean(values.name.length) || !Boolean(values.description.length)}
             >
               Mint NFT
             </Button>
