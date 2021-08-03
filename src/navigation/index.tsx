@@ -18,6 +18,7 @@ import ContentManagement from '../pages/ContentManagement'
 import MakeOffer from '../pages/MakeOffer'
 import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
+import TermsOfService from '../pages/AuxiliaryPages/components/TermsOfService'
 
 export const history = createBrowserHistory()
 
@@ -92,6 +93,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.communityGuidelines,
       component: <CommunityGuidelines />,
+    },
+    {
+      path: routes.termsOfService,
+      component: <TermsOfService />,
     },
   ]
 

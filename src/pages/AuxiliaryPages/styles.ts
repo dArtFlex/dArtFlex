@@ -36,7 +36,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     navLink: {
+      textDecoration: 'unset',
       color: theme.palette.lightViolet,
+      '&:hover': {
+        textDecoration: 'unset',
+      },
     },
     textBlockTight: {
       margin: theme.spacing(2, 0, 4, 0),
