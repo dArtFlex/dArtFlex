@@ -9,7 +9,7 @@ const initialState: ManagementStateType = {
 }
 
 const userSlice = createSlice({
-  name: 'minting',
+  name: 'management',
   initialState,
   reducers: {
     getAllWorksRequest: (state) => {
