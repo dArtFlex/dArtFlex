@@ -51,7 +51,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         // should be 0 if data.type is "instant_buy"
         salesTokenContract: tokenContract,
         // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAF etc.
+        // token contract address ETH, DAFPage etc.
         platfromFee: data.platfromFee,
       },
     })
@@ -105,7 +105,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         bidContract: tokenContract,
         // Sells token contract
         // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAF etc.
+        // token contract address ETH, DAFPage etc.
       },
     })
 

@@ -158,6 +158,11 @@ const theme = {
         fontWeight: 600,
         lineHeight: 1.25,
       },
+      body2: {
+        fontSize: 16,
+        fontWeight: 400,
+        lineHeight: 1.74,
+      },
     },
     MuiToolbar: {
       root: {
