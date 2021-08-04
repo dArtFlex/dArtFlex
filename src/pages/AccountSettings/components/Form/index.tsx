@@ -54,7 +54,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
-          name="id"
+          name="userid"
           label="User Name"
           variant="outlined"
           className={classes.formField}
