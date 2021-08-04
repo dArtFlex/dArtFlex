@@ -14,4 +14,8 @@ export default {
   sales: '/my-sales',
   contentManagement: '/content-management',
   makeOffer: '/make-offer',
+  privacyPolicy: '/privacy-policy',
+  aboutDAF: '/about-daf',
+  communityGuidelines: '/guidelines',
+  termsOfService: '/terms-of-service',
 }

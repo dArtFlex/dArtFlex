@@ -54,7 +54,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
-          name="id"
+          name="userid"
           label="User Name"
           variant="outlined"
           className={classes.formField}
@@ -62,7 +62,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.id.length && values.id.match(/[A-Za-z0-9]+$/)) && (
+            Boolean(values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>

@@ -30,6 +30,7 @@ import { listingRequest } from '../reducers/listing'
 import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
 import { getNotificationsRequest } from '../reducers/notifications'
+import { getAllWorksRequest, getAllUsersListRequest } from '../reducers/management'
 
 import {
   getUserData,
@@ -49,6 +50,7 @@ import { listing } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications } from '../sagas/notifications'
+import { getAllWorks, getAllUsersList } from '../sagas/management'
 
 export default function* root() {
   yield all([
@@ -93,5 +95,9 @@ export default function* root() {
 
     /** Notifications **/
     takeLatest(getNotificationsRequest.type, getNotifications, apiMiddleware),
+
+    /** Management **/
+    takeLatest(getAllWorksRequest.type, getAllWorks, apiMiddleware),
+    takeLatest(getAllUsersListRequest.type, getAllUsersList, apiMiddleware),
   ])
 }
