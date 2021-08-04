@@ -24,11 +24,10 @@ export default function CreateActionMenu(props: ICreateActionMenuProps) {
           lable: 'Constructor AI',
           onClick: () => history.push(routes.constructor),
         },
-        // Todo: Would be implemented in next version
-        // {
-        //   lable: 'My Album',
-        //   onClick: () => console.log('My Album'),
-        // },
+        {
+          lable: 'My Album',
+          onClick: () => history.push(routes.myAlbum),
+        },
       ]}
     />
   )

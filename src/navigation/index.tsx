@@ -19,6 +19,7 @@ import MakeOffer from '../pages/MakeOffer'
 import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
 import TermsOfService from '../pages/AuxiliaryPages/components/TermsOfService'
+import MyAlbum from '../pages/MyAlbum'
 
 export const history = createBrowserHistory()
 
@@ -97,6 +98,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.termsOfService,
       component: <TermsOfService />,
+    },
+    {
+      path: routes.myAlbum,
+      component: <MyAlbum />,
     },
   ]
 
