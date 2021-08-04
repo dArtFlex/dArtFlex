@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { PageWrapper } from 'common'
 import { Box, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
-import { DownloadIcon } from '../../common/icons'
 import MyAlbumPicture from './components/MyAlbumPicture'
 
 export default function MyAlbum() {

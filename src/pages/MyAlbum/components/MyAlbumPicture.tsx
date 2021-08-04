@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useStyles } from '../styles'
 import { Box, Button, IconButton, Modal, Typography } from '@material-ui/core'
-import { DownloadIcon, PlusHugeIcon, TrashIcon, ZoomIcon } from '../../../common/icons'
+import { DownloadIcon, PlusHugeIcon, TrashIcon, ZoomIcon } from 'common/icons'
 import clsx from 'clsx'
 
 interface IMyAlbumPicture {
