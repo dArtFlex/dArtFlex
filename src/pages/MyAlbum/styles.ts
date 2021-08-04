@@ -8,6 +8,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(425)]: {
         padding: theme.spacing(8, 4, 6),
       },
+      '&>p': {
+        margin: theme.spacing(4, 0),
+      },
     },
     myAlbumPicsContainer: {
       display: 'grid',
@@ -93,6 +96,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(4, 4, 18),
       borderRadius: 12,
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(520)]: {
+        width: '96vw',
+      },
     },
     buttonWrapper: {
       display: 'flex',
@@ -139,10 +145,17 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       gap: 16,
+      rowGap: 16,
       '&>button': {
         width: 140,
         height: 50,
         padding: theme.spacing(2, 6),
+        [theme.breakpoints.down(426)]: {
+          width: '100%',
+        },
+      },
+      [theme.breakpoints.down(426)]: {
+        flexDirection: 'column',
       },
     },
     deleteButton: {
