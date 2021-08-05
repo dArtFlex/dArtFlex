@@ -6,6 +6,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       padding: theme.spacing(6),
+      minWidth: 325,
+      [theme.breakpoints.down(375)]: {
+        minWidth: '96vw',
+      },
     },
     avatar: {
       width: 115,
