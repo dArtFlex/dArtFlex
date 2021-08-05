@@ -18,7 +18,7 @@ export default function CardAsset(props: ICardAssetProps) {
   const history = useHistory()
 
   const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
-  const burnTime = normalizeDate(asset.start_time).getTime() + 1000 * 60 * 60
+  const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
   const [isZoomOpen, setIsZoomOpen] = useState(false)
