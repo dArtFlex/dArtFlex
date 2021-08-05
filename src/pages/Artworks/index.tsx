@@ -266,6 +266,7 @@ export default function Artworks() {
                         input: classes.priceInput,
                         notchedOutline: classes.priceInputBorder,
                       },
+                      'aria-valuemin': 0,
                       endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
                     }}
                     type="number"
