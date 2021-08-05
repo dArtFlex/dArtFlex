@@ -5,7 +5,7 @@ import { PageWrapper, Form } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest } from 'stores/reducers/assets'
-import { getBidsHistoryRequest } from 'stores/reducers/placeBid'
+import { getBidsHistoryRequest, getBidsRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
 
@@ -31,6 +31,7 @@ export default function ArtworkDetails() {
   const fetchBidsHistory = () => {
     if (assetDetails) {
       dispatch(getBidsHistoryRequest())
+      assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
     }
   }
 
@@ -39,6 +40,7 @@ export default function ArtworkDetails() {
       return
     }
     dispatch(getBidsHistoryRequest())
+    assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
     const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
     return () => {
       clearInterval(iId)
