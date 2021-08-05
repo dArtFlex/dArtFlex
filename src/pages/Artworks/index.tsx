@@ -268,6 +268,7 @@ export default function Artworks() {
                       },
                       endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
                     }}
+                    type="number"
                     className={classes.priceInput}
                   />
                   {Boolean(index === 0) && (
