@@ -6,7 +6,7 @@ const {
 } = appConst
 
 export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus' | 'button'> {
-  userWallet: string
+  userWallet?: string
   ownerWallet: string
   status: IAssetStatus
   type: IAssetType
