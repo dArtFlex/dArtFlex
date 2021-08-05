@@ -7,17 +7,15 @@ import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
-import { AssetDataTypesWithStatus, IImageData, IPromotionId, UserDataTypes } from 'types'
+import { AssetDataTypesWithStatus, IPromotionId } from 'types'
 import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
 import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import ImageViewer from '../../../../common/ImageViewer'
-import FormMakeOffer from './BuyNow/FormMakeOffer'
+import ImageViewer from 'common/ImageViewer'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
-  STATUSES: { MINTED },
 } = appConst
 
 export default function FormContainer() {

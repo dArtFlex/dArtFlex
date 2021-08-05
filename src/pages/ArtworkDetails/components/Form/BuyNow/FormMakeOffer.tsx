@@ -3,7 +3,7 @@ import { useStyles } from '../styles'
 import { useFormikContext } from 'formik'
 import { ApprovedFormState } from '../../../types'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } from '../../../../../stores/selectors'
+import { selectAssetTokenRates, selectWallet } from '../../../../../stores/selectors'
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
 import { ArrowLeftIcon } from '../../../../../common/icons'
 import { Field, Tooltip } from '../../../../../common'
@@ -16,16 +16,11 @@ interface IFormMakeOffer {
 export default function FormMakeOffer(props: IFormMakeOffer) {
   const classes = useStyles()
   const { onSubmit } = props
-  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
+  const { setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
-  const { user } = useSelector(selectUser())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
-
-  const {
-    assetDetails: { marketData, tokenData },
-  } = useSelector(selectAssetDetails())
 
   return (
     <Box className={classes.formContainer}>
