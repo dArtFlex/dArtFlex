@@ -26,7 +26,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(3),
       minHeight: 680,
       '&>div': {
-        maxWidth: 'min-content',
+        [theme.breakpoints.up(681)]: {
+          maxWidth: 'min-content',
+        },
       },
       '&>img': {
         height: 520,
@@ -216,6 +218,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.grey['100'],
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
+      [theme.breakpoints.down(480)]: {
+        minWidth: 'unset',
+        padding: theme.spacing(4, 2),
+      },
     },
     inputAdorment: {
       fontSize: '16px',
@@ -345,8 +351,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     gridBox: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
+
       gridGap: 16,
+      [theme.breakpoints.down(480)]: {
+        gridTemplateRows: 'repeat(2, 1fr)',
+        width: '100%',
+      },
+      [theme.breakpoints.up(481)]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+      },
     },
     dateSelect: {
       marginTop: theme.spacing(2),

@@ -10,8 +10,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'space-between',
       position: 'relative',
-      [theme.breakpoints.down(640)]: {
+      [theme.breakpoints.down(680)]: {
         width: '88vw',
+        minWidth: 'unset',
+        margin: 'auto',
       },
     },
     card: {

@@ -23,14 +23,19 @@ export default function CardAsset(props: ICardAssetProps) {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
   const [isZoomOpen, setIsZoomOpen] = useState(false)
 
+  function cardActionEvent() {
+    switch (history.location.pathname) {
+      case routes.artworks:
+        history.push(`${routes.artworks}/${asset.item_id}`)
+        break
+      case routes.dashboard:
+        asset.id ? history.push(`${routes.artworks}/${asset.item_id}`) : setIsZoomOpen(true)
+    }
+  }
+
   return (
     <>
-      <Card
-        onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}
-        key={asset.item_id}
-        elevation={1}
-        className={classes.root}
-      >
+      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
