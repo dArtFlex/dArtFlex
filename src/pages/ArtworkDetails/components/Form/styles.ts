@@ -213,7 +213,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       borderRadius: 12,
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.grey['500'],
+      backgroundColor: theme.palette.grey['100'],
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
     },

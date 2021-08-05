@@ -11,7 +11,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       position: 'relative',
       [theme.breakpoints.down(640)]: {
-        minWidth: 'unset',
         width: '88vw',
       },
     },
@@ -89,6 +88,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         background: theme.palette.text.primary,
       },
+    },
+    mintedBottom: {
+      height: 72,
     },
     collectedBoxBtn: {
       display: 'grid',

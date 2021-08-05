@@ -13,7 +13,7 @@ import { normalizeDate } from 'utils'
 import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet, withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
+  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom } = props // eslint-disable-line @typescript-eslint/no-empty-function
   const classes = useStyles()
   const history = useHistory()
 
@@ -71,6 +71,7 @@ export default function CardAsset(props: ICardAssetProps) {
           button={button}
           userWallet={userWallet}
           ownerWallet={asset.userData?.wallet}
+          emptyBottom={emptyBottom}
         />
       </Card>
 

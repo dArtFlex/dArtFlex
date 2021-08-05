@@ -12,7 +12,7 @@ import routes from '../../../routes'
 import { useHistory } from 'react-router-dom'
 
 const {
-  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
+  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD, LISTED },
 } = appConst
 
 export default function CardActions(props: ICardActionsProps) {
@@ -31,6 +31,7 @@ export default function CardActions(props: ICardActionsProps) {
     status,
     useCardStatus = useDefaultCardStatus,
     button,
+    emptyBottom,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
@@ -53,27 +54,31 @@ export default function CardActions(props: ICardActionsProps) {
   switch (cardStatus) {
     case MINTED:
       return (
-        <Box className={classes.actionBtnBox}>
-          <>
-            {history.location.pathname === routes.artworks ? (
-              <Box className={classes.cardAction}>
-                <Section text={'Reserve Price'} value={'-'} />
-              </Box>
-            ) : (
-              <>
-                {userWallet === ownerWallet ? (
-                  <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-                    List
-                  </Button>
-                ) : (
-                  <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-                    Make offer
-                  </Button>
-                )}
-              </>
-            )}
-          </>
-        </Box>
+        <>
+          {history.location.pathname === routes.artworks ? (
+            <Box className={classes.cardAction}>
+              <Section text={'Reserve Price'} value={'-'} />
+            </Box>
+          ) : (
+            <>
+              {emptyBottom ? (
+                <Box className={classes.mintedBottom} />
+              ) : (
+                <Box className={classes.actionBtnBox}>
+                  {userWallet === ownerWallet ? (
+                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                      List
+                    </Button>
+                  ) : (
+                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                      Make offer
+                    </Button>
+                  )}
+                </Box>
+              )}
+            </>
+          )}
+        </>
       )
     case LIVE_AUCTION:
       return (
@@ -135,6 +140,13 @@ export default function CardActions(props: ICardActionsProps) {
           <Section text={'Reserve Not Met'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
+    case LISTED: {
+      return (
+        <Box className={classes.cardAction}>
+          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
+        </Box>
+      )
+    }
     default:
       return null
   }
