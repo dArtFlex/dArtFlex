@@ -23,11 +23,10 @@ export function useSearchAssets({ assets, search }: { assets: IAssetsBaseTypes; 
     return assets
   }
   return assets.filter((asset) => {
-    return (
-      asset.imageData.name === search ||
-      asset.userData?.userid === search ||
-      asset.userData?.wallet.toLocaleLowerCase() === search.toLocaleLowerCase()
-    )
+    const match = (value: string) => {
+      return value.match(new RegExp(search, 'gi')) !== null
+    }
+    return match(asset.imageData.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
   })
 }
 
