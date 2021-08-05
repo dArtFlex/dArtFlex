@@ -8,6 +8,8 @@ import { useDefaultCardStatus } from './lib'
 import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
 import { normalizeDate } from 'utils'
+import routes from '../../../routes'
+import { useHistory } from 'react-router-dom'
 
 const {
   FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
@@ -32,6 +34,7 @@ export default function CardActions(props: ICardActionsProps) {
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
+  const history = useHistory()
 
   const startPriceToCoin = startPrice
     ? new BigNumber(startPrice)
@@ -51,15 +54,25 @@ export default function CardActions(props: ICardActionsProps) {
     case MINTED:
       return (
         <Box className={classes.actionBtnBox}>
-          {userWallet === ownerWallet ? (
-            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-              List
-            </Button>
-          ) : (
-            <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-              Make offer
-            </Button>
-          )}
+          <>
+            {history.location.pathname === routes.artworks ? (
+              <Box className={classes.cardAction}>
+                <Section text={'Reserve Price'} value={'-'} />
+              </Box>
+            ) : (
+              <>
+                {userWallet === ownerWallet ? (
+                  <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                    List
+                  </Button>
+                ) : (
+                  <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                    Make offer
+                  </Button>
+                )}
+              </>
+            )}
+          </>
         </Box>
       )
     case LIVE_AUCTION:

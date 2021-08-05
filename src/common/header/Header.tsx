@@ -360,10 +360,12 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                <Box className={classes.mobileUserStatsWrapper}>
-                  <Typography variant={'h4'}>Bids</Typography>
-                  <Box className={classes.bidsCount}>1</Box>
-                </Box>
+                {Boolean(bids.length) && (
+                  <Box className={classes.mobileUserStatsWrapper}>
+                    <Typography variant={'h4'}>Bids</Typography>
+                    <Box className={classes.bidsCount}>1</Box>
+                  </Box>
+                )}
                 <Box className={classes.mobileActionButtonsWrapper}>
                   <Box className={classes.profileTabsWrapper}>
                     <ProfileActionMenu isMobile={isMobile} links={combineLinks} subLinks={subLinks} />

@@ -144,6 +144,20 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(8),
       paddingRight: theme.spacing(8),
     },
+    adornmentText: {
+      fontSize: 30,
+      fontWeight: 500,
+      color: theme.palette.greyMid,
+    },
+    makeOfferInput: {
+      backgroundColor: theme.palette.background.default,
+      height: 62,
+      fontSize: 30,
+      fontWeight: 600,
+    },
+    focusedInput: {
+      boxShadow: '0px 7px 12px -5px rgba(84, 61, 178, 0.72)',
+    },
     linkTitle: {
       color: theme.palette.text.secondary,
     },
@@ -282,6 +296,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `1px solid ${theme.palette.greyLight}`,
       color: theme.palette.blackMain,
       marginRight: theme.spacing(4),
+      '&:hover': {
+        backgroundColor: theme.palette.white,
+        opacity: '70%',
+      },
     },
     formHead: {
       display: 'flex',
@@ -320,6 +338,22 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiSwitch-root': {
         backgroundColor: 'transparent',
       },
+    },
+    textBold: {
+      fontSize: 16,
+      fontWeight: 700,
+    },
+    gridBox: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridGap: 16,
+    },
+    dateSelect: {
+      marginTop: theme.spacing(2),
+    },
+    bottomInfoText: {
+      marginTop: theme.spacing(4),
+      color: theme.palette.greyDark,
     },
   })
 )

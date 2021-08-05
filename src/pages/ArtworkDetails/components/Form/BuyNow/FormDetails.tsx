@@ -100,10 +100,11 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.infoRow} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              <span>Buy Now Price</span>
+              <span>{marketData ? 'Buy Now Price ' : 'Sold for'}</span>
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
+            {!marketData && <Typography>$792.22</Typography>}
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
@@ -131,7 +132,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           disableElevation
           className={classes.bitBtn}
         >
-          {`Buy Now for ${startPriceToToken} ETH`}
+          {marketData ? `Buy Now for ${startPriceToToken} ETH` : 'Make offer'}
         </Button>
 
         <Tabs

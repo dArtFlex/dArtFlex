@@ -23,13 +23,14 @@ export default function CardAsset(props: ICardAssetProps) {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
   const [isZoomOpen, setIsZoomOpen] = useState(false)
 
-  function imageClickEvent() {
-    asset.status === 'minted' ? setIsZoomOpen(true) : history.push(`${routes.artworks}/${asset.item_id}`)
-  }
-
   return (
     <>
-      <Card onClick={imageClickEvent} key={asset.item_id} elevation={1} className={classes.root}>
+      <Card
+        onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}
+        key={asset.item_id}
+        elevation={1}
+        className={classes.root}
+      >
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
@@ -42,7 +43,6 @@ export default function CardAsset(props: ICardAssetProps) {
                 <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
               </Box>
             )}
-
             {withAction && (
               <IconButton
                 className={classes.borderdIconButton}

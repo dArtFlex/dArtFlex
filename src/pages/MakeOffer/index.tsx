@@ -67,7 +67,8 @@ export default function MakeOffer() {
         <Box>
           <Box className={classes.previewContainer}>
             {formId > 1 ? (
-              <CardAsset asset={asset} />
+              // <CardAsset asset={asset} />
+              <Box>qq</Box>
             ) : (
               <>
                 <img

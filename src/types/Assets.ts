@@ -1,6 +1,8 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
 import { IHashtag } from 'types'
+import { AST } from 'eslint'
+import TokenType = AST.TokenType
 
 const { TYPES, STATUSES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {

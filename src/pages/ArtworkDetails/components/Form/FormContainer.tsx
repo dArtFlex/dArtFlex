@@ -7,15 +7,17 @@ import { useFormikContext } from 'formik'
 import { ArrowExpandIcon } from 'common/icons'
 import { FormAuction, FormBuy } from '../../components'
 import { ApprovedFormState } from '../../types'
-import { AssetDataTypesWithStatus, IPromotionId } from 'types'
+import { AssetDataTypesWithStatus, IImageData, IPromotionId, UserDataTypes } from 'types'
 import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/selectors'
 import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 import ImageViewer from '../../../../common/ImageViewer'
+import FormMakeOffer from './BuyNow/FormMakeOffer'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
+  STATUSES: { MINTED },
 } = appConst
 
 export default function FormContainer() {
@@ -102,11 +104,12 @@ export default function FormContainer() {
         ) : (
           <Box className={classes.previewContainer}>
             {composeData !== null ? <CardAsset asset={composeData} /> : null}
+            {/*<CardAsset asset={composeData} />*/}
           </Box>
         )}
       </Box>
       {assetDetails.marketData?.type === AUCTION ? <FormAuction /> : null}
-      {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
+      {assetDetails.marketData?.type === INSTANT_BY || !assetDetails.marketData ? <FormBuy /> : null}
       {isZoomOpen && (
         <ImageViewer
           open={isZoomOpen}
