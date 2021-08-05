@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import DucolLayout from 'layouts/DucolLayout'
 import { Box, Typography, useMediaQuery } from '@material-ui/core'
@@ -9,7 +9,6 @@ import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { SetPriceForm, AuctionForm } from './components'
 import { listingRequest } from 'stores/reducers/listing'
-import { clearLazyMintingData } from 'stores/reducers/minting'
 import { ISellArtwork } from './types'
 
 const {
@@ -63,12 +62,6 @@ export default function SellNFT() {
       })
     )
   }
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearLazyMintingData())
-    }
-  })
 
   const isTabletResolution = useMediaQuery('(max-width:1024px)')
 
