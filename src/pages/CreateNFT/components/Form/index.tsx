@@ -6,7 +6,7 @@ import { useFormikContext } from 'formik'
 import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-ui/core'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
-import { lazyMintingRequest } from 'stores/reducers/minting'
+import { lazyMintingRequest, clearLazyMintingData } from 'stores/reducers/minting'
 import MintingForm from './MintingForm'
 import ListingForm from './ListingForm'
 import routes from '../../../../routes'
@@ -20,7 +20,7 @@ export default function Form() {
   const { values } = useFormikContext<ICreateNFT>()
 
   const {
-    minting: { data, lazyMintItemId },
+    minting: { data },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -44,7 +44,10 @@ export default function Form() {
 
   const handleList = () => history.push(routes.sellNFT)
 
-  const handleViewArtwork = () => history.push(`${routes.artworks}/${lazyMintItemId}`)
+  const handleViewArtwork = () => {
+    history.push(routes.dashboard)
+    dispatch(clearLazyMintingData())
+  }
 
   return (
     <Box className={classes.mintFormWrapper}>

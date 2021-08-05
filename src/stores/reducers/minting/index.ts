@@ -11,7 +11,7 @@ const initialState: MintingStateType = {
     image: '',
     image_data: '',
     royalties: '',
-    attribute: '', // unnecessary field
+    attribute: '',
     description: '',
   },
   lazyMintItemId: null,
@@ -101,6 +101,21 @@ const userSlice = createSlice({
         signatures: payload.lazyMintData.signatures,
       }
     },
+
+    clearLazyMintingData: (state) => {
+      state.minting = 'none'
+      state.data = {
+        name: '',
+        image: '',
+        image_data: '',
+        royalties: '',
+        attribute: '',
+        description: '',
+      }
+      state.lazyMintItemId = null
+      state.lazyMintData = undefined
+      state.file = null
+    },
   },
 })
 
@@ -114,6 +129,7 @@ export const {
   lazyMintingFailure,
 
   setLazyMintingData,
+  clearLazyMintingData,
 } = userSlice.actions
 
 export const { reducer } = userSlice
