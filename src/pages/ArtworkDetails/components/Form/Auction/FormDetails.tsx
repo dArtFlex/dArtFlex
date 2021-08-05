@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUserRole } from 'stores/selectors'
+import {
+  selectAssetDetails,
+  selectWallet,
+  selectAssetTokenRates,
+  selectUserRole,
+  selectUser,
+  selectBid,
+} from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
@@ -17,12 +24,15 @@ import {
   BurnIcon,
   EyeIcon,
   ReportIcon,
+  ArrowCurveIcon,
+  CancelIcon,
 } from 'common/icons'
-import { History, About } from '../../../components'
+import { TabHistory, TabBids, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
+import { IBids, UserDataTypes } from 'types'
 
 interface IDetailsFormProps {
   onSubmit: () => void
@@ -36,6 +46,9 @@ const tabsItems = [
     title: 'History',
   },
   {
+    title: 'Bids',
+  },
+  {
     title: 'About Creator',
   },
 ]
@@ -47,7 +60,11 @@ export default function FormDetails(props: IDetailsFormProps) {
   const dispatch = useDispatch()
   const { wallet } = useSelector(selectWallet())
   const { role } = useSelector(selectUserRole())
+  const { user } = useSelector(selectUser())
 
+  const {
+    bid: { bidHistory, bids },
+  } = useSelector(selectBid())
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
@@ -266,8 +283,9 @@ export default function FormDetails(props: IDetailsFormProps) {
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <History />}
-        {tab === 2 && <About creator={creatorData} />}
+        {tab === 1 && <TabHistory history={bidHistory} />}
+        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
+        {tab === 3 && <About creator={creatorData} />}
       </Box>
 
       <Modal
@@ -280,6 +298,31 @@ export default function FormDetails(props: IDetailsFormProps) {
       <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
         <Box>
           <Grid container direction="column">
+            {user?.id === creatorData?.id && (
+              <>
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={classes.btnTitle}
+                  startIcon={<ArrowCurveIcon />}
+                >
+                  Price Drop
+                </Button>
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleRed)}
+                  startIcon={<CancelIcon />}
+                >
+                  Cancel Listing
+                </Button>
+                <Divider />
+              </>
+            )}
             <Button
               onClick={() => console.log('todo')}
               variant={'text'}

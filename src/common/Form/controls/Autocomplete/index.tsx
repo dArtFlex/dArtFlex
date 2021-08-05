@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { useFormikContext } from 'formik'
-import { Typography, TextField, Chip } from '@material-ui/core'
+import { Typography, TextField, Chip, Box } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
@@ -104,8 +104,9 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
         selectOnFocus
         handleHomeEndKeys
       />
-      {witChips && values[field.name].length
-        ? values[field.name].map((el: { inputValue: string; title: string }, i: number) => (
+      {witChips && values[field.name].length ? (
+        <Box className={classes.chipsWrapper}>
+          {values[field.name].map((el: { inputValue: string; title: string }, i: number) => (
             <Chip
               key={i}
               label={el.inputValue || el.title}
@@ -117,8 +118,9 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
               }
               className={classes.chip}
             />
-          ))
-        : null}
+          ))}
+        </Box>
+      ) : null}
     </FormControl>
   )
 }

@@ -6,11 +6,11 @@ export function useValidationSchema() {
       .string()
       .max(50)
       .required()
-      .matches(/^[A-Za-z0-9]+$/, 'Use latin alphabet'),
+      .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet'),
     description: yup
       .string()
       .required()
-      .matches(/^[A-Za-z0-9]+$/, 'Use latin alphabet'),
+      .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet'),
     royalties: yup
       .string()
       .max(50)

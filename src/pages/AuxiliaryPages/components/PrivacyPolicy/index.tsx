@@ -30,7 +30,9 @@ export default function PrivacyPolicy() {
   return (
     <AuxiliaryPage title="Privacy Policy">
       <>
-        <Typography variant={'body2'}>APRIL 20, 2021</Typography>
+        <Typography variant={'body2'} className={classes.textBlock}>
+          APRIL 20, 2021
+        </Typography>
         <Typography variant={'body2'}>
           dArtFlex (“we” or “us”) is committed to protecting your privacy. We have prepared this Privacy Policy to
           describe to you our practices regarding the Personal Data (as defined below) we collect from users of our

@@ -1,6 +1,6 @@
 import React from 'react'
 import AuxiliaryPage from '../../index'
-import { Box, Link, Typography } from '@material-ui/core'
+import { Link, Typography } from '@material-ui/core'
 import { useStyles } from '../../styles'
 import routes from '../../../../routes'
 import { NavLink } from 'react-router-dom'

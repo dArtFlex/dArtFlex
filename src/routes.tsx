@@ -18,4 +18,5 @@ export default {
   aboutDAF: '/about-daf',
   communityGuidelines: '/guidelines',
   termsOfService: '/terms-of-service',
+  myAlbum: '/my-album',
 }

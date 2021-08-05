@@ -12,6 +12,11 @@ export interface IBidsHistory {
   tx_hash: string
 }
 
+export interface IBids extends Omit<IBidsHistory, 'tx_hash' | 'bid_id' | 'id'> {
+  id: IBidsHistory['bid_id']
+  user_id: string
+}
+
 export type HistoryStatusType =
   | 'owend'
   | 'transferred'

@@ -17,6 +17,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     sectionTitle: {
       fontSize: 24,
       fontWeight: 700,
+      margin: theme.spacing(6, 0),
     },
     wrapSection: {
       wordBreak: 'break-word',

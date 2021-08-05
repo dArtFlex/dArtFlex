@@ -10,9 +10,10 @@ import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
+import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet = '', withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
+  const { asset, userWallet, withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
   const classes = useStyles()
   const history = useHistory()
 
@@ -20,15 +21,15 @@ export default function CardAsset(props: ICardAssetProps) {
   const burnTime = normalizeDate(asset.start_time).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
+
+  function imageClickEvent() {
+    asset.status === 'minted' ? setIsZoomOpen(true) : history.push(`${routes.artworks}/${asset.item_id}`)
+  }
 
   return (
     <>
-      <Card
-        onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}
-        key={asset.item_id}
-        elevation={1}
-        className={classes.root}
-      >
+      <Card onClick={imageClickEvent} key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
@@ -87,6 +88,9 @@ export default function CardAsset(props: ICardAssetProps) {
           },
         ]}
       />
+      {isZoomOpen && (
+        <ImageViewer open={isZoomOpen} onClose={() => setIsZoomOpen(false)} images={[asset.imageData.image]} />
+      )}
     </>
   )
 }

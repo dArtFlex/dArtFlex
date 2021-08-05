@@ -38,6 +38,13 @@ export const useStyles = makeStyles((theme) =>
         color: theme.palette.warning.main,
       },
     },
+    chipsWrapper: {
+      marginTop: theme.spacing(1),
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 4,
+      rowGap: 4,
+    },
     chip: {
       margin: theme.spacing(0.5),
       backgroundColor: theme.palette.primary.main,
