@@ -73,6 +73,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(425)]: {
         width: 100,
       },
+      '&::-webkit-inner-spin-button': {
+        '-webkit-appearance': 'none',
+      },
     },
     priceInputBorder: {
       border: `1px solid ${theme.palette.grey['200']}`,
