@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
-import { History, About } from '../../../components'
+import { TabHistory, About } from '../../../components'
 import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid } from 'stores/selectors'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
 
@@ -29,6 +29,10 @@ const tabsItems = [
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+
+  const {
+    bid: { bidHistory },
+  } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
@@ -147,7 +151,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <History />}
+        {tab === 1 && <TabHistory history={bidHistory} />}
         {tab === 2 && <About creator={creatorData} />}
       </Box>
 

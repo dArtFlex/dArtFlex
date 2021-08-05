@@ -1,5 +1,6 @@
 import About from './About'
-import History from './History'
+import TabHistory from './TabHistory'
+import TabBids from './TabBids'
 import { FormContainer, FormAuction, FormBuy } from './Form'
 
-export { About, History, FormContainer, FormAuction, FormBuy }
+export { About, TabHistory, TabBids, FormContainer, FormAuction, FormBuy }
