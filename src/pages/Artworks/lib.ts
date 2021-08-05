@@ -51,7 +51,8 @@ export function useInnerAssetsFilter({
     let isHotOnly
     if (hotOnly) {
       const now_time = new Date().getTime()
-      isHotOnly = normalizeDate(asset.end_time).getTime() < now_time + 1000 * 60 * 60
+      const end_time = normalizeDate(asset.end_time).getTime()
+      isHotOnly = end_time > now_time && end_time < now_time + 1000 * 60 * 60
     }
 
     // By Price
