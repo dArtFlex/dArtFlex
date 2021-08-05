@@ -149,6 +149,7 @@ export default function Dashboard() {
                   <CardAsset
                     key={i}
                     asset={userAsset}
+                    userWallet={user?.wallet}
                     withLabel
                     withAction={Boolean(
                       userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
