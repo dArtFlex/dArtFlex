@@ -23,11 +23,10 @@ export function useSearchAssets({ assets, search }: { assets: IAssetsBaseTypes; 
     return assets
   }
   return assets.filter((asset) => {
-    return (
-      asset.imageData.name === search ||
-      asset.userData?.userid === search ||
-      asset.userData?.wallet.toLocaleLowerCase() === search.toLocaleLowerCase()
-    )
+    const match = (value: string) => {
+      return value.match(new RegExp(search, 'gi')) !== null
+    }
+    return match(asset.imageData.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
   })
 }
 
@@ -52,7 +51,8 @@ export function useInnerAssetsFilter({
     let isHotOnly
     if (hotOnly) {
       const now_time = new Date().getTime()
-      isHotOnly = normalizeDate(asset.end_time).getTime() < now_time + 1000 * 60 * 60
+      const end_time = normalizeDate(asset.end_time).getTime()
+      isHotOnly = end_time > now_time && end_time < now_time + 1000 * 60 * 60
     }
 
     // By Price

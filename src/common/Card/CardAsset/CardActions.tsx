@@ -51,6 +51,8 @@ export default function CardActions(props: ICardActionsProps) {
     : currentPrice
 
   const now_time = new Date().getTime()
+  const expire_time = normalizeDate(endTime).getTime() < burnTime
+
   switch (cardStatus) {
     case MINTED:
       return (
@@ -92,10 +94,8 @@ export default function CardActions(props: ICardActionsProps) {
             }
           />
           {now_time < normalizeDate(endTime).getTime() ? (
-            <ButtonBase
-              className={clsx(classes.actionBtn, normalizeDate(endTime).getTime() < burnTime && classes.actionBtnBurn)}
-            >
-              {normalizeDate(endTime).getTime() < burnTime ? (
+            <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
+              {expire_time ? (
                 <BurnIcon className={classes.actionBtnIcon} />
               ) : (
                 <TimeIcon className={classes.actionBtnIcon} />
