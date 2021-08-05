@@ -39,6 +39,7 @@ export interface IUserAsset extends AssetDataTypesWithStatus {
 export interface IUserBid extends IBidsHistory {
   marketData: AssetMarketplaceTypes
   ownerData: UserDataTypes
+  ownerProfile: UserDataTypes
   imageData: IImageData
 }
 
