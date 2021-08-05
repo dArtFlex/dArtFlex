@@ -238,7 +238,10 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
     url: APP_CONFIG.getItemByItemId(Number(item_id)),
   })
   const userByOwner: UserDataTypes[] = yield call(api, {
-    url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+    url: APP_CONFIG.getBidsByUserId(Number(assetById[0].owner)),
+  })
+  const userProfileByOwner: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserProfileByUserId(Number(assetById[0].owner)),
   })
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
@@ -247,7 +250,14 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
     url: APP_CONFIG.getMarketplaceItemById(Number(market_id)),
   })
 
-  return { ...userBids, imageData: imageData[0], ownerData: userByOwner[0], marketData: marketData[0] }
+  return {
+    ...userBids,
+    item_id,
+    imageData: imageData[0],
+    marketData: marketData[0],
+    ownerData: userByOwner[0],
+    ownerProfile: userProfileByOwner[0],
+  }
 }
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
