@@ -16,17 +16,17 @@ export function useComposeBidsData({
     .map((bid: IUserBid) => {
       const status = useStatus({
         status: bid.status,
-        end_time: bid.marketData.end_time,
+        end_time: bid.marketData?.end_time || '0',
         ownerId: bid.ownerData?.id || 0,
         userId,
-        bid_amount: bid.bid_amount,
-        bid_current: bid.marketData.current_price,
+        bid_amount: bid?.bid_amount || '0',
+        bid_current: bid.marketData?.current_price || '0',
       })
 
       // When we use only ETH or WETH we know for sure token decimals
       // In this case the same for both is 18
       // If we add some new token to buying system we shold change this logic
-      const currentBidAmount = new BigNumber(bid.marketData.end_price)
+      const currentBidAmount = new BigNumber(bid.marketData?.end_price || '0')
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
         .toFixed(2)
@@ -43,7 +43,7 @@ export function useComposeBidsData({
         image: bid.imageData.image,
         name: bid.imageData.name,
         status,
-        endDate: bid.marketData.end_time,
+        endDate: bid.marketData?.end_time || '',
         creator: {
           avatar: bid.ownerProfile?.profile_image || '',
           name: bid.ownerProfile?.userid || '',
@@ -73,9 +73,11 @@ function useStatus({ status }: IUseStatus): IBidStatus {
       return 'winner'
     case 'pending':
       return 'bid'
+    case 'offered':
+      return 'offered'
     default:
       return 'none'
   }
 }
 
-type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none'
+type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered'

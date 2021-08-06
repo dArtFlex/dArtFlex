@@ -31,7 +31,7 @@ export default function FormAuction() {
             dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bidHistory[1].order_id }))
           }}
           onMakeOffer={() => {
-            dispatch(makeOfferRequest({ amount: marketData?.start_price }))
+            dispatch(makeOfferRequest({ amount: values.bid }))
           }}
         />
       )
