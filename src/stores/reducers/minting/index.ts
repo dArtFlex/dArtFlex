@@ -17,7 +17,7 @@ const initialState: MintingStateType = {
   lazyMintItemId: null,
 }
 
-const userSlice = createSlice({
+const mintingSlice = createSlice({
   name: 'minting',
   initialState,
   reducers: {
@@ -130,6 +130,6 @@ export const {
 
   setLazyMintingData,
   clearLazyMintingData,
-} = userSlice.actions
+} = mintingSlice.actions
 
-export const { reducer } = userSlice
+export const { reducer } = mintingSlice

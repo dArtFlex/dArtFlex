@@ -12,11 +12,12 @@ import { useStyles } from '../styles'
 
 interface IFormBuyApproveProps {
   onSubmit: () => void
+  onMakeOffer: () => void
 }
 
 export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const classes = useStyles()
-  const { onSubmit } = props
+  const { onSubmit, onMakeOffer } = props
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
@@ -123,6 +124,19 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             ) : (
               `Buy Now for ${startPriceToToken} ETH`
             )}
+          </Button>
+          {/******************************************************************************************************************************/}
+          {/************* Button below should be removed after that common button will be able to handle make offer request **************/}
+          {/******************************************************************************************************************************/}
+          <Button
+            onClick={onMakeOffer}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={clsx(classes.bitBtn, !disabledBuy && classes.bitBtnDisabled)}
+          >
+            Make offer
           </Button>
         </Box>
       </Box>
