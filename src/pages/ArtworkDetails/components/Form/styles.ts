@@ -26,7 +26,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(3),
       minHeight: 680,
       '&>div': {
-        maxWidth: 'min-content',
+        [theme.breakpoints.up(681)]: {
+          maxWidth: 'min-content',
+        },
       },
       '&>img': {
         height: 520,
@@ -144,6 +146,20 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(8),
       paddingRight: theme.spacing(8),
     },
+    adornmentText: {
+      fontSize: 30,
+      fontWeight: 500,
+      color: theme.palette.greyMid,
+    },
+    makeOfferInput: {
+      backgroundColor: theme.palette.background.default,
+      height: 62,
+      fontSize: 30,
+      fontWeight: 600,
+    },
+    focusedInput: {
+      boxShadow: '0px 7px 12px -5px rgba(84, 61, 178, 0.72)',
+    },
     linkTitle: {
       color: theme.palette.text.secondary,
     },
@@ -199,9 +215,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       borderRadius: 12,
       justifyContent: 'space-around',
-      backgroundColor: theme.palette.grey['500'],
+      backgroundColor: theme.palette.grey['100'],
       padding: theme.spacing(6, 8),
       flexDirection: 'column',
+      [theme.breakpoints.down(480)]: {
+        minWidth: 'unset',
+        padding: theme.spacing(4, 2),
+      },
     },
     inputAdorment: {
       fontSize: '16px',
@@ -282,6 +302,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `1px solid ${theme.palette.greyLight}`,
       color: theme.palette.blackMain,
       marginRight: theme.spacing(4),
+      '&:hover': {
+        backgroundColor: theme.palette.white,
+        opacity: '70%',
+      },
     },
     formHead: {
       display: 'flex',
@@ -320,6 +344,29 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiSwitch-root': {
         backgroundColor: 'transparent',
       },
+    },
+    textBold: {
+      fontSize: 16,
+      fontWeight: 700,
+    },
+    gridBox: {
+      display: 'grid',
+
+      gridGap: 16,
+      [theme.breakpoints.down(480)]: {
+        gridTemplateRows: 'repeat(2, 1fr)',
+        width: '100%',
+      },
+      [theme.breakpoints.up(481)]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+      },
+    },
+    dateSelect: {
+      marginTop: theme.spacing(2),
+    },
+    bottomInfoText: {
+      marginTop: theme.spacing(4),
+      color: theme.palette.greyDark,
     },
   })
 )

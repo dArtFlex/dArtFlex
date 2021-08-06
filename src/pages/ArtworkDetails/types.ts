@@ -8,6 +8,7 @@ export interface ApprovedFormState {
   agreeTerms: boolean
   formProgress: IFormProgress
   promotion?: boolean
+  offerExpiration?: string
 }
 
-type IFormProgress = 'details' | 'auction' | 'buy' | 'approved'
+type IFormProgress = 'details' | 'auction' | 'buy' | 'approved' | 'make offer'

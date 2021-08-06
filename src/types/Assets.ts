@@ -28,6 +28,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
 export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
+  tokenData?: AssetTypes
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {

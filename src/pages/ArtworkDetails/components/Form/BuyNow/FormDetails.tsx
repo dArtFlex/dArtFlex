@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About } from '../../../components'
-import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
+import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon, MoreHorizontalIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid } from 'stores/selectors'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
@@ -61,18 +61,26 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            <IconButton className={classes.borderdIconButton}>
-              <ShareIcon />
-            </IconButton>
-            <IconButton
-              onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                const target = event.currentTarget as HTMLElement
-                setAnchorElExtLink(target)
-              }}
-              className={classes.borderdIconButton}
-            >
-              <ExternalLinkIcon />
-            </IconButton>
+            {marketData ? (
+              <>
+                <IconButton className={classes.borderdIconButton}>
+                  <ShareIcon />
+                </IconButton>
+                <IconButton
+                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    const target = event.currentTarget as HTMLElement
+                    setAnchorElExtLink(target)
+                  }}
+                  className={classes.borderdIconButton}
+                >
+                  <ExternalLinkIcon />
+                </IconButton>
+              </>
+            ) : (
+              <IconButton className={classes.borderdIconButton}>
+                <MoreHorizontalIcon />
+              </IconButton>
+            )}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -100,10 +108,11 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.infoRow} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              <span>Buy Now Price</span>
+              <span>{marketData ? 'Buy Now Price ' : 'Sold for'}</span>
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
+            {!marketData && <Typography>$792.22</Typography>}
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
@@ -131,7 +140,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           disableElevation
           className={classes.bitBtn}
         >
-          {`Buy Now for ${startPriceToToken} ETH`}
+          {marketData ? `Buy Now for ${startPriceToToken} ETH` : 'Make offer'}
         </Button>
 
         <Tabs

@@ -12,7 +12,7 @@ import { selectAssetDetails, selectUserRole, selectPromotion } from 'stores/sele
 import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import ImageViewer from '../../../../common/ImageViewer'
+import ImageViewer from 'common/ImageViewer'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -27,14 +27,31 @@ export default function FormContainer() {
 
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
-  const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
+  const composeData: AssetDataTypesWithStatus = assetDetails.marketData
     ? {
         ...assetDetails.marketData,
         status: assetDetails.status as string,
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
       }
-    : null
+    : {
+        current_price: '',
+        created_at: '',
+        updated_at: '',
+        id: assetDetails.imageData?.id as AssetDataTypesWithStatus['imageData']['id'],
+        end_price: '',
+        end_time: '',
+        status: 'minted',
+        item_id: `${assetDetails.tokenData?.id}`,
+        type: 'instant_buy',
+        platform_fee: '2.5',
+        sales_token_contract: `${assetDetails.ownerData?.wallet}`,
+        sold: false,
+        start_time: '',
+        start_price: '',
+        userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
+        imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+      }
 
   const { role } = useSelector(selectUserRole())
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
@@ -101,12 +118,12 @@ export default function FormContainer() {
           </Box>
         ) : (
           <Box className={classes.previewContainer}>
-            {composeData !== null ? <CardAsset asset={composeData} /> : null}
+            <CardAsset asset={composeData} withLabel={!assetDetails.marketData} emptyBottom />
           </Box>
         )}
       </Box>
       {assetDetails.marketData?.type === AUCTION ? <FormAuction /> : null}
-      {assetDetails.marketData?.type === INSTANT_BY ? <FormBuy /> : null}
+      {assetDetails.marketData?.type === INSTANT_BY || !assetDetails.marketData ? <FormBuy /> : null}
       {isZoomOpen && (
         <ImageViewer
           open={isZoomOpen}

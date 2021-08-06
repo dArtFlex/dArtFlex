@@ -13,7 +13,6 @@ export default {
   bidDetails: '/my-bids/:id',
   sales: '/my-sales',
   contentManagement: '/content-management',
-  makeOffer: '/make-offer',
   privacyPolicy: '/privacy-policy',
   aboutDAF: '/about-daf',
   communityGuidelines: '/guidelines',

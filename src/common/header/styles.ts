@@ -30,6 +30,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.grey['100']}`,
+      [theme.breakpoints.down(680)]: {
+        marginTop: theme.spacing(6),
+      },
     },
     navTabs: {
       padding: theme.spacing(5, 0),
@@ -111,6 +114,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
       borderRadius: 12,
       cursor: 'pointer',
+      [theme.breakpoints.down(480)]: {
+        minWidth: 'unset',
+      },
+      // [theme.breakpoints.down(420)]: {
+      //   minWidth: 360
+      // },
+      // [theme.breakpoints.down(375)]: {
+      //   minWidth: 300
+      // },
+      // [theme.breakpoints.down(320)]: {
+      //   minWidth:
+      // }
     },
     notificationBadgeUnread: {
       background: theme.palette.warning.light,

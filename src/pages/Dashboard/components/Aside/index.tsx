@@ -46,18 +46,19 @@ export default function Aside(props: IAsideProps) {
             ))
           : null}
         <Box className={classes.shareBtnCotainer}>
-          <IconButton
-            className={classes.borderdIconButton}
-            onClick={(event: React.SyntheticEvent<EventTarget>) => {
-              const target = event.currentTarget as HTMLElement
-              setAnchor(target)
-            }}
-          >
-            <ShareIcon />
-          </IconButton>
-          <IconButton className={classes.borderdIconButton}>
-            <ExternalLinkIcon />
-          </IconButton>
+          {/*Todo will be implemented in next version*/}
+          {/*<IconButton*/}
+          {/*  className={classes.borderdIconButton}*/}
+          {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+          {/*    const target = event.currentTarget as HTMLElement*/}
+          {/*    setAnchor(target)*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <ShareIcon />*/}
+          {/*</IconButton>*/}
+          {/*<IconButton className={classes.borderdIconButton}>*/}
+          {/*  <ExternalLinkIcon />*/}
+          {/*</IconButton>*/}
         </Box>
         <Typography variant={'body1'} color={'textSecondary'} align={'center'}>
           {joinedToArtworks}

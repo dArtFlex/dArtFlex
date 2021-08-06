@@ -98,6 +98,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridGap: theme.spacing(6),
       gridTemplateColumns: 'repeat(auto-fill, minmax(322px, 1fr))',
+      [theme.breakpoints.down(375)]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+      },
+      [theme.breakpoints.down(320)]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+      },
     },
     promotionBox: {
       display: 'flex',

@@ -10,9 +10,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'space-between',
       position: 'relative',
-      [theme.breakpoints.down(640)]: {
-        minWidth: 'unset',
+      [theme.breakpoints.down(680)]: {
         width: '88vw',
+        minWidth: 'unset',
+        margin: 'auto',
       },
     },
     card: {
@@ -89,6 +90,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         background: theme.palette.text.primary,
       },
+    },
+    mintedBottom: {
+      height: 72,
     },
     collectedBoxBtn: {
       display: 'grid',
