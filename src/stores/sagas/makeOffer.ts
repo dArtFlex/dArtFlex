@@ -12,7 +12,6 @@ import { UserDataTypes } from 'types'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
   try {
-    debugger
     const chainId: IChainId = walletService.getChainId()
     const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
     const { tokenData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)

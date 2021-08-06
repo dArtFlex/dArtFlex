@@ -73,6 +73,7 @@ function CardInfoBox(props: ICardInfoBox) {
   const history = useHistory()
   switch (status) {
     case 'bid':
+    case 'offered':
       return (
         <Box className={classes.cardBidAction}>
           <Box className={classes.informerHead}>
