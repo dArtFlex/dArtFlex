@@ -27,6 +27,7 @@ export interface ITradingHistory {
   amount: string
   cancelBid?: () => void
   etherscanLink: string
+  txHash?: string
 }
 
 export interface ITradingHistoryFilter {
