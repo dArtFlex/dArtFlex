@@ -16,14 +16,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     container: {
       display: 'flex',
       gap: theme.spacing(5),
-      [theme.breakpoints.down(640)]: {
+      [theme.breakpoints.down(680)]: {
         flexDirection: 'column',
       },
     },
     aside: {
       maxWidth: 325,
       marginTop: theme.spacing(-25),
-      [theme.breakpoints.down(640)]: {
+      [theme.breakpoints.down(680)]: {
         maxWidth: 'unset',
       },
     },

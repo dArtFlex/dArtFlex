@@ -7,6 +7,7 @@ import FormDetails from './FormDetails'
 import FormBuy from './FormBuy'
 import FormApproved from './FormApproved'
 import { ApprovedFormState } from '../../../types'
+import FormMakeOffer from './FormMakeOffer'
 
 export default function FormAuction() {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
@@ -30,6 +31,8 @@ export default function FormAuction() {
           }}
         />
       )
+    case 'make offer':
+      return <FormMakeOffer onSubmit={() => setFieldValue('formProgress', 'approved')} />
     case 'approved':
       return <FormApproved />
     default:
