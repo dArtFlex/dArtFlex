@@ -46,6 +46,7 @@ export default function Aside(props: IAsideProps) {
             ))
           : null}
         <Box className={classes.shareBtnCotainer}>
+          {/*Todo will be implemented in next version*/}
           {/*<IconButton*/}
           {/*  className={classes.borderdIconButton}*/}
           {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}

@@ -129,6 +129,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
             <IconButton
+              // Todo will be implemented in next version
               // onClick={(event: React.SyntheticEvent<EventTarget>) => {
               //   const target = event.currentTarget as HTMLElement
               //   setAnchorElExtLink(target)
