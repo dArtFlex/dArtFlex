@@ -65,10 +65,11 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               <ShareIcon />
             </IconButton>
             <IconButton
-              onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                const target = event.currentTarget as HTMLElement
-                setAnchorElExtLink(target)
-              }}
+              // Todo will be implemented in next version
+              // onClick={(event: React.SyntheticEvent<EventTarget>) => {
+              //   const target = event.currentTarget as HTMLElement
+              //   setAnchorElExtLink(target)
+              // }}
               className={classes.borderdIconButton}
             >
               <ExternalLinkIcon />
