@@ -10,7 +10,7 @@ const initialState: PlaceBidStateType = {
   bidAmount: null,
 }
 
-const userSlice = createSlice({
+const placeBidSlice = createSlice({
   name: 'placeBid',
   initialState,
   reducers: {
@@ -84,6 +84,6 @@ export const {
   getBidsRequest,
   getBidsSuccess,
   getBidsFailure,
-} = userSlice.actions
+} = placeBidSlice.actions
 
-export const { reducer } = userSlice
+export const { reducer } = placeBidSlice

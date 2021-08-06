@@ -4,7 +4,7 @@ import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { listingSuccess, listingFailure } from 'stores/reducers/listing'
+import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { IChainId } from 'types'
 import { walletService } from 'services/wallet_service'
@@ -121,5 +121,20 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     history.push(routes.createNFT)
   } catch (e) {
     yield put(listingFailure(e.message || e))
+  }
+}
+
+export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<{ market_id: string }>) {
+  try {
+    yield call(api, {
+      method: 'POST',
+      url: APP_CONFIG.bidUnlistingItem,
+      body: {
+        id: market_id,
+      },
+    })
+    yield put(unlistingSuccess())
+  } catch (e) {
+    yield put(unlistingFailure(e.message || e))
   }
 }

@@ -45,6 +45,8 @@ const APP_CONFIG = {
   createUserProfile: `${STAGE_URL}/user/create`,
   updateUserProfile: `${STAGE_URL}/user/update`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
+  bidUnlistingItem: `${STAGE_URL}/bid/unlist_item`,
+  makeOffer: `${STAGE_URL}/bid/make_offer`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
   buy: `${STAGE_URL}/bid/buy`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,

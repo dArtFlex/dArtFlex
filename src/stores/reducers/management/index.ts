@@ -8,7 +8,7 @@ const initialState: ManagementStateType = {
   users: [],
 }
 
-const userSlice = createSlice({
+const managementSlice = createSlice({
   name: 'management',
   initialState,
   reducers: {
@@ -44,6 +44,6 @@ export const {
   getAllUsersListRequest,
   getAllUsersListSuccess,
   getAllUsersListFailure,
-} = userSlice.actions
+} = managementSlice.actions
 
-export const { reducer } = userSlice
+export const { reducer } = managementSlice

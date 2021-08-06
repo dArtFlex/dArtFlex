@@ -3,16 +3,17 @@ import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, Button, Link, IconButton, InputAdornment, OutlinedInput } from '@material-ui/core'
+import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } from 'stores/selectors'
-import { Field, Tooltip } from 'common'
+import { Field, Tooltip, InputAdornment } from 'common'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
 import appConst from '../../../../../config/consts'
 
 interface IFormBuyApproveProps {
   onSubmit: () => void
+  onMakeOffer: () => void
 }
 
 const {
@@ -40,7 +41,7 @@ const schedule = [
 
 export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const classes = useStyles()
-  const { onSubmit } = props
+  const { onSubmit, onMakeOffer } = props
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
@@ -69,6 +70,11 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
       Boolean(values.acknowledge) &&
       Boolean(values.agreeTerms) &&
       Number(tokenData?.owner) !== user?.id)
+
+  const bidValueAmountUsd =
+    values.bid && parseFloat(`${values.bid}`)
+      ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
+      : 0
 
   return (
     <>
@@ -113,20 +119,25 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             </Box>
           ) : (
             <>
-              <OutlinedInput
-                id="outlined-adornment-weight"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <Typography className={classes.adornmentText}>ETH</Typography>
-                  </InputAdornment>
-                }
-                className={classes.makeOfferInput}
-                fullWidth
-                classes={{ focused: classes.focusedInput }}
+              <Field
+                type="input"
+                name="bid"
+                variant="outlined"
+                className={classes.rootField}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="start"
+                      icon={
+                        <Typography className={classes.inputAdorment} color={'textSecondary'}>
+                          ETH
+                        </Typography>
+                      }
+                    />
+                  ),
+                }}
+                helperText={`$${bidValueAmountUsd}`}
               />
-              <Box mt={1}>
-                <Typography>$1234.45</Typography>
-              </Box>
               <Box mt={6}>
                 <Typography className={classes.textBold}>Offer expiration</Typography>
               </Box>
@@ -160,7 +171,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             />
           </Box>
           <Button
-            onClick={marketData ? onSubmit : () => console.log('Make offer')}
+            onClick={marketData ? onSubmit : onMakeOffer}
             variant={'contained'}
             color={'primary'}
             fullWidth
