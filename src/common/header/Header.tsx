@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch } from 'stores/reducers/user'
+import { setSearch, resetSearch } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -151,6 +151,12 @@ export default function Header({ toggleTheme }: HeaderType) {
   const handleDisconnect = () => {
     dispatch(walletsDisconetRequest())
   }
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetSearch())
+    }
+  }, [])
 
   return (
     <>
