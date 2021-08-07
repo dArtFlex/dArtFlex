@@ -11,10 +11,10 @@ export function useSortedAssets({
   userAssets,
   filter,
 }: {
-  userAssets: IUserAssets[] | []
+  userAssets: IUserAssets[] | null
   filter: IDashboardArtworksFiltes
 }) {
-  if (userAssets.length == 0) {
+  if (!userAssets) {
     return userAssets
   }
 

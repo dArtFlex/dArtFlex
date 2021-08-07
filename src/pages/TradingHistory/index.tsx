@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUser, selectAllTradingHistory } from 'stores/selectors'
+import { selectUser, selectAllTradingHistory, selectSearch } from 'stores/selectors'
 import { Box, Typography, FormControl, Select as MUISelect } from '@material-ui/core'
 import { PageWrapper, Select } from 'common'
 import { TradingHistoryTable, Filter } from './components'
 import { getTradingHistoryRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
 import { ITradingHistory, IFilterTypes } from './types'
-import { useComposeTradingData, useTradingHistoryByFilter } from './lib'
+import { useComposeTradingData, useTradingHistoryByFilter, useSearchTradingHistory } from './lib'
 
 const sortItems = [
   {
@@ -24,9 +24,14 @@ export default function TradingHistory() {
 
   const { user } = useSelector(selectUser())
   const { tradingHistoryAll } = useSelector(selectAllTradingHistory())
+  const { search } = useSelector(selectSearch())
 
   const tradingHistory: ITradingHistory[] = useComposeTradingData({ tradingHistoryAll })
-  const tradingHistoryByFilter: ITradingHistory[] = useTradingHistoryByFilter({ tradingHistory, filterBy })
+  const tradingFistoryBySearch: ITradingHistory[] = useSearchTradingHistory({ tradingHistory, search })
+  const tradingHistoryByFilter: ITradingHistory[] = useTradingHistoryByFilter({
+    tradingHistory: tradingFistoryBySearch,
+    filterBy,
+  })
 
   const getTradingHistory = useCallback(
     (id?: number) => {

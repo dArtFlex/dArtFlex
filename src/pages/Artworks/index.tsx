@@ -19,7 +19,6 @@ import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
-  useSearchAssets,
   useInnerAssetsFilter,
   useSortedAssets,
   useCardStatusLiveAuction,
@@ -29,9 +28,9 @@ import {
   useCardStatusFeaturedArtworks,
   usePromotionMultiplyData,
 } from './lib'
+import { useSearchAssets } from 'hooks'
 import appConst from 'config/consts'
-import { IArtworksFiltes } from './types'
-import { IHashtag } from 'types'
+import { IHashtag, IArtworksFiltes } from 'types'
 import { useStyles } from './styles'
 
 const {

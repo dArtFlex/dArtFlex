@@ -1,6 +1,5 @@
-import { IArtworksFiltes } from './types'
 import BigNumber from 'bignumber.js'
-import { AssetDataTypesWithStatus, IHashtag } from 'types'
+import { AssetDataTypesWithStatus, IHashtag, IArtworksFiltes } from 'types'
 import { IUseCardStatus } from 'common/Card/CardAsset/types'
 import { UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { normalizeDate } from 'utils'
@@ -14,21 +13,6 @@ const {
 } = appConst
 
 type IAssetsBaseTypes = Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }> | null
-
-export function useSearchAssets({ assets, search }: { assets: IAssetsBaseTypes; search: IArtworksFiltes }) {
-  if (!assets) {
-    return null
-  }
-  if (!search.length) {
-    return assets
-  }
-  return assets.filter((asset) => {
-    const match = (value: string) => {
-      return value.match(new RegExp(search, 'gi')) !== null
-    }
-    return match(asset.imageData.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
-  })
-}
 
 export function useInnerAssetsFilter({
   assets,
