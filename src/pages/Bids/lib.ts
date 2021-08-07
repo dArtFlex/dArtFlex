@@ -81,3 +81,16 @@ function useStatus({ status }: IUseStatus): IBidStatus {
 }
 
 type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered'
+
+export function useSearchBids({ userBids, search }: { userBids: UserStateType['userBids']; search: string }) {
+  if (!userBids) {
+    return []
+  }
+  if (!userBids.length) {
+    return userBids
+  }
+  return userBids.filter((bid) => {
+    const match = (value: string) => value.match(new RegExp(search, 'gi')) !== null
+    return match(bid.imageData.name) || match(bid.ownerProfile?.userid) || match(bid.ownerProfile?.wallet)
+  })
+}

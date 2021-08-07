@@ -1,13 +1,14 @@
 import { IArtworksFiltes } from 'types'
 
 interface IAssets {
-  imageData: {
-    name: string
-  }
-  userData: {
-    userid: string
-    wallet: string
-  }
+  imageData: Pick<IData, 'name'>
+  userData: Pick<IData, 'userid' | 'wallet'>
+}
+
+interface IData {
+  userid: string
+  wallet: string
+  name: string
 }
 
 function useSearchAssets<T extends IAssets>({
@@ -24,9 +25,7 @@ function useSearchAssets<T extends IAssets>({
     return assets
   }
   return assets.filter((asset) => {
-    const match = (value: string) => {
-      return value.match(new RegExp(search, 'gi')) !== null
-    }
+    const match = (value: string) => value.match(new RegExp(search, 'gi')) !== null
     return match(asset.imageData.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
   })
 }
