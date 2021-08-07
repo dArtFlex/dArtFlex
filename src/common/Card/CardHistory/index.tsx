@@ -1,38 +1,13 @@
 import React from 'react'
 import moment from 'moment'
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Avatar,
-  IconButton,
-  Typography,
-  Box,
-  Link,
-  Divider,
-  Button,
-} from '@material-ui/core'
-import { ExternalLinkIcon, SuccessIcon } from 'common/icons'
+import { Card, CardHeader, CardContent, Avatar, IconButton, Typography, Box, Link, Divider } from '@material-ui/core'
+import { ExternalLinkIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 import APP_CONFIG from 'config'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const {
-    id,
-    order_id,
-    market_id,
-    user_id,
-    tx_hash,
-    status,
-    updated_at,
-    userWalletId,
-    bidAmountToToken,
-    bidAmountUsd,
-    userData,
-    onCancel,
-    onAccept,
-  } = props
+  const { user_id, tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
@@ -99,25 +74,6 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Divider />
             <Box className={classes.footerBox}>
               <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
-              {onCancel && (
-                <Button
-                  classes={{ root: classes.cardBtn }}
-                  disableRipple
-                  onClick={() => onCancel({ id, order_id, user_id, market_id })}
-                >
-                  Cancel Bid
-                </Button>
-              )}
-              {onAccept && (
-                <Button
-                  classes={{ root: classes.cardAcceptBtn }}
-                  disableRipple
-                  onClick={onAccept}
-                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
-                >
-                  Accept Offer
-                </Button>
-              )}
             </Box>
           </CardContent>
         </CardContainer>

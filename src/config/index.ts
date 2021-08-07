@@ -53,6 +53,7 @@ const APP_CONFIG = {
   addPromotion: `${STAGE_URL}/super_admin/add_promotion`,
   deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
   createHashtag: `${STAGE_URL}/hashtag/create`,
+  cancelBid: `${STAGE_URL}/bid/withdraw_bid`,
 } as const
 
 export default APP_CONFIG

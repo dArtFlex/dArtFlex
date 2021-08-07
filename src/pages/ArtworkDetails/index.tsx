@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { PageWrapper, Form } from 'common'
+import { PageWrapper, Form, CircularProgressLoader } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
-import { getAssetByIdRequest } from 'stores/reducers/assets'
+import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
 import { getBidsHistoryRequest, getBidsRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
@@ -24,9 +24,9 @@ export default function ArtworkDetails() {
   const { id } = useParams<{ id: string }>()
   const { assetDetails } = useSelector(selectAssetDetails())
 
-  useEffect(() => {
+  const fetchAssetDetails = () => {
     dispatch(getAssetByIdRequest(Number(id)))
-  }, [])
+  }
 
   const fetchBidsHistory = () => {
     if (assetDetails) {
@@ -34,6 +34,15 @@ export default function ArtworkDetails() {
       assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
     }
   }
+
+  useEffect(() => {
+    fetchAssetDetails()
+    const iId = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
+    return () => {
+      clearInterval(iId)
+      dispatch(clearAssetDetails())
+    }
+  }, [])
 
   useEffect(() => {
     if (!assetDetails) {
@@ -47,15 +56,15 @@ export default function ArtworkDetails() {
     }
   }, [assetDetails])
 
-  if (assetDetails.tokenData === null) {
-    return null
-  }
-
   return (
     <PageWrapper>
-      <Form initialValues={formData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
-        <FormContainer />
-      </Form>
+      {assetDetails.tokenData === null ? (
+        <CircularProgressLoader />
+      ) : (
+        <Form initialValues={formData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
+          <FormContainer />
+        </Form>
+      )}
     </PageWrapper>
   )
 }

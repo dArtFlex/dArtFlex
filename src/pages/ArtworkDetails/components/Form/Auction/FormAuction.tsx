@@ -27,13 +27,18 @@ export default function FormAuction(props: IFormAuctionProps) {
     assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
-  const minBid = marketData
-    ? new BigNumber(marketData.start_price)
-        .plus(new BigNumber(marketData.start_price).multipliedBy(0.1).toNumber())
-        .dividedBy(`10e${18 - 1}`)
-        .toNumber()
-        .toFixed(5)
-    : 0
+  const price = marketData ? marketData?.current_price || marketData?.start_price : 0
+  const minBid =
+    marketData?.current_price !== '0'
+      ? new BigNumber(price)
+          .plus(new BigNumber(price).multipliedBy(0.1).toNumber())
+          .dividedBy(`10e${18 - 1}`)
+          .toNumber()
+          .toFixed(5)
+      : new BigNumber(marketData?.start_price)
+          .dividedBy(`10e${18 - 1}`)
+          .toNumber()
+          .toFixed(5)
 
   const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
 
