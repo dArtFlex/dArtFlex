@@ -14,9 +14,9 @@ import {
   walletsDisconeFailure,
 } from '../reducers/wallet'
 import { IChainId, ITokenBalances, IBaseTokens } from 'types'
-import { storageActiveWallet, createWalletInstance } from 'utils'
+import { storageActiveWallet, createWalletInstance, getWalletsFromHistory } from 'utils'
 import tokensAll from 'core/tokens'
-import appConst from 'config/consts'
+import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,13 +30,18 @@ export function* connectMetaMask(api: IApi) {
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
-    storageActiveWallet(walletInstance, appConst.WALLET_CONNECT_STORAGE.METAMASK)
+    storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
 
     const chainChannel = yield call(chainChangedChannel)
     while (true) {
       const data = yield take(chainChannel)
-      yield put(connectMetaMaskFailure(data ? '' : 'Not supported network'))
+      if (data.chainId) {
+        yield put(connectMetaMaskFailure(data ? '' : 'Not supported network'))
+      }
+      if (data.accounts) {
+        window.location.reload()
+      }
     }
   } catch (e) {
     const error = e?.message || e
@@ -55,7 +60,7 @@ export function* connectWalletConnect(api: IApi) {
 
     const walletInstance = createWalletInstance(accounts, balance, 'ETH')
 
-    storageActiveWallet(walletInstance, appConst.WALLET_CONNECT_STORAGE.TRUST)
+    storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.TRUST)
     yield put(connnectWalletConnectSuccess(walletInstance))
 
     const chainChannel = yield call(chainChangedChannel)
@@ -77,6 +82,10 @@ function chainChangedChannel() {
       } else {
         emit(true)
       }
+    })
+
+    ethereum.on('accountsChanged', function (accounts) {
+      emit({ accounts })
     })
 
     // We don't need do anything in unsubscribe as we always wanna know if user change network
@@ -140,17 +149,34 @@ export function* walletsDisconet() {
   try {
     if (ethereum.isConnected()) {
       ethereum.on('disconnect', (error) => console.log(error))
-      localStorage.removeItem(appConst.WALLET_CONNECT_STORAGE.METAMASK)
+      localStorage.removeItem(APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     }
     if (window.connector) {
       connector.on('disconnect', (error) => console.log(error))
-      localStorage.removeItem(appConst.WALLET_CONNECT)
+      localStorage.removeItem(APP_CONSTS.WALLET_CONNECT)
     }
-    localStorage.removeItem(appConst.ACTIVE_WALLET_STORAGE)
+    localStorage.removeItem(APP_CONSTS.ACTIVE_WALLET_STORAGE)
 
     yield put(walletsDisconeSuccess())
     window.location.reload()
   } catch (e) {
     yield put(walletsDisconeFailure())
+  }
+}
+
+export function* walletsHistory() {
+  try {
+    const history = getWalletsFromHistory()
+
+    if (history.activeWallet === APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK) {
+      const accounts = yield web3.eth.getAccounts()
+      if (accounts[0].toLocaleLowerCase() === history.connectedMetaMask.accounts[0].toLocaleLowerCase()) {
+        yield call(connectMetaMask)
+      }
+    } else if (history.activeWallet === APP_CONSTS.WALLET_CONNECT) {
+      yield call(connectWalletConnect)
+    }
+  } catch (e) {
+    console.log(e)
   }
 }
