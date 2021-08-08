@@ -7,7 +7,7 @@ import { modalBgUrl } from 'common/icons/bgUrl'
 import { useStyles } from './styles'
 
 export default function Modal(props: IModalProps) {
-  const { open, onClose = noop, classNames = {}, body, withAside = false, ...rest } = props
+  const { open, onClose = noop, classNames = {}, body, withAside = false, withoutCloseBtn = false, ...rest } = props
   const classes = useStyles()
 
   return (
@@ -27,9 +27,11 @@ export default function Modal(props: IModalProps) {
           </aside>
         )}
         <Grid container justify="center">
-          <Button onClick={onClose} color={'secondary'} variant={'outlined'} className={classes.modalBtnClose}>
-            <CloseIcon />
-          </Button>
+          {!withoutCloseBtn ? (
+            <Button onClick={onClose} color={'secondary'} variant={'outlined'} className={classes.modalBtnClose}>
+              <CloseIcon />
+            </Button>
+          ) : null}
           {body}
         </Grid>
       </Box>

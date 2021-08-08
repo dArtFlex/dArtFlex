@@ -18,6 +18,9 @@ import { storageActiveWallet, createWalletInstance, getWalletsFromHistory } from
 import tokensAll from 'core/tokens'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
+import { history } from '../../navigation'
+import routes from '../../routes'
+import { parseJS } from 'utils'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
@@ -32,6 +35,11 @@ export function* connectMetaMask(api: IApi) {
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
+
+    const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
+    if (!isAccepted) {
+      history.push(routes.wellcome)
+    }
 
     const chainChannel = yield call(chainChangedChannel)
     while (true) {
@@ -62,6 +70,11 @@ export function* connectWalletConnect(api: IApi) {
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.TRUST)
     yield put(connnectWalletConnectSuccess(walletInstance))
+
+    const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
+    if (!isAccepted) {
+      history.push(routes.wellcome)
+    }
 
     const chainChannel = yield call(chainChangedChannel)
     while (true) {
