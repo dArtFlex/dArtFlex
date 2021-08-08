@@ -97,10 +97,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     collectedBoxBtn: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+      gridTemplateColumns: 'repeat(2, 1fr)',
     },
     collectedBtn: {
+      width: 130,
       border: `2px solid ${theme.palette.text.primary}`,
+      padding: theme.spacing(2, 3.5),
     },
     badgeBox: {
       position: 'absolute',
