@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Box, Typography, Button, FormGroup, FormControlLabel, Checkbox, Link } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { Modal } from 'common'
 import { VectorIcon } from 'common/icons'
 import { useStyles } from './styles'
 import routes from 'routes'
+import APP_CONSTS from 'config/consts'
+import { parseJS } from 'utils'
 
 export default function Wellcome() {
   const classes = useStyles()
@@ -20,6 +22,14 @@ function WellcomeForm() {
   const classes = useStyles()
   const history = useHistory()
   const [accept, setAccept] = React.useState(false)
+  const redirect = () => history.push(routes.artworks)
+
+  useEffect(() => {
+    const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
+    if (isAccepted) {
+      redirect()
+    }
+  }, [])
 
   return (
     <Box className={classes.wellcome}>
@@ -39,7 +49,11 @@ function WellcomeForm() {
             <Checkbox
               color="primary"
               checked={accept}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAccept(event.target.checked)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const value = event.target.checked
+                setAccept(value)
+                localStorage.setItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES, JSON.stringify(value))
+              }}
             />
           }
           label={
@@ -53,9 +67,7 @@ function WellcomeForm() {
         />
       </FormGroup>
       <Button
-        onClick={() => {
-          history.push(routes.artworks)
-        }}
+        onClick={redirect}
         variant={'contained'}
         fullWidth
         disableElevation
