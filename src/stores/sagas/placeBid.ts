@@ -11,6 +11,8 @@ import {
   acceptBidFailure,
   getBidsSuccess,
   getBidsFailure,
+  cancelBidSuccess,
+  cancelBidFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
@@ -152,5 +154,20 @@ export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: stri
     yield put(getBidsSuccess({ bids }))
   } catch (e) {
     yield put(getBidsFailure(e.message || e))
+  }
+}
+
+export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.cancelBid,
+      method: 'POST',
+      data: {
+        id: payload.bid_id,
+      },
+    })
+    yield put(cancelBidSuccess())
+  } catch (e) {
+    yield put(cancelBidFailure(e.message || e))
   }
 }

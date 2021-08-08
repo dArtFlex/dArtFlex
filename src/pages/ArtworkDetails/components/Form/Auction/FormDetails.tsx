@@ -95,6 +95,11 @@ export default function FormDetails(props: IDetailsFormProps) {
     marketData?.start_price && tokenInfo?.decimals
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
+  const currentPriceToToken =
+    marketData?.current_price && tokenInfo?.decimals
+      ? new BigNumber(marketData?.current_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
+      : 0
+  const priceToToken = currentPriceToToken || startPriceToToken
 
   const handleListed = () => {
     if (!tokenData || !imageData) {
@@ -168,18 +173,18 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${startPriceToToken} ETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${startPriceToToken} ETH` : '-') : ''}
+              {!isAuctionExpired ? `${priceToToken} ETH` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ETH` : '-') : ''}
             </Typography>
             <span>
               {!isAuctionExpired
                 ? marketData?.end_price &&
-                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                 : null}
 
               {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                   : ''
                 : ''}
             </span>
@@ -189,11 +194,11 @@ export default function FormDetails(props: IDetailsFormProps) {
               <Typography variant={'body1'} className={classes.infoTitle}>
                 <span>Sold For</span>
               </Typography>
-              <Typography variant={'h2'}>{marketData?.sold && `${startPriceToToken} ETH`}</Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ETH`}</Typography>
               <span>
                 {marketData?.sold &&
                   marketData?.end_price &&
-                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
+                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
               </span>
             </Box>
           )}

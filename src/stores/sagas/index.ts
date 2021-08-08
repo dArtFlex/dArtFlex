@@ -27,7 +27,13 @@ import {
 } from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest, unlistingRequest } from '../reducers/listing'
-import { placeBidRequest, getBidsHistoryRequest, acceptBidRequest, getBidsRequest } from '../reducers/placeBid'
+import {
+  placeBidRequest,
+  getBidsHistoryRequest,
+  acceptBidRequest,
+  getBidsRequest,
+  cancelBidRequest,
+} from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
 import { getNotificationsRequest } from '../reducers/notifications'
 import { getAllWorksRequest, getAllUsersListRequest } from '../reducers/management'
@@ -48,7 +54,7 @@ import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, 
 import { connectMetaMask, connectWalletConnect, getTokensBalances, walletsDisconet } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing, unlisting } from '../sagas/listing'
-import { placeBid, getBidsHistory, acceptBid, getBids } from '../sagas/placeBid'
+import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList } from '../sagas/management'
@@ -93,6 +99,7 @@ export default function* root() {
     takeLatest(getBidsHistoryRequest.type, getBidsHistory, apiMiddleware),
     takeLatest(acceptBidRequest.type, acceptBid, apiMiddleware),
     takeLatest(getBidsRequest.type, getBids, apiMiddleware),
+    takeLatest(cancelBidRequest.type, cancelBid, apiMiddleware),
 
     /** Buy Now **/
     takeLatest(buyNowRequest.type, buyNow, apiMiddleware),

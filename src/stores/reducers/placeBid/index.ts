@@ -65,6 +65,17 @@ const placeBidSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    cancelBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    cancelBidSuccess: (state) => {
+      state.fetching = false
+    },
+    cancelBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -84,6 +95,10 @@ export const {
   getBidsRequest,
   getBidsSuccess,
   getBidsFailure,
+
+  cancelBidRequest,
+  cancelBidSuccess,
+  cancelBidFailure,
 } = placeBidSlice.actions
 
 export const { reducer } = placeBidSlice
