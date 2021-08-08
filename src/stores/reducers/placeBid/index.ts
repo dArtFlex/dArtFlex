@@ -10,7 +10,7 @@ const initialState: PlaceBidStateType = {
   bidAmount: null,
 }
 
-const userSlice = createSlice({
+const placeBidSlice = createSlice({
   name: 'placeBid',
   initialState,
   reducers: {
@@ -65,6 +65,17 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    cancelBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    cancelBidSuccess: (state) => {
+      state.fetching = false
+    },
+    cancelBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -84,6 +95,10 @@ export const {
   getBidsRequest,
   getBidsSuccess,
   getBidsFailure,
-} = userSlice.actions
 
-export const { reducer } = userSlice
+  cancelBidRequest,
+  cancelBidSuccess,
+  cancelBidFailure,
+} = placeBidSlice.actions
+
+export const { reducer } = placeBidSlice

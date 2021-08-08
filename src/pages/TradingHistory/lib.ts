@@ -34,6 +34,21 @@ export function useTradingHistoryByFilter({
   tradingHistory: ITradingHistory[]
   filterBy: IFilterTypes[]
 }) {
-  console.log(tradingHistory, filterBy)
   return filterBy.length ? tradingHistory.filter((th) => filterBy.some((el) => el === th.action)) : tradingHistory
+}
+
+export function useSearchTradingHistory({
+  tradingHistory,
+  search,
+}: {
+  tradingHistory: ITradingHistory[]
+  search: string
+}) {
+  if (!search.length) {
+    return tradingHistory
+  }
+  return tradingHistory.filter((row) => {
+    const match = (value: string) => value.match(new RegExp(search, 'gi')) !== null
+    return match(row.action) || match(row.token.name) || match(row.from) || match(row.to)
+  })
 }

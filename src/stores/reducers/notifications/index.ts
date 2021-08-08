@@ -9,7 +9,7 @@ const initialState: NotificationsStateType = {
   bids: 0,
 }
 
-const userSlice = createSlice({
+const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
@@ -30,6 +30,6 @@ const userSlice = createSlice({
   },
 })
 
-export const { getNotificationsRequest, getNotificationsSuccess, getNotificationsFailure } = userSlice.actions
+export const { getNotificationsRequest, getNotificationsSuccess, getNotificationsFailure } = notificationsSlice.actions
 
-export const { reducer } = userSlice
+export const { reducer } = notificationsSlice

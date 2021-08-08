@@ -20,15 +20,11 @@ const initialState: ListingStateType = {
   listing: 'none',
 }
 
-const userSlice = createSlice({
+const listingSlice = createSlice({
   name: 'listing',
   initialState,
   reducers: {
-    listingRequest: (
-      state,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      { payload }: PayloadAction<{ data: Omit<ListingStateType['data'], 'salesTokenContract'> }>
-    ) => {
+    listingRequest: (state, i) => {
       state.fetching = true
     },
     listingSuccess: (
@@ -53,9 +49,28 @@ const userSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    unlistingRequest: (state, i) => {
+      state.fetching = true
+    },
+    unlistingSuccess: (state, i) => {
+      state.fetching = true
+    },
+    unlistingFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
-export const { listingRequest, listingSuccess, listingFailure } = userSlice.actions
+export const {
+  listingRequest,
+  listingSuccess,
+  listingFailure,
 
-export const { reducer } = userSlice
+  unlistingRequest,
+  unlistingSuccess,
+  unlistingFailure,
+} = listingSlice.actions
+
+export const { reducer } = listingSlice

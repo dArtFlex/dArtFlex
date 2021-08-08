@@ -18,6 +18,7 @@ export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus'
   burnTime?: number
   timer?: string
   onAction?: () => void
+  emptyBottom?: boolean
 }
 
 export type ICardBadgeProps = Pick<ICardActionsProps, 'status' | 'sold'>
@@ -35,6 +36,7 @@ export interface ICardAssetProps {
   withLabel?: boolean
   withAction?: boolean
   userWallet?: string
+  emptyBottom?: boolean
   button?: {
     onListed?: () => void
   }

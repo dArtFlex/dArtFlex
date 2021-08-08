@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectWallet } from 'stores/selectors'
 import { getAssetsAllRequest, getExchangeRateTokensRequest } from 'stores/reducers/assets'
 import { getUserDataRequest, getPromotionRequest } from 'stores/reducers/user'
-import { getTokensBalancesRequest } from 'stores/reducers/wallet'
+import { getTokensBalancesRequest, walletsHistoryRequest } from 'stores/reducers/wallet'
 import { getNotificationsRequest } from 'stores/reducers/notifications'
 import { CircularProgressLoader } from 'common'
 import appConst from 'config/consts'
@@ -32,6 +32,7 @@ export const DataProvider: React.FC = ({ children }) => {
   useEffect(() => {
     fetchAssets()
     dispatch(getExchangeRateTokensRequest())
+    dispatch(walletsHistoryRequest())
 
     const iId = setInterval(() => fetchAssets(), INTERVALS.UPDATE_ASSETS)
     setReady(true)

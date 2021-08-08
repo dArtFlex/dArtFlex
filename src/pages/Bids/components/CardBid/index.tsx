@@ -73,10 +73,11 @@ function CardInfoBox(props: ICardInfoBox) {
   const history = useHistory()
   switch (status) {
     case 'bid':
+    case 'offered':
       return (
         <Box className={classes.cardBidAction}>
           <Box className={classes.informerHead}>
-            <ExclamationCircleIcon />
+            <CupIcon />
             <Typography variant={'body1'} noWrap>
               You have a chance to win
             </Typography>

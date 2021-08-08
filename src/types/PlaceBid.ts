@@ -28,6 +28,7 @@ export type HistoryStatusType =
   | 'pending'
   | 'bidded'
   | 'purchased'
+  | 'offered'
 
 export interface IOrderData {
   data: string

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
-import { acceptBidRequest } from 'stores/reducers/placeBid'
+import { acceptBidRequest, cancelBidRequest } from 'stores/reducers/placeBid'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
 import { CardHistoryBids } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -61,18 +61,8 @@ export default function TabBids(props: ITabHistoryPropa) {
     )
   }
 
-  const handleCancelOffer = ({
-    id,
-    order_id,
-    user_id,
-    market_id,
-  }: {
-    id: number
-    order_id: string
-    user_id: string
-    market_id: string
-  }) => {
-    console.log(id, order_id, user_id, market_id)
+  const handleCancelOffer = ({ id }: { id: number }) => {
+    dispatch(cancelBidRequest({ bid_id: id }))
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()

@@ -6,17 +6,42 @@ import clsx from 'clsx'
 import { Box, Typography, Button, Link, IconButton } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } from 'stores/selectors'
-import { Field, Tooltip } from 'common'
+import { Field, Tooltip, InputAdornment } from 'common'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
+import appConst from '../../../../../config/consts'
 
 interface IFormBuyApproveProps {
   onSubmit: () => void
+  onMakeOffer: () => void
 }
+
+const {
+  SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
+} = appConst
+
+const schedule = [
+  {
+    value: DAYS3,
+    label: '3 days',
+  },
+  {
+    value: DAYS5,
+    label: '5 days',
+  },
+  {
+    value: MONTH,
+    label: '1 month',
+  },
+  {
+    value: SPECIFIC,
+    label: 'Custom Date',
+  },
+]
 
 export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const classes = useStyles()
-  const { onSubmit } = props
+  const { onSubmit, onMakeOffer } = props
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
@@ -40,10 +65,16 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
 
   const isValidValueAmount = Number(tokenBalanceETH) >= Number(startPriceToToken)
   const disabledBuy =
-    isValidValueAmount &&
-    Boolean(values.acknowledge) &&
-    Boolean(values.agreeTerms) &&
-    Number(tokenData?.owner) !== user?.id
+    !marketData ||
+    (isValidValueAmount &&
+      Boolean(values.acknowledge) &&
+      Boolean(values.agreeTerms) &&
+      Number(tokenData?.owner) !== user?.id)
+
+  const bidValueAmountUsd =
+    values.bid && parseFloat(`${values.bid}`)
+      ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
+      : 0
 
   return (
     <>
@@ -54,7 +85,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
               <ArrowLeftIcon />
             </IconButton>
             <Typography variant="h1" component="p">
-              Buy Now
+              {marketData ? 'Buy Now' : 'Make offer'}
             </Typography>
           </Box>
           <Box mb={5}>
@@ -72,20 +103,50 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
               4
             )} ETH`}</Typography>
           </Box>
-          <Box mb={8.5} className={classes.priceRow}>
-            <Typography variant="body1" color="textSecondary">
-              Buy Now Price
-            </Typography>
-            <Box mt={2}>
-              <Typography
-                className={clsx(classes.tokenAmount, classes.fontFamilyRoboto)}
-              >{`${startPriceToToken} ETH`}</Typography>
-              <Typography
-                className={clsx(classes.tokenAmountUsd, classes.fontFamilyRoboto)}
-              >{`$${priceToUsd}`}</Typography>
+          {marketData ? (
+            <Box mb={8.5} className={classes.priceRow}>
+              <Typography variant="body1" color="textSecondary">
+                Buy Now Price
+              </Typography>
+              <Box mt={2}>
+                <Typography
+                  className={clsx(classes.tokenAmount, classes.fontFamilyRoboto)}
+                >{`${startPriceToToken} ETH`}</Typography>
+                <Typography
+                  className={clsx(classes.tokenAmountUsd, classes.fontFamilyRoboto)}
+                >{`$${priceToUsd}`}</Typography>
+              </Box>
             </Box>
-          </Box>
-
+          ) : (
+            <>
+              <Field
+                type="input"
+                name="bid"
+                variant="outlined"
+                className={classes.rootField}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="start"
+                      icon={
+                        <Typography className={classes.inputAdorment} color={'textSecondary'}>
+                          ETH
+                        </Typography>
+                      }
+                    />
+                  ),
+                }}
+                helperText={`$${bidValueAmountUsd}`}
+              />
+              <Box mt={6}>
+                <Typography className={classes.textBold}>Offer expiration</Typography>
+              </Box>
+              <Box className={clsx(classes.gridBox, classes.dateSelect)}>
+                <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
+                {values.offerExpiration === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
+              </Box>
+            </>
+          )}
           <Box mt={6} mb={4}>
             <Field
               type="checkbox"
@@ -110,7 +171,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             />
           </Box>
           <Button
-            onClick={onSubmit}
+            onClick={marketData ? onSubmit : onMakeOffer}
             variant={'contained'}
             color={'primary'}
             fullWidth
@@ -121,10 +182,15 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             {!isValidValueAmount ? (
               <Typography className={classes.bitBtnDisabledText}>You don’t have enough ETH</Typography>
             ) : (
-              `Buy Now for ${startPriceToToken} ETH`
+              <Typography>{marketData ? `Buy Now for ${startPriceToToken} ETH` : 'Make offer'}</Typography>
             )}
           </Button>
         </Box>
+        {!marketData && (
+          <Typography align={'center'} className={clsx(classes.textBold, classes.bottomInfoText)}>
+            Learn how our auction works
+          </Typography>
+        )}
       </Box>
     </>
   )

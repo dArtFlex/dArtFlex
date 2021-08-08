@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Box, Typography, Card, Avatar, Badge, Button, Link, IconButton } from '@material-ui/core'
+import { Box, Typography, Card, Avatar, Badge, Button, Link } from '@material-ui/core'
 import { PopoverLinks } from 'common'
-import { VerificationIcon, TwitterIcon, LinkIcon, ShareIcon, ExternalLinkIcon } from 'common/icons'
+import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
 import { IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import { useSelector, useDispatch } from 'react-redux'
 import routes from 'routes'
@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch } from 'stores/reducers/user'
+import { setSearch, resetSearch } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -152,9 +152,15 @@ export default function Header({ toggleTheme }: HeaderType) {
     dispatch(walletsDisconetRequest())
   }
 
+  useEffect(() => {
+    return () => {
+      dispatch(resetSearch())
+    }
+  }, [])
+
   return (
     <>
-      <AppBar position="static" elevation={0}>
+      <AppBar position="static" elevation={0} color={'transparent'}>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} onClick={() => history.push(routes.artworks)} />
           {isMobile ? (
@@ -165,7 +171,11 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <>
                   {wallet !== null && (
                     <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                      <SmileyFaceIcon />
+                      {user?.profile_image ? (
+                        <Avatar src={user?.profile_image} className={classes.avatar} />
+                      ) : (
+                        <SmileyFaceIcon />
+                      )}
                     </IconButton>
                   )}
 
@@ -275,7 +285,14 @@ export default function Header({ toggleTheme }: HeaderType) {
           dispatch(closeWarningModal())
           setOpen(false)
         }}
-        body={<WalletConnect onClose={() => setOpen(false)} />}
+        body={
+          <WalletConnect
+            onClose={() => {
+              setOpen(false)
+              setIsMobileMenuOpen(false)
+            }}
+          />
+        }
         withAside
       />
       {isMobileMenuOpen && (
@@ -335,15 +352,19 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Paper className={classes.mobileMenuUserInfo}>
                 <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
-                    <SmileyFaceIcon />
+                    {user?.profile_image ? (
+                      <Avatar src={user?.profile_image} className={classes.avatar} />
+                    ) : (
+                      <SmileyFaceIcon />
+                    )}
                   </Icon>
-                  <Typography>2.435 ETH</Typography>
+                  <Typography>{`${wallet?.balance.toFixed(4)} ${wallet?.meta.coinAbbr}`}</Typography>
                   <IconButton
                     aria-label="notification"
-                    // onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                    //   const target = event.currentTarget as HTMLElement
-                    //   setAnchorElNotification(target)
-                    // }}
+                    onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                      const target = event.currentTarget as HTMLElement
+                      setAnchorElNotification(target)
+                    }}
                     className={clsx(classes.rightBlock, classes.borderedIcon)}
                   >
                     <Badge
@@ -360,10 +381,12 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                <Box className={classes.mobileUserStatsWrapper}>
-                  <Typography variant={'h4'}>Bids</Typography>
-                  <Box className={classes.bidsCount}>1</Box>
-                </Box>
+                {Boolean(bids.length) && (
+                  <Box className={classes.mobileUserStatsWrapper}>
+                    <Typography variant={'h4'}>Bids</Typography>
+                    <Box className={classes.bidsCount}>1</Box>
+                  </Box>
+                )}
                 <Box className={classes.mobileActionButtonsWrapper}>
                   <Box className={classes.profileTabsWrapper}>
                     <ProfileActionMenu isMobile={isMobile} links={combineLinks} subLinks={subLinks} />
