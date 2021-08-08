@@ -61,19 +61,19 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            <IconButton className={classes.borderdIconButton}>
-              <ShareIcon />
-            </IconButton>
-            <IconButton
-              // Todo will be implemented in next version
-              // onClick={(event: React.SyntheticEvent<EventTarget>) => {
-              //   const target = event.currentTarget as HTMLElement
-              //   setAnchorElExtLink(target)
-              // }}
-              className={classes.borderdIconButton}
-            >
-              <ExternalLinkIcon />
-            </IconButton>
+            {/*Todo will be implemented in next version*/}
+            {/*<IconButton className={classes.borderdIconButton}>*/}
+            {/*  <ShareIcon />*/}
+            {/*</IconButton>*/}
+            {/*<IconButton*/}
+            {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+            {/*    const target = event.currentTarget as HTMLElement*/}
+            {/*    setAnchorElExtLink(target)*/}
+            {/*  }}*/}
+            {/*  className={classes.borderdIconButton}*/}
+            {/*>*/}
+            {/*  <ExternalLinkIcon />*/}
+            {/*</IconButton>*/}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
