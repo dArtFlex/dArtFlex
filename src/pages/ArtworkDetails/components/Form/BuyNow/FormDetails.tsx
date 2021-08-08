@@ -113,7 +113,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
-            {!marketData && <Typography>$792.22</Typography>}
+            {!marketData && <Typography>{startPriceToToken / tokenRate}</Typography>}
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
