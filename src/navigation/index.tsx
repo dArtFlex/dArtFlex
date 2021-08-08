@@ -1,7 +1,7 @@
 import React from 'react'
 import { createBrowserHistory } from 'history'
 import { IAppRouterProps } from './types'
-import { Router, Switch, Redirect } from 'react-router-dom'
+import { Router, Switch, Redirect, Route } from 'react-router-dom'
 import routes from '../routes'
 import RouteHOC from './RouteHOC'
 import Bids, { BidDetails } from 'pages/Bids'
@@ -19,6 +19,7 @@ import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
 import TermsOfService from '../pages/AuxiliaryPages/components/TermsOfService'
 import MyAlbum from '../pages/MyAlbum'
+import Wellcome from '../pages/Wellcome'
 
 export const history = createBrowserHistory()
 
@@ -112,6 +113,9 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
             {component}
           </RouteHOC>
         ))}
+        <Route path={routes.wellcome}>
+          <Wellcome />
+        </Route>
       </Switch>
     </Router>
   )
