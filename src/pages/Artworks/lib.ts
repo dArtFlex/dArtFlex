@@ -1,6 +1,5 @@
-import { IArtworksFiltes } from './types'
 import BigNumber from 'bignumber.js'
-import { AssetDataTypesWithStatus, IHashtag } from 'types'
+import { AssetDataTypesWithStatus, IHashtag, IArtworksFiltes } from 'types'
 import { IUseCardStatus } from 'common/Card/CardAsset/types'
 import { UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { normalizeDate } from 'utils'
@@ -14,22 +13,6 @@ const {
 } = appConst
 
 type IAssetsBaseTypes = Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }> | null
-
-export function useSearchAssets({ assets, search }: { assets: IAssetsBaseTypes; search: IArtworksFiltes }) {
-  if (!assets) {
-    return null
-  }
-  if (!search.length) {
-    return assets
-  }
-  return assets.filter((asset) => {
-    return (
-      asset.imageData.name === search ||
-      asset.userData?.userid === search ||
-      asset.userData?.wallet.toLocaleLowerCase() === search.toLocaleLowerCase()
-    )
-  })
-}
 
 export function useInnerAssetsFilter({
   assets,
@@ -52,7 +35,8 @@ export function useInnerAssetsFilter({
     let isHotOnly
     if (hotOnly) {
       const now_time = new Date().getTime()
-      isHotOnly = normalizeDate(asset.end_time).getTime() < now_time + 1000 * 60 * 60
+      const end_time = normalizeDate(asset.end_time).getTime()
+      isHotOnly = end_time > now_time && end_time < now_time + 1000 * 60 * 60
     }
 
     // By Price
@@ -61,7 +45,7 @@ export function useInnerAssetsFilter({
       +asset.current_price > 0
         ? new BigNumber(asset.current_price).dividedBy(`10e${18 - 1}`).toNumber()
         : new BigNumber(asset.start_price).dividedBy(`10e${18 - 1}`).toNumber()
-    if (+price.from > 0 || +price.to > 0) {
+    if ((+price.from > 0 && !+price.to) || (+price.to > 0 && !+price.from)) {
       isPrice = +price.from > 0 ? +price.from <= startPrice : startPrice <= +price.to
     } else if (+price.from > 0 && +price.to > 0) {
       isPrice = +price.from <= startPrice && startPrice <= +price.to

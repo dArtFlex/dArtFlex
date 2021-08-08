@@ -19,7 +19,6 @@ import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
-  useSearchAssets,
   useInnerAssetsFilter,
   useSortedAssets,
   useCardStatusLiveAuction,
@@ -29,9 +28,9 @@ import {
   useCardStatusFeaturedArtworks,
   usePromotionMultiplyData,
 } from './lib'
+import { useSearchAssets } from 'hooks'
 import appConst from 'config/consts'
-import { IArtworksFiltes } from './types'
-import { IHashtag } from 'types'
+import { IHashtag, IArtworksFiltes } from 'types'
 import { useStyles } from './styles'
 
 const {
@@ -266,8 +265,10 @@ export default function Artworks() {
                         input: classes.priceInput,
                         notchedOutline: classes.priceInputBorder,
                       },
+                      'aria-valuemin': 0,
                       endAdornment: <Typography className={classes.inputAdorment}>ETH</Typography>,
                     }}
+                    type="number"
                     className={classes.priceInput}
                   />
                   {Boolean(index === 0) && (

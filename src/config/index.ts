@@ -27,12 +27,14 @@ const APP_CONFIG = {
   getItemsByOwnerId: (owner_id: number) => `${STAGE_URL}/item/get_by_owner/${owner_id}`,
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
-  getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
+  getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
+  getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
+
+  // GET History
   getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,
   getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
-  getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
+  getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
-  getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
 
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,
@@ -43,12 +45,15 @@ const APP_CONFIG = {
   createUserProfile: `${STAGE_URL}/user/create`,
   updateUserProfile: `${STAGE_URL}/user/update`,
   bidListItem: `${STAGE_URL}/bid/list_item`,
+  bidUnlistingItem: `${STAGE_URL}/bid/unlist_item`,
+  makeOffer: `${STAGE_URL}/bid/make_offer`,
   placeBid: `${STAGE_URL}/bid/place_bid`,
   buy: `${STAGE_URL}/bid/buy`,
   acceptBid: `${STAGE_URL}/bid/accept_bid`,
   addPromotion: `${STAGE_URL}/super_admin/add_promotion`,
   deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
   createHashtag: `${STAGE_URL}/hashtag/create`,
+  cancelBid: `${STAGE_URL}/bid/withdraw_bid`,
 } as const
 
 export default APP_CONFIG

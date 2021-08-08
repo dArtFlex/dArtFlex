@@ -7,6 +7,7 @@ const {
 export type IBidStatus = typeof LIVE_AUCTION
 
 export interface IBids {
+  itemId: string | number
   tokenId: string | number
   image: string
   name: string

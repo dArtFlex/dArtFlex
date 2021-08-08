@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -8,7 +9,7 @@ import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
 import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
-import { selectUser } from 'stores/selectors'
+import { selectUser, selectSearch } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import { getUserAssetsRequest } from 'stores/reducers/user'
@@ -17,6 +18,7 @@ import appConst from 'config/consts'
 import { useStyles } from './styles'
 import { shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
+import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 
 const { FILTER_VALUES } = appConst
@@ -47,8 +49,11 @@ export default function Dashboard() {
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
   const { user, userAssets, userCollectedAssets, fetching } = useSelector(selectUser())
 
+  const { search } = useSelector(selectSearch())
+  const searchAssets = useSearchAssets({ assets: userAssets, search })
+  const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
   const sortedAssets = useSortedAssets({
-    userAssets: filter === FILTER_VALUES.COLLECTED ? userCollectedAssets : userAssets,
+    userAssets: filter === FILTER_VALUES.COLLECTED ? searchCollectedAssets : searchAssets,
     filter,
   })
 
@@ -145,19 +150,22 @@ export default function Dashboard() {
             ) : (
               <>
                 {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
-                {sortedAssets.map((userAsset, i) => (
-                  <CardAsset
-                    key={i}
-                    asset={userAsset}
-                    withLabel
-                    withAction={Boolean(
-                      userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
-                    )}
-                    button={{
-                      onListed: () => handleListed(userAsset),
-                    }}
-                  />
-                ))}
+                {sortedAssets
+                  ? sortedAssets.map((userAsset, i) => (
+                      <CardAsset
+                        key={i}
+                        asset={userAsset}
+                        userWallet={user?.wallet}
+                        withLabel
+                        withAction={Boolean(
+                          userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
+                        )}
+                        button={{
+                          onListed: () => handleListed(userAsset),
+                        }}
+                      />
+                    ))
+                  : null}
                 {!userAssets?.length && <Empty />}
               </>
             )}

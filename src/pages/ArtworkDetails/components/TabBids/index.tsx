@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectBid, selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
-import { acceptBidRequest } from 'stores/reducers/placeBid'
+import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
+import { acceptBidRequest, cancelBidRequest } from 'stores/reducers/placeBid'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
-import { CardHistory } from 'common'
+import { CardHistoryBids } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { normalizeDate } from 'utils'
+import { IBids, UserDataTypes } from 'types'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -20,14 +21,17 @@ const useStyles = makeStyles(() =>
   })
 )
 
-export default function History() {
+interface ITabHistoryPropa {
+  history: Array<IBids & { userData: UserDataTypes }>
+}
+
+export default function TabBids(props: ITabHistoryPropa) {
+  const { history } = props
   const [showMore, setShowMore] = useState<boolean>(false)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const {
-    bid: { bidHistory },
-  } = useSelector(selectBid())
-  const bidHistoryReverse = bidHistory.slice().reverse()
+
+  const historyReverse = history.slice().reverse()
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
@@ -49,36 +53,26 @@ export default function History() {
   const handleAcceptOffer = () => {
     dispatch(
       acceptBidRequest({
-        creatorId: bidHistory[0].order_id,
-        market_id: bidHistoryReverse[0].market_id,
-        buyerId: bidHistoryReverse[0].order_id,
-        bid_id: bidHistoryReverse[0].bid_id,
+        creatorId: history[0].order_id,
+        market_id: historyReverse[0].market_id,
+        buyerId: historyReverse[0].order_id,
+        bid_id: historyReverse[0]?.id,
       })
     )
   }
 
-  const handleCancelOffer = ({
-    id,
-    order_id,
-    user_id,
-    market_id,
-  }: {
-    id: number
-    order_id: string
-    user_id: string
-    market_id: string
-  }) => {
-    console.log(id, order_id, user_id, market_id)
+  const handleCancelOffer = ({ id }: { id: number }) => {
+    dispatch(cancelBidRequest({ bid_id: id }))
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
 
-  if (bidHistory.length > 4 && !showMore) {
+  if (history.length > 4 && !showMore) {
     return (
       <Box mt={3} mb={3}>
-        {bidHistoryReverse.slice(0, 4).map((props, i) => {
+        {historyReverse.slice(0, 4).map((props, i) => {
           return (
-            <CardHistory
+            <CardHistoryBids
               key={i}
               {...props}
               {...getBidAmountToTokenAndUsd(props.bid_amount)}
@@ -107,9 +101,9 @@ export default function History() {
 
   return (
     <Box mt={3} mb={3}>
-      {bidHistoryReverse.map((props, i) => {
+      {historyReverse.map((props, i) => {
         return (
-          <CardHistory
+          <CardHistoryBids
             key={i}
             {...props}
             {...getBidAmountToTokenAndUsd(props.bid_amount)}

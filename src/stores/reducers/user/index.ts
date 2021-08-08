@@ -148,6 +148,9 @@ const userSlice = createSlice({
     setSearch: (state, { payload }: PayloadAction<string>) => {
       state.search = payload
     },
+    resetSearch: (state) => {
+      state.search = ''
+    },
 
     getAllUsersRequest: (state) => {
       state.fetching = true
@@ -209,6 +212,7 @@ export const {
   deletePromotionFailure,
 
   setSearch,
+  resetSearch,
 
   getAllUsersRequest,
   getAllUsersSuccess,

@@ -6,12 +6,12 @@ import { PageWrapper, CircularProgressLoader } from 'common'
 import { CardBid } from './components'
 import BidDetails from './BidDetails'
 import { getUserBidsRequest } from 'stores/reducers/user'
-import { selectUser, selectAssetTokenRates } from 'stores/selectors'
+import { selectUser, selectAssetTokenRates, selectSearch } from 'stores/selectors'
 import { useStyles } from './styles'
 import appConsts from 'config/consts'
 
 import routes from 'routes'
-import { useComposeBidsData } from './lib'
+import { useComposeBidsData, useSearchBids } from './lib'
 
 const { INTERVALS } = appConsts
 
@@ -20,11 +20,13 @@ export default function TradingHistory() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { user, userBids, fetchingBids } = useSelector(selectUser())
+  const { search } = useSelector(selectSearch())
 
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const rateETH = exchangeRates ? exchangeRates[0].rateUsd : 0
 
-  const composeUserBidsData = useComposeBidsData({ userBids, userId: user?.id || 0, rateETH })
+  const searchUserBidsData = useSearchBids({ userBids, search })
+  const composeUserBidsData = useComposeBidsData({ userBids: searchUserBidsData, userId: user?.id || 0, rateETH })
 
   const fetchUserBids = () => {
     dispatch(getUserBidsRequest())

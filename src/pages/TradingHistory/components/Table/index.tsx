@@ -16,6 +16,7 @@ export default function TradingHistoryTable(props: ITradingHistoryTable) {
 
 function useColumns() {
   const classes = useStyles()
+
   return [
     {
       accessor: 'action',
@@ -84,7 +85,7 @@ function useColumns() {
     },
     {
       accessor: 'cancelBid',
-      header: 'Expiration',
+      header: '',
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => {
         return cell.cancelBid ? (
@@ -102,9 +103,15 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => {
         return (
-          <IconButton href={cell.etherscanLink}>
-            <ExternalLinkIcon className={classes.btnLink} />
-          </IconButton>
+          <>
+            {cell.txHash ? (
+              <IconButton href={cell.etherscanLink}>
+                <ExternalLinkIcon className={classes.btnLink} />
+              </IconButton>
+            ) : (
+              <Box />
+            )}
+          </>
         )
       },
     },

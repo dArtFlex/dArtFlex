@@ -9,6 +9,10 @@ import {
   getBidsHistorySuccess,
   acceptBidSuccess,
   acceptBidFailure,
+  getBidsSuccess,
+  getBidsFailure,
+  cancelBidSuccess,
+  cancelBidFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
@@ -17,7 +21,7 @@ import { acceptBidService } from 'services/accept_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes, IAcceptBidTransaction } from 'types'
+import { UserDataTypes, IAcceptBidTransaction, IBids } from 'types'
 
 export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
@@ -137,5 +141,33 @@ export function* acceptBid(
     yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
     yield put(acceptBidFailure(e.message || e))
+  }
+}
+
+export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: string }>) {
+  try {
+    const getHistory: IBids[] = yield call(api, {
+      url: APP_CONFIG.getHistory(payload.market_id),
+    })
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+    const bids = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+    yield put(getBidsSuccess({ bids }))
+  } catch (e) {
+    yield put(getBidsFailure(e.message || e))
+  }
+}
+
+export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.cancelBid,
+      method: 'POST',
+      data: {
+        id: payload.bid_id,
+      },
+    })
+    yield put(cancelBidSuccess())
+  } catch (e) {
+    yield put(cancelBidFailure(e.message || e))
   }
 }

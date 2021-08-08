@@ -10,25 +10,32 @@ import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
+import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet = '', withLabel, withAction, useCardStatus, button } = props // eslint-disable-line @typescript-eslint/no-empty-function
+  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom } = props
   const classes = useStyles()
   const history = useHistory()
 
   const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
-  const burnTime = normalizeDate(asset.start_time).getTime() + 1000 * 60 * 60
+  const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
+
+  function cardActionEvent() {
+    switch (history.location.pathname) {
+      case routes.artworks:
+        history.push(`${routes.artworks}/${asset.item_id}`)
+        break
+      case routes.dashboard:
+        asset.id ? history.push(`${routes.artworks}/${asset.item_id}`) : setIsZoomOpen(true)
+    }
+  }
 
   return (
     <>
-      <Card
-        onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}
-        key={asset.item_id}
-        elevation={1}
-        className={classes.root}
-      >
+      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
@@ -41,7 +48,6 @@ export default function CardAsset(props: ICardAssetProps) {
                 <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
               </Box>
             )}
-
             {withAction && (
               <IconButton
                 className={classes.borderdIconButton}
@@ -70,6 +76,7 @@ export default function CardAsset(props: ICardAssetProps) {
           button={button}
           userWallet={userWallet}
           ownerWallet={asset.userData?.wallet}
+          emptyBottom={emptyBottom}
         />
       </Card>
 
@@ -87,6 +94,9 @@ export default function CardAsset(props: ICardAssetProps) {
           },
         ]}
       />
+      {isZoomOpen && (
+        <ImageViewer open={isZoomOpen} onClose={() => setIsZoomOpen(false)} images={[asset.imageData.image]} />
+      )}
     </>
   )
 }

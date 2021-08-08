@@ -73,6 +73,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(425)]: {
         width: 100,
       },
+      '&::-webkit-inner-spin-button': {
+        '-webkit-appearance': 'none',
+      },
     },
     priceInputBorder: {
       border: `1px solid ${theme.palette.grey['200']}`,
@@ -95,6 +98,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridGap: theme.spacing(6),
       gridTemplateColumns: 'repeat(auto-fill, minmax(322px, 1fr))',
+      [theme.breakpoints.down(375)]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+      },
+      [theme.breakpoints.down(320)]: {
+        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+      },
     },
     promotionBox: {
       display: 'flex',

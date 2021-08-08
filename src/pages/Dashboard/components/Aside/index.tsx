@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Box, Typography, Card, Avatar, Badge, Button, Link, IconButton } from '@material-ui/core'
+import { Box, Typography, Card, Avatar, Badge, Button, Link } from '@material-ui/core'
 import { PopoverLinks } from 'common'
-import { VerificationIcon, TwitterIcon, LinkIcon, ShareIcon, ExternalLinkIcon } from 'common/icons'
+import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
 import { IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
 
@@ -46,18 +46,19 @@ export default function Aside(props: IAsideProps) {
             ))
           : null}
         <Box className={classes.shareBtnCotainer}>
-          <IconButton
-            className={classes.borderdIconButton}
-            onClick={(event: React.SyntheticEvent<EventTarget>) => {
-              const target = event.currentTarget as HTMLElement
-              setAnchor(target)
-            }}
-          >
-            <ShareIcon />
-          </IconButton>
-          <IconButton className={classes.borderdIconButton}>
-            <ExternalLinkIcon />
-          </IconButton>
+          {/*Todo will be implemented in next version*/}
+          {/*<IconButton*/}
+          {/*  className={classes.borderdIconButton}*/}
+          {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+          {/*    const target = event.currentTarget as HTMLElement*/}
+          {/*    setAnchor(target)*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <ShareIcon />*/}
+          {/*</IconButton>*/}
+          {/*<IconButton className={classes.borderdIconButton}>*/}
+          {/*  <ExternalLinkIcon />*/}
+          {/*</IconButton>*/}
         </Box>
         <Typography variant={'body1'} color={'textSecondary'} align={'center'}>
           {joinedToArtworks}

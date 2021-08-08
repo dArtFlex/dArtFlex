@@ -15,10 +15,10 @@ import Constructor from '../pages/Constructor'
 import TradingHistory from '../pages/TradingHistory'
 import ArtworkDetails from '../pages/ArtworkDetails'
 import ContentManagement from '../pages/ContentManagement'
-import MakeOffer from '../pages/MakeOffer'
 import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
 import TermsOfService from '../pages/AuxiliaryPages/components/TermsOfService'
+import MyAlbum from '../pages/MyAlbum'
 
 export const history = createBrowserHistory()
 
@@ -79,10 +79,6 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
       component: <ContentManagement />,
     },
     {
-      path: routes.makeOffer,
-      component: <MakeOffer />,
-    },
-    {
       path: routes.privacyPolicy,
       component: <PrivacyPolicy />,
     },
@@ -97,6 +93,10 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.termsOfService,
       component: <TermsOfService />,
+    },
+    {
+      path: routes.myAlbum,
+      component: <MyAlbum />,
     },
   ]
 

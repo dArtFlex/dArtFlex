@@ -7,7 +7,7 @@ const initialState: BuyNowStateType = {
   error: '',
 }
 
-const userSlice = createSlice({
+const buyNowSlice = createSlice({
   name: 'buy',
   initialState,
   reducers: {
@@ -25,6 +25,6 @@ const userSlice = createSlice({
   },
 })
 
-export const { buyNowRequest, buyNowSuccess, buyNowFailure } = userSlice.actions
+export const { buyNowRequest, buyNowSuccess, buyNowFailure } = buyNowSlice.actions
 
-export const { reducer } = userSlice
+export const { reducer } = buyNowSlice

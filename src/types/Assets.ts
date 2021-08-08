@@ -2,7 +2,7 @@ import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, I
 import appConst from 'config/consts'
 import { IHashtag } from 'types'
 
-const { TYPES, STATUSES } = appConst
+const { TYPES, STATUSES, FILTER_VALUES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
   item_id: string
   type: IAssetType
@@ -28,6 +28,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
 export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
+  tokenData?: AssetTypes
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {
@@ -48,6 +49,13 @@ export type IAssetStatus =
   | typeof STATUSES.ON_SALE
   | typeof STATUSES.PURCHASED
   | typeof STATUSES.SOLD
+
+export type IArtworksFiltes =
+  | typeof FILTER_VALUES.LIVE_AUCTION
+  | typeof FILTER_VALUES.BUY_NOW
+  | typeof FILTER_VALUES.RESERVE_NOT_MET
+  | typeof FILTER_VALUES.SOLD
+  | typeof FILTER_VALUES.FEATURED_ARTWORKS
 
 export interface ITokenBalances {
   balance: string

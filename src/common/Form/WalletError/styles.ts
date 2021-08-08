@@ -11,9 +11,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     walletErrorDesc: {
+      color: theme.palette.text.primary,
       fontSize: 16,
       marginTop: theme.spacing(4),
       fontWeight: 'normal',
+    },
+    walletErrorText: {
+      color: theme.palette.text.primary,
     },
     errorBtn: {
       position: 'relative',
@@ -21,7 +25,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(10),
       marginBottom: theme.spacing(10),
       background: theme.palette.text.primary,
-      color: theme.palette.white,
+      color: theme.palette.background.default,
       '&:hover': {
         background: theme.palette.text.primary,
       },

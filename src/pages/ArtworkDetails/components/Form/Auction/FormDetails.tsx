@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUserRole, selectUser } from 'stores/selectors'
+import {
+  selectAssetDetails,
+  selectWallet,
+  selectAssetTokenRates,
+  selectUserRole,
+  selectUser,
+  selectBid,
+} from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
@@ -20,11 +27,12 @@ import {
   ArrowCurveIcon,
   CancelIcon,
 } from 'common/icons'
-import { History, About } from '../../../components'
+import { TabHistory, TabBids, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
+import { IBids, UserDataTypes } from 'types'
 
 interface IDetailsFormProps {
   onSubmit: () => void
@@ -36,6 +44,9 @@ const tabsItems = [
   },
   {
     title: 'History',
+  },
+  {
+    title: 'Bids',
   },
   {
     title: 'About Creator',
@@ -51,6 +62,9 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { role } = useSelector(selectUserRole())
   const { user } = useSelector(selectUser())
 
+  const {
+    bid: { bidHistory, bids },
+  } = useSelector(selectBid())
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
   } = useSelector(selectAssetDetails())
@@ -81,6 +95,11 @@ export default function FormDetails(props: IDetailsFormProps) {
     marketData?.start_price && tokenInfo?.decimals
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
       : 0
+  const currentPriceToToken =
+    marketData?.current_price && tokenInfo?.decimals
+      ? new BigNumber(marketData?.current_price).dividedBy(`10e${tokenInfo?.decimals - 1}`).toNumber()
+      : 0
+  const priceToToken = currentPriceToToken || startPriceToToken
 
   const handleListed = () => {
     if (!tokenData || !imageData) {
@@ -115,10 +134,11 @@ export default function FormDetails(props: IDetailsFormProps) {
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
             <IconButton
-              onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                const target = event.currentTarget as HTMLElement
-                setAnchorElExtLink(target)
-              }}
+              // Todo will be implemented in next version
+              // onClick={(event: React.SyntheticEvent<EventTarget>) => {
+              //   const target = event.currentTarget as HTMLElement
+              //   setAnchorElExtLink(target)
+              // }}
               className={classes.borderdIconButton}
             >
               <MoreHorizontalIcon />
@@ -153,18 +173,18 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${startPriceToToken} ETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${startPriceToToken} ETH` : '-') : ''}
+              {!isAuctionExpired ? `${priceToToken} ETH` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ETH` : '-') : ''}
             </Typography>
             <span>
               {!isAuctionExpired
                 ? marketData?.end_price &&
-                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                 : null}
 
               {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
                   : ''
                 : ''}
             </span>
@@ -174,11 +194,11 @@ export default function FormDetails(props: IDetailsFormProps) {
               <Typography variant={'body1'} className={classes.infoTitle}>
                 <span>Sold For</span>
               </Typography>
-              <Typography variant={'h2'}>{marketData?.sold && `${startPriceToToken} ETH`}</Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ETH`}</Typography>
               <span>
                 {marketData?.sold &&
                   marketData?.end_price &&
-                  `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
+                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`}
               </span>
             </Box>
           )}
@@ -269,8 +289,9 @@ export default function FormDetails(props: IDetailsFormProps) {
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <History />}
-        {tab === 2 && <About creator={creatorData} />}
+        {tab === 1 && <TabHistory history={bidHistory} />}
+        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
+        {tab === 3 && <About creator={creatorData} />}
       </Box>
 
       <Modal

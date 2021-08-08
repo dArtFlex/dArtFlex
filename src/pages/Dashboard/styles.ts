@@ -36,7 +36,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     grid: {
       display: 'grid',
       gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(322px, 1fr))',
       [theme.breakpoints.down(320)]: {
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
       },
