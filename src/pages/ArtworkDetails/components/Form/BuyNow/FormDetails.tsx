@@ -6,7 +6,7 @@ import { Box, Typography, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/c
 import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About } from '../../../components'
 import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid } from 'stores/selectors'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
 
@@ -34,6 +34,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
     bid: { bidHistory },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
   } = useSelector(selectAssetDetails())
@@ -126,23 +127,43 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </span>
           </Box>
         </Box>
-
-        <Button
-          onClick={() => {
-            if (wallet) {
-              onSubmit()
-            } else {
-              setOpen(true)
-            }
-          }}
-          variant={'contained'}
-          color={'primary'}
-          fullWidth
-          disableElevation
-          className={classes.bitBtn}
-        >
-          {marketData ? `Buy Now for ${startPriceToToken} ETH` : 'Make offer'}
-        </Button>
+        {marketData ? (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+          >
+            {`Buy Now for ${startPriceToToken} ETH`}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            disabled={user?.id === creatorData?.id}
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+          >
+            Make offer
+          </Button>
+        )}
 
         <Tabs
           aria-label="info"
@@ -150,7 +171,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
-          classes={{ indicator: classes.indicator }}
+          classes={{ indicator: classes.indicator, fixed: classes.tabsOverflow }}
         >
           {tabsItems.map(({ title }) => (
             <Tab key={title} label={title} classes={{ selected: classes.activeTabColor }} />
