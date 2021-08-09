@@ -166,6 +166,7 @@ export default function MintingForm(props: IMintingForm) {
               pathname: routes.dashboard,
               state: { from: pathname },
             }}
+            className={classes.redirectLink}
           >
             <Button variant={'outlined'} className={classes.btnView} fullWidth={isTabletMobile} onClick={onViewArtwork}>
               View Artwork
