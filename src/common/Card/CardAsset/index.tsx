@@ -13,7 +13,8 @@ import { normalizeDate } from 'utils'
 import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom } = props
+  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
+
   const classes = useStyles()
   const history = useHistory()
 
@@ -52,6 +53,7 @@ export default function CardAsset(props: ICardAssetProps) {
               <IconButton
                 className={classes.borderdIconButton}
                 onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                  event.stopPropagation()
                   const target = event.currentTarget as HTMLElement
                   setAnchor(target)
                 }}
@@ -85,12 +87,8 @@ export default function CardAsset(props: ICardAssetProps) {
         setAnchor={setAnchor}
         links={[
           {
-            lable: 'Change Price',
-            onClick: () => console.log('Change Price'),
-          },
-          {
             lable: 'Unlist Artwork',
-            onClick: () => console.log('Unlist Artwork'),
+            onClick: () => menu?.onUnlisted && menu.onUnlisted(),
           },
         ]}
       />

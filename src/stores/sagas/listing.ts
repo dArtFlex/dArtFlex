@@ -129,7 +129,7 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
     yield call(api, {
       method: 'POST',
       url: APP_CONFIG.bidUnlistingItem,
-      body: {
+      data: {
         id: market_id,
       },
     })
