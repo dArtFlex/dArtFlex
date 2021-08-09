@@ -32,13 +32,17 @@ export const selectHashtags = () =>
 export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { user, userAssets, userCollectedAssets, userBids, fetching, fetchingBids } }: stateType) => ({
+    ({
+      user: { user, userAssets, userCollectedAssets, userBids, fetching, fetchingBids, isId, fetchingId },
+    }: stateType) => ({
       user,
       userAssets,
       userCollectedAssets,
       userBids,
       fetching,
       fetchingBids,
+      isId,
+      fetchingId,
     })
   )
 export const selectUserRole = () =>
