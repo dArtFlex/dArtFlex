@@ -19,7 +19,9 @@ function getIdFromString(v) {
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
-    const { lazyMintData, lazyMintItemId }: ReturnType<typeof selector> = yield select((state) => state.minting)
+    const { lazyMintData, lazyMintItemId, lazymint }: ReturnType<typeof selector> = yield select(
+      (state) => state.minting
+    )
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
 
@@ -68,6 +70,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         // erc20 - 0x only ETH
         erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
         signature: lazyMintData.signatures[0],
+        lazymint,
       },
     })
 
