@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -61,6 +60,14 @@ export default function Dashboard() {
     history.push(routes.home)
     return null
   }
+
+  useEffect(() => {
+    const historyState = { ...history }
+    if (historyState.location.state && (historyState.location.state as { from: string }).from === routes.createNFT) {
+      setFilter(FILTER_VALUES.CREATED)
+      historyState.location.state = {}
+    }
+  })
 
   useEffect(() => {
     dispatch(getUserAssetsRequest())
