@@ -12,6 +12,7 @@ import ListingForm from './ListingForm'
 import routes from '../../../../routes'
 import { ICreateNFT } from '../../types'
 import { useStyles } from './styles'
+import clsx from 'clsx'
 
 export default function Form() {
   const classes = useStyles()
@@ -50,7 +51,7 @@ export default function Form() {
 
   return (
     <Box className={classes.mintFormWrapper}>
-      <Box className={classes.flexBox}>
+      <Box className={clsx(classes.flexBox, classes.mintedCardInfo)}>
         <Card className={classes.card}>
           <Box className={classes.cardImageContainer}>
             {data.image ? (

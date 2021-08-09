@@ -16,6 +16,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       marginTop: theme.spacing(4),
     },
+    mintedCardInfo: {
+      maxHeight: 740,
+    },
     card: {
       display: 'flex',
       alignItems: 'center',
