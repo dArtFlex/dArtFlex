@@ -83,8 +83,8 @@ export default function Form() {
                   {user ? `@${user.userid}` : '@'}
                 </Typography>
               </Box>
-              {values.name.length ? (
-                <Typography className={classes.cardDesc}>{values.name}</Typography>
+              {values.name.length || data.name ? (
+                <Typography className={classes.cardDesc}>{values.name ? values.name : data.name}</Typography>
               ) : (
                 <Box className={classes.emptyName} />
               )}
