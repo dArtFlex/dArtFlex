@@ -40,6 +40,9 @@ export interface ICardAssetProps {
   button?: {
     onListed?: () => void
   }
+  menu?: {
+    onUnlisted?: () => void
+  }
   useCardStatus?: (
     data: IUseCardStatus
   ) =>

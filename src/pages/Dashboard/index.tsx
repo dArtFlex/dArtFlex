@@ -19,8 +19,9 @@ import { shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
+import { unlistingRequest } from 'stores/reducers/listing'
 
-const { FILTER_VALUES } = appConst
+const { FILTER_VALUES, STATUSES } = appConst
 
 const filterItems = [
   {
@@ -110,6 +111,11 @@ export default function Dashboard() {
     history.push(routes.sellNFT)
   }
 
+  const handleUnlisted = (market_id: string) => {
+    dispatch(unlistingRequest({ market_id }))
+    dispatch(getUserAssetsRequest())
+  }
+
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
@@ -164,11 +170,12 @@ export default function Dashboard() {
                         asset={userAsset}
                         userWallet={user?.wallet}
                         withLabel
-                        withAction={Boolean(
-                          userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
-                        )}
+                        withAction={Boolean(userAsset.status === STATUSES.LISTED)}
                         button={{
                           onListed: () => handleListed(userAsset),
+                        }}
+                        menu={{
+                          onUnlisted: () => handleUnlisted(String(userAsset.id)),
                         }}
                       />
                     ))

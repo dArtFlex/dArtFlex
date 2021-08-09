@@ -11,11 +11,10 @@ import {
   selectBid,
 } from 'stores/selectors'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import {
-  MoreHorizontalIcon,
   TwitterIcon,
   LinkIcon,
   EtherscanIcon,
