@@ -14,6 +14,8 @@ const initialState: UserStateType = {
   fetching: false,
   fetchingBids: false,
   fetchingPromo: false,
+  isId: false,
+  fetchingId: false,
 }
 
 const userSlice = createSlice({
@@ -156,7 +158,7 @@ const userSlice = createSlice({
       state.fetching = true
     },
     getAllUsersSuccess: (state, { payload }: PayloadAction<{ userAll: UserStateType['userAll'] }>) => {
-      state.fetching = true
+      state.fetching = false
       state.userAll = payload.userAll
     },
     getAllUsersFailure: (state, { payload }: PayloadAction<string>) => {
@@ -171,12 +173,35 @@ const userSlice = createSlice({
       state,
       { payload }: PayloadAction<{ tradingHistoryAll: UserStateType['tradingHistoryAll'] }>
     ) => {
-      state.fetching = true
+      state.fetching = false
       state.tradingHistoryAll = payload.tradingHistoryAll
     },
     getTradingHistoryFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
+    },
+
+    checkAssetIdRequest: (state, i) => {
+      state.fetchingId = true
+    },
+    checkAssetIdSuccess: (state, { payload }: PayloadAction<{ isId: UserStateType['isId'] }>) => {
+      state.isId = payload.isId
+      state.fetchingId = false
+    },
+    checkAssetIdFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingId = false
+    },
+
+    updatePromotionRequest: (state, i) => {
+      state.fetchingPromo = true
+    },
+    updatePromotionSuccess: (state) => {
+      state.fetchingPromo = false
+    },
+    updatePromotionFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingPromo = false
     },
   },
 })
@@ -221,6 +246,14 @@ export const {
   getTradingHistoryRequest,
   getTradingHistorySuccess,
   getTradingHistoryFailure,
+
+  checkAssetIdRequest,
+  checkAssetIdSuccess,
+  checkAssetIdFailure,
+
+  updatePromotionRequest,
+  updatePromotionSuccess,
+  updatePromotionFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

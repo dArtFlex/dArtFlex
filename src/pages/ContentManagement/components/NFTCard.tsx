@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { selectUser } from 'stores/selectors'
 import { Box, IconButton, Paper, TextField, Typography, useMediaQuery } from '@material-ui/core'
 import { CheckedIcon, CloseIcon, DragIcon, EditIcon, TrashIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
@@ -6,11 +8,12 @@ import { INFTCard } from '../types'
 import clsx from 'clsx'
 
 export default function NFTCard(props: INFTCard) {
+  const { url, item_id, name, onChangePromotion, onAddPromotion, onDeletePromotion } = props
   const classes = useStyles()
-
   const [isEdit, setIsEdit] = useState(false)
-
   const isMobile = useMediaQuery('(max-width: 680px)')
+
+  const { isId, fetchingId } = useSelector(selectUser())
 
   return (
     <Box mt={4}>
@@ -24,7 +27,7 @@ export default function NFTCard(props: INFTCard) {
         <Box className={classes.NFTCard}>
           <Paper classes={{ root: classes.NFTWrapper }} elevation={1}>
             <Box className={clsx(classes.flexBoxInit, isMobile && isEdit && classes.mobileEditableNFT)}>
-              <div style={{ backgroundImage: `url(${props.url})` }} className={classes.NFTPhoto} />
+              <div style={{ backgroundImage: `url(${url})` }} className={classes.NFTPhoto} />
               {isEdit ? (
                 <>
                   <Typography className={classes.NFTLink}>Link</Typography>
@@ -33,8 +36,8 @@ export default function NFTCard(props: INFTCard) {
                     name="link"
                     variant="outlined"
                     className={classes.formField}
-                    value={props.url}
-                    onChange={() => console.log('Changed')}
+                    value={item_id}
+                    onChange={onChangePromotion}
                     InputProps={{
                       classes: {
                         notchedOutline: classes.borderedInput,
@@ -42,7 +45,14 @@ export default function NFTCard(props: INFTCard) {
                     }}
                   />
                   <Box className={clsx(classes.flexBoxInit, classes.actionButtonsContainer)}>
-                    <IconButton className={classes.CheckedIcon} onClick={() => setIsEdit(false)}>
+                    <IconButton
+                      disabled={fetchingId || !isId}
+                      className={classes.CheckedIcon}
+                      onClick={() => {
+                        onAddPromotion()
+                        setIsEdit(false)
+                      }}
+                    >
                       <CheckedIcon />
                     </IconButton>
                     <IconButton className={classes.CloseIcon} onClick={() => setIsEdit(false)}>
@@ -53,12 +63,12 @@ export default function NFTCard(props: INFTCard) {
               ) : (
                 <>
                   <Typography component={'span'} className={classes.NFTName}>
-                    {props.name}
+                    {name}
                   </Typography>
                   <IconButton className={classes.EditIcon} onClick={() => setIsEdit(true)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton className={classes.DeleteIcon}>
+                  <IconButton className={classes.DeleteIcon} onClick={onDeletePromotion}>
                     <TrashIcon />
                   </IconButton>
                 </>

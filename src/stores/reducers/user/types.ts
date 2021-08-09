@@ -16,6 +16,8 @@ export interface UserStateType {
   fetching: boolean
   fetchingBids: boolean
   fetchingPromo: boolean
+  isId: boolean
+  fetchingId: boolean
   error: string
   search: string
   user: UserDataTypes | null
