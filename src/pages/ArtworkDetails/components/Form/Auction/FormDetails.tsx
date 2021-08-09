@@ -133,16 +133,17 @@ export default function FormDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            <IconButton
-              // Todo will be implemented in next version
-              // onClick={(event: React.SyntheticEvent<EventTarget>) => {
-              //   const target = event.currentTarget as HTMLElement
-              //   setAnchorElExtLink(target)
-              // }}
-              className={classes.borderdIconButton}
-            >
-              <MoreHorizontalIcon />
-            </IconButton>
+            {/*Todo will be implemented in next version*/}
+            {/*<IconButton*/}
+            {/*  */}
+            {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+            {/*    const target = event.currentTarget as HTMLElement*/}
+            {/*    setAnchorElExtLink(target)*/}
+            {/*  }}*/}
+            {/*  className={classes.borderdIconButton}*/}
+            {/*>*/}
+            {/*  <MoreHorizontalIcon />*/}
+            {/*</IconButton>*/}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
