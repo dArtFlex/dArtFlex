@@ -118,7 +118,11 @@ export default function FormContainer() {
           </Box>
         ) : (
           <Box className={classes.previewContainer}>
-            <CardAsset asset={composeData} withLabel={!assetDetails.marketData} emptyBottom />
+            <CardAsset
+              asset={composeData}
+              withLabel={!assetDetails.marketData || values.formProgress === 'make offer'}
+              emptyBottom
+            />
           </Box>
         )}
       </Box>

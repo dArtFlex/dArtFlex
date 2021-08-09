@@ -34,7 +34,7 @@ import routes from 'routes'
 import { IBids, UserDataTypes } from 'types'
 
 interface IDetailsFormProps {
-  onSubmit: () => void
+  onSubmit: (field: string, value: string) => void
 }
 
 const tabsItems = [
@@ -226,6 +226,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           ) : null}
         </Box>
         {isReserveNotMet &&
+          !isAuctionExpired &&
           marketData?.start_price &&
           marketData?.end_price &&
           marketData.start_price !== marketData.end_price && (
@@ -244,33 +245,51 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
           </Box>
         ) : null}
-
-        <Button
-          onClick={() => {
-            if (isSamePerson) {
-              // Secondary sell
-              return handleListed()
-            }
-            if (wallet) {
-              onSubmit()
-            } else {
-              setOpen(true)
-            }
-          }}
-          variant={ifAuctionEnds ? 'outlined' : 'contained'}
-          color={'primary'}
-          fullWidth
-          disableElevation
-          className={classes.bitBtn}
-          classes={{ disabled: classes.bitBtnDisabled }}
-          disabled={!isSamePerson && Boolean(isAuctionExpired)}
-        >
-          {ifAuctionEnds && !isAuctionExpired
-            ? 'I understand, let me bid anyway'
-            : isSamePerson
-            ? 'Sell'
-            : 'Place a Bid'}
-        </Button>
+        {!isAuctionExpired ? (
+          <Button
+            onClick={() => {
+              if (isSamePerson) {
+                // Secondary sell
+                return handleListed()
+              }
+              if (wallet) {
+                onSubmit('formProgress', 'auction')
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={ifAuctionEnds ? 'outlined' : 'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+            disabled={!isSamePerson && Boolean(isAuctionExpired)}
+          >
+            {ifAuctionEnds && !isAuctionExpired
+              ? 'I understand, let me bid anyway'
+              : isSamePerson
+              ? 'Sell'
+              : 'Place a Bid'}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit('formProgress', 'make offer')
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+            disabled={isSamePerson}
+          >
+            Make offer
+          </Button>
+        )}
 
         <Tabs
           aria-label="info"

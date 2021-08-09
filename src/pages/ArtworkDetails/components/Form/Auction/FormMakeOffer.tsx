@@ -5,9 +5,34 @@ import { ApprovedFormState } from '../../../types'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectWallet } from '../../../../../stores/selectors'
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
-import { ArrowLeftIcon } from '../../../../../common/icons'
-import { Field, Tooltip } from '../../../../../common'
+import { ArrowLeftIcon } from 'common/icons'
+import { Field, InputAdornment, Tooltip } from 'common'
 import clsx from 'clsx'
+import BigNumber from 'bignumber.js'
+import appConst from '../../../../../config/consts'
+
+const {
+  SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
+} = appConst
+
+const schedule = [
+  {
+    value: DAYS3,
+    label: '3 days',
+  },
+  {
+    value: DAYS5,
+    label: '5 days',
+  },
+  {
+    value: MONTH,
+    label: '1 month',
+  },
+  {
+    value: SPECIFIC,
+    label: 'Custom Date',
+  },
+]
 
 interface IFormMakeOffer {
   onSubmit: () => void
@@ -16,11 +41,16 @@ interface IFormMakeOffer {
 export default function FormMakeOffer(props: IFormMakeOffer) {
   const classes = useStyles()
   const { onSubmit } = props
-  const { setFieldValue } = useFormikContext<ApprovedFormState>()
+  const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
+  const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
+  const bidValueAmountUsd =
+    values.bid && parseFloat(`${values.bid}`)
+      ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
+      : 0
 
   return (
     <Box className={classes.formContainer}>
@@ -48,18 +78,31 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
             4
           )} ETH`}</Typography>
         </Box>
-        <Box mb={8.5} className={classes.priceRow}>
-          <Typography variant="body1" color="textSecondary">
-            Buy Now Price
-          </Typography>
-          <Box mt={2}>
-            {/*<Typography*/}
-            {/*  className={clsx(classes.tokenAmount, classes.fontFamilyRoboto)}*/}
-            {/*>{`${startPriceToToken} ETH`}</Typography>*/}
-            {/*<Typography*/}
-            {/*  className={clsx(classes.tokenAmountUsd, classes.fontFamilyRoboto)}*/}
-            {/*>{`$${priceToUsd}`}</Typography>*/}
-          </Box>
+        <Field
+          type="input"
+          name="bid"
+          variant="outlined"
+          className={classes.rootField}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment
+                position="start"
+                icon={
+                  <Typography className={classes.inputAdorment} color={'textSecondary'}>
+                    ETH
+                  </Typography>
+                }
+              />
+            ),
+          }}
+          helperText={`$${bidValueAmountUsd}`}
+        />
+        <Box mt={6}>
+          <Typography className={classes.textBold}>Offer expiration</Typography>
+        </Box>
+        <Box className={clsx(classes.gridBox, classes.dateSelect)}>
+          <Field type="select" options={schedule} name="offerExpiration" fullWidth={false} />
+          {values.offerExpiration === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
         </Box>
 
         <Box mt={6} mb={4}>
@@ -70,6 +113,7 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
             className={classes.checkbox}
           />
         </Box>
+
         <Box mb={6}>
           <Field
             type="checkbox"
@@ -91,16 +135,14 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           color={'primary'}
           fullWidth
           disableElevation
-          className={clsx(classes.bitBtn)}
-          // disabled={!disabledBuy}
+          className={classes.bitBtn}
         >
-          {/*{!isValidValueAmount ? (*/}
-          {/*  <Typography className={classes.bitBtnDisabledText}>You don’t have enough ETH</Typography>*/}
-          {/*) : (*/}
-          {/*  `Buy Now for ${startPriceToToken} ETH`*/}
-          {/*)}*/}
+          <Typography>Make offer</Typography>
         </Button>
       </Box>
+      <Typography align={'center'} className={clsx(classes.textBold, classes.bottomInfoText)}>
+        Learn how our auction works
+      </Typography>
     </Box>
   )
 }
