@@ -61,26 +61,27 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {marketData ? (
-              <>
-                <IconButton className={classes.borderdIconButton}>
-                  <ShareIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                    const target = event.currentTarget as HTMLElement
-                    setAnchorElExtLink(target)
-                  }}
-                  className={classes.borderdIconButton}
-                >
-                  <ExternalLinkIcon />
-                </IconButton>
-              </>
-            ) : (
-              <IconButton className={classes.borderdIconButton}>
-                <MoreHorizontalIcon />
-              </IconButton>
-            )}
+            {/*Todo will be implemented in next version*/}
+            {/*{marketData ? (*/}
+            {/*  <>*/}
+            {/*    <IconButton className={classes.borderdIconButton}>*/}
+            {/*      <ShareIcon />*/}
+            {/*    </IconButton>*/}
+            {/*    <IconButton*/}
+            {/*      onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+            {/*        const target = event.currentTarget as HTMLElement*/}
+            {/*        setAnchorElExtLink(target)*/}
+            {/*      }}*/}
+            {/*      className={classes.borderdIconButton}*/}
+            {/*    >*/}
+            {/*      <ExternalLinkIcon />*/}
+            {/*    </IconButton>*/}
+            {/*  </>*/}
+            {/*) : (*/}
+            {/*  <IconButton className={classes.borderdIconButton}>*/}
+            {/*    <MoreHorizontalIcon />*/}
+            {/*  </IconButton>*/}
+            {/*)}*/}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -112,7 +113,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
-            {!marketData && <Typography>$792.22</Typography>}
+            {!marketData && <Typography>{`$${(startPriceToToken / tokenRate).toFixed(2)}`}</Typography>}
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
