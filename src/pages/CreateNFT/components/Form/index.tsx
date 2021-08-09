@@ -45,7 +45,6 @@ export default function Form() {
   const handleList = () => history.push(routes.sellNFT)
 
   const handleViewArtwork = () => {
-    history.push(routes.dashboard)
     dispatch(clearLazyMintingData())
   }
 

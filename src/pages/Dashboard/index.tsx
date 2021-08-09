@@ -63,6 +63,15 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    const historyState = { ...history }
+    // @ts-ignore
+    if (historyState.location.state && historyState.location.state.from === routes.createNFT) {
+      setFilter(FILTER_VALUES.CREATED)
+      historyState.location.state = {}
+    }
+  })
+
+  useEffect(() => {
     dispatch(getUserAssetsRequest())
   }, [])
 

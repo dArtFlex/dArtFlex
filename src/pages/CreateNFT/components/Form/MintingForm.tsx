@@ -8,6 +8,8 @@ import { Box, Card, Button, Typography } from '@material-ui/core'
 import { CircularProgressLoader, Field, Modal, WalletConnect } from 'common'
 import { ArrowLeftIcon } from 'common/icons'
 import { useStyles } from './styles'
+import { Link, useLocation } from 'react-router-dom'
+import routes from '../../../../routes'
 
 interface IMintingForm {
   onMinting: () => void
@@ -20,6 +22,7 @@ export default function MintingForm(props: IMintingForm) {
   const { onMinting, onList, onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { pathname } = useLocation()
 
   const { values, setFieldValue } = useFormikContext<ICreateNFT>()
   const [open, setOpen] = useState<boolean>(false)
@@ -158,9 +161,16 @@ export default function MintingForm(props: IMintingForm) {
               List your NFT
             </Button>
           </Box>
-          <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork} fullWidth={isTabletMobile}>
-            View Artwork
-          </Button>
+          <Link
+            to={{
+              pathname: routes.dashboard,
+              state: { from: pathname },
+            }}
+          >
+            <Button variant={'outlined'} className={classes.btnView} fullWidth={isTabletMobile} onClick={onViewArtwork}>
+              View Artwork
+            </Button>
+          </Link>
         </Box>
       )
     default:
