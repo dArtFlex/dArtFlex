@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -64,8 +63,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const historyState = { ...history }
-    // @ts-ignore
-    if (historyState.location.state && historyState.location.state.from === routes.createNFT) {
+    if (historyState.location.state && (historyState.location.state as { from: string }).from === routes.createNFT) {
       setFilter(FILTER_VALUES.CREATED)
       historyState.location.state = {}
     }
