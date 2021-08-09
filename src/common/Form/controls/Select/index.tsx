@@ -80,7 +80,7 @@ export default function FormSelect(props: IFormSelectProps & FieldRenderProps<st
           },
           getContentAnchorEl: null,
         }}
-        // classes={{ select: classes.select }}
+        classes={{ outlined: classes.select }}
         className={classes.select}
       >
         {options.map((option: IOptionsType) => (

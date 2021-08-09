@@ -10,6 +10,7 @@ import { useStyles } from './styles'
 import { SetPriceForm, AuctionForm } from './components'
 import { listingRequest } from 'stores/reducers/listing'
 import { ISellArtwork } from './types'
+import { useValidationSchema } from './lib'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -67,7 +68,7 @@ export default function SellNFT() {
 
   return (
     <PageWrapper className={classes.wrapper}>
-      <Form initialValues={initialData} onSubmit={onSubmit}>
+      <Form initialValues={initialData} onSubmit={onSubmit} validationSchema={useValidationSchema()}>
         <DucolLayout
           aside={<Aside form={form} />}
           containerSize={'minmax(270px, 554px)'}
