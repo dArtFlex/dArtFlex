@@ -46,7 +46,7 @@ export function* minting(
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
-
+    debugger
     const hashtagsIds = hashtags.reduce((acc, curr) => {
       if (curr?.id) {
         acc.push(curr.id)
@@ -106,7 +106,7 @@ export function* minting(
     })
     const lazyMintItemId: number = getIdFromString(createItemId)
 
-    yield put(lazyMintingSuccess({ lazyMintData: lm, lazyMintItemId }))
+    yield put(lazyMintingSuccess({ lazyMintData: lm, lazyMintItemId, lazymint }))
   } catch (e) {
     yield put(lazyMintingFailure(e))
   }

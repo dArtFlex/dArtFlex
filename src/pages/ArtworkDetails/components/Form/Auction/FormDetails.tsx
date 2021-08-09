@@ -121,6 +121,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           uri: tokenData.uri,
           signatures: [tokenData.signature],
         },
+        lazymint: tokenData.lazymint,
       })
     )
     history.push(routes.sellNFT)

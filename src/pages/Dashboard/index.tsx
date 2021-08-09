@@ -106,6 +106,7 @@ export default function Dashboard() {
           uri: userAsset.tokenData.uri,
           signatures: [userAsset.tokenData.signature],
         },
+        lazymint: userAsset.tokenData.lazymint,
       })
     )
     history.push(routes.sellNFT)

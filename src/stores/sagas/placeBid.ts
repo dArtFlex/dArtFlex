@@ -32,6 +32,8 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     const accounts = walletService.getAccoutns()
     const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
 
+    const lazymint = tokenData.lazymint
+
     // Todo: Should only be once, so we need to check if it's approved
     yield placeBidService.approveToken(accounts[0])
 
@@ -49,6 +51,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
         uri: tokenData.uri,
         erc20: tokenContractWETH,
         signature: tokenData.signature,
+        lazymint,
       },
     })
 

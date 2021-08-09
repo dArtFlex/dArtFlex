@@ -8,13 +8,13 @@ class ListingService extends CommonService {
     return Math.floor(Math.random() * (max - min)) + min
   }
 
-  createOrder(maker, contract, tokenId, uri, erc20, price, signature) {
+  createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint) {
     return {
       type: 'RARIBLE_V2',
       maker: maker,
       make: {
         assetType: {
-          assetClass: signature == '0x' ? 'ERC721' : 'ERC721_LAZY',
+          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY', // If lazymint is false then ERC721 and if is true then ERC721_LAZY
           contract: contract,
           tokenId: tokenId,
           uri,
@@ -98,9 +98,9 @@ class ListingService extends CommonService {
   // Maket is creater Nft
   // Taker is ZERO
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, erc20, price, signature } = request.body
+    const { contract, tokenId, uri, maker, erc20, price, signature, lazymint } = request.body
 
-    const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature)
+    const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm)
     const data = this.createTypeData(
       {
