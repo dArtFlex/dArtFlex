@@ -3,6 +3,7 @@ import { AssetsStateType } from './types'
 
 const initialState: AssetsStateType = {
   fetching: false,
+  fetchingAll: false,
   error: '',
   assets: null,
   assetDetails: {
@@ -19,15 +20,15 @@ const assetsSlice = createSlice({
   initialState,
   reducers: {
     getAssetsAllRequest: (state) => {
-      state.fetching = true
+      state.fetchingAll = true
     },
     getAssetsAllSuccess: (state, { payload }: PayloadAction<AssetsStateType['assets']>) => {
       state.assets = payload
-      state.fetching = false
+      state.fetchingAll = false
     },
     getAssetsAllFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingAll = false
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
