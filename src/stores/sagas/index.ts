@@ -13,6 +13,7 @@ import {
   getTradingHistoryRequest,
   checkAssetIdRequest,
   updatePromotionRequest,
+  validateUserIdRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -54,6 +55,7 @@ import {
   tradingHistory,
   checkAssetId,
   updatePromotion,
+  validateUserId,
 } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
 import {
@@ -92,6 +94,7 @@ export default function* root() {
     takeLatest(getTradingHistoryRequest.type, tradingHistory, apiMiddleware),
     takeLatest(checkAssetIdRequest.type, checkAssetId, apiMiddleware),
     takeLatest(updatePromotionRequest.type, updatePromotion, apiMiddleware),
+    takeLatest(validateUserIdRequest.type, validateUserId, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

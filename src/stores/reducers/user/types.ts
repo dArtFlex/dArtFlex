@@ -31,6 +31,7 @@ export interface UserStateType {
   promotionIdLastAdded?: number
   promotionIdLastDelete?: number
   userAll?: UserDataTypes[]
+  userIdValid?: boolean
   tradingHistoryAll?: Array<
     ITradingHistory & { imageData: IImageData; fromUserData: UserDataTypes; toUserData: UserDataTypes }
   >

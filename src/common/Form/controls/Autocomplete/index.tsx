@@ -109,7 +109,7 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
           {values[field.name].map((el: { inputValue: string; title: string }, i: number) => (
             <Chip
               key={i}
-              label={el.inputValue || el.title}
+              label={el.inputValue || el.title || el}
               onDelete={() =>
                 setFieldValue(
                   field.name,

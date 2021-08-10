@@ -14,7 +14,7 @@ class ListingService extends CommonService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY', // If lazymint is false then ERC721 and if is true then ERC721_LAZY
+          assetClass: lazymint ? 'ERC721_LAZY' : 'ERC721', // If lazymint is false then ERC721 and if is true then ERC721_LAZY
           contract: contract,
           tokenId: tokenId,
           uri,
