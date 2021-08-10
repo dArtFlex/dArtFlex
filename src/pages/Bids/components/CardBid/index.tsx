@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom'
 import { Card, Box, Typography, Button } from '@material-ui/core'
 import { Image, AvatarUser, Timer } from 'common'
 import { CupIcon, ExclamationCircleIcon } from 'common/icons'
-import { Informer } from '../../components'
 import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
 import routes from '../../../../routes'
@@ -33,20 +32,8 @@ export default function CardBid(props: ICardBidProps) {
         {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
-        {status !== 'winner' ? (
-          <>
-            <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
-            <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
-          </>
-        ) : (
-          <Informer
-            iconTitle={<CupIcon />}
-            title={'You are the winner!'}
-            message={
-              'Congratulations, you won the auction for this artwork. Now claim your NFT and add it to your collection!'
-            }
-          />
-        )}
+        <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
+        <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
       </Box>
       <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} />
     </Card>
@@ -108,14 +95,6 @@ function CardInfoBox(props: ICardInfoBox) {
             variant={'contained'}
           >
             Place a Bid
-          </Button>
-        </Box>
-      )
-    case 'winner':
-      return (
-        <Box className={classes.cardBidAction}>
-          <Button className={clsx(classes.btnAction, classes.btnClaimNFT)} variant={'contained'}>
-            Claim your NFT
           </Button>
         </Box>
       )
