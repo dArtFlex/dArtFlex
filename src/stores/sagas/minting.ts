@@ -46,7 +46,6 @@ export function* minting(
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
-    debugger
     const hashtagsIds = hashtags.reduce((acc, curr) => {
       if (curr?.id) {
         acc.push(curr.id)

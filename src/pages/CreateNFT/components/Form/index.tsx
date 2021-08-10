@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
-import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-ui/core'
+import { Box, Card, Button, Avatar, Typography, useMediaQuery, Snackbar } from '@material-ui/core'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { lazyMintingRequest, clearLazyMintingData } from 'stores/reducers/minting'
@@ -21,7 +21,7 @@ export default function Form() {
   const { values } = useFormikContext<ICreateNFT>()
 
   const {
-    minting: { data },
+    minting: { data, error },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -111,6 +111,7 @@ export default function Form() {
       ) : (
         <ListingForm onViewArtwork={handleViewArtwork} isTabletMobile={isTabletMobile} />
       )}
+      <Snackbar></Snackbar>
     </Box>
   )
 }

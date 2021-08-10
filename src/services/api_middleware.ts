@@ -40,13 +40,13 @@ export default function apiMiddleware({
       return resp.data
     })
     .catch((er: AxiosError) => {
-      const _error = er?.response?.data?.error || er?.message
+      const _error = er?.response?.data?.message || er?.message
       // const isToken = localStorage.getItem('token')
 
       if (!!er.message) {
         const error = new Error(_error)
         error.message = _error
-        throw error
+        throw error.message
       }
     })
 }
