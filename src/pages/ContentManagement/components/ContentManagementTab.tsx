@@ -52,6 +52,7 @@ export default function ContentManagementTab() {
   ]
 
   const [sortValue, setSortValue] = useState('statusASC')
+  const [search, setSearch] = useState<string>('')
 
   const handleChange = (event: React.MouseEvent<HTMLElement, MouseEvent>, newValue: string) => {
     setSelectTable(newValue)
@@ -100,11 +101,12 @@ export default function ContentManagementTab() {
             aria-describedby="outlined-weight-helper-text"
             labelWidth={0}
             placeholder="Search"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
           />
         </FormControl>
       </Box>
-      {Boolean(selectTable === 'works') && <ContentManagementWorks />}
-      {Boolean(selectTable === 'users') && <ContentManagementUsers />}
+      {Boolean(selectTable === 'works') && <ContentManagementWorks search={search} />}
+      {Boolean(selectTable === 'users') && <ContentManagementUsers search={search} />}
     </Box>
   )
 }
