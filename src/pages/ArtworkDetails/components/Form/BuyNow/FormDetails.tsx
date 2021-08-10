@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About } from '../../../components'
-import { ShareIcon, ExternalLinkIcon, EtherscanIcon, OpenseaIcon, IpfsIcon, MoreHorizontalIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid } from 'stores/selectors'
+import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
+import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
 
@@ -34,6 +34,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
     bid: { bidHistory },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
+  const { user } = useSelector(selectUser())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
   } = useSelector(selectAssetDetails())
@@ -61,26 +62,27 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {marketData ? (
-              <>
-                <IconButton className={classes.borderdIconButton}>
-                  <ShareIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
-                    const target = event.currentTarget as HTMLElement
-                    setAnchorElExtLink(target)
-                  }}
-                  className={classes.borderdIconButton}
-                >
-                  <ExternalLinkIcon />
-                </IconButton>
-              </>
-            ) : (
-              <IconButton className={classes.borderdIconButton}>
-                <MoreHorizontalIcon />
-              </IconButton>
-            )}
+            {/*Todo will be implemented in next version*/}
+            {/*{marketData ? (*/}
+            {/*  <>*/}
+            {/*    <IconButton className={classes.borderdIconButton}>*/}
+            {/*      <ShareIcon />*/}
+            {/*    </IconButton>*/}
+            {/*    <IconButton*/}
+            {/*      onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+            {/*        const target = event.currentTarget as HTMLElement*/}
+            {/*        setAnchorElExtLink(target)*/}
+            {/*      }}*/}
+            {/*      className={classes.borderdIconButton}*/}
+            {/*    >*/}
+            {/*      <ExternalLinkIcon />*/}
+            {/*    </IconButton>*/}
+            {/*  </>*/}
+            {/*) : (*/}
+            {/*  <IconButton className={classes.borderdIconButton}>*/}
+            {/*    <MoreHorizontalIcon />*/}
+            {/*  </IconButton>*/}
+            {/*)}*/}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -112,7 +114,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               {marketData?.sold && <span>Sold for</span>}
             </Typography>
             <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
-            {!marketData && <Typography>$792.22</Typography>}
+            {!marketData && <Typography>{`$${(startPriceToToken / tokenRate).toFixed(2)}`}</Typography>}
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
@@ -125,23 +127,43 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </span>
           </Box>
         </Box>
-
-        <Button
-          onClick={() => {
-            if (wallet) {
-              onSubmit()
-            } else {
-              setOpen(true)
-            }
-          }}
-          variant={'contained'}
-          color={'primary'}
-          fullWidth
-          disableElevation
-          className={classes.bitBtn}
-        >
-          {marketData ? `Buy Now for ${startPriceToToken} ETH` : 'Make offer'}
-        </Button>
+        {marketData ? (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+          >
+            {`Buy Now for ${startPriceToToken} ETH`}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit()
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            disabled={user?.id === creatorData?.id}
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+          >
+            Make offer
+          </Button>
+        )}
 
         <Tabs
           aria-label="info"
@@ -149,7 +171,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           onChange={(_, newValue) => {
             setTab(newValue)
           }}
-          classes={{ indicator: classes.indicator }}
+          classes={{ indicator: classes.indicator, fixed: classes.tabsOverflow }}
         >
           {tabsItems.map(({ title }) => (
             <Tab key={title} label={title} classes={{ selected: classes.activeTabColor }} />

@@ -11,6 +11,8 @@ import {
   deletePromotionRequest,
   getAllUsersRequest,
   getTradingHistoryRequest,
+  checkAssetIdRequest,
+  updatePromotionRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -24,6 +26,7 @@ import {
   connnectWalletConnectRequest,
   getTokensBalancesRequest,
   walletsDisconetRequest,
+  walletsHistoryRequest,
 } from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
 import { listingRequest, unlistingRequest } from '../reducers/listing'
@@ -36,7 +39,7 @@ import {
 } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
 import { getNotificationsRequest } from '../reducers/notifications'
-import { getAllWorksRequest, getAllUsersListRequest } from '../reducers/management'
+import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
 import { makeOfferRequest } from '../reducers/makeOffer'
 
 import {
@@ -49,15 +52,23 @@ import {
   deletePromotion,
   getAllUsers,
   tradingHistory,
+  checkAssetId,
+  updatePromotion,
 } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
-import { connectMetaMask, connectWalletConnect, getTokensBalances, walletsDisconet } from '../sagas/wallet'
+import {
+  connectMetaMask,
+  connectWalletConnect,
+  getTokensBalances,
+  walletsDisconet,
+  walletsHistory,
+} from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing, unlisting } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications } from '../sagas/notifications'
-import { getAllWorks, getAllUsersList } from '../sagas/management'
+import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
 import { makeOffer } from '../sagas/makeOffer'
 
 export default function* root() {
@@ -79,12 +90,15 @@ export default function* root() {
     takeLatest(deletePromotionRequest.type, deletePromotion, apiMiddleware),
     takeLatest(getAllUsersRequest.type, getAllUsers, apiMiddleware),
     takeLatest(getTradingHistoryRequest.type, tradingHistory, apiMiddleware),
+    takeLatest(checkAssetIdRequest.type, checkAssetId, apiMiddleware),
+    takeLatest(updatePromotionRequest.type, updatePromotion, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
     takeLatest(walletsDisconetRequest, walletsDisconet),
+    takeLatest(walletsHistoryRequest, walletsHistory),
 
     /** Minting **/
     takeLatest(lazyMintingRequest.type, minting, apiMiddleware),
@@ -110,6 +124,8 @@ export default function* root() {
     /** Management **/
     takeLatest(getAllWorksRequest.type, getAllWorks, apiMiddleware),
     takeLatest(getAllUsersListRequest.type, getAllUsersList, apiMiddleware),
+    takeLatest(banUserRequest.type, banUser, apiMiddleware),
+    takeLatest(unbanUserRequest.type, unbanUser, apiMiddleware),
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),

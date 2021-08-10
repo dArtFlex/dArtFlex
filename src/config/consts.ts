@@ -65,6 +65,8 @@ const appConst = {
       '0x00418a685a1368CD69aDECAb675E310877222509',
     ],
   },
+
+  ACCEPT_COMMUNITY_GUIDELINES: '_aGui',
 }
 
 export default appConst

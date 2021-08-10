@@ -65,11 +65,13 @@ const mintingSlice = createSlice({
       }: PayloadAction<{
         lazyMintData: MintingStateType['lazyMintData']
         lazyMintItemId: MintingStateType['lazyMintItemId']
+        lazymint: MintingStateType['lazymint']
       }>
     ) => {
       state.minting = 'done'
       state.lazyMintData = payload.lazyMintData
       state.lazyMintItemId = payload.lazyMintItemId
+      state.lazymint = payload.lazymint
     },
     lazyMintingFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -89,6 +91,7 @@ const mintingSlice = createSlice({
           uri: string
           signatures: string[]
         }
+        lazymint: boolean
       }>
     ) => {
       state.minting = 'done'
@@ -100,6 +103,7 @@ const mintingSlice = createSlice({
         uri: payload.lazyMintData.uri,
         signatures: payload.lazyMintData.signatures,
       }
+      state.lazymint = payload.lazymint
     },
 
     clearLazyMintingData: (state) => {

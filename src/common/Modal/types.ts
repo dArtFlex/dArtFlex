@@ -5,6 +5,7 @@ export interface IModalProps {
   onClose: () => void
   body: JSX.Element
   withAside?: boolean
+  withoutCloseBtn?: boolean
   classNames?: Partial<{
     root: ModalProps['classes']
   }>

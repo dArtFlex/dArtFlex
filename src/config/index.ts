@@ -29,6 +29,7 @@ const APP_CONFIG = {
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
   getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
+  getSoldHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_sold_history/${user_id}`,
 
   // GET History
   getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,
@@ -54,6 +55,10 @@ const APP_CONFIG = {
   deletePromotion: `${STAGE_URL}/super_admin/delete_promotion`,
   createHashtag: `${STAGE_URL}/hashtag/create`,
   cancelBid: `${STAGE_URL}/bid/withdraw_bid`,
+  banUser: `${STAGE_URL}/super_admin/ban_user`,
+  unbanUser: `${STAGE_URL}/super_admin/unban_user`,
+  banItem: `${STAGE_URL}/super_admin/ban_item`,
+  unbanItem: `${STAGE_URL}/super_admin/unban_item`,
 } as const
 
 export default APP_CONFIG

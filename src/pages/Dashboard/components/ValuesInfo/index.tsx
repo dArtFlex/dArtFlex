@@ -3,13 +3,18 @@ import { Card, Box, Typography, Divider } from '@material-ui/core'
 import { Tooltip } from 'common'
 import { useStyles } from './styles'
 
-export default function ValuesInfo() {
+interface IValuesInfoProps {
+  totalSalesToEth: string
+}
+
+export default function ValuesInfo(props: IValuesInfoProps) {
   const classes = useStyles()
+  const { totalSalesToEth } = props
 
   return (
     <Card className={classes.card}>
       <Box className={classes.box}>
-        <Typography variant={'h3'}>25 ETH</Typography>
+        <Typography variant={'h3'}>{`${totalSalesToEth} ETH`}</Typography>
         <Box className={classes.infoRowIcon}>
           <Tooltip
             text={'Total Sales'}
@@ -20,7 +25,7 @@ export default function ValuesInfo() {
       </Box>
       <Divider orientation="vertical" flexItem />
       <Box className={classes.box}>
-        <Typography variant={'h3'}>22,5 ETH</Typography>
+        <Typography variant={'h3'}>0 ETH</Typography>
         <Box className={classes.infoRowIcon}>
           <Tooltip
             text={'Net Sale Revenue'}

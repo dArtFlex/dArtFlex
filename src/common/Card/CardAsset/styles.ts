@@ -96,11 +96,24 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     collectedBoxBtn: {
       display: 'grid',
-      gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+      gridGap: 24,
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(320)]: {
+        gridGap: 4,
+      },
     },
     collectedBtn: {
+      minWidth: 130,
       border: `2px solid ${theme.palette.text.primary}`,
+      padding: theme.spacing(2, 3.5),
+      [theme.breakpoints.down(375)]: {
+        minWidth: 110,
+        padding: theme.spacing(2, 1),
+      },
+      [theme.breakpoints.down(320)]: {
+        minWidth: 105,
+        padding: theme.spacing(2, 0),
+      },
     },
     badgeBox: {
       position: 'absolute',
@@ -134,6 +147,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     purple: {
       background: theme.palette.purple,
+    },
+    grey: {
+      background: theme.palette.grey6,
     },
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,

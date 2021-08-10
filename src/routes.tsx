@@ -18,4 +18,5 @@ export default {
   communityGuidelines: '/guidelines',
   termsOfService: '/terms-of-service',
   myAlbum: '/my-album',
+  wellcome: '/wellcome',
 }

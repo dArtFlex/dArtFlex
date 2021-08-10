@@ -16,6 +16,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       marginTop: theme.spacing(4),
     },
+    mintedCardInfo: {
+      maxHeight: 740,
+    },
     card: {
       display: 'flex',
       alignItems: 'center',
@@ -93,6 +96,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnView: {
       border: `2px solid ${theme.palette.text.primary}`,
+    },
+    redirectLink: {
+      textDecoration: 'unset',
     },
     btnMint: {
       '&:disabled': {

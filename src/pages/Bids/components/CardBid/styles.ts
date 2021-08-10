@@ -138,7 +138,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: 6,
     },
     btnAction: {
-      margin: 'auto',
+      margin: 'auto 0',
       fontSize: 16,
       fontWeight: 700,
       // minWidth: 155,

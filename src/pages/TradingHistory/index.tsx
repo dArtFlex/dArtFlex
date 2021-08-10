@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser, selectAllTradingHistory, selectSearch } from 'stores/selectors'
 import { Box, Typography, FormControl, Select as MUISelect } from '@material-ui/core'
-import { PageWrapper, Select } from 'common'
+import { PageWrapper, Select, CircularProgressLoader } from 'common'
 import { TradingHistoryTable, Filter } from './components'
 import { getTradingHistoryRequest } from 'stores/reducers/user'
 import { useStyles } from './styles'
@@ -22,7 +22,7 @@ export default function TradingHistory() {
   const [sortValue, setSortValue] = useState('recent')
   const [filterBy, setFilterBy] = useState<IFilterTypes[]>([])
 
-  const { user } = useSelector(selectUser())
+  const { user, fetching } = useSelector(selectUser())
   const { tradingHistoryAll } = useSelector(selectAllTradingHistory())
   const { search } = useSelector(selectSearch())
 
@@ -81,7 +81,7 @@ export default function TradingHistory() {
             </FormControl>
           </Box>
         </Box>
-        <TradingHistoryTable data={tradingHistoryByFilter} />
+        {fetching ? <CircularProgressLoader /> : <TradingHistoryTable data={tradingHistoryByFilter} />}
       </Box>
     </PageWrapper>
   )

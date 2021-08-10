@@ -7,6 +7,7 @@ const palette = {
   greyLight: '#E8ECEE', // secondary color, header border-bottom, outlined select border, button secondary, divider
   grey3: '#828282',
   grey5: '#E0E0E0',
+  grey6: '#BDBDBD',
   greyPale: '#F8F8F9', // artworks grid bg, iconButton border,
   graySoft: '#F2F4F5', // artworks search input bg,
   greyMid: '#BDC1C6', //hashtag botton border, price input adorment

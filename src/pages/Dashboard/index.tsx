@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -20,8 +19,10 @@ import { shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
+import { unlistingRequest } from 'stores/reducers/listing'
+import BigNumber from 'bignumber.js'
 
-const { FILTER_VALUES } = appConst
+const { FILTER_VALUES, STATUSES } = appConst
 
 const filterItems = [
   {
@@ -47,13 +48,19 @@ export default function Dashboard() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { user, userAssets, userCollectedAssets, fetching } = useSelector(selectUser())
+  const { user, userAssets, userCollectedAssets, userSolddAssets, fetching } = useSelector(selectUser())
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
   const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
+  const searchSoldAssets = useSearchAssets({ assets: userSolddAssets, search })
   const sortedAssets = useSortedAssets({
-    userAssets: filter === FILTER_VALUES.COLLECTED ? searchCollectedAssets : searchAssets,
+    userAssets:
+      filter === FILTER_VALUES.COLLECTED
+        ? searchCollectedAssets
+        : filter === FILTER_VALUES.SOLD
+        ? searchSoldAssets
+        : searchAssets,
     filter,
   })
 
@@ -61,6 +68,14 @@ export default function Dashboard() {
     history.push(routes.home)
     return null
   }
+
+  useEffect(() => {
+    const historyState = { ...history }
+    if (historyState.location.state && (historyState.location.state as { from: string }).from === routes.createNFT) {
+      setFilter(FILTER_VALUES.CREATED)
+      historyState.location.state = {}
+    }
+  })
 
   useEffect(() => {
     dispatch(getUserAssetsRequest())
@@ -98,10 +113,24 @@ export default function Dashboard() {
           uri: userAsset.tokenData.uri,
           signatures: [userAsset.tokenData.signature],
         },
+        lazymint: userAsset.tokenData.lazymint,
       })
     )
     history.push(routes.sellNFT)
   }
+
+  const handleUnlisted = (market_id: string) => {
+    dispatch(unlistingRequest({ market_id }))
+    dispatch(getUserAssetsRequest())
+  }
+
+  const totalSales = userSolddAssets
+    .map((a: { current_price: string }) => a.current_price)
+    .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
+  const totalSalesToEth = new BigNumber(totalSales)
+    .dividedBy(`10e${18 - 1}`)
+    .toNumber()
+    .toFixed(4)
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -139,7 +168,7 @@ export default function Dashboard() {
           {filter === FILTER_VALUES.SOLD && (
             <Box className={classes.container}>
               <Box className={classes.inlineFlex}>
-                <ValuesInfo />
+                <ValuesInfo totalSalesToEth={totalSalesToEth} />
               </Box>
             </Box>
           )}
@@ -157,11 +186,12 @@ export default function Dashboard() {
                         asset={userAsset}
                         userWallet={user?.wallet}
                         withLabel
-                        withAction={Boolean(
-                          userAsset.status === appConst.TYPES.INSTANT_BY || userAsset.status === appConst.TYPES.AUCTION
-                        )}
+                        withAction={Boolean(userAsset.status === STATUSES.LISTED)}
                         button={{
                           onListed: () => handleListed(userAsset),
+                        }}
+                        menu={{
+                          onUnlisted: () => handleUnlisted(String(userAsset.id)),
                         }}
                       />
                     ))

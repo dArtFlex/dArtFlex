@@ -57,6 +57,12 @@ export default function Filter(props: IFilterProps) {
     handleFilter(_filters)
   }
 
+  const handleRemoveSortValue = (value: ITradingHistoryFilter) => {
+    const selectedFilters = filters.map((f) => (f.name === value.name ? { ...f, checked: false } : f))
+    setFilters(selectedFilters)
+    handleFilter(selectedFilters)
+  }
+
   return (
     <>
       <Box className={classes.flex}>
@@ -86,6 +92,7 @@ export default function Filter(props: IFilterProps) {
               color={'primary'}
               variant={'outlined'}
               endIcon={<CloseIcon />}
+              onClick={() => handleRemoveSortValue(el)}
             >
               {el.label}
             </Button>

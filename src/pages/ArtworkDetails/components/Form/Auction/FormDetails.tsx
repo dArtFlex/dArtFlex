@@ -11,11 +11,10 @@ import {
   selectBid,
 } from 'stores/selectors'
 import clsx from 'clsx'
-import { Box, Typography, IconButton, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
 import { Popover, Modal, WalletConnect, Tooltip } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import {
-  MoreHorizontalIcon,
   TwitterIcon,
   LinkIcon,
   EtherscanIcon,
@@ -35,7 +34,7 @@ import routes from 'routes'
 import { IBids, UserDataTypes } from 'types'
 
 interface IDetailsFormProps {
-  onSubmit: () => void
+  onSubmit: (field: string, value: string) => void
 }
 
 const tabsItems = [
@@ -122,6 +121,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           uri: tokenData.uri,
           signatures: [tokenData.signature],
         },
+        lazymint: tokenData.lazymint,
       })
     )
     history.push(routes.sellNFT)
@@ -133,16 +133,17 @@ export default function FormDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            <IconButton
-              // Todo will be implemented in next version
-              // onClick={(event: React.SyntheticEvent<EventTarget>) => {
-              //   const target = event.currentTarget as HTMLElement
-              //   setAnchorElExtLink(target)
-              // }}
-              className={classes.borderdIconButton}
-            >
-              <MoreHorizontalIcon />
-            </IconButton>
+            {/*Todo will be implemented in next version*/}
+            {/*<IconButton*/}
+            {/*  */}
+            {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
+            {/*    const target = event.currentTarget as HTMLElement*/}
+            {/*    setAnchorElExtLink(target)*/}
+            {/*  }}*/}
+            {/*  className={classes.borderdIconButton}*/}
+            {/*>*/}
+            {/*  <MoreHorizontalIcon />*/}
+            {/*</IconButton>*/}
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -226,6 +227,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           ) : null}
         </Box>
         {isReserveNotMet &&
+          !isAuctionExpired &&
           marketData?.start_price &&
           marketData?.end_price &&
           marketData.start_price !== marketData.end_price && (
@@ -244,33 +246,51 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
           </Box>
         ) : null}
-
-        <Button
-          onClick={() => {
-            if (isSamePerson) {
-              // Secondary sell
-              return handleListed()
-            }
-            if (wallet) {
-              onSubmit()
-            } else {
-              setOpen(true)
-            }
-          }}
-          variant={ifAuctionEnds ? 'outlined' : 'contained'}
-          color={'primary'}
-          fullWidth
-          disableElevation
-          className={classes.bitBtn}
-          classes={{ disabled: classes.bitBtnDisabled }}
-          disabled={!isSamePerson && Boolean(isAuctionExpired)}
-        >
-          {ifAuctionEnds && !isAuctionExpired
-            ? 'I understand, let me bid anyway'
-            : isSamePerson
-            ? 'Sell'
-            : 'Place a Bid'}
-        </Button>
+        {!isAuctionExpired ? (
+          <Button
+            onClick={() => {
+              if (isSamePerson) {
+                // Secondary sell
+                return handleListed()
+              }
+              if (wallet) {
+                onSubmit('formProgress', 'auction')
+              } else {
+                setOpen(true)
+              }
+            }}
+            variant={ifAuctionEnds ? 'outlined' : 'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+            disabled={!isSamePerson && Boolean(isAuctionExpired)}
+          >
+            {ifAuctionEnds && !isAuctionExpired
+              ? 'I understand, let me bid anyway'
+              : isSamePerson
+              ? 'Sell'
+              : 'Place a Bid'}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              if (wallet) {
+                onSubmit('formProgress', 'make offer')
+              }
+            }}
+            variant={'contained'}
+            color={'primary'}
+            fullWidth
+            disableElevation
+            className={classes.bitBtn}
+            classes={{ disabled: classes.bitBtnDisabled }}
+            disabled={isSamePerson}
+          >
+            Make offer
+          </Button>
+        )}
 
         <Tabs
           aria-label="info"

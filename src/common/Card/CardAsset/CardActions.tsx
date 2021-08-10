@@ -126,7 +126,7 @@ export default function CardActions(props: ICardActionsProps) {
     case COLLECTED:
       return (
         <Box className={clsx(classes.actionBtnBox, classes.collectedBoxBtn)}>
-          <Button variant={'outlined'} className={classes.collectedBtn}>
+          <Button variant={'outlined'} className={classes.collectedBtn} onClick={() => history.push(routes.sellNFT)}>
             Sell
           </Button>
           <Button variant={'outlined'} className={classes.collectedBtn}>

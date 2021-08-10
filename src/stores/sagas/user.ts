@@ -21,6 +21,10 @@ import {
   getAllUsersFailure,
   getTradingHistorySuccess,
   getTradingHistoryFailure,
+  checkAssetIdSuccess,
+  checkAssetIdFailure,
+  updatePromotionFailure,
+  updatePromotionSuccess,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -206,10 +210,35 @@ export function* getUserAssets(api: IApi) {
       }
     > = yield all(getAssetsListCollectedData.map((asset) => call(getMainAssetStatus, api, asset)))
 
+    // Sold Asset
+    const userSolddAssets: IBidsHistory[] = yield call(api, {
+      url: APP_CONFIG.getSoldHistoryByUser(user.id),
+    })
+    const getAllSoldItemById: AssetTypes[] = yield all(
+      userSolddAssets.map((asset) =>
+        call(api, {
+          url: APP_CONFIG.getItemByItemId(+asset.item_id),
+        })
+      )
+    )
+
+    const getAssetsListSoldData: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllSoldItemById.flat().map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListSoldWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListSoldData.map((asset) => call(getMainAssetStatus, api, asset)))
+
     yield put(
       getUserAssetsSuccess({
         userAssets: getAssetsListAllWithStatuses,
         userCollectedAssets: getAssetsListCollectedWithStatuses,
+        userSolddAssets: getAssetsListSoldWithStatuses,
       })
     )
   } catch (e) {
@@ -262,19 +291,24 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
-    const signature: { data: string; signature: string } = yield walletService.generateSignature()
-    const promotionData: IAddPromotionEntities = yield call(api, {
-      url: APP_CONFIG.addPromotion,
-      method: 'POST',
-      data: {
-        itemId: Number(payload.promotionId),
-        ...signature,
-      },
-    })
+    const promotionData: IAddPromotionEntities = yield call(_addPromotion, api, Number(payload.promotionId))
     yield put(addPromotionSuccess({ promotionIdLastAdded: promotionData.id[0] }))
   } catch (e) {
     yield put(addPromotionFailure(e.message || e))
   }
+}
+
+function* _addPromotion(api: IApi, promotionId: number) {
+  const signature: { data: string; signature: string } = yield walletService.generateSignature()
+  const promotionData: IAddPromotionEntities = yield call(api, {
+    url: APP_CONFIG.addPromotion,
+    method: 'POST',
+    data: {
+      itemId: Number(promotionId),
+      ...signature,
+    },
+  })
+  return promotionData
 }
 
 export function* deletePromotion(
@@ -282,19 +316,23 @@ export function* deletePromotion(
   { payload }: PayloadAction<{ promotionItemId: number; promotionId: number }>
 ) {
   try {
-    const signature: { data: string; signature: string } = yield walletService.generateSignature()
-    yield call(api, {
-      url: APP_CONFIG.deletePromotion,
-      method: 'POST',
-      data: {
-        itemId: Number(payload.promotionItemId),
-        ...signature,
-      },
-    })
+    yield call(_deletePromotion, api, payload.promotionItemId)
     yield put(deletePromotionSuccess({ promotionIdLastDelete: payload.promotionId }))
   } catch (e) {
     yield put(deletePromotionFailure(e.message || e))
   }
+}
+
+function* _deletePromotion(api: IApi, promotionItemId: number) {
+  const signature: { data: string; signature: string } = yield walletService.generateSignature()
+  yield call(api, {
+    url: APP_CONFIG.deletePromotion,
+    method: 'POST',
+    data: {
+      itemId: Number(promotionItemId),
+      ...signature,
+    },
+  })
 }
 
 export function* getPromotion(api: IApi) {
@@ -365,5 +403,29 @@ export function* tradingHistory(api: IApi, { payload }: PayloadAction<{ userId: 
     yield put(getTradingHistorySuccess({ tradingHistoryAll: composeData }))
   } catch (e) {
     yield put(getTradingHistoryFailure(e.message || e))
+  }
+}
+
+export function* checkAssetId(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
+  try {
+    const getAsset: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemByItemId(+payload.item_id),
+    })
+
+    yield put(checkAssetIdSuccess({ isId: Boolean(getAsset.length) }))
+  } catch (e) {
+    yield put(checkAssetIdFailure(e.message || e))
+  }
+}
+
+export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: string[] }>) {
+  try {
+    const currentPromotionIds: UserStateType['promotionIds'] = yield call(api, { url: APP_CONFIG.getPromotionAll })
+    yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id))))
+    yield all(payload.promotionIds.map((p: string) => call(_addPromotion, api, Number(p))))
+
+    yield put(updatePromotionSuccess())
+  } catch (e) {
+    yield put(updatePromotionFailure(e.message || e))
   }
 }
