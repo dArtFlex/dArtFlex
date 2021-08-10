@@ -7,17 +7,18 @@ const {
 export type IBidStatus = typeof LIVE_AUCTION
 
 export interface IBids {
-  tokenId: string
+  itemId: string | number
+  tokenId: string | number
   image: string
   name: string
-  status: IBidStatus
-  endDate: number // as timestamp
+  status?: IBidStatus
+  endDate: string
   creator: {
     avatar: string
     name: string
   }
-  currentBid: number | null
-  currentBidUsd: number | null
-  yourBid: number | null
-  yourBidUsd: number | null
+  currentBid: string
+  currentBidUsd: string
+  yourBid: string
+  yourBidUsd: string
 }

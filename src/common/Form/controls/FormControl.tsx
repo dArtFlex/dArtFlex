@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: ({ display }: Display) => display,
     marginBottom: ({ display }: Display) => (display === 'inline-flex' ? 0 : theme.spacing(6)),
     flexWrap: 'wrap',
+    backgroundColor: theme.palette.background.default,
   },
   helperText: {
     minHeight: 18,

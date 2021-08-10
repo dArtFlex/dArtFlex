@@ -10,23 +10,36 @@ import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
+import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, withLabel, withAction, useCardStatus } = props
+  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
+
   const classes = useStyles()
   const history = useHistory()
 
   const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
-  const burnTime = normalizeDate(asset.start_time).getTime() + 1000 * 60 * 60
+  const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
+
+  function cardActionEvent() {
+    switch (history.location.pathname) {
+      case routes.artworks:
+        history.push(`${routes.artworks}/${asset.item_id}`)
+        break
+      case routes.dashboard:
+        asset.id ? history.push(`${routes.artworks}/${asset.item_id}`) : setIsZoomOpen(true)
+    }
+  }
 
   return (
     <>
-      <Card key={asset.item_id} elevation={1}>
-        <Box className={classes.artContainer} onClick={() => history.push(`${routes.artworks}/${asset.item_id}`)}>
+      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
+        <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} />
-          {withLabel && <CardBadge status={asset.type} />}
+          {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
@@ -36,11 +49,11 @@ export default function CardAsset(props: ICardAssetProps) {
                 <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
               </Box>
             )}
-
             {withAction && (
               <IconButton
                 className={classes.borderdIconButton}
                 onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                  event.stopPropagation()
                   const target = event.currentTarget as HTMLElement
                   setAnchor(target)
                 }}
@@ -57,10 +70,15 @@ export default function CardAsset(props: ICardAssetProps) {
           type={asset.type}
           startPrice={asset.start_price}
           endPrice={asset.end_price}
+          currentPrice={asset.current_price}
           sold={asset.sold}
           endTime={asset.end_time}
           burnTime={burnTime}
           timer={timer}
+          button={button}
+          userWallet={userWallet}
+          ownerWallet={asset.userData?.wallet}
+          emptyBottom={emptyBottom}
         />
       </Card>
 
@@ -69,15 +87,14 @@ export default function CardAsset(props: ICardAssetProps) {
         setAnchor={setAnchor}
         links={[
           {
-            lable: 'Change Price',
-            onClick: () => console.log('Change Price'),
-          },
-          {
             lable: 'Unlist Artwork',
-            onClick: () => console.log('Unlist Artwork'),
+            onClick: () => menu?.onUnlisted && menu.onUnlisted(),
           },
         ]}
       />
+      {isZoomOpen && (
+        <ImageViewer open={isZoomOpen} onClose={() => setIsZoomOpen(false)} images={[asset.imageData.image]} />
+      )}
     </>
   )
 }

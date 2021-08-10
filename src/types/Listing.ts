@@ -5,8 +5,7 @@ export interface ListingData extends IDatedTimeEntity {
   type: ListingType
   startPrice: string
   endPrice: string
-  // startTime: string
-  // endTime: string
   salesTokenContract: string
   platfromFee: string
+  lazymint?: boolean
 }

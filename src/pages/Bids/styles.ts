@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['50'],
       paddingBottom: theme.spacing(16),
     },
     menuTitle: {
@@ -37,6 +37,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.ghostWhite,
       borderRadius: theme.spacing(3),
       minHeight: 680,
+      '&>div': {
+        maxWidth: 'min-content',
+      },
       '&>img': {
         maxWidth: '100%',
         maxHeight: '100%',

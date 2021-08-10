@@ -8,16 +8,21 @@ import { useDefaultCardStatus } from './lib'
 import { ICardActionsProps } from './types'
 import { useStyles } from './styles'
 import { normalizeDate } from 'utils'
+import routes from '../../../routes'
+import { useHistory } from 'react-router-dom'
 
 const {
-  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD },
+  FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD, LISTED },
 } = appConst
 
 export default function CardActions(props: ICardActionsProps) {
   const classes = useStyles()
   const {
+    userWallet,
+    ownerWallet = '',
     endPrice,
     startPrice,
+    currentPrice,
     sold,
     endTime = '0',
     burnTime = 0,
@@ -25,45 +30,72 @@ export default function CardActions(props: ICardActionsProps) {
     type,
     status,
     useCardStatus = useDefaultCardStatus,
+    button,
+    emptyBottom,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
+  const history = useHistory()
 
   const startPriceToCoin = startPrice
     ? new BigNumber(startPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
+        .toFixed(4)
     : startPrice
-  const currentBitToCoin = endPrice
-    ? new BigNumber(endPrice)
+  const currentBitToCoin = currentPrice
+    ? new BigNumber(currentPrice)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
-    : endPrice
+        .toFixed(4)
+    : currentPrice
 
   const now_time = new Date().getTime()
+  const expire_time = normalizeDate(endTime).getTime() < burnTime
+
   switch (cardStatus) {
     case MINTED:
       return (
-        <Box className={classes.actionBtnBox}>
-          <Button variant={'contained'} fullWidth className={classes.listBtn}>
-            List
-          </Button>
-        </Box>
+        <>
+          {history.location.pathname === routes.artworks ? (
+            <Box className={classes.cardAction}>
+              <Section text={'Reserve Price'} value={'-'} />
+            </Box>
+          ) : (
+            <>
+              {emptyBottom ? (
+                <Box className={classes.mintedBottom} />
+              ) : (
+                <Box className={classes.actionBtnBox}>
+                  {userWallet === ownerWallet ? (
+                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                      List
+                    </Button>
+                  ) : (
+                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                      Make offer
+                    </Button>
+                  )}
+                </Box>
+              )}
+            </>
+          )}
+        </>
       )
     case LIVE_AUCTION:
       return (
         <Box className={classes.cardAction}>
           <Section
             text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={now_time < normalizeDate(endTime).getTime() ? `${startPriceToCoin || currentBitToCoin} ETH` : '-'}
+            value={
+              now_time < normalizeDate(endTime).getTime()
+                ? `${parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin} ETH`
+                : '-'
+            }
           />
           {now_time < normalizeDate(endTime).getTime() ? (
-            <ButtonBase
-              className={clsx(classes.actionBtn, normalizeDate(endTime).getTime() < burnTime && classes.actionBtnBurn)}
-            >
-              {normalizeDate(endTime).getTime() < burnTime ? (
+            <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
+              {expire_time ? (
                 <BurnIcon className={classes.actionBtnIcon} />
               ) : (
                 <TimeIcon className={classes.actionBtnIcon} />
@@ -88,13 +120,13 @@ export default function CardActions(props: ICardActionsProps) {
     case SOLD:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
-          <Section text={'Sold for'} value={`${sold} ETH`} />
+          <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
         </Box>
       )
     case COLLECTED:
       return (
         <Box className={clsx(classes.actionBtnBox, classes.collectedBoxBtn)}>
-          <Button variant={'outlined'} className={classes.collectedBtn}>
+          <Button variant={'outlined'} className={classes.collectedBtn} onClick={() => history.push(routes.sellNFT)}>
             Sell
           </Button>
           <Button variant={'outlined'} className={classes.collectedBtn}>
@@ -108,6 +140,13 @@ export default function CardActions(props: ICardActionsProps) {
           <Section text={'Reserve Not Met'} value={`${startPriceToCoin} ETH`} />
         </Box>
       )
+    case LISTED: {
+      return (
+        <Box className={classes.cardAction}>
+          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
+        </Box>
+      )
+    }
     default:
       return null
   }

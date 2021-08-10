@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, TableCell } from '@material-ui/core'
 import { IWorksRow } from '../types'
 import { StyledTableRow, useStyles } from '../styles'
+import clsx from 'clsx'
 
 interface IWorksRowInterface {
   row: IWorksRow
@@ -17,7 +18,7 @@ export default function WorksRow(props: IWorksRowInterface) {
 
   return (
     <StyledTableRow key={props.row.id}>
-      <TableCell>
+      <TableCell className={classes.tableCellRoot}>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
           <Box className={classes.photoWrapper}>
             <img src={props.row.pictureURL} className={classes.photo} />
@@ -25,22 +26,26 @@ export default function WorksRow(props: IWorksRowInterface) {
           <Box className={classes.tableTextItem}>{props.row.name}</Box>
         </Box>
       </TableCell>
-      <TableCell classes={{ root: classes.tableTextItem }}>@{props.row.creator}</TableCell>
-      <TableCell classes={{ root: classes.tableTextItem }}>@{props.row.owner}</TableCell>
-      <TableCell>
+      <TableCell classes={{ root: classes.tableTextItem }} className={classes.tableCellRoot}>
+        @{props.row.creator}
+      </TableCell>
+      <TableCell classes={{ root: classes.tableTextItem }} className={classes.tableCellRoot}>
+        @{props.row.owner}
+      </TableCell>
+      <TableCell className={clsx(classes.tableCellRoot, classes.userStatus)}>
         {isBanned ? (
           <span className={classes.statusTextActive}>Active</span>
         ) : (
           <span className={classes.statusTextBanned}>Banned</span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.tableCellRoot}>
         {isBanned ? (
-          <Button className={classes.statusTextBanned} onClick={handleStatusChange}>
+          <Button className={clsx(classes.statusTextBanned, classes.worksRowActionButton)} onClick={handleStatusChange}>
             Ban
           </Button>
         ) : (
-          <Button className={classes.statusTextUnban} onClick={handleStatusChange}>
+          <Button className={clsx(classes.statusTextUnban, classes.worksRowActionButton)} onClick={handleStatusChange}>
             Unban
           </Button>
         )}

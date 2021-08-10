@@ -3,10 +3,65 @@ import { Box, Button, FormGroup, FormControlLabel, Checkbox, Typography } from '
 import { CurrentDownIcon, RefreshIcon, CloseIcon } from 'common/icons'
 import { Popover } from 'common'
 import { useStyles } from './styles'
+import { ITradingHistoryFilter } from '../../types'
+import { IFilterProps } from './types'
 
-export default function Filter() {
+const FILTERS: ITradingHistoryFilter[] = [
+  {
+    label: 'Minted',
+    name: 'minted',
+    checked: false,
+  },
+  {
+    label: 'Listed',
+    name: 'listed',
+    checked: false,
+  },
+  {
+    label: 'Place a bid',
+    name: 'bidded',
+    checked: false,
+  },
+  {
+    label: 'Sold',
+    name: 'sold',
+    checked: false,
+  },
+  {
+    label: 'Owned',
+    name: 'purchased',
+    checked: false,
+  },
+]
+
+export default function Filter(props: IFilterProps) {
+  const { onFilter } = props
   const [open, setOpen] = useState<null | HTMLElement>(null)
   const classes = useStyles()
+
+  const [filters, setFilters] = useState<ITradingHistoryFilter[]>(FILTERS)
+
+  const handleFilter = (filters: ITradingHistoryFilter[]) => {
+    onFilter(filters.filter((f) => f.checked).map((f) => f.name))
+  }
+
+  const onSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const _filters = filters.map((f) => (f.name === event.target.name ? { ...f, checked: event.target.checked } : f))
+    setFilters(_filters)
+    handleFilter(_filters)
+  }
+
+  const onClear = () => {
+    const _filters = filters.map((f) => ({ ...f, checked: false }))
+    setFilters(_filters)
+    handleFilter(_filters)
+  }
+
+  const handleRemoveSortValue = (value: ITradingHistoryFilter) => {
+    const selectedFilters = filters.map((f) => (f.name === value.name ? { ...f, checked: false } : f))
+    setFilters(selectedFilters)
+    handleFilter(selectedFilters)
+  }
 
   return (
     <>
@@ -27,55 +82,39 @@ export default function Filter() {
           Filter By
         </Button>
 
-        <Box className={classes.filtersBtnBox}>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Minted
-          </Button>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Place a bid
-          </Button>
-          <Button className={classes.filtersBtn} color={'primary'} variant={'outlined'} endIcon={<CloseIcon />}>
-            Sold
-          </Button>
-        </Box>
+        {/*<Box className={classes.filtersBtnBox}>*/}
+        {filters
+          .filter((f) => f.checked)
+          .map((el) => (
+            <Button
+              key={el.name}
+              className={classes.filtersBtn}
+              color={'primary'}
+              variant={'outlined'}
+              endIcon={<CloseIcon />}
+              onClick={() => handleRemoveSortValue(el)}
+            >
+              {el.label}
+            </Button>
+          ))}
+        {/*</Box>*/}
 
-        <Button className={classes.btnRefreshIcon} startIcon={<RefreshIcon />}>
+        <Button onClick={onClear} className={classes.btnRefreshIcon} startIcon={<RefreshIcon />}>
           Clear Filters
         </Button>
       </Box>
 
       <Popover anchorEl={open} onClose={() => setOpen(null)}>
-        <FormGroup className={classes.formGroup}>
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Minted" color={'primary'} />}
-            label={<Typography noWrap>Minted</Typography>}
-          />
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Listed" color={'primary'} />}
-            label={<Typography noWrap>Listed</Typography>}
-          />
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Place a bid" color={'primary'} />}
-            label={<Typography noWrap>Place a bid </Typography>}
-          />
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Sold" color={'primary'} />}
-            label={<Typography noWrap>Sold</Typography>}
-          />
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Transferred" color={'primary'} />}
-            label={<Typography noWrap>Transferred</Typography>}
-          />
-          <FormControlLabel
-            classes={{ label: classes.formLabel }}
-            control={<Checkbox name="Owned" color={'primary'} />}
-            label={<Typography noWrap>Owned</Typography>}
-          />
+        <FormGroup onChange={onSelect} className={classes.formGroup}>
+          {filters.map((item) => (
+            <FormControlLabel
+              key={item.name}
+              classes={{ label: classes.formLabel }}
+              control={<Checkbox name={item.name} color={'primary'} />}
+              label={<Typography noWrap>{item.label}</Typography>}
+              checked={item.checked}
+            />
+          ))}
         </FormGroup>
       </Popover>
     </>

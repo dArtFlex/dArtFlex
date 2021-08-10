@@ -3,6 +3,9 @@ export * from './Listing'
 export * from './Assets'
 export * from './User'
 export * from './Wallet'
+export * from './PlaceBid'
+export * from './Notifications'
+export * from './Management'
 
 export interface IEntity {
   id: number
@@ -20,6 +23,7 @@ export interface IDatedTimeEntity {
 export interface IPriceEntity {
   start_price: string
   end_price: string
+  current_price: string
 }
 export interface IImageEntity extends IDatedEntity, IEntity {
   image: string

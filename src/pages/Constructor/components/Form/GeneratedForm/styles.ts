@@ -8,22 +8,31 @@ export const useStyles = makeStyles((theme: Theme) =>
       gridGap: 40,
       alignItems: 'start',
       justifyContent: 'center',
-      gridTemplateRows: 'minmax(100%, auto)',
-      gridTemplateColumns: '777px 1fr',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(900)]: {
+        gridTemplateColumns: 'auto',
+      },
     },
     imageBox: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['500'],
       padding: theme.spacing(20, 3),
       borderRadius: 12,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 2,
+      },
     },
     image: {
       width: 463,
       height: 463,
       borderRadius: 12,
       objectFit: 'cover',
+      [theme.breakpoints.down(640)]: {
+        width: '90vw',
+        height: '90vw',
+      },
     },
     genetatedForm: {
       display: 'flex',
@@ -31,13 +40,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto',
       maxWidth: 325,
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(900)]: {
+        gridRow: 1,
+      },
     },
     btnBack: {
       alignSelf: 'flex-start',
     },
     btnDownload: {
       background: theme.palette.text.primary,
-      color: theme.palette.white,
+      color: theme.palette.background.default,
       marginBottom: theme.spacing(6),
       '&:hover': {
         background: theme.palette.text.primary,
@@ -51,6 +63,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       gap: 20,
+      [theme.breakpoints.down(480)]: {
+        gap: 8,
+      },
     },
     btnSecondary: {
       maxWidth: 153,
@@ -58,6 +73,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `2px solid ${theme.palette.text.primary}`,
       padding: theme.spacing(3.5),
       whiteSpace: 'nowrap',
+      [theme.breakpoints.down(480)]: {
+        maxWidth: 142,
+        padding: theme.spacing(2),
+      },
     },
   })
 )

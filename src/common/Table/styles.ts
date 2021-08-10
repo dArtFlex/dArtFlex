@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.white,
     },
     table: {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.default,
       '& .MuiTableCell-stickyHeader': {
         backgroundColor: theme.palette.text.primary,
       },
@@ -26,11 +26,17 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.white,
         paddingLeft: theme.spacing(6),
         paddingRight: theme.spacing(6),
+        backgroundColor: theme.palette.grey['300'],
       },
     },
     tableRowRoot: {
-      '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.greyPale,
+      backgroundColor: theme.palette.grey['500'],
+      '&:hover': {
+        backgroundColor: `${theme.palette.type === 'dark' && theme.palette.background.default} !important`,
+        opacity: theme.palette.type === 'dark' && '70%',
+      },
+      '&:nth-of-type(even)': {
+        backgroundColor: theme.palette.background.default,
       },
     },
     tableCell: {
@@ -41,6 +47,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(6),
       paddingRight: theme.spacing(6),
       borderBottom: 'none',
+      [theme.breakpoints.down(768)]: {
+        padding: theme.spacing(2),
+      },
     },
     tableCellControls: {
       minWidth: 55,

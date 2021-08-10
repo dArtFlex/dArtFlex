@@ -1,16 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import moment from 'moment'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
 import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
-import { selectAssets } from 'stores/selectors'
+import { selectUser, selectSearch } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
+import { getUserAssetsRequest } from 'stores/reducers/user'
+import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
+import { shortCutWallet } from 'utils'
+import { useSortedAssets } from './lib'
+import { useSearchAssets } from 'hooks'
+import { IUserAssets } from './types'
+import { unlistingRequest } from 'stores/reducers/listing'
+import BigNumber from 'bignumber.js'
 
-const { FILTER_VALUES } = appConst
+const { FILTER_VALUES, STATUSES } = appConst
 
 const filterItems = [
   {
@@ -33,42 +45,106 @@ const filterItems = [
 
 export default function Dashboard() {
   const classes = useStyles()
+  const history = useHistory()
+  const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { assets, fetching } = useSelector(selectAssets())
+  const { user, userAssets, userCollectedAssets, userSolddAssets, fetching } = useSelector(selectUser())
+
+  const { search } = useSelector(selectSearch())
+  const searchAssets = useSearchAssets({ assets: userAssets, search })
+  const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
+  const searchSoldAssets = useSearchAssets({ assets: userSolddAssets, search })
+  const sortedAssets = useSortedAssets({
+    userAssets:
+      filter === FILTER_VALUES.COLLECTED
+        ? searchCollectedAssets
+        : filter === FILTER_VALUES.SOLD
+        ? searchSoldAssets
+        : searchAssets,
+    filter,
+  })
+
+  if (!user) {
+    history.push(routes.home)
+    return null
+  }
+
+  useEffect(() => {
+    const historyState = { ...history }
+    if (historyState.location.state && (historyState.location.state as { from: string }).from === routes.createNFT) {
+      setFilter(FILTER_VALUES.CREATED)
+      historyState.location.state = {}
+    }
+  })
+
+  useEffect(() => {
+    dispatch(getUserAssetsRequest())
+  }, [])
 
   const links = [
     {
-      link: 'instagram.com/tianadias',
+      link: user.instagram.length ? `instagram.com/${user.instagram}` : undefined,
       icon: <InstagramOutlinedIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://instagram.com/${user.instagram}`,
     },
     {
-      link: 'twitter.com/tianadias',
+      link: user.twitter.length ? `twitter.com/${user.twitter}` : undefined,
       icon: <TwitterIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://twitter.com/${user.twitter}`,
     },
     {
-      link: 'youtube.com/user/tianadias',
+      link: user.youtube.length ? `youtube.com/user/${user.youtube}` : undefined,
       icon: <YouTubeIcon className={classes.linkIcon} />,
-      href: '#',
+      href: `https://youtube.com/user/${user.youtube}`,
     },
   ]
+
+  const handleListed = (userAsset: IUserAssets) => {
+    dispatch(
+      setLazyMintingData({
+        data: {
+          ...userAsset.imageData,
+          royalties: String(userAsset.tokenData.royalty),
+        },
+        lazyMintItemId: userAsset.tokenData.id,
+        lazyMintData: {
+          contract: userAsset.tokenData.contract,
+          tokenId: userAsset.tokenData.token_id,
+          uri: userAsset.tokenData.uri,
+          signatures: [userAsset.tokenData.signature],
+        },
+        lazymint: userAsset.tokenData.lazymint,
+      })
+    )
+    history.push(routes.sellNFT)
+  }
+
+  const handleUnlisted = (market_id: string) => {
+    dispatch(unlistingRequest({ market_id }))
+    dispatch(getUserAssetsRequest())
+  }
+
+  const totalSales = userSolddAssets
+    .map((a: { current_price: string }) => a.current_price)
+    .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
+  const totalSalesToEth = new BigNumber(totalSales)
+    .dividedBy(`10e${18 - 1}`)
+    .toNumber()
+    .toFixed(4)
 
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={'https://picsum.photos/1500/500'}
+        coverURL={user.cover_image}
         aside={
           <Aside
-            avatar={'https://picsum.photos/200/300'}
-            name={'Tiana Dias'}
-            userName={'tianadias'}
-            walletAddress={'0x683a67...11d1e1334'}
-            content={
-              'Tiana is the Co-founder and Creative Director at Toast. She is a 3D artist that specializes in creating content.'
-            }
-            links={links}
-            joinedToArtworks={'Joined April, 2021'}
+            avatar={user.profile_image}
+            name={user.fullname}
+            userName={user.userid}
+            walletAddress={shortCutWallet(user.wallet)}
+            content={user.overview}
+            links={links.filter((l) => l.link !== undefined)}
+            joinedToArtworks={`Joined ${moment(user.created_at).format('MMMM, YYYY')}`}
           />
         }
       >
@@ -82,7 +158,7 @@ export default function Dashboard() {
           >
             {filterItems.map(({ label, value }) => {
               return (
-                <ToggleButton key={value} value={value} selected={filter === value}>
+                <ToggleButton key={value} value={value} selected={filter === value} className={classes.toggleButton}>
                   {label}
                 </ToggleButton>
               )
@@ -92,7 +168,7 @@ export default function Dashboard() {
           {filter === FILTER_VALUES.SOLD && (
             <Box className={classes.container}>
               <Box className={classes.inlineFlex}>
-                <ValuesInfo />
+                <ValuesInfo totalSalesToEth={totalSalesToEth} />
               </Box>
             </Box>
           )}
@@ -102,18 +178,25 @@ export default function Dashboard() {
               <CircularProgressLoader />
             ) : (
               <>
-                {filter === FILTER_VALUES.CREATED && <CardUploadNew />}
-                {assets
-                  ?.filter((el) => {
-                    if (filter === FILTER_VALUES.LIVE_AUCTION) {
-                      return true
-                    }
-                    return el.type === filter
-                  })
-                  .map((asset, i) => (
-                    <CardAsset key={i} asset={asset} withLabel withAction={Boolean(asset.type === 'auction')} />
-                  ))}
-                {!assets?.length && <Empty />}
+                {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
+                {sortedAssets
+                  ? sortedAssets.map((userAsset, i) => (
+                      <CardAsset
+                        key={i}
+                        asset={userAsset}
+                        userWallet={user?.wallet}
+                        withLabel
+                        withAction={Boolean(userAsset.status === STATUSES.LISTED)}
+                        button={{
+                          onListed: () => handleListed(userAsset),
+                        }}
+                        menu={{
+                          onUnlisted: () => handleUnlisted(String(userAsset.id)),
+                        }}
+                      />
+                    ))
+                  : null}
+                {!userAssets?.length && <Empty />}
               </>
             )}
           </Box>

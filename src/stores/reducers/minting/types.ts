@@ -1,4 +1,4 @@
-import { ILazyMintData } from 'types'
+import { ILazyMintData, IHashtag, IHashtagNew } from 'types'
 export interface MintingStateType {
   fetching: boolean
   uploading?: boolean
@@ -13,8 +13,10 @@ export interface MintingStateType {
     description: string
     royalties: string
   }
-  lazyMintData: null | ILazyMintData
+  lazyMintData?: ILazyMintData
   lazyMintItemId: null | number
+  hashtags?: Array<IHashtag | IHashtagNew>
+  lazymint?: boolean
 }
 
 export type IProcess = 'none' | 'in progress' | 'done' | 'failed'

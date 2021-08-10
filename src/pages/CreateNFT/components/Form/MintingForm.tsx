@@ -1,22 +1,28 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { useFormikContext } from 'formik'
 import { ICreateNFT } from '../../types'
-import { selectMinting, selectWallet } from 'stores/selectors'
+import { selectMinting, selectWallet, selectHashtags } from 'stores/selectors'
+import { getHashtagsAllRequest } from 'stores/reducers/assets'
 import { Box, Card, Button, Typography } from '@material-ui/core'
 import { CircularProgressLoader, Field, Modal, WalletConnect } from 'common'
 import { ArrowLeftIcon } from 'common/icons'
 import { useStyles } from './styles'
+import { Link, useLocation } from 'react-router-dom'
+import routes from '../../../../routes'
 
 interface IMintingForm {
   onMinting: () => void
   onList: () => void
   onViewArtwork: () => void
+  isTabletMobile: boolean
 }
 
 export default function MintingForm(props: IMintingForm) {
-  const { onMinting, onList, onViewArtwork } = props
+  const { onMinting, onList, onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const { pathname } = useLocation()
 
   const { values, setFieldValue } = useFormikContext<ICreateNFT>()
   const [open, setOpen] = useState<boolean>(false)
@@ -24,8 +30,12 @@ export default function MintingForm(props: IMintingForm) {
   const {
     minting: { minting },
   } = useSelector(selectMinting())
-
   const { wallet } = useSelector(selectWallet())
+  const { hashtags } = useSelector(selectHashtags())
+
+  useEffect(() => {
+    dispatch(getHashtagsAllRequest())
+  }, [])
 
   switch (minting) {
     case 'none':
@@ -53,10 +63,46 @@ export default function MintingForm(props: IMintingForm) {
                 information.
               </Typography>
             </Box>
-            <Field type="input" name="name" variant={'outlined'} label="Title" />
-            {/* Royalty - type number - max 100 */}
-            <Field type="input" name="royalties" variant={'outlined'} label="Royalties" helperText={'Suggested: 10%'} />
-            <Field type="input" name="description" variant={'outlined'} label="Description" multiline rows={4} />
+            <Field type="input" name="name" variant={'outlined'} label="Title" className={classes.inputField} />
+            <Field
+              type="autocomplete"
+              name="hashtags"
+              variant={'outlined'}
+              label="Hashtags"
+              className={classes.inputField}
+              withMultiple
+              witChips
+              options={hashtags ? hashtags.map((ht) => ({ title: ht.name, ...ht })) : []}
+            />
+
+            <Field
+              type="slider"
+              name="royalties"
+              variant={'outlined'}
+              label="Royalties"
+              helperText={
+                <>
+                  <Typography component={'span'} className={classes.royaltiesAmount}>
+                    {`${values.royalties}% `}
+                  </Typography>
+                  <Typography component={'span'} className={classes.royalties}>
+                    (Suggested: 10%)
+                  </Typography>
+                </>
+              }
+              className={classes.inputField}
+              defaultValue={1}
+              min={1}
+            />
+            <Field
+              type="input"
+              name="description"
+              variant={'outlined'}
+              label="Description"
+              multiline
+              rows={4}
+              className={classes.inputField}
+            />
             <Button
               variant={'contained'}
               color={'primary'}
@@ -68,7 +114,7 @@ export default function MintingForm(props: IMintingForm) {
                 onMinting()
               }}
               className={classes.btnMint}
-              disabled={Boolean(values.name.length) === false || Boolean(values.description.length) === false}
+              disabled={!Boolean(values.name.length) || !Boolean(values.description.length)}
             >
               Mint NFT
             </Button>
@@ -111,13 +157,21 @@ export default function MintingForm(props: IMintingForm) {
             </Typography>
           </Box>
           <Box pb={4}>
-            <Button variant={'contained'} color={'primary'} onClick={onList}>
+            <Button variant={'contained'} color={'primary'} onClick={onList} fullWidth={isTabletMobile}>
               List your NFT
             </Button>
           </Box>
-          <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork}>
-            View Artwork
-          </Button>
+          <Link
+            to={{
+              pathname: routes.dashboard,
+              state: { from: pathname },
+            }}
+            className={classes.redirectLink}
+          >
+            <Button variant={'outlined'} className={classes.btnView} fullWidth={isTabletMobile} onClick={onViewArtwork}>
+              View Artwork
+            </Button>
+          </Link>
         </Box>
       )
     default:

@@ -6,6 +6,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       padding: theme.spacing(6),
+      minWidth: 325,
+      [theme.breakpoints.down(375)]: {
+        minWidth: '96vw',
+      },
     },
     avatar: {
       width: 115,
@@ -32,9 +36,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     userName: {
       fontSize: 24,
       fontWeight: 700,
-      color: theme.palette.primary.main,
+      color: theme.palette.lightViolet,
       paddingBottom: theme.spacing(1),
       textAlign: 'center',
+    },
+    actionText: {
+      color: theme.palette.lightViolet,
     },
     text: {
       fontSize: 16,

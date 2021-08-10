@@ -2,7 +2,7 @@ import React from 'react'
 import { Popover as MUIPopover, PopoverOrigin } from '@material-ui/core'
 
 interface IPopoverProps {
-  anchorEl: HTMLElement | null
+  anchorEl?: HTMLElement | null
   onClose: () => void
   children: React.ReactNode
   anchorOrigin?: PopoverOrigin

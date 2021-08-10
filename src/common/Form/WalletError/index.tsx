@@ -16,7 +16,9 @@ export default function WalletError(props: IWalletErrorProps) {
 
   return (
     <Box className={classes.walletError}>
-      <Typography variant="h2">Wrong network!</Typography>
+      <Typography variant="h2" className={classes.walletErrorText}>
+        Wrong network!
+      </Typography>
       <Typography className={classes.walletErrorDesc}>
         Your wallet is connected to the wrong network Please change your network to one of mainnet
       </Typography>

@@ -2,23 +2,37 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      minWidth: 325,
+      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      position: 'relative',
+      [theme.breakpoints.down(680)]: {
+        width: '88vw',
+        minWidth: 'unset',
+        margin: 'auto',
+      },
+    },
     card: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     artContainer: {
-      position: 'relative',
-      padding: theme.spacing(1),
       height: '242px',
+      width: '100%',
+      color: theme.palette.blackMain,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'baseline',
       justifyContent: 'space-around',
       cursor: 'pointer',
       '&>img': {
-        maxWidth: '100%',
-        maxHeight: '100%',
-        objectFit: 'contain',
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
       },
     },
     artInfoContainer: {
@@ -34,9 +48,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 24px',
+      flexWrap: 'wrap',
+      rowGap: 16,
+      gap: 12,
+      padding: theme.spacing(4, 5),
       background: theme.palette.accentGradient,
       color: theme.palette.white,
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(4, 3),
+      },
     },
     cardActionNotMet: {
       background: 'transparent',
@@ -47,12 +67,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     actionBtn: {
       padding: theme.spacing(2, 3),
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.paper,
       color: theme.palette.text.primary,
       borderRadius: '8px',
       fontSize: 18,
       lineHeight: 1.3,
       fontWeight: 600,
+      width: 159,
     },
     actionBtnBurn: {
       color: theme.palette.warning.main,
@@ -70,13 +91,29 @@ export const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.text.primary,
       },
     },
+    mintedBottom: {
+      height: 72,
+    },
     collectedBoxBtn: {
       display: 'grid',
-      gridGap: theme.spacing(6),
-      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+      gridGap: 24,
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(320)]: {
+        gridGap: 4,
+      },
     },
     collectedBtn: {
+      minWidth: 130,
       border: `2px solid ${theme.palette.text.primary}`,
+      padding: theme.spacing(2, 3.5),
+      [theme.breakpoints.down(375)]: {
+        minWidth: 110,
+        padding: theme.spacing(2, 1),
+      },
+      [theme.breakpoints.down(320)]: {
+        minWidth: 105,
+        padding: theme.spacing(2, 0),
+      },
     },
     badgeBox: {
       position: 'absolute',
@@ -86,7 +123,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(3.5),
       alignItems: 'center',
       padding: theme.spacing(3),
-      background: theme.palette.background.default,
+      background: theme.palette.background.paper,
+      color: theme.palette.text.primary,
       borderRadius: '50% / 100%',
     },
     badgeIcon: {
@@ -103,6 +141,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     red: {
       background: theme.palette.warning.main,
+    },
+    blue: {
+      background: theme.palette.blue,
+    },
+    purple: {
+      background: theme.palette.purple,
+    },
+    grey: {
+      background: theme.palette.grey6,
     },
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,

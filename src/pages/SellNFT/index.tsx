@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import DucolLayout from 'layouts/DucolLayout'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, useMediaQuery } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
 import { Form, PageWrapper } from 'common'
 import { Aside } from './components'
@@ -10,6 +10,7 @@ import { useStyles } from './styles'
 import { SetPriceForm, AuctionForm } from './components'
 import { listingRequest } from 'stores/reducers/listing'
 import { ISellArtwork } from './types'
+import { useValidationSchema } from './lib'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -29,10 +30,10 @@ const formVariant = [
 ]
 
 const initialData = {
-  price: 0.01,
-  minimumBid: 0.01,
-  reservePrice: '1',
-  startingPrice: '0.01',
+  price: '',
+  minimumBid: '',
+  reservePrice: '',
+  startingPrice: '',
   fee: '2.5',
   futureTime: '',
   expirationTime: '',
@@ -47,26 +48,33 @@ export default function SellNFT() {
   const [form, setForm] = useState(INSTANT_BY)
   const dispatch = useDispatch()
 
-  const onSubmit = (state: ISellArtwork) => {
+  const onSubmit = (values: ISellArtwork) => {
     const type = form === 'instant_buy' ? 'instant_buy' : 'auction'
     dispatch(
       listingRequest({
         data: {
           type,
-          startPrice: state.startingPrice,
-          endPrice: state.reservePrice,
-          start_time: state.startDate,
-          end_time: state.endDate,
-          platfromFee: state.fee,
+          startPrice: form === 'instant_buy' ? values.price : values.minimumBid,
+          endPrice: values.reservePrice,
+          start_time: values.startDate,
+          end_time: values.endDate,
+          platfromFee: values.fee,
         },
       })
     )
   }
 
+  const isTabletResolution = useMediaQuery('(max-width:1024px)')
+
   return (
     <PageWrapper className={classes.wrapper}>
-      <Form initialValues={initialData} onSubmit={onSubmit}>
-        <DucolLayout aside={<Aside form={form} />} containerSize={'minmax(270px, 554px)'} asideSize={'325px'} gap={135}>
+      <Form initialValues={initialData} onSubmit={onSubmit} validationSchema={useValidationSchema()}>
+        <DucolLayout
+          aside={<Aside form={form} />}
+          containerSize={'minmax(270px, 554px)'}
+          asideSize={'325px'}
+          gap={isTabletResolution ? 20 : 135}
+        >
           <Box>
             <Typography variant={'h1'} className={classes.formTitle}>
               Sell Artwork

@@ -5,6 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     btnFilter: {
       maxWidth: 184,
       minWidth: 184,
+      backgroundColor: theme.palette.background.paper,
     },
     formGroup: {
       width: 184,
@@ -17,14 +18,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     btnFilterLabel: {
+      color: theme.palette.text.primary,
       justifyContent: 'space-between',
       whiteSpace: 'nowrap',
     },
     btnRefreshIcon: {
-      width: '100%',
       whiteSpace: 'nowrap',
     },
     filtersBtn: {
+      backgroundColor: '#8566FF1A',
+      color: theme.palette.primary.contrastText,
       minWidth: '122px',
       display: 'flex',
       justifyContent: 'space-around',
@@ -37,7 +40,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     flex: {
       display: 'flex',
       alignItems: 'center',
+      flexWrap: 'wrap',
       gap: 16,
+      padding: theme.spacing(4, 0),
     },
   })
 )

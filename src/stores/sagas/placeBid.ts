@@ -1,38 +1,57 @@
 //@ts-nocheck
-// import { PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, all } from 'redux-saga/effects'
 import {
   placeBidSuccess,
   placeBidFailure,
   getBidsHistoryFailure,
-  // getBidsHistorySuccess,
+  getBidsHistorySuccess,
+  acceptBidSuccess,
+  acceptBidFailure,
+  getBidsSuccess,
+  getBidsFailure,
+  cancelBidSuccess,
+  cancelBidFailure,
 } from 'stores/reducers/placeBid'
-// import { PlaceBidStateType } from 'stores/reducers/placeBid/types'
+import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
+import { acceptBidService } from 'services/accept_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
+import tokensAll from 'core/tokens'
+import { UserDataTypes, IAcceptBidTransaction, IBids } from 'types'
 
-const WETH_Contract_Rinkeby = '0xdf032bc4b9dc2782bb09352007d4c57b75160b15'
-
-export function* placeBid(api: IApi) {
+export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
+    const chainId: IChainId = walletService.getChainId()
+    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
     const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
     const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
-    // const endPrice = '108000000000000000'
+
+    const lazymint = tokenData.lazymint
+
+    // Todo: Should only be once, so we need to check if it's approved
+    yield placeBidService.approveToken(accounts[0])
+
+    const tokenCreatorData: UserDataTypes[] = yield call(api, {
+      url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
+    })
 
     const order = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
-        tokenId: marketData.id,
-        maker: tokenData.owner,
+        tokenId: tokenData.token_id,
+        maker: tokenCreatorData[0].wallet,
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,
-        erc20: WETH_Contract_Rinkeby,
+        erc20: tokenContractWETH,
         signature: tokenData.signature,
+        lazymint,
       },
     })
 
@@ -62,18 +81,16 @@ export function* placeBid(api: IApi) {
       method: 'POST',
       data: {
         orderId: getIdFromString(orderId),
-        itemId: marketData.id,
-        userId: 1,
+        itemId: tokenData.id,
+        userId,
         marketId: Number(marketData.id),
         bidAmount: endPrice,
       },
     })
 
-    yield call(acceptBid)
-
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
-    yield put(placeBidFailure(e))
+    yield put(placeBidFailure(e.message || e))
   }
 }
 
@@ -81,26 +98,79 @@ export function* getBidsHistory(api: IApi) {
   try {
     const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const getHistory = yield call(api, {
-      url: APP_CONFIG.getHistory(+marketData.id),
+      url: APP_CONFIG.getHistoryNFT(+marketData.item_id),
     })
-    return getHistory
+
+    const userData: UserDataTypes[] = yield all(
+      getHistory.map((h) => {
+        const userDataId = h.from !== '0' ? h.from : h.to
+        return call(getUserDataById, api, userDataId)
+      })
+    )
+    const composeData = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+
+    yield put(getBidsHistorySuccess(composeData))
   } catch (e) {
     yield put(getBidsHistoryFailure(e))
   }
 }
 
-export function* acceptBid(api: IApi) {
+export function* acceptBid(
+  api: IApi,
+  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string }>
+) {
   try {
-    // const history = yield call(getBidsHistory)
-    const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+    const marketData = yield call(api, {
+      url: APP_CONFIG.getHistory(payload.market_id),
+    })
+    const creatorOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
+    })
+    const buyerOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
+    })
+
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
       data: {
-        id: marketData.id,
+        id: payload.bid_id,
+        txHash: acceptBidTransaction.transactionHash,
       },
     })
+
+    yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
-    console.log(e)
+    yield put(acceptBidFailure(e.message || e))
+  }
+}
+
+export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: string }>) {
+  try {
+    const getHistory: IBids[] = yield call(api, {
+      url: APP_CONFIG.getHistory(payload.market_id),
+    })
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+    const bids = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+    yield put(getBidsSuccess({ bids }))
+  } catch (e) {
+    yield put(getBidsFailure(e.message || e))
+  }
+}
+
+export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.cancelBid,
+      method: 'POST',
+      data: {
+        id: payload.bid_id,
+      },
+    })
+    yield put(cancelBidSuccess())
+  } catch (e) {
+    yield put(cancelBidFailure(e.message || e))
   }
 }

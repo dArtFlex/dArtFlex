@@ -15,6 +15,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'start',
     },
     image: {
+      display: 'flex',
+      alignItems: 'center',
       width: 115,
       height: 115,
     },
@@ -28,31 +30,35 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-start',
       gap: theme.spacing(3),
+      [theme.breakpoints.down(480)]: {
+        flexWrap: 'wrap',
+      },
     },
     uploadBtn: {
       lineHeight: '21.6px',
       border: `2px solid ${theme.palette.text.primary}`,
+      '&:hover': {
+        backgroundColor: theme.palette.background.default,
+      },
     },
     deleteBtn: {
       lineHeight: '21.6px',
       color: theme.palette.greyDark,
     },
     avatar: {
-      '& img': {
-        width: 115,
-        height: 115,
-        borderRadius: '50%',
-        alignSelf: 'flex-start',
-      },
+      width: 115,
+      height: 115,
+      borderRadius: '100%',
+      objectFit: 'cover',
+      alignSelf: 'flex-start',
     },
     cover: {
-      '& img': {
-        width: 115,
-        height: 50,
-        objectFit: 'cover',
-        borderRadius: 4,
-        alignSelf: 'flex-start',
-      },
+      width: 115,
+      height: 50,
+      objectFit: 'cover',
+      borderRadius: 4,
+      alignSelf: 'flex-start',
+      backgroundColor: theme.palette.grey['50'],
     },
   })
 )

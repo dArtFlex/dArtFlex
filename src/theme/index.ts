@@ -7,6 +7,7 @@ const palette = {
   greyLight: '#E8ECEE', // secondary color, header border-bottom, outlined select border, button secondary, divider
   grey3: '#828282',
   grey5: '#E0E0E0',
+  grey6: '#BDBDBD',
   greyPale: '#F8F8F9', // artworks grid bg, iconButton border,
   graySoft: '#F2F4F5', // artworks search input bg,
   greyMid: '#BDC1C6', //hashtag botton border, price input adorment
@@ -22,6 +23,10 @@ const palette = {
   lightViolet: '#8566FF',
   blackMain: '#222A2C',
   blackDark: '#141717',
+  blackLight: '#4F4F4F',
+  yellowBright: '#3E3807',
+  blue: '#2F80ED',
+  purple: '#BB6BD9',
   accentGradient: 'linear-gradient(129.22deg, #5239AE 6.8%, #7F82F5 134.28%)',
 } as const
 
@@ -52,8 +57,13 @@ const lightPalette = {
   },
   secondary: {
     main: palette.greyLight,
+    light: PrimaryLight,
+  },
+  info: {
+    main: PrimaryMain,
   },
   warning: { main: '#FF5C00', light: PrimaryLight },
+  success: { main: palette.yellowLight },
   text: { primary: TextPrimary, secondary: palette.greyDark },
   background: {
     default: '#fff',
@@ -63,6 +73,9 @@ const lightPalette = {
     50: palette.greyPale,
     100: palette.graySoft,
     200: palette.greyLight,
+    300: palette.blackMain,
+    400: palette.greyLight,
+    500: palette.greyPale,
     A100: palette.lightViolet,
   },
   ...palette,
@@ -77,6 +90,10 @@ const DarkPalette = {
   },
   secondary: {
     main: palette.white,
+    light: PrimaryLight,
+  },
+  info: {
+    main: palette.lightViolet,
   },
   text: { primary: '#fff', secondary: palette.greyMid },
   background: {
@@ -84,10 +101,14 @@ const DarkPalette = {
     paper: palette.blackMain,
   },
   warning: { main: '#FF5C00', light: palette.violet },
+  success: { main: palette.yellowBright },
   grey: {
     50: '#141717',
     100: palette.blackMain,
     200: palette.greyDark,
+    300: palette.blackLight,
+    400: palette.blackLight,
+    500: palette.blackMain,
     A100: palette.white,
   },
   ...palette,
@@ -95,6 +116,18 @@ const DarkPalette = {
 
 const theme = {
   spacing: 4,
+  breakpoints: {
+    values: {
+      mobileS: 320,
+      mobileM: 375,
+      mobileL: 425,
+      tabletS: 640,
+      tabletM: 800,
+      tabletL: 960,
+      laptop: 1024,
+      desktop: 1280,
+    },
+  },
   typography: {
     htmlFontSize: 16,
     fontFamily: ['Archivo', 'sans-serif'].join(','),
@@ -125,6 +158,11 @@ const theme = {
         fontSize: 14,
         fontWeight: 600,
         lineHeight: 1.25,
+      },
+      body2: {
+        fontSize: 16,
+        fontWeight: 400,
+        lineHeight: 1.74,
       },
     },
     MuiToolbar: {

@@ -7,21 +7,16 @@ import { CupIcon, ExclamationCircleIcon } from 'common/icons'
 import { Informer } from '../../components'
 import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
-import appConsts from 'config/consts'
 import routes from '../../../../routes'
-
-const {
-  FILTER_VALUES: { LIVE_AUCTION },
-} = appConsts
-
-const PLACED_BID = ''
-const OWNED = ''
+import { normalizeDate } from 'utils'
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
-  const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status } = bid
+  const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status, itemId } = bid
   const classes = useStyles()
-  const history = useHistory()
+
+  const nowTime = new Date().getTime()
+  const timeExpired = nowTime > normalizeDate(endDate).getTime()
 
   return (
     <Card classes={{ root: classes.cardBid }}>
@@ -35,13 +30,13 @@ export default function CardBid(props: ICardBidProps) {
             {name}
           </Typography>
         </Box>
-        <Timer endDate={endDate} className={classes.timer} />
+        {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
-        {currentBid && yourBid ? (
+        {status !== 'winner' ? (
           <>
-            <Bids title="Current Bid" bidAmount={currentBid as number} bidAmountUsd={currentBidUsd as number} />
-            <Bids title="Your Bid" bidAmount={yourBid as number} bidAmountUsd={yourBidUsd as number} />
+            <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
+            <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
           </>
         ) : (
           <Informer
@@ -53,36 +48,7 @@ export default function CardBid(props: ICardBidProps) {
           />
         )}
       </Box>
-      <Box className={classes.cardBidAction}>
-        {status !== OWNED && (
-          <Box className={classes.informerHead}>
-            {status === LIVE_AUCTION ? <CupIcon /> : <ExclamationCircleIcon />}
-            <Typography variant={'body1'} noWrap>
-              {status === LIVE_AUCTION ? 'You have a chance to win' : 'Your bet is outbid'}
-            </Typography>
-          </Box>
-        )}
-
-        {status === LIVE_AUCTION && (
-          <Button className={clsx(classes.btnAction, classes.btnView)} variant={'outlined'}>
-            View Artwork
-          </Button>
-        )}
-        {status === PLACED_BID && (
-          <Button className={clsx(classes.btnAction, classes.btnPlaceBid)} variant={'contained'}>
-            Place a Bid
-          </Button>
-        )}
-        {status === OWNED && (
-          <Button
-            className={clsx(classes.btnAction, classes.btnClaneNFT)}
-            variant={'contained'}
-            onClick={() => history.push(routes.bids + '/1009')}
-          >
-            Claim your NFT
-          </Button>
-        )}
-      </Box>
+      <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} />
     </Card>
   )
 }
@@ -99,4 +65,67 @@ function Bids(props: IBidsProps) {
       <Typography>{`$${bidAmountUsd}`}</Typography>
     </Box>
   )
+}
+
+function CardInfoBox(props: ICardInfoBox) {
+  const classes = useStyles()
+  const { status, timeExpired, itemId } = props
+  const history = useHistory()
+  switch (status) {
+    case 'bid':
+    case 'offered':
+      return (
+        <Box className={classes.cardBidAction}>
+          <Box className={classes.informerHead}>
+            <CupIcon />
+            <Typography variant={'body1'} noWrap>
+              You have a chance to win
+            </Typography>
+          </Box>
+          <Button
+            onClick={() => history.push(routes.artworkDetails.replace(':id', String(itemId)))}
+            className={clsx(classes.btnAction, classes.btnView)}
+            variant={'outlined'}
+            fullWidth
+          >
+            View Artwork
+          </Button>
+        </Box>
+      )
+    case 'outbid':
+      return (
+        <Box className={classes.cardBidAction}>
+          <Box className={classes.informerHead}>
+            <ExclamationCircleIcon />
+            <Typography variant={'body1'} noWrap>
+              Your bet is outbid
+            </Typography>
+          </Box>
+          <Button
+            onClick={() => history.push(routes.artworkDetails.replace(':id', String(itemId)))}
+            disabled={timeExpired}
+            className={clsx(classes.btnAction, classes.btnPlaceBid)}
+            variant={'contained'}
+          >
+            Place a Bid
+          </Button>
+        </Box>
+      )
+    case 'winner':
+      return (
+        <Box className={classes.cardBidAction}>
+          <Button className={clsx(classes.btnAction, classes.btnClaimNFT)} variant={'contained'}>
+            Claim your NFT
+          </Button>
+        </Box>
+      )
+    default:
+      return null
+  }
+}
+
+export interface ICardInfoBox {
+  status: ICardBidProps['bid']['status']
+  timeExpired: boolean
+  itemId: ICardBidProps['bid']['itemId']
 }

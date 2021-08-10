@@ -1,7 +1,8 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
+import { IHashtag } from 'types'
 
-const { TYPES, STATUSES } = appConst
+const { TYPES, STATUSES, FILTER_VALUES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
   item_id: string
   type: IAssetType
@@ -21,11 +22,13 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   signature: string
   lazymint: boolean
   ban: boolean
+  hashtag: IHashtag[]
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
+  tokenData?: AssetTypes
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {
@@ -47,6 +50,13 @@ export type IAssetStatus =
   | typeof STATUSES.PURCHASED
   | typeof STATUSES.SOLD
 
+export type IArtworksFiltes =
+  | typeof FILTER_VALUES.LIVE_AUCTION
+  | typeof FILTER_VALUES.BUY_NOW
+  | typeof FILTER_VALUES.RESERVE_NOT_MET
+  | typeof FILTER_VALUES.SOLD
+  | typeof FILTER_VALUES.FEATURED_ARTWORKS
+
 export interface ITokenBalances {
   balance: string
   balanceUSD: number
@@ -62,4 +72,19 @@ export interface IBaseTokens {
   symbol: string
   decimals: number
   logoURI: string
+}
+
+export interface IAssetMarketData {
+  id: number
+  item_id: string
+  type: string
+  start_price: string
+  end_price: string
+  start_time: string
+  end_time: string
+  platform_fee: string
+  sales_token_contract: string
+  sold: false
+  created_at: string
+  updated_at: string
 }

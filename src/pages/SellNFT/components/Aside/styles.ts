@@ -27,7 +27,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 700,
     },
     card: {
-      background: theme.palette.greyPale,
+      background: theme.palette.grey['500'],
       padding: theme.spacing(5),
       marginBottom: theme.spacing(6),
     },

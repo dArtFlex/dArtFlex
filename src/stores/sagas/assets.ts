@@ -7,8 +7,10 @@ import {
   getAssetByIdFailure,
   getExchangeRateTokensSuccess,
   getExchangeRateTokensFailure,
+  getHashtagsAllSuccess,
+  getHashtagsAllFailure,
 } from 'stores/reducers/assets'
-import { getUserDataByOwner } from 'stores/sagas/user'
+import { getUserDataById } from 'stores/sagas/user'
 import { IApi } from '../../services/types'
 import { walletService } from 'services/wallet_service'
 import {
@@ -18,19 +20,23 @@ import {
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
   IChainId,
+  IHashtagNew,
 } from 'types'
-import APP_CONFIG from 'config'
 import tokensAll from 'core/tokens'
-import { getAssetStatus } from 'utils'
+import { getAssetStatus, createDummyMarketplaceData, getIdFromString } from 'utils'
+import APP_CONFIG from 'config'
+import appConst from 'config/consts'
+import { AssetsStateType } from 'stores/reducers/assets/types'
 
-function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imageData'>) {
+const {
+  STATUSES: { MINTED },
+} = appConst
+
+function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: { owner: string; uri: string }) {
   try {
-    const assetById: AssetTypes[] = yield call(api, {
-      url: APP_CONFIG.getItemByItemId(parseFloat(asset.item_id)),
-    })
-    const userData: UserDataTypes = yield call(getUserDataByOwner, api, assetById[0].owner)
+    const userData: UserDataTypes = yield call(getUserDataById, api, owner)
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
-      url: assetById[0].uri,
+      url: uri,
     })
 
     return { ...asset, imageData: imageData[0], userData }
@@ -41,18 +47,27 @@ function* getAssetData(api: IApi, asset: Omit<AssetDataTypes, 'userData' | 'imag
 
 export function* getAssetsAllData(api: IApi) {
   try {
-    const getAssetsListAll: AssetMarketplaceTypes[] = yield call(api, {
-      url: APP_CONFIG.getMarketplaceAll,
+    const getItemAssetsAll: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemAll,
     })
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = yield all(
+      getItemAssetsAll.map((item) => call(getMarketplaceData, api, item.id))
+    )
     const getAssetsListAllData: AssetDataTypes[] = yield all(
-      getAssetsListAll.map((asset) => call(getAssetData, api, asset))
+      getMarketplactAssetsAll
+        .map((mpD) => (mpD ? mpD : createDummyMarketplaceData()))
+        .map((asset, index) =>
+          call(getAssetData, api, asset, { owner: getItemAssetsAll[index].owner, uri: getItemAssetsAll[index].uri })
+        )
     )
 
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
-
-    yield put(getAssetsAllSuccess(getAssetsListAllWithStatuses))
+    const assets = getAssetsListAllWithStatuses
+      .map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag }))
+      .map((item, index) => ({ ...item, item_id: `${getItemAssetsAll[index].id}` }))
+    yield put(getAssetsAllSuccess(assets))
   } catch (e) {
     yield put(getAssetsAllFailure(e.message || e))
   }
@@ -67,10 +82,10 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
       url: APP_CONFIG.getItemByItemId(Number(payload)),
     })
     const userByOwner: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].owner),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].owner),
     })
     const userByCreator: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserByWallet(assetById[0].creator),
+      url: APP_CONFIG.getUserProfileByUserId(+assetById[0].creator),
     })
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,
@@ -107,7 +122,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
   }
 }
 
-function* getMarketplaceData(api: IApi, itemId: number) {
+export function* getMarketplaceData(api: IApi, itemId: number) {
   try {
     const allMarketplace: AssetMarketplaceTypes[] = yield call(api, {
       url: APP_CONFIG.getMarketplaceAll,
@@ -121,11 +136,19 @@ function* getMarketplaceData(api: IApi, itemId: number) {
   }
 }
 
-function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
+export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
   try {
+    // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
+    if (asset.item_id.length === 0) {
+      return {
+        ...asset,
+        status: MINTED,
+      }
+    }
     const assetById: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
     })
+
     const status = getAssetStatus({
       type: asset.type,
       start_price: asset.start_price,
@@ -172,4 +195,31 @@ export function* getExchangeRateTokens(api: IApi) {
   } catch (e) {
     yield put(getExchangeRateTokensFailure(e.message || e))
   }
+}
+
+export function* getHashtagsAll(api: IApi) {
+  try {
+    const hashtags: AssetsStateType['hashtags'] | undefined = yield call(api, {
+      url: APP_CONFIG.getHashtagAll,
+    })
+    yield put(getHashtagsAllSuccess({ hashtags }))
+  } catch (e) {
+    yield put(getHashtagsAllFailure(e.message || e))
+  }
+}
+
+export function* addHashtags(api: IApi, { payload }: PayloadAction<{ hashtags: IHashtagNew[] }>) {
+  const hashtagsIds: string[] = yield all(
+    payload.hashtags.map((ht) =>
+      call(api, {
+        url: APP_CONFIG.createHashtag,
+        method: 'POST',
+        data: {
+          name: ht.inputValue,
+        },
+      })
+    )
+  )
+
+  return hashtagsIds.map((ht) => getIdFromString(ht))
 }
