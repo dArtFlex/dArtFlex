@@ -1,14 +1,20 @@
 import { put, call, all } from 'redux-saga/effects'
+import { PayloadAction } from '@reduxjs/toolkit'
 import {
   getAllWorksSuccess,
   getAllWorksFailure,
   getAllUsersListSuccess,
   getAllUsersListFailure,
+  banUserSuccess,
+  banUserFailure,
+  unbanUserSuccess,
+  unbanUserFailure,
 } from 'stores/reducers/management'
 import { ManagementStateType } from 'stores/reducers/management/types'
 import { IApi } from '../../services/types'
 import { AssetTypes, UserDataTypes, AssetDataTypes } from 'types'
 import APP_CONFIG from 'config'
+import { walletService } from 'services/wallet_service'
 
 function* composeWorkData(api: IApi, asset: AssetTypes) {
   const creatorData: UserDataTypes[] = yield call(api, {
@@ -43,5 +49,39 @@ export function* getAllUsersList(api: IApi) {
     yield put(getAllUsersListSuccess({ users }))
   } catch (e) {
     yield put(getAllUsersListFailure(e.message || e))
+  }
+}
+
+export function* banUser(api: IApi, { payload }: PayloadAction<{ user_id: string }>) {
+  try {
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+    yield call(api, {
+      url: APP_CONFIG.banUser,
+      method: 'POST',
+      data: {
+        userId: payload.user_id,
+        ...signature,
+      },
+    })
+    yield put(banUserSuccess())
+  } catch (e) {
+    yield put(banUserFailure(e.message || e))
+  }
+}
+
+export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: string }>) {
+  try {
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+    yield call(api, {
+      url: APP_CONFIG.unbanItem,
+      method: 'POST',
+      data: {
+        userId: payload.user_id,
+        ...signature,
+      },
+    })
+    yield put(unbanUserSuccess())
+  } catch (e) {
+    yield put(unbanUserFailure(e.message || e))
   }
 }

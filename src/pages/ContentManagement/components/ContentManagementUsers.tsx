@@ -18,8 +18,9 @@ import { useStyles } from '../styles'
 import UsersRow from './UsersRow'
 import clsx from 'clsx'
 import { UserDataTypes } from 'types'
+import { useFilterByUser } from '../lib'
 
-export default function ContentManagementUsers() {
+export default function ContentManagementUsers({ search }: { search: string }) {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { users } = useSelector(selectManagement())
@@ -34,7 +35,8 @@ export default function ContentManagementUsers() {
   const handleNextPage = () => setPage(page + 1)
   const handlePreviousPage = () => setPage(page - 1)
 
-  const usersContent = useUsersComposeData(users)
+  const usersByFilter = useFilterByUser(users, search)
+  const usersContent = useUsersComposeData(usersByFilter)
 
   const worksHeaders = ['Name', 'Username', 'Status', '']
 

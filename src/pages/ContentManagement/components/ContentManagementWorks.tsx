@@ -18,8 +18,9 @@ import WorksRow from './WorksRow'
 import { useStyles } from '../styles'
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 import clsx from 'clsx'
+import { useFilterByWorks } from '../lib'
 
-export default function ContentManagementWorks() {
+export default function ContentManagementWorks({ search }: { search: string }) {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { works } = useSelector(selectManagement())
@@ -33,7 +34,8 @@ export default function ContentManagementWorks() {
   const handleNextPage = () => setPage(page + 1)
   const handlePreviousPage = () => setPage(page - 1)
 
-  const worksContent = useWorksComposeData(works)
+  const worksByFilter = useFilterByWorks(works, search)
+  const worksContent = useWorksComposeData(worksByFilter)
 
   const worksHeaders = ['Artwork Name', 'Creator', 'Owner', 'Status', '']
 

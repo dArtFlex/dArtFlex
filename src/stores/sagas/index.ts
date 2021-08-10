@@ -39,7 +39,7 @@ import {
 } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
 import { getNotificationsRequest } from '../reducers/notifications'
-import { getAllWorksRequest, getAllUsersListRequest } from '../reducers/management'
+import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
 import { makeOfferRequest } from '../reducers/makeOffer'
 
 import {
@@ -68,7 +68,7 @@ import { listing, unlisting } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications } from '../sagas/notifications'
-import { getAllWorks, getAllUsersList } from '../sagas/management'
+import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
 import { makeOffer } from '../sagas/makeOffer'
 
 export default function* root() {
@@ -124,6 +124,8 @@ export default function* root() {
     /** Management **/
     takeLatest(getAllWorksRequest.type, getAllWorks, apiMiddleware),
     takeLatest(getAllUsersListRequest.type, getAllUsersList, apiMiddleware),
+    takeLatest(banUserRequest.type, banUser, apiMiddleware),
+    takeLatest(unbanUserRequest.type, unbanUser, apiMiddleware),
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
