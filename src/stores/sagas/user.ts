@@ -25,6 +25,8 @@ import {
   checkAssetIdFailure,
   updatePromotionFailure,
   updatePromotionSuccess,
+  validateUserIdSuccess,
+  validateUserIdFailure,
 } from 'stores/reducers/user'
 import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
@@ -427,5 +429,20 @@ export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promoti
     yield put(updatePromotionSuccess())
   } catch (e) {
     yield put(updatePromotionFailure(e.message || e))
+  }
+}
+
+export function* validateUserId(api: IApi, { payload }: PayloadAction<{ userId: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.userValidation,
+      method: 'POST',
+      data: {
+        userId: payload.userId,
+      },
+    })
+    yield put(validateUserIdSuccess({ userIdValid: true }))
+  } catch (e) {
+    yield put(validateUserIdFailure())
   }
 }

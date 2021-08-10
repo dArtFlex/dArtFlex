@@ -43,6 +43,7 @@ export const selectUser = () =>
         fetchingBids,
         isId,
         fetchingId,
+        userIdValid,
       },
     }: stateType) => ({
       user,
@@ -54,6 +55,7 @@ export const selectUser = () =>
       fetchingBids,
       isId,
       fetchingId,
+      userIdValid,
     })
   )
 export const selectUserRole = () =>

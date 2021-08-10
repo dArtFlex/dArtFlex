@@ -16,7 +16,7 @@ export class PlaceBidService extends CommonService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY',
+          assetClass: lazymint ? 'ERC721_LAZY' : 'ERC721',
           contract: contract,
           tokenId: tokenId,
           uri,

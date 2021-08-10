@@ -189,6 +189,7 @@ export default function Dashboard() {
                         withAction={Boolean(userAsset.status === STATUSES.LISTED)}
                         button={{
                           onListed: () => handleListed(userAsset),
+                          onSell: () => handleListed(userAsset),
                         }}
                         menu={{
                           onUnlisted: () => handleUnlisted(String(userAsset.id)),

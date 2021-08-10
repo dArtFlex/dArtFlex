@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux'
 import clsx from 'clsx'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
-import { TabHistory, About } from '../../../components'
+import { TabHistory, About, TabBids } from '../../../components'
 import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
 import { normalizeDate } from 'utils'
 import { useStyles } from '../styles'
+import { IBids, UserDataTypes } from 'types'
 
 interface IDetailsFormProps {
   onSubmit: () => void
@@ -22,6 +23,9 @@ const tabsItems = [
     title: 'History',
   },
   {
+    title: 'Bids',
+  },
+  {
     title: 'About Creator',
   },
 ]
@@ -31,7 +35,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const classes = useStyles()
 
   const {
-    bid: { bidHistory },
+    bid: { bidHistory, bids },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
@@ -183,7 +187,8 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           </div>
         )}
         {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <About creator={creatorData} />}
+        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
+        {tab === 3 && <About creator={creatorData} />}
       </Box>
 
       <Modal

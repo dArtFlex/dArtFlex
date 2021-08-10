@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { validateUserIdRequest } from 'stores/reducers/user'
+import { selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Button } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
@@ -16,7 +19,7 @@ import {
   SuccessIcon,
 } from 'common/icons'
 import { UploadFileSection } from '../../components'
-import { IAccountSettings } from '../../types'
+import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
 import image from 'common/icons/smiley_face.svg'
@@ -30,7 +33,24 @@ interface IFormAccountSettings {
 export default function FormAccountSettings(props: IFormAccountSettings) {
   const { setOpenVerification, user } = props
   const classes = useStyles()
-  const { values, handleSubmit } = useFormikContext<IAccountSettings>()
+  const dispatch = useDispatch()
+  const { userIdValid } = useSelector(selectUser())
+
+  const { values, handleSubmit, setFieldError } = useFormikContext<ICustomAccountSettings>()
+  const [userIdValidation, setUserIdValidation] = useState(user?.userid === values.userid)
+
+  useEffect(() => {
+    if (user?.userid !== values.userid) {
+      dispatch(validateUserIdRequest({ userId: String(values.userid) }))
+      setUserIdValidation(false)
+    }
+  }, [values.userid, user])
+
+  useEffect(() => {
+    if (!userIdValidation) {
+      setFieldError('userid', "Username isn't unique")
+    }
+  }, [userIdValid])
 
   return (
     <Box className={classes.form}>
@@ -62,7 +82,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
+            Boolean(userIdValidation && values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>

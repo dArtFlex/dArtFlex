@@ -206,6 +206,16 @@ const userSlice = createSlice({
       state.error = payload
       state.fetchingPromo = false
     },
+
+    validateUserIdRequest: (state, i) => {
+      state.userIdValid = false
+    },
+    validateUserIdSuccess: (state, { payload }: PayloadAction<{ userIdValid: boolean }>) => {
+      state.userIdValid = payload.userIdValid
+    },
+    validateUserIdFailure: (state) => {
+      state.userIdValid = false
+    },
   },
 })
 
@@ -257,6 +267,10 @@ export const {
   updatePromotionRequest,
   updatePromotionSuccess,
   updatePromotionFailure,
+
+  validateUserIdRequest,
+  validateUserIdSuccess,
+  validateUserIdFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice
