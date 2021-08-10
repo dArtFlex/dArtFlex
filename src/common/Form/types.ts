@@ -7,20 +7,36 @@ export type FieldRenderProps<Field = unknown, Form = unknown> = {
   field: FieldInputProps<Field>
 }
 
-export interface ITextInput {
-  description?: string
-}
-
-export interface IUploadInput extends ITextInput {
-  helperText?: React.ReactNode
-  cover?: boolean
-}
-
-export type IFormCheckboxProps = Omit<CheckboxProps, 'form'> & {
+export interface IBaseFormFieldProps {
+  name?: string
   label?: FormControlLabelProps | string
   asSwitch?: boolean
   helperText?: React.ReactNode
   fullWidth?: boolean
+  className?: string
+  required?: boolean
 }
 
+export interface ITextInput {
+  description?: string
+}
+
+export interface IUploadInput extends Pick<IBaseFormFieldProps, 'helperText'> {
+  cover?: boolean
+}
+
+export type IFormCheckboxProps = Omit<CheckboxProps, 'form'> & IBaseFormFieldProps
 export type IFormSwitchProps = IFormCheckboxProps
+
+export interface IFormAutocompleteProps {
+  withClearOnBlur?: boolean
+  withMultiple?: boolean
+  witChips?: boolean
+  onCreate?: (value: string) => void
+}
+
+export interface IBaseSliderProps extends IBaseFormFieldProps {
+  defaultValue?: number
+  min?: number
+  max?: number
+}

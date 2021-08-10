@@ -1,7 +1,7 @@
 import { IDatedTimeEntity } from 'types'
 export interface ISellArtwork {
-  price: number
-  minimumBid: number
+  price: string
+  minimumBid: string
   startingPrice: string
   reservePrice: string
   fee: string

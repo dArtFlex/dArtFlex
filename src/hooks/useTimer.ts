@@ -5,36 +5,21 @@ interface ITimerProps {
   timeInterval: number // milliseconds
 }
 
+interface ITime {
+  timer: string
+  days: number
+  hours: number
+  minutes: number
+  seconds: number
+}
+
 const INTERVAL = 1000
 
 const useTimer = (endTime: ITimerProps['endTime'], timeInterval: ITimerProps['timeInterval'] = INTERVAL) => {
-  const [time, setTime] = useState<number>(endTime)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const duration = endTime - new Date().getTime()
-      if (duration <= 0) {
-        clearInterval(interval)
-      } else {
-        setTime((time) => time - timeInterval)
-      }
-    }, timeInterval)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
+  const [time, setTime] = useState<ITime>({ timer: `${0}d:${0}h:${0}m`, days: 0, hours: 0, minutes: 0, seconds: 0 })
 
   const timeBetweenDates = () => {
-    const difference = time - new Date().getTime()
-    if (difference <= 0) {
-      return {
-        timer: `${0}d:${0}h:${0}m`,
-        days: 0,
-        hours: 0,
-        minutes: 0,
-      }
-    }
+    const difference = endTime - new Date().getTime()
     let seconds = Math.floor(difference / 1000)
     let minutes = Math.floor(seconds / 60)
     let hours = Math.floor(minutes / 60)
@@ -44,20 +29,38 @@ const useTimer = (endTime: ITimerProps['endTime'], timeInterval: ITimerProps['ti
     minutes %= 60
     seconds %= 60
 
-    return {
-      timer: `${days}d:${hours}h:${minutes}m`,
+    const timer =
+      endTime > new Date().getTime() + 1000 * 60 * 60
+        ? `${days}d:${hours}h:${minutes}m`
+        : `${hours}h:${minutes}m:${seconds}s`
+
+    setTime({
+      timer,
       days,
       hours,
       minutes,
-    }
+      seconds,
+    })
   }
 
-  return {
-    timer: timeBetweenDates().timer,
-    days: timeBetweenDates().days,
-    hours: timeBetweenDates().hours,
-    minutes: timeBetweenDates().minutes,
-  }
+  useEffect(() => {
+    const difference = endTime - new Date().getTime()
+
+    timeBetweenDates()
+    const iId = setInterval(() => {
+      if (difference <= 0) {
+        clearInterval(iId)
+        return
+      }
+      timeBetweenDates()
+    }, timeInterval)
+
+    return () => {
+      clearInterval(iId)
+    }
+  }, [endTime])
+
+  return time
 }
 
 export default useTimer

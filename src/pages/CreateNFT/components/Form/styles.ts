@@ -2,10 +2,22 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    mintFormWrapper: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      [theme.breakpoints.down(980)]: {
+        gridTemplateColumns: '1fr',
+        gap: 20,
+      },
+    },
     flexBox: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: theme.spacing(4),
+    },
+    mintedCardInfo: {
+      maxHeight: 740,
     },
     card: {
       display: 'flex',
@@ -14,7 +26,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 325,
       width: '100%',
       height: 448,
-      background: theme.palette.background.default,
+      background: theme.palette.background.paper,
       borderRadius: theme.spacing(3),
     },
     cardImageContainer: {
@@ -23,12 +35,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardImage: {
       height: 242,
       width: 256,
-      '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: theme.spacing(3),
-      },
+      objectFit: 'cover',
+      borderRadius: theme.spacing(3),
     },
     cardContent: {
       padding: theme.spacing(6),
@@ -68,6 +76,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 478,
       padding: theme.spacing(8, 13),
       color: theme.palette.text.primary,
+      [theme.breakpoints.down(480)]: {
+        padding: theme.spacing(4, 6),
+      },
     },
     confirming: {
       maxWidth: 325,
@@ -77,14 +88,17 @@ export const useStyles = makeStyles((theme: Theme) =>
     loader: {
       display: 'inline-box',
     },
-    empyName: {
+    emptyName: {
       height: 27,
       maxWidth: 216,
-      background: theme.palette.greyMid,
+      background: theme.palette.grey['200'],
       borderRadius: theme.spacing(1),
     },
     btnView: {
       border: `2px solid ${theme.palette.text.primary}`,
+    },
+    redirectLink: {
+      textDecoration: 'unset',
     },
     btnMint: {
       '&:disabled': {
@@ -94,6 +108,17 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     linkIcon: {
       fill: theme.palette.text.primary,
+    },
+    inputField: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    royaltiesAmount: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: theme.palette.text.primary,
+    },
+    royalties: {
+      fontWeight: 'normal',
     },
   })
 )

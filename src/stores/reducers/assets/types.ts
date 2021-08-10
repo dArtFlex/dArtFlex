@@ -5,13 +5,15 @@ import {
   UserDataTypes,
   AssetDataTypesWithStatus,
   IAssetStatus,
+  IHashtag,
 } from 'types'
 export interface AssetsStateType {
   fetching: boolean
   error: string
-  assets: null | AssetDataTypesWithStatus[]
+  assets: null | Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }>
   assetDetails: IAssetDetails
   exchangeRates?: IExchangeRates[]
+  hashtags?: IHashtag[]
 }
 
 export interface IAssetDetails {

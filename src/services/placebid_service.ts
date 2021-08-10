@@ -1,58 +1,22 @@
 //@ts-nocheck
-import { web3Service } from 'services/web3_service'
-import { signTypedData_v4 } from 'eth-sig-util'
+import { CommonService } from 'services/common_service'
+import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
+import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
-import { ORDER_LISTING_ADDRESS } from 'core/contracts/order_contract'
+import appConst from 'config/consts'
 
-class PlaceBidService {
-  async signTypedData(data) {
-    const resp = await web3Service.connectMetaMaskWallet()
-    const from = resp[0]
-
-    if (web3.currentProvider.isMetaMask) {
-      const msgData = JSON.stringify(data)
-      return (
-        await new Promise((resolve, reject) => {
-          function cb(err, result) {
-            if (err) return reject(err)
-            if (result.error) return reject(result.error)
-            const sig = result.result
-            const sig0 = sig.substring(2)
-            const r = '0x' + sig0.substring(0, 64)
-            const s = '0x' + sig0.substring(64, 128)
-            const v = parseInt(sig0.substring(128, 130), 16)
-            resolve({ data, sig, v, r, s })
-          }
-
-          // @ts-ignore
-          return web3.currentProvider.sendAsync(
-            {
-              jsonrpc: '2.0',
-              method: 'eth_signTypedData_v4',
-              params: [from, msgData],
-              from,
-              id: new Date().getTime(),
-            },
-            cb
-          )
-        })
-      ).sig
-    } else {
-      return signTypedData_v4(web3.currentProvider.wallets[from.toLowerCase()].privateKey, { data })
-    }
-  }
-
+export class PlaceBidService extends CommonService {
   random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
   }
 
-  createOrder(maker, contract, tokenId, uri, erc20, price, signature) {
+  createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint) {
     return {
       type: 'RARIBLE_V2',
       maker: maker,
       make: {
         assetType: {
-          assetClass: 'ERC721',
+          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY',
           contract: contract,
           tokenId: tokenId,
           uri,
@@ -79,14 +43,14 @@ class PlaceBidService {
 
   enc(form) {
     if (form.assetClass == 'ERC721_LAZY')
-      return web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
+      return this.web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
         form.contract,
         [form.tokenId, form.uri, [[form.creator, '10000']], [], [form.signature]],
       ])
     if (form.assetClass == 'ERC721')
-      return web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
+      return this.web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
     if (form.assetClass == 'ERC20') {
-      return web3.eth.abi.encodeParameter('address', form.contract)
+      return this.web3.eth.abi.encodeParameter('address', form.contract)
     }
     return '0x'
   }
@@ -94,13 +58,14 @@ class PlaceBidService {
   async encodeOrder(form, taker) {
     const makeAsset = form.make.assetType
     const takeAsset = form.take.assetType
+
     return {
-      data: web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
+      data: this.web3.eth.abi.encodeParameters(['tuple(address, uint256)[]', 'tuple(address, uint256)[]'], [[], []]),
       dataType: '0x4c234266',
       maker: taker,
       makeAsset: {
         assetType: {
-          assetClass: web3.utils.keccak256(form.take.assetType.assetClass).substring(0, 10),
+          assetClass: this.web3.utils.keccak256(form.take.assetType.assetClass).substring(0, 10),
           data: this.enc(takeAsset),
         },
         value: form.take.value,
@@ -108,7 +73,7 @@ class PlaceBidService {
       taker: ZERO,
       takeAsset: {
         assetType: {
-          assetClass: web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
+          assetClass: this.web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
           data: this.enc(makeAsset),
         },
         value: form.make.value,
@@ -133,20 +98,19 @@ class PlaceBidService {
     }
   }
 
-  // maket is creater nft
-  // taker is ZERO
-  // price = '100000000000000000'
+  // Maket is creater Nft
+  // Taker is ZERO
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, taker, erc20, price, signature } = request.body
+    const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
 
-    const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature)
+    const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
         chainId: 4,
-        verifyingContract: ORDER_LISTING_ADDRESS,
+        verifyingContract: AUCTION_CONTRACT_ADDRESS,
       },
       'Order',
       order,
@@ -155,6 +119,21 @@ class PlaceBidService {
 
     const signatureOrder = await this.signTypedData(data)
     return [{ ...order, signatureOrder }]
+  }
+
+  async approveToken(wallet) {
+    // Todo: Approve address contract shouldn't be WETH only
+    return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, '0xc778417E063141139Fce010982780140Aa0cD5Ab').methods
+      .approve('0x2fce8435f0455edc702199741411dbcd1b7606ca', appConst.APPROVE_AMOUNT) // Todo: This address should be defined and need to dicuss with solidity dev.
+      .send({
+        from: wallet,
+      })
+  }
+
+  async checkAllowance(wallet, token, contractAddress) {
+    const tokenContract = new this.web3.eth.Contract(human_standard_token_abi, token)
+    const tokenResp = await tokenContract.methods.allowance(wallet, contractAddress).call()
+    return Number(tokenResp) > 0
   }
 }
 

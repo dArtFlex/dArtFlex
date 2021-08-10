@@ -18,14 +18,18 @@ import {
 import { UploadFileSection } from '../../components'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
+import { UserDataTypes } from '../../../../types'
+import image from 'common/icons/smiley_face.svg'
+import cover from 'common/icons/cover-default.svg'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
+  user: UserDataTypes | null
 }
 
 export default function FormAccountSettings(props: IFormAccountSettings) {
+  const { setOpenVerification, user } = props
   const classes = useStyles()
-  const { setOpenVerification } = props
   const { values, handleSubmit } = useFormikContext<IAccountSettings>()
 
   return (
@@ -37,24 +41,28 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
+          photoUrl={user?.profile_image ? user?.profile_image : image}
+          variant="avatar"
         />
         <UploadFileSection
           name="cover_image"
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
+          photoUrl={user?.cover_image ? user?.cover_image : cover}
         />
-        <Field type="input" name="fullname" label="Name" variant="outlined" />
+        <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
           type="input"
           name="userid"
           label="User Name"
           variant="outlined"
+          className={classes.formField}
           InputProps={{
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.userid.length) && (
+            Boolean(values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
               <Box className={classes.successTextHelper}>
                 <SuccessIcon className={classes.successIcon} />
                 <Typography>Username is Valid</Typography>
@@ -69,8 +77,17 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           variant="outlined"
           description="Email is used for notifications. It will not be shown on your profile."
           placeholder="Enter your email"
+          className={classes.formField}
         />
-        <Field type="input" name="overview" label="Short Biography" variant="outlined" multiline rows={4} />
+        <Field
+          type="input"
+          name="overview"
+          label="Short Biography"
+          variant="outlined"
+          multiline
+          rows={4}
+          className={classes.formField}
+        />
       </Box>
       <Box className={classes.section}>
         <Typography component="h3">Socials</Typography>
@@ -82,6 +99,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<WorldIcon />} placeholder={'https://'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -98,6 +116,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
               />
             ),
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -108,6 +127,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<InstagramIcon />} placeholder={'Instagram.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -118,6 +138,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<CodeIcon />} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -128,6 +149,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<FacebookIcon />} placeholder={'facebook.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -138,6 +160,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<YouTubeIcon className={classes.socialsIcon} />} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
@@ -148,16 +171,18 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<TikTokIcon />} placeholder={'tiktok.com/'} />,
           }}
+          className={classes.formField}
         />
         <Field
           type="input"
-          name="otherUrl"
+          name="other_url"
           label="Other"
           variant="outlined"
           placeholder={'URL'}
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
           }}
+          className={classes.formField}
         />
       </Box>
       <Box className={classes.section}>
@@ -179,7 +204,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         </Button>
       </Box>
       <Button
-        disabled={!Boolean(values.userid.length)}
+        disabled={!Boolean(values.id.length)}
         variant={'contained'}
         onClick={() => handleSubmit()}
         className={classes.btnSubmit}

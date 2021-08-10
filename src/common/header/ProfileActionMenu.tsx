@@ -1,60 +1,16 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { PopoverLinks } from 'common'
-import { ManIcon, ListIcon, BidsIcon, SellIcon, SettingsIcon, DisconnectIcon, ContentIcon } from 'common/icons'
-import routes from '../../routes'
-
+import { ILinks } from '../Popover/PopoverLinks/types'
 interface IProfileActionMenuProps {
-  anchor: null | HTMLElement
-  setAnchor: (target: null) => void
+  anchor?: null | HTMLElement
+  setAnchor?: (target: null) => void
+  isMobile?: boolean
+  links: ILinks[]
+  subLinks: ILinks[]
 }
 
 export default function ProfileActionMenu(props: IProfileActionMenuProps) {
-  const { anchor, setAnchor } = props
-  const history = useHistory()
-  return (
-    <PopoverLinks
-      anchor={anchor}
-      setAnchor={setAnchor}
-      links={[
-        {
-          lable: 'Dashboard',
-          icon: <ManIcon />,
-          onClick: () => history.push(routes.dashboard),
-        },
-        {
-          lable: 'Trading History',
-          icon: <ListIcon />,
-          onClick: () => history.push(routes.tradingHistory),
-        },
-        {
-          lable: 'My Bids',
-          icon: <BidsIcon />,
-          onClick: () => history.push(routes.bids),
-        },
-        {
-          lable: 'My Sales',
-          icon: <SellIcon />,
-          onClick: () => history.push(routes.sales),
-        },
-        {
-          lable: 'Account Settings',
-          icon: <SettingsIcon />,
-          onClick: () => history.push(routes.artworkAccountSettings),
-        },
-        {
-          lable: 'Content Management',
-          icon: <ContentIcon />,
-          onClick: () => history.push(routes.contentManagement),
-        },
-      ]}
-      subLinks={[
-        {
-          lable: 'Disconnect',
-          icon: <DisconnectIcon />,
-          onClick: () => console.log('Disconnect'),
-        },
-      ]}
-    />
-  )
+  const { anchor, setAnchor, isMobile, links, subLinks } = props
+
+  return <PopoverLinks anchor={anchor} setAnchor={setAnchor} links={links} isMobile={isMobile} subLinks={subLinks} />
 }

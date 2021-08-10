@@ -7,36 +7,72 @@ export const useStyles = makeStyles((theme: Theme) =>
       minHeight: '142px',
       padding: theme.spacing(0, 10),
       display: 'flex',
+      flexWrap: 'wrap',
       alignItems: 'center',
       justifyContent: 'space-between',
       [theme.breakpoints.down('md')]: {
-        flexWrap: 'wrap',
         padding: theme.spacing(0, 2),
+      },
+      [theme.breakpoints.down(800)]: {
+        flexWrap: 'wrap',
+      },
+      [theme.breakpoints.down(910)]: {
+        justifyContent: 'center',
+      },
+      [theme.breakpoints.down(641)]: {
+        padding: theme.spacing(0, 4),
       },
     },
     logo: {
-      marginRight: theme.spacing(12),
+      [theme.breakpoints.up(640)]: {
+        marginRight: theme.spacing(12),
+      },
     },
     social: {
       color: theme.palette.grey5,
-      '& a': {
-        marginRight: theme.spacing(12),
+
+      display: 'flex',
+      justifyContent: 'space-between',
+      [theme.breakpoints.down(641)]: {
+        gap: 20,
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.up(641)]: {
         '& a': {
-          marginLeft: theme.spacing(2),
+          marginRight: theme.spacing(12),
         },
       },
+      // '& a': {
+      //   marginRight: theme.spacing(12),
+      //   [theme.breakpoints.down('md')]: {
+      //     marginRight: theme.spacing(8),
+      //   },
+      // },
+      // [theme.breakpoints.down('md')]: {
+      //   '& a': {
+      //     marginLeft: theme.spacing(2),
+      //   },
+      // },
     },
     linksWrapper: {
       color: theme.palette.spanishGray,
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      rowGap: 10,
       '& a': {
+        color: theme.palette.spanishGray,
+        textDecoration: 'none',
         marginLeft: theme.spacing(12),
+        [theme.breakpoints.down(1280)]: {
+          marginLeft: theme.spacing(4),
+        },
+        '&:hover': {
+          textDecoration: 'underline',
+        },
       },
       [theme.breakpoints.down('md')]: {
-        '& a': {
-          marginLeft: theme.spacing(3),
-        },
+        width: '100%',
+        textAlign: 'center',
       },
     },
   })

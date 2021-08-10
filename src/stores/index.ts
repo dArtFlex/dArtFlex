@@ -10,7 +10,8 @@ export default function configStore() {
   const store = configureStore({
     reducer: rootReducer,
     middleware,
-    devTools: process.env.NODE_ENV === 'production' ? false : true,
+    // devTools: process.env.NODE_ENV === 'production' ? false : true,
+    devTools: true,
   })
 
   sagaMiddleware.run(rootSaga)

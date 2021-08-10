@@ -1,14 +1,18 @@
 import React from 'react'
 import { Box, Button, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
+import { Link, useLocation } from 'react-router-dom'
+import routes from '../../../../routes'
 
-interface IMintingForm {
+interface IListingForm {
   onViewArtwork: () => void
+  isTabletMobile: boolean
 }
 
-export default function ListingForm(props: IMintingForm) {
-  const { onViewArtwork } = props
+export default function ListingForm(props: IListingForm) {
+  const { onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
+  const { pathname } = useLocation()
 
   return (
     <Box className={classes.confirming}>
@@ -20,9 +24,17 @@ export default function ListingForm(props: IMintingForm) {
           Congratulations! Your artwork has officially been listed as an NFT on the Blockchain
         </Typography>
       </Box>
-      <Button variant={'outlined'} className={classes.btnView} onClick={onViewArtwork}>
-        View Artwork
-      </Button>
+      <Link
+        to={{
+          pathname: routes.dashboard,
+          state: { from: pathname },
+        }}
+        className={classes.redirectLink}
+      >
+        <Button variant={'outlined'} className={classes.btnView} fullWidth={isTabletMobile} onClick={onViewArtwork}>
+          View Artwork
+        </Button>
+      </Link>
     </Box>
   )
 }

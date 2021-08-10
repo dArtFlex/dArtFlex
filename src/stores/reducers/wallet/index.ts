@@ -53,6 +53,29 @@ const walletSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    walletsDisconetRequest: (state) => {
+      state.fetching = true
+    },
+    walletsDisconeSuccess: (state) => {
+      state.wallet = null
+      state.fetching = false
+    },
+    walletsDisconeFailure: (state, { payload }) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    walletsHistoryRequest: (state) => {
+      state.fetching = true
+    },
+    walletsHistorySuccess: (state) => {
+      state.fetching = false
+    },
+    walletsHistoryFailure: (state, { payload }) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -70,6 +93,14 @@ export const {
   getTokensBalancesRequest,
   getTokensBalancesSuccess,
   getTokensBalancesFailure,
+
+  walletsDisconetRequest,
+  walletsDisconeSuccess,
+  walletsDisconeFailure,
+
+  walletsHistoryRequest,
+  walletsHistorySuccess,
+  walletsHistoryFailure,
 } = walletSlice.actions
 
 export const { reducer } = walletSlice

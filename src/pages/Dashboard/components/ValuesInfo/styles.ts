@@ -9,6 +9,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     box: {
       padding: theme.spacing(0, 17),
+      [theme.breakpoints.down(840)]: {
+        padding: theme.spacing(0, 6),
+      },
     },
     infoRowIcon: {
       display: 'flex',
@@ -22,9 +25,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     helperText: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: theme.palette.text.secondary,
+      '& > p': {
+        fontSize: 14,
+        fontWeight: 700,
+        color: theme.palette.text.secondary,
+      },
     },
     tooltip: {
       backgroundColor: theme.palette.background.default,

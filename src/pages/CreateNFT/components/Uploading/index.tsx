@@ -12,7 +12,9 @@ export default function Uploading() {
   return (
     <Box className={classes.uploadBox}>
       <Typography variant={'h1'}>Uploading</Typography>
-      <CircularProgress />
+      <Box mt={4} mb={4}>
+        <CircularProgress />
+      </Box>
       <Button variant={'outlined'} onClick={() => setFieldValue('file', null)}>
         Cancel Uploading
       </Button>

@@ -9,12 +9,18 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontWeight: 'bold',
         lineHeight: '125%',
         marginBottom: theme.spacing(8),
+        [theme.breakpoints.down(480)]: {
+          textAlign: 'center',
+        },
       },
       '& h3': {
         fontSize: 24,
         fontWeight: 'bold',
         lineHeight: '125%',
         marginBottom: theme.spacing(8),
+        [theme.breakpoints.down(480)]: {
+          textAlign: 'center',
+        },
       },
       '& input::placeholder': {
         fontWeight: 700,
@@ -59,6 +65,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       color: theme.palette.green,
       gap: theme.spacing(1.5),
+    },
+    formField: {
+      backgroundColor: theme.palette.background.default,
     },
     successIcon: {
       fill: theme.palette.green,

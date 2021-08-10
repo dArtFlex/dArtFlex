@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
-import { Box, Card, Button, Avatar, Typography } from '@material-ui/core'
-import { Grid } from 'layouts'
+import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-ui/core'
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
-import { lazyMintingRequest } from 'stores/reducers/minting'
+import { lazyMintingRequest, clearLazyMintingData } from 'stores/reducers/minting'
 import MintingForm from './MintingForm'
 import ListingForm from './ListingForm'
 import routes from '../../../../routes'
 import { ICreateNFT } from '../../types'
 import { useStyles } from './styles'
+import clsx from 'clsx'
 
 export default function Form() {
   const classes = useStyles()
@@ -21,7 +21,7 @@ export default function Form() {
   const { values } = useFormikContext<ICreateNFT>()
 
   const {
-    minting: { data, lazyMintItemId },
+    minting: { data },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -30,17 +30,28 @@ export default function Form() {
 
   const [openViewImage, setOpenViewImage] = useState<boolean>(false)
 
+  const isTabletMobile = useMediaQuery('(max-width: 980px)')
+
   const handleMinting = () => {
-    dispatch(lazyMintingRequest({ name: values.name, description: values.description, royalties: values.royalties }))
+    dispatch(
+      lazyMintingRequest({
+        name: values.name,
+        description: values.description,
+        royalties: String(values.royalties),
+        hashtags: values.hashtags,
+      })
+    )
   }
 
   const handleList = () => history.push(routes.sellNFT)
 
-  const handleViewArtwork = () => history.push(`${routes.artworks}/${lazyMintItemId}`)
+  const handleViewArtwork = () => {
+    dispatch(clearLazyMintingData())
+  }
 
   return (
-    <Grid columns={2}>
-      <Box className={classes.flexBox}>
+    <Box className={classes.mintFormWrapper}>
+      <Box className={clsx(classes.flexBox, classes.mintedCardInfo)}>
         <Card className={classes.card}>
           <Box className={classes.cardImageContainer}>
             {data.image ? (
@@ -72,10 +83,10 @@ export default function Form() {
                   {user ? `@${user.userid}` : '@'}
                 </Typography>
               </Box>
-              {values.name.length ? (
-                <Typography className={classes.cardDesc}>{values.name}</Typography>
+              {values.name.length || data.name ? (
+                <Typography className={classes.cardDesc}>{values.name ? values.name : data.name}</Typography>
               ) : (
-                <Box className={classes.empyName}></Box>
+                <Box className={classes.emptyName} />
               )}
             </Box>
             <Button
@@ -91,10 +102,15 @@ export default function Form() {
       </Box>
 
       {listing !== 'done' ? (
-        <MintingForm onMinting={handleMinting} onList={handleList} onViewArtwork={handleViewArtwork} />
+        <MintingForm
+          onMinting={handleMinting}
+          onList={handleList}
+          onViewArtwork={handleViewArtwork}
+          isTabletMobile={isTabletMobile}
+        />
       ) : (
-        <ListingForm onViewArtwork={handleViewArtwork} />
+        <ListingForm onViewArtwork={handleViewArtwork} isTabletMobile={isTabletMobile} />
       )}
-    </Grid>
+    </Box>
   )
 }

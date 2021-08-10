@@ -43,14 +43,30 @@ const appConst = {
   },
   INTERVALS: {
     UPDATE_ASSETS: 30000, // in 0,5 min
+    UPDATE_BIDS_HISTORY: 10000, // in 0,1 min
   },
 
   ACTIVE_WALLET_STORAGE: 'active.wallet',
   WALLET_CONNECT_STORAGE: {
     METAMASK: 'metamask.connect',
-    TRUST: 'trust.connect',
   },
   WALLET_CONNECT: 'walletconnect',
+
+  APPROVE_AMOUNT: '900000000000000000000000000000000000000000000000000000000000000',
+
+  USER: {
+    ROLES: {
+      ROLE_SUPER_ADMIN: 'ROLE_SUPER_ADMIN',
+      ROLE_COMMON: 'ROLE_COMMON',
+    },
+    SECRET_KEYS: [
+      '0x5c763f9C2111a61e154d0A05a526E332c12957CE',
+      '0xC8B41dEcb99FDadb63b90F6E3BEB5DfE9B2E693c',
+      '0x00418a685a1368CD69aDECAb675E310877222509',
+    ],
+  },
+
+  ACCEPT_COMMUNITY_GUIDELINES: '_aGui',
 }
 
 export default appConst

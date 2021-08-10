@@ -21,16 +21,19 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       '&:hover': {
         backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+      },
+      [theme.breakpoints.down(600)]: {
+        top: 10,
+        right: 10,
       },
     },
     cardImage: {
-      padding: theme.spacing(21),
-      '& img': {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        borderRadius: theme.spacing(3),
-      },
+      width: 'inherit',
+      objectFit: 'contain',
+      borderRadius: theme.spacing(3),
+      maxHeight: 630,
+      maxWidth: '96%',
     },
   })
 )

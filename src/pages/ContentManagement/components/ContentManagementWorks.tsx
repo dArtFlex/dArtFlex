@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getAllWorksRequest } from 'stores/reducers/management'
+import { ManagementStateType } from 'stores/reducers/management/types'
+import { selectManagement } from 'stores/selectors'
 import {
   Box,
   IconButton,
@@ -13,188 +17,25 @@ import {
 import WorksRow from './WorksRow'
 import { useStyles } from '../styles'
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
+import clsx from 'clsx'
+import { useFilterByWorks } from '../lib'
 
-export default function ContentManagementWorks() {
+export default function ContentManagementWorks({ search }: { search: string }) {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const { works } = useSelector(selectManagement())
+
+  useEffect(() => {
+    dispatch(getAllWorksRequest())
+  }, [])
 
   const [page, setPage] = useState<number>(1)
-
   const rowsPerPage = 10
-
   const handleNextPage = () => setPage(page + 1)
-
   const handlePreviousPage = () => setPage(page - 1)
 
-  const worksContent = [
-    {
-      id: 1,
-      name: 'Broadleaf Lane',
-      creator: '435345ff',
-      owner: '435345ff',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 2,
-      name: 'Why Does Love Always Fade...',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: false,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 3,
-      name: 'H74 Golden Panther',
-      creator: 'gff4442',
-      owner: 'johndou',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 4,
-      name: 'Broadleaf Lane',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 5,
-      name: 'Why Does Love Always Fade...',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 6,
-      name: 'H74 Golden Panther',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 7,
-      name: 'Broadleaf Lane',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 8,
-      name: 'Why Does Love Always Fade...',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 9,
-      name: 'H74 Golden Panther',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 10,
-      name: 'Broadleaf Lane',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 11,
-      name: 'Test 11',
-      creator: '435345ff',
-      owner: '435345ff',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 12,
-      name: 'Test 12',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: false,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 13,
-      name: 'Test 13',
-      creator: 'gff4442',
-      owner: 'johndou',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 14,
-      name: 'Broadleaf Lane',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 15,
-      name: 'Why Does Love Always Fade...',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 16,
-      name: 'H74 Golden Panther',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 17,
-      name: 'Broadleaf Lane',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-    {
-      id: 18,
-      name: 'Why Does Love Always Fade...',
-      creator: 'johnconnor',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1vhpffjHc1tkN_dWCRXj2wflTLTNE1HPFyA&usqp=CAU',
-    },
-    {
-      id: 19,
-      name: 'H74 Golden Panther',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL: 'https://news.artnet.com/app/news-upload/2021/04/30nft-art-market9-superJumbo-775x1024.jpg',
-    },
-    {
-      id: 20,
-      name: 'Broadleaf Lane',
-      creator: 'johndou',
-      owner: 'sarah1224',
-      isActive: true,
-      pictureURL:
-        'https://besthqwallpapers.com/Uploads/25-4-2020/130574/thumb2-colorful-paint-splashes-artwork-abstract-art-creative-abstract-splashes.jpg',
-    },
-  ]
+  const worksByFilter = useFilterByWorks(works, search)
+  const worksContent = useWorksComposeData(worksByFilter)
 
   const worksHeaders = ['Artwork Name', 'Creator', 'Owner', 'Status', '']
 
@@ -206,7 +47,7 @@ export default function ContentManagementWorks() {
             <TableRow>
               {worksHeaders.map((item, index) => {
                 return (
-                  <TableCell key={index} className={classes.tableHeadCell}>
+                  <TableCell key={index} className={clsx(classes.tableHeadCell, classes.tableCellRoot)}>
                     {item}
                   </TableCell>
                 )
@@ -220,7 +61,7 @@ export default function ContentManagementWorks() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box className={classes.flexBox} mt={4}>
+      <Box className={clsx(classes.flexBox, classes.paginationContent)} mt={4}>
         <Paper elevation={3} className={classes.paginationWrapper}>
           <Box className={classes.flexBox}>
             <IconButton onClick={handlePreviousPage} disabled={page === 1} className={classes.disabledButton}>
@@ -241,4 +82,15 @@ export default function ContentManagementWorks() {
       </Box>
     </Box>
   )
+}
+
+function useWorksComposeData(works: ManagementStateType['works']) {
+  return works.map((as) => ({
+    id: as.id,
+    name: as.imageData.name,
+    creator: as.creatorData.userid,
+    owner: as.ownerData.userid,
+    isActive: !as.ban,
+    pictureURL: as.imageData.image,
+  }))
 }

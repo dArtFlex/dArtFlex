@@ -4,7 +4,7 @@ import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { listingSuccess, listingFailure } from 'stores/reducers/listing'
+import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { IChainId } from 'types'
 import { walletService } from 'services/wallet_service'
@@ -19,11 +19,14 @@ function getIdFromString(v) {
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
-    const { lazyMintData, lazyMintItemId }: ReturnType<typeof selector> = yield select((state) => state.minting)
+    const { lazyMintData, lazyMintItemId, lazymint }: ReturnType<typeof selector> = yield select(
+      (state) => state.minting
+    )
+    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
 
     const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
-    const endPrice = yield web3.utils.toWei(data.endPrice, 'ether')
+    const endPrice = yield web3.utils.toWei(data.endPrice.length ? data.endPrice : '0', 'ether')
 
     const chainId: IChainId = walletService.getChainId()
     const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id
@@ -50,7 +53,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         // should be 0 if data.type is "instant_buy"
         salesTokenContract: tokenContract,
         // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAF etc.
+        // token contract address ETH, DAFPage etc.
         platfromFee: data.platfromFee,
       },
     })
@@ -65,8 +68,9 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         price: startPrice,
         uri: lazyMintData.uri,
         // erc20 - 0x only ETH
-        erc20: '0x',
+        erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
         signature: lazyMintData.signatures[0],
+        lazymint,
       },
     })
 
@@ -97,30 +101,14 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       data: {
         itemId: lazyMintItemId,
         orderId: getIdFromString(orderId),
-        userId: 1,
+        userId,
         bidAmount: startPrice,
         // bidAmount the same with startPrice
         marketId: getIdFromString(marketId),
         bidContract: tokenContract,
         // Sells token contract
         // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAF etc.
-      },
-    })
-
-    // Push bid to list item with bids
-    const bidListItemId = yield call(api, {
-      url: APP_CONFIG.bidListItem,
-      method: 'POST',
-      data: {
-        itemId: lazyMintItemId,
-        orderId: getIdFromString(orderId),
-        // userId should be get from /api/user/get/wallet/{wallet}
-        userId: 1,
-        bidAmount: startPrice,
-        marketId: getIdFromString(marketId),
-        // 0x only ETH
-        bidContract: tokenContract,
+        // token contract address ETH, DAFPage etc.
       },
     })
 
@@ -129,12 +117,27 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         orderId: getIdFromString(orderId),
         salesDetailId: getIdFromString(marketId),
         listItemId: getIdFromString(listItemId),
-        bidListItemId: getIdFromString(bidListItemId),
+        bidListItemId: getIdFromString(listItemId), // redundand part
       })
     )
 
     history.push(routes.createNFT)
   } catch (e) {
-    yield put(listingFailure(e))
+    yield put(listingFailure(e.message || e))
+  }
+}
+
+export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<{ market_id: string }>) {
+  try {
+    yield call(api, {
+      method: 'POST',
+      url: APP_CONFIG.bidUnlistingItem,
+      data: {
+        id: market_id,
+      },
+    })
+    yield put(unlistingSuccess())
+  } catch (e) {
+    yield put(unlistingFailure(e.message || e))
   }
 }

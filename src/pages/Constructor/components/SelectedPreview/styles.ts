@@ -10,6 +10,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       padding: theme.spacing(3),
+      flexWrap: 'wrap',
+      rowGap: 16,
+      justifyContent: 'center',
     },
     cardImages: {
       display: 'flex',
@@ -23,6 +26,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: 90,
       height: 90,
       borderRadius: 8,
+      backgroundColor: theme.palette.grey['400'],
+      [theme.breakpoints.down(480)]: {
+        width: 60,
+        height: 60,
+      },
     },
     image: {
       width: '100%',
@@ -30,7 +38,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 8,
     },
     imageNumber: {
-      color: theme.palette.greyDark,
+      color: theme.palette.text.secondary,
       fontWeight: 700,
       fontSize: 24,
     },

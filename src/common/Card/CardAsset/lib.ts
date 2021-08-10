@@ -2,7 +2,7 @@ import { IUseCardStatus } from './types'
 import appConst from 'config/consts'
 const {
   STATUSES: { LISTED, MINTED },
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD },
+  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, COLLECTED },
   TYPES: { INSTANT_BY, AUCTION },
 } = appConst
 
@@ -21,6 +21,8 @@ export function useDefaultCardStatus({ status, type, endTime }: IUseCardStatus) 
         return LIVE_AUCTION
       }
       return BUY_NOW
+    case COLLECTED:
+      return COLLECTED
     default:
       return MINTED
   }

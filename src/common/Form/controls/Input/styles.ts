@@ -13,6 +13,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.greyDark,
       marginBottom: theme.spacing(2),
     },
+    textInput: {
+      backgroundColor: theme.palette.background.paper,
+    },
     star: {
       '&::after': {
         content: "'*'",

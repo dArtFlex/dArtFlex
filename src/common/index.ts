@@ -5,7 +5,7 @@ import Modal from './Modal'
 import { Popover, PopoverLinks } from './Popover'
 import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
 import CircularProgressLoader from './Loaders'
-import { CardHistory, CardAsset, CardUploadNew } from './Card'
+import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
 import Tooltip from './Tooltip'
@@ -19,6 +19,7 @@ import Select from './Select'
 import Table from './Table'
 import AvatarUser from './AvatarUser'
 import Timer from './Timer'
+import Slider from './Slider'
 
 export {
   Header,
@@ -35,6 +36,7 @@ export {
   CircularProgressLoader,
   CardHistory,
   CardAsset,
+  CardHistoryBids,
   CardUploadNew,
   Chip,
   ButtonStartIcon,
@@ -49,4 +51,5 @@ export {
   Table,
   AvatarUser,
   Timer,
+  Slider,
 }

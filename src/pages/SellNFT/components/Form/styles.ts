@@ -12,6 +12,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 700,
     },
+    switcher: {
+      backgroundColor: theme.palette.background.default,
+    },
     divider: {
       background: theme.palette.secondary.main,
       margin: theme.spacing(8, 0),
@@ -24,6 +27,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     flexBox: {
       display: 'flex',
       gap: 20,
+      flexWrap: 'wrap',
+      rowGap: 16,
+    },
+    flexContent: {
+      justifyContent: 'space-between',
     },
     field: {
       marginBottom: 0,
