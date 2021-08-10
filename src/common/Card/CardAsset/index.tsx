@@ -30,7 +30,9 @@ export default function CardAsset(props: ICardAssetProps) {
         history.push(`${routes.artworks}/${asset.item_id}`)
         break
       case routes.dashboard:
-        asset.id ? history.push(`${routes.artworks}/${asset.item_id}`) : setIsZoomOpen(true)
+        asset.id
+          ? history.push(`${routes.artworks}/${asset.item_id}`)
+          : history.push(`${routes.artworks}/${asset.tokenData?.id}`)
     }
   }
 
@@ -38,7 +40,7 @@ export default function CardAsset(props: ICardAssetProps) {
     <>
       <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
         <Box className={classes.artContainer}>
-          <img src={asset.imageData.image} className={classes.cardImage} />
+          <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
         <Box className={classes.artInfoContainer}>
