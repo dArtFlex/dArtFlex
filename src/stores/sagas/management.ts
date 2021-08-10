@@ -73,7 +73,7 @@ export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: stri
   try {
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
     yield call(api, {
-      url: APP_CONFIG.unbanItem,
+      url: APP_CONFIG.unbanUser,
       method: 'POST',
       data: {
         userId: payload.user_id,

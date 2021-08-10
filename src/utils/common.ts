@@ -21,3 +21,12 @@ export function normalizeDate(date: string): Date {
 export function tabelTimeFormat(date: string) {
   return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(false).format('hh:mm')}`
 }
+
+export function creatArrayFromNumber(n = 10): number[] {
+  const emptyArray = new Array(n)
+  const array = []
+  for (let i = 0; i < emptyArray.length; i++) {
+    array.push(i)
+  }
+  return array
+}

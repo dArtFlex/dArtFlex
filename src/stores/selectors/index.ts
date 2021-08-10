@@ -5,7 +5,7 @@ import { stateType } from 'stores/reducers'
 export const selectAssets = () =>
   createSelector(
     (store: stateType) => store,
-    ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
+    ({ assets: { assets, fetching, fetchingAll } }: stateType) => ({ assets, fetching, fetchingAll })
   )
 export const selectAssetFromList = (id: string) =>
   createSelector(
