@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MintingStateType } from './types'
-import { ErrorMessageProps } from 'formik'
-import { ErrorInfo } from 'react'
 
 const initialState: MintingStateType = {
   fetching: false,
