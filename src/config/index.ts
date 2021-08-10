@@ -29,6 +29,7 @@ const APP_CONFIG = {
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
   getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
+  getSoldHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_sold_history/${user_id}`,
 
   // GET History
   getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,

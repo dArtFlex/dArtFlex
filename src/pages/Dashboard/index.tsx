@@ -20,6 +20,7 @@ import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 import { unlistingRequest } from 'stores/reducers/listing'
+import BigNumber from 'bignumber.js'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -47,13 +48,19 @@ export default function Dashboard() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { user, userAssets, userCollectedAssets, fetching } = useSelector(selectUser())
+  const { user, userAssets, userCollectedAssets, userSolddAssets, fetching } = useSelector(selectUser())
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
   const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
+  const searchSoldAssets = useSearchAssets({ assets: userSolddAssets, search })
   const sortedAssets = useSortedAssets({
-    userAssets: filter === FILTER_VALUES.COLLECTED ? searchCollectedAssets : searchAssets,
+    userAssets:
+      filter === FILTER_VALUES.COLLECTED
+        ? searchCollectedAssets
+        : filter === FILTER_VALUES.SOLD
+        ? searchSoldAssets
+        : searchAssets,
     filter,
   })
 
@@ -117,6 +124,14 @@ export default function Dashboard() {
     dispatch(getUserAssetsRequest())
   }
 
+  const totalSales = userSolddAssets
+    .map((a: { current_price: string }) => a.current_price)
+    .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
+  const totalSalesToEth = new BigNumber(totalSales)
+    .dividedBy(`10e${18 - 1}`)
+    .toNumber()
+    .toFixed(4)
+
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
@@ -153,7 +168,7 @@ export default function Dashboard() {
           {filter === FILTER_VALUES.SOLD && (
             <Box className={classes.container}>
               <Box className={classes.inlineFlex}>
-                <ValuesInfo />
+                <ValuesInfo totalSalesToEth={totalSalesToEth} />
               </Box>
             </Box>
           )}

@@ -210,10 +210,35 @@ export function* getUserAssets(api: IApi) {
       }
     > = yield all(getAssetsListCollectedData.map((asset) => call(getMainAssetStatus, api, asset)))
 
+    // Sold Asset
+    const userSolddAssets: IBidsHistory[] = yield call(api, {
+      url: APP_CONFIG.getSoldHistoryByUser(user.id),
+    })
+    const getAllSoldItemById: AssetTypes[] = yield all(
+      userSolddAssets.map((asset) =>
+        call(api, {
+          url: APP_CONFIG.getItemByItemId(+asset.item_id),
+        })
+      )
+    )
+
+    const getAssetsListSoldData: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllSoldItemById.flat().map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListSoldWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListSoldData.map((asset) => call(getMainAssetStatus, api, asset)))
+
     yield put(
       getUserAssetsSuccess({
         userAssets: getAssetsListAllWithStatuses,
         userCollectedAssets: getAssetsListCollectedWithStatuses,
+        userSolddAssets: getAssetsListSoldWithStatuses,
       })
     )
   } catch (e) {

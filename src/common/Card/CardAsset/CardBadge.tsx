@@ -53,8 +53,8 @@ export default function CardBadge(props: ICardBadgeProps) {
     case SOLD:
       return (
         <Box className={classes.badgeBox}>
-          <Icon className={clsx(classes.badgeIcon, classes.purple)} />
-          <Typography variant={'body1'}>Purchased</Typography>
+          <Icon className={clsx(classes.badgeIcon, classes.grey)} />
+          <Typography variant={'body1'}>Sold</Typography>
         </Box>
       )
     default:

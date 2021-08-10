@@ -34,7 +34,7 @@ export function useSortedAssets({
           : a
       })
     case SOLD:
-      return userAssets.filter((a) => a.tokenData.creator === a.tokenData.owner && Boolean(a.sold))
+      return userAssets.map((a: IUserAssets) => ({ ...a, status: SOLD }))
     default:
       throw new Error(`Insufficient type: ${filter}`)
   }
