@@ -33,11 +33,22 @@ export const selectUser = () =>
   createSelector(
     (store: stateType) => store,
     ({
-      user: { user, userAssets, userCollectedAssets, userBids, fetching, fetchingBids, isId, fetchingId },
+      user: {
+        user,
+        userAssets,
+        userCollectedAssets,
+        userBids,
+        userSolddAssets,
+        fetching,
+        fetchingBids,
+        isId,
+        fetchingId,
+      },
     }: stateType) => ({
       user,
       userAssets,
       userCollectedAssets,
+      userSolddAssets,
       userBids,
       fetching,
       fetchingBids,
