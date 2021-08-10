@@ -46,7 +46,7 @@ export default function apiMiddleware({
       if (!!er.message) {
         const error = new Error(_error)
         error.message = _error
-        throw error.message
+        throw error
       }
     })
 }

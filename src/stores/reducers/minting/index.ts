@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MintingStateType } from './types'
+import { ErrorMessageProps } from 'formik'
+import { ErrorInfo } from 'react'
 
 const initialState: MintingStateType = {
   fetching: false,
@@ -73,9 +75,8 @@ const mintingSlice = createSlice({
       state.lazyMintItemId = payload.lazyMintItemId
       state.lazymint = payload.lazymint
     },
-    lazyMintingFailure: (state, { payload }: PayloadAction<string>) => {
-      const mintingErrorMessage = typeof payload === 'string' ? 'Image already exists' : 'Name already exists'
-      state.error = mintingErrorMessage
+    lazyMintingFailure: (state, { payload }: PayloadAction<Error>) => {
+      state.error = typeof payload.message === 'string' ? 'Image already exists' : 'Name already exists'
       state.minting = 'failed'
     },
 
