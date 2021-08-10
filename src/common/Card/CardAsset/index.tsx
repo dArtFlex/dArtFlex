@@ -10,7 +10,6 @@ import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 import { normalizeDate } from 'utils'
-import ImageViewer from '../../ImageViewer'
 
 export default function CardAsset(props: ICardAssetProps) {
   const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
@@ -22,7 +21,6 @@ export default function CardAsset(props: ICardAssetProps) {
   const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
-  const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   function cardActionEvent() {
     switch (history.location.pathname) {
@@ -94,9 +92,6 @@ export default function CardAsset(props: ICardAssetProps) {
           },
         ]}
       />
-      {isZoomOpen && (
-        <ImageViewer open={isZoomOpen} onClose={() => setIsZoomOpen(false)} images={[asset.imageData.image]} />
-      )}
     </>
   )
 }
