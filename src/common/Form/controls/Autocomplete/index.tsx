@@ -106,25 +106,21 @@ export default function FormAutocomplete(props: IBaseFormAutocompleteProps) {
       />
       {witChips && values[field.name].length ? (
         <Box className={classes.chipsWrapper}>
-          {values[field.name].map((el: { inputValue: string; title: string }, i: number) => {
-            return (
-              <Chip
-                key={i}
-                label={el.inputValue || el.title || el}
-                onDelete={() =>
-                  setFieldValue(
-                    field.name,
-                    values[field.name].filter((_: unknown, _i: number) => _i !== i)
-                  )
-                }
-                className={classes.chip}
-              />
-            )
-          })}
+          {values[field.name].map((el: { inputValue: string; title: string }, i: number) => (
+            <Chip
+              key={i}
+              label={el.inputValue || el.title || el}
+              onDelete={() =>
+                setFieldValue(
+                  field.name,
+                  values[field.name].filter((_: unknown, _i: number) => _i !== i)
+                )
+              }
+              className={classes.chip}
+            />
+          ))}
         </Box>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </FormControl>
   )
 }
