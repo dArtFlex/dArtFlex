@@ -9,6 +9,7 @@ import {
 } from 'types'
 export interface AssetsStateType {
   fetching: boolean
+  fetchingAll: boolean
   error: string
   assets: null | Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }>
   assetDetails: IAssetDetails
