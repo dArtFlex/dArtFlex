@@ -21,7 +21,7 @@ export default function Form() {
   const { values } = useFormikContext<ICreateNFT>()
 
   const {
-    minting: { data, error },
+    minting: { data },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -111,7 +111,6 @@ export default function Form() {
       ) : (
         <ListingForm onViewArtwork={handleViewArtwork} isTabletMobile={isTabletMobile} />
       )}
-      <Snackbar></Snackbar>
     </Box>
   )
 }
