@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Tooltip as MUITooltip } from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
 import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
@@ -132,41 +132,59 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           </Box>
         </Box>
         {marketData ? (
-          <Button
-            onClick={() => {
-              if (wallet) {
-                onSubmit()
-              } else {
-                setOpen(true)
-              }
-            }}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            className={classes.bitBtn}
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={user?.id !== creatorData?.id}
           >
-            {`Buy Now for ${startPriceToToken} ETH`}
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (wallet) {
+                    onSubmit()
+                  } else {
+                    setOpen(true)
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                disabled={user?.id === creatorData?.id}
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+              >
+                {`Buy Now for ${startPriceToToken} ETH`}
+              </Button>
+            </Box>
+          </MUITooltip>
         ) : (
-          <Button
-            onClick={() => {
-              if (wallet) {
-                onSubmit()
-              } else {
-                setOpen(true)
-              }
-            }}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            disabled={user?.id === creatorData?.id}
-            className={classes.bitBtn}
-            classes={{ disabled: classes.bitBtnDisabled }}
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={user?.id !== creatorData?.id}
           >
-            Make offer
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (wallet) {
+                    onSubmit()
+                  } else {
+                    setOpen(true)
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                disabled={user?.id === creatorData?.id}
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+              >
+                Make offer
+              </Button>
+            </Box>
+          </MUITooltip>
         )}
 
         <Tabs
