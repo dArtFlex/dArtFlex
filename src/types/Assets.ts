@@ -23,6 +23,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   lazymint: boolean
   ban: boolean
   hashtag: IHashtag[]
+  marketplace: IAssetMarketData[]
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {
@@ -77,14 +78,15 @@ export interface IBaseTokens {
 export interface IAssetMarketData {
   id: number
   item_id: string
-  type: string
+  type: IAssetStatus
   start_price: string
   end_price: string
   start_time: string
   end_time: string
   platform_fee: string
   sales_token_contract: string
-  sold: false
+  sold: boolean
   created_at: string
   updated_at: string
+  current_price: string
 }
