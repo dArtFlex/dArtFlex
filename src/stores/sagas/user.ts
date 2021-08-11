@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select, all } from 'redux-saga/effects'
@@ -45,7 +46,7 @@ import {
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
-import { getIdFromString, createDummyMarketplaceData } from 'utils'
+import { getIdFromString, createDummyMarketplaceData, setDummyAccount } from 'utils'
 import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -89,33 +90,50 @@ export function* getUserDataById(api: IApi, id: string) {
 }
 
 function* uploadImage(api: IApi, file: File) {
-  try {
-    const formData = new FormData()
-    formData.append('file', file as File)
-    const imageUrl: string = yield call(api, {
-      method: 'POST',
-      url: APP_CONFIG.uploadImage,
-      data: formData,
-      transform: false,
+  const formData = new FormData()
+  formData.append('file', file as File)
+  const imageUrl: string = yield call(api, {
+    method: 'POST',
+    url: APP_CONFIG.uploadImage,
+    data: formData,
+    transform: false,
+  })
+  return imageUrl
+}
+
+export function* initialConnection(api: IApi, { payload }: PayloadAction<{ accounts: string }>) {
+  const userData: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(payload.accounts),
+  })
+  if (!userData.length) {
+    yield call(createNewUser, api, {
+      payload: {
+        accountSettings: { ...setDummyAccount(), userid: payload.accounts },
+        wallet: payload.accounts,
+        isNewProfileImage: false,
+        isNewCoverImage: false,
+      },
     })
-    return imageUrl
-  } catch (e) {
-    throw new Error(e.message || e)
   }
 }
 
 export function* createNewUser(
   api: IApi,
-  { payload: { accountSettings, wallet } }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
+  {
+    payload: { accountSettings, wallet, isNewProfileImage, isNewCoverImage },
+  }: PayloadAction<{
+    accountSettings: IAccountSettings
+    wallet: string
+    isNewProfileImage: boolean
+    isNewCoverImage: boolean
+  }>
 ) {
   try {
-    const { profile_image, cover_image, fullname, id: userid, email, overview, ...socials } = accountSettings
+    const { profile_image, cover_image, fullname, userid, email, overview, ...socials } = accountSettings
     const { website, twitter, instagram, discord, facebook, youtube, tiktok, other_url: otherUrl } = socials
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const coverImageUrl: string = yield call(uploadImage as any, api, cover_image)
+    const profileImageUrl: string = isNewProfileImage ? yield call(uploadImage, api, profile_image) : profile_image
+    const coverImageUrl: string = isNewCoverImage ? yield call(uploadImage, api, cover_image) : cover_image
 
     const formData = new FormData()
     formData.append('profile_image', profileImageUrl)
@@ -154,8 +172,13 @@ export function* createNewUser(
     })
 
     yield put(createNewUserSuccess({ userData: userData[0] }))
-  } catch ({ message = '' }) {
-    yield put(createNewUserFailure(message))
+  } catch (e) {
+    const code: number = getIdFromString(e.message || e)
+    if (code === 413) {
+      yield put(createNewUserFailure('User image or cover image is too large!'))
+      return
+    }
+    yield put(createNewUserFailure(e.message || e))
   }
 }
 

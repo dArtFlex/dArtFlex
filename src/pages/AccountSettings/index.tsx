@@ -39,7 +39,14 @@ export default function AccountSettings() {
   const { user } = useSelector(selectUser())
 
   const onSubmit = (values: IAccountSettings) => {
-    dispatch(createNewUserRequest({ accountSettings: values, wallet: wallet?.accounts[0] as string }))
+    dispatch(
+      createNewUserRequest({
+        accountSettings: values,
+        wallet: wallet?.accounts[0] as string,
+        isNewProfileImage: typeof values.profile_image !== 'string',
+        isNewCoverImage: typeof values.cover_image !== 'string',
+      })
+    )
   }
 
   const [initialValues, setInitialValues] = useState<IAccountSettings>(data)

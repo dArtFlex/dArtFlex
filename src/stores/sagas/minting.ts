@@ -27,8 +27,8 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
     })
 
     yield put(uploadImageSuccess({ image, image_data: file?.name }))
-  } catch ({ message = '' }) {
-    yield put(uploadImageFailure(message))
+  } catch (e) {
+    yield put(uploadImageFailure(e.message || e))
   }
 }
 

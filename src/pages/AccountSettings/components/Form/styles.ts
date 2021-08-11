@@ -66,6 +66,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.green,
       gap: theme.spacing(1.5),
     },
+    errorTextHelper: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      color: theme.palette.redMiddle,
+      gap: theme.spacing(1.5),
+    },
     formField: {
       backgroundColor: theme.palette.background.default,
     },
