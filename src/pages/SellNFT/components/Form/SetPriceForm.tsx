@@ -90,6 +90,10 @@ export default function SetPriceForm() {
                 />
               ),
             }}
+            inputProps={{
+              type: 'number',
+              className: classes.numberInput,
+            }}
           />
         </>
       ) : (
@@ -116,6 +120,10 @@ export default function SetPriceForm() {
                   }
                 />
               ),
+            }}
+            inputProps={{
+              type: 'number',
+              className: classes.numberInput,
             }}
           />
         </>

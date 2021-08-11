@@ -45,5 +45,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       paddingBottom: theme.spacing(4),
     },
+    numberInput: {
+      '&::-webkit-inner-spin-button': {
+        '-webkit-appearance': 'none',
+      },
+    },
   })
 )
