@@ -89,10 +89,7 @@ If you receive a bid above the starting value but below your reserve price - you
             />
           ),
         }}
-        inputProps={{
-          type: 'number',
-          className: classes.numberInput,
-        }}
+        typeValue="number"
       />
 
       <Divider className={classes.divider} />
@@ -124,10 +121,7 @@ If you receive a bid above the starting value but below your reserve price - you
             />
           ),
         }}
-        inputProps={{
-          type: 'number',
-          className: classes.numberInput,
-        }}
+        typeValue="number"
       />
 
       <Divider className={classes.divider} />

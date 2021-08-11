@@ -19,6 +19,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         '-webkit-box-shadow': `0 0 0 100px ${theme.palette.background.paper} inset`,
       },
     },
+    numberInput: {
+      '&::-webkit-inner-spin-button': {
+        '-webkit-appearance': 'none',
+      },
+    },
     star: {
       '&::after': {
         content: "'*'",

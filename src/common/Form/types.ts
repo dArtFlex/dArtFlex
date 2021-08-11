@@ -19,6 +19,7 @@ export interface IBaseFormFieldProps {
 
 export interface ITextInput {
   description?: string
+  typeValue?: 'number' | 'string'
 }
 
 export interface IUploadInput extends Pick<IBaseFormFieldProps, 'helperText'> {
