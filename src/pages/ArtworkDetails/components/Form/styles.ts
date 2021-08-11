@@ -99,6 +99,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.greyMid,
       '&.Mui-disabled': {
         color: theme.palette.white,
+        pointerEvents: 'auto',
+        cursor: 'pointer',
       },
     },
     bitBtnDisabledText: {
