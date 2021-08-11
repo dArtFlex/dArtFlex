@@ -17,6 +17,7 @@ const initialState: UserStateType = {
   fetchingPromo: false,
   isId: false,
   fetchingId: false,
+  activeBids: [],
 }
 
 const userSlice = createSlice({
@@ -89,6 +90,24 @@ const userSlice = createSlice({
     getUserBidsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingBids = false
+    },
+
+    getBidsByUser: (state) => {
+      state.fetching = true
+    },
+
+    getActiveBidsByUserRequest: (state) => {
+      state.fetching = true
+    },
+
+    getActiveBidsByUserSuccess: (state, { payload }: PayloadAction<{ activeBids: UserStateType['activeBids'] }>) => {
+      state.fetching = false
+      state.activeBids = payload.activeBids
+    },
+
+    getActiveBidsByUserFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
     },
 
     addPromotionRequest: (state, i) => {
@@ -236,6 +255,10 @@ export const {
   getUserBidsRequest,
   getUserBidsSuccess,
   getUserBidsFailure,
+
+  getActiveBidsByUserRequest,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
 
   addPromotionRequest,
   addPromotionSuccess,

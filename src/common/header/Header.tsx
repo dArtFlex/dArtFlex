@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch, getUserBidsRequest } from 'stores/reducers/user'
+import { setSearch, resetSearch, getUserBidsRequest, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -56,7 +56,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const { path } = useRouteMatch()
 
   const { wallet } = useSelector(selectWallet())
-  const { user, userBids } = useSelector(selectUser())
+  const { user, activeBids } = useSelector(selectUser())
   const { notifications } = useSelector(selectNotifications())
 
   const { role } = useSelector(selectUserRole())
@@ -76,6 +76,9 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   useEffect(() => {
     user?.id && fetchUserBids()
+  }, [user?.id])
+  useEffect(() => {
+    user?.id && dispatch(getActiveBidsByUserRequest())
   }, [user?.id])
 
   const mainLinks = [
@@ -211,8 +214,8 @@ export default function Header({ toggleTheme }: HeaderType) {
                 ))}
               </Tabs>
               <Box className={classes.buttonContainer}>
-                {Boolean(userBids?.length) && (
-                  <Chip avatar={`${userBids?.length}`} endIcon>
+                {Boolean(activeBids.length) && (
+                  <Chip avatar={`${activeBids.length}`} endIcon>
                     Bids
                   </Chip>
                 )}
@@ -376,7 +379,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <Badge
                       color={'primary'}
                       variant="dot"
-                      invisible={false}
+                      invisible={!notifications.length}
                       className={classes.notification}
                       classes={{ badge: classes.notificationBadge }}
                     >
@@ -387,10 +390,10 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                {Boolean(userBids?.length) && (
+                {Boolean(activeBids.length) && (
                   <Box className={classes.mobileUserStatsWrapper}>
                     <Typography variant={'h4'}>Bids</Typography>
-                    <Box className={classes.bidsCount}>1</Box>
+                    <Box className={classes.bidsCount}>{activeBids.length}</Box>
                   </Box>
                 )}
                 <Box className={classes.mobileActionButtonsWrapper}>
