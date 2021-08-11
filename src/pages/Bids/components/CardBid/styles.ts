@@ -100,7 +100,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       backgroundColor: theme.palette.grey['50'],
       '&.burn': {
-        backgroundColor: theme.palette.lightPink,
+        backgroundColor: theme.palette.info.light,
       },
     },
     bids: {

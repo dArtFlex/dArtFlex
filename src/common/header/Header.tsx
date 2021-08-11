@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch } from 'stores/reducers/user'
+import { setSearch, resetSearch, getUserBidsRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -56,13 +56,11 @@ export default function Header({ toggleTheme }: HeaderType) {
   const { path } = useRouteMatch()
 
   const { wallet } = useSelector(selectWallet())
-  const { user } = useSelector(selectUser())
+  const { user, userBids } = useSelector(selectUser())
   const { notifications } = useSelector(selectNotifications())
 
   const { role } = useSelector(selectUserRole())
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
-
-  const bids: Array<string> = []
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
@@ -71,6 +69,14 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
   const history = useHistory()
+
+  const fetchUserBids = () => {
+    dispatch(getUserBidsRequest())
+  }
+
+  useEffect(() => {
+    user?.id && fetchUserBids()
+  }, [user?.id])
 
   const mainLinks = [
     {
@@ -205,8 +211,8 @@ export default function Header({ toggleTheme }: HeaderType) {
                 ))}
               </Tabs>
               <Box className={classes.buttonContainer}>
-                {Boolean(bids.length) && (
-                  <Chip avatar={`${bids.length}`} endIcon>
+                {Boolean(userBids?.length) && (
+                  <Chip avatar={`${userBids?.length}`} endIcon>
                     Bids
                   </Chip>
                 )}
@@ -381,7 +387,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                {Boolean(bids.length) && (
+                {Boolean(userBids?.length) && (
                   <Box className={classes.mobileUserStatsWrapper}>
                     <Typography variant={'h4'}>Bids</Typography>
                     <Box className={classes.bidsCount}>1</Box>
