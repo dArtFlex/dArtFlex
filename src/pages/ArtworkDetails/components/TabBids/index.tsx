@@ -31,7 +31,7 @@ export default function TabBids(props: ITabHistoryPropa) {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const historyReverse = history.slice().reverse()
+  const historyReverse = history ? history.slice().reverse() : []
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
