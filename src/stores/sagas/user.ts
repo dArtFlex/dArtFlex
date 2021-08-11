@@ -186,7 +186,8 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: asset.uri,
   })
-  const marketplaceData = asset.marketplace.length ? asset.marketplace : createDummyMarketplaceData()
+
+  const marketplaceData = asset.marketplace?.length ? asset.marketplace[0] : createDummyMarketplaceData()
   // We need to use dummy marketplace data in order to use common cards component
   return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
@@ -382,7 +383,8 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
   })
-  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace : null
+
+  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
   return {
     marketData: marketplaceData,
     ownerData: userByOwner[0],

@@ -140,7 +140,7 @@ export function* getMarketplaceData(api: IApi, itemId: number) {
 export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
   try {
     // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
-    if (asset.item_id.length === 0) {
+    if (asset?.item_id.length === 0) {
       return {
         ...asset,
         status: MINTED,
