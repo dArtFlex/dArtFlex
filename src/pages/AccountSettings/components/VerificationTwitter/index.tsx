@@ -34,7 +34,9 @@ export default function VerificationTwitter(props: IVerificationTwitterProps) {
         ) : (
           <Box className={classes.container}>
             <Box mb={6}>
-              <Typography variant={'h2'}>Verification</Typography>
+              <Typography variant={'h2'} className={classes.modalTitle}>
+                Verification
+              </Typography>
             </Box>
             <Box className={classes.section}>
               <Typography className={classes.sectionHead}>Step 1</Typography>
