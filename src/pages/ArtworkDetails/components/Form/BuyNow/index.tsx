@@ -27,7 +27,7 @@ export default function FormAuction() {
         <FormBuy
           onSubmit={() => {
             setFieldValue('formProgress', 'approved')
-            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bids && bids[0].order_id })) // should
+            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bids && bids[0].order_id })) // Should first element
           }}
           onMakeOffer={() => {
             setFieldValue('formProgress', 'approved')

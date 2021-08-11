@@ -90,6 +90,7 @@ export default function SetPriceForm() {
                 />
               ),
             }}
+            typeValue="number"
           />
         </>
       ) : (
@@ -117,6 +118,7 @@ export default function SetPriceForm() {
                 />
               ),
             }}
+            typeValue="number"
           />
         </>
       )}

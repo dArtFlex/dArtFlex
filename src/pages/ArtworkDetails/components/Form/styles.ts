@@ -99,6 +99,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.greyMid,
       '&.Mui-disabled': {
         color: theme.palette.white,
+        pointerEvents: 'auto',
+        cursor: 'pointer',
       },
     },
     bitBtnDisabledText: {
@@ -246,6 +248,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
     },
     bitViewBtn: {
+      color: theme.palette.text.primary,
+      backgroundColor: theme.palette.background.paper,
       border: `2px solid ${theme.palette.text.primary}`,
       '&:hover': {
         border: `2px solid ${theme.palette.text.primary}`,

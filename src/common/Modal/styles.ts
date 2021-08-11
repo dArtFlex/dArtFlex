@@ -15,6 +15,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       borderRadius: theme.spacing(3),
       outline: 'none',
+      [theme.breakpoints.down(720)]: {
+        width: '96vw',
+      },
     },
     aside: {
       height: 424,

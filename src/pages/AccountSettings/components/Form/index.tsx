@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { validateUserIdRequest } from 'stores/reducers/user'
 import { selectUser } from 'stores/selectors'
@@ -24,6 +24,7 @@ import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
 import image from 'common/icons/smiley_face.svg'
 import cover from 'common/icons/cover-default.svg'
+import { debounce } from 'lodash'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
@@ -34,23 +35,19 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
   const { setOpenVerification, user } = props
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { userIdValid } = useSelector(selectUser())
+  const { userIdValid, fetching } = useSelector(selectUser())
 
-  const { values, handleSubmit, setFieldError } = useFormikContext<ICustomAccountSettings>()
-  const [userIdValidation, setUserIdValidation] = useState(user?.userid === values.userid)
+  const { values, handleSubmit } = useFormikContext<ICustomAccountSettings>()
+
+  const callRequest = debounce(() => dispatch(validateUserIdRequest({ userId: String(values.userid) })), 1000, {
+    leading: true,
+  })
 
   useEffect(() => {
     if (user?.userid !== values.userid) {
-      dispatch(validateUserIdRequest({ userId: String(values.userid) }))
-      setUserIdValidation(false)
+      callRequest()
     }
   }, [values.userid, user])
-
-  useEffect(() => {
-    if (!userIdValidation) {
-      setFieldError('userid', "Username isn't unique")
-    }
-  }, [userIdValid])
 
   return (
     <Box className={classes.form}>
@@ -82,12 +79,18 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(userIdValidation && values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
-              <Box className={classes.successTextHelper}>
-                <SuccessIcon className={classes.successIcon} />
-                <Typography>Username is Valid</Typography>
-              </Box>
-            )
+            user?.userid !== values.userid && !fetching ? (
+              userIdValid === false ? (
+                <Box className={classes.errorTextHelper}>
+                  <Typography>{`Username isn't unique`}</Typography>
+                </Box>
+              ) : (
+                <Box className={classes.successTextHelper}>
+                  <SuccessIcon className={classes.successIcon} />
+                  <Typography>{`Username is Valid`}</Typography>
+                </Box>
+              )
+            ) : null
           }
         />
         <Field
@@ -224,7 +227,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         </Button>
       </Box>
       <Button
-        disabled={!Boolean(values.id.length)}
+        disabled={!Boolean(values.id.length || values?.userid?.length) || userIdValid === false || fetching}
         variant={'contained'}
         onClick={() => handleSubmit()}
         className={classes.btnSubmit}

@@ -13,6 +13,7 @@ import {
   walletsDisconeSuccess,
   walletsDisconeFailure,
 } from '../reducers/wallet'
+import { initialConnection } from 'stores/sagas/user'
 import { IChainId, ITokenBalances, IBaseTokens } from 'types'
 import { storageActiveWallet, createWalletInstance, getWalletsFromHistory } from 'utils'
 import tokensAll from 'core/tokens'
@@ -35,6 +36,7 @@ export function* connectMetaMask(api: IApi) {
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
+    yield call(initialConnection, api, { payload: { accounts: accounts[0] } })
 
     const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
     if (!isAccepted) {
@@ -70,6 +72,7 @@ export function* connectWalletConnect(api: IApi) {
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.TRUST)
     yield put(connnectWalletConnectSuccess(walletInstance))
+    yield call(initialConnection, api, { payload: { accounts: accounts[0] } })
 
     const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
     if (!isAccepted) {
