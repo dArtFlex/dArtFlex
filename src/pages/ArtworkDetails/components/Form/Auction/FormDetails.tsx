@@ -251,58 +251,60 @@ export default function FormDetails(props: IDetailsFormProps) {
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
             disableHoverListener={!isSamePerson}
-            interactive
           >
-            <Button
-              onClick={() => {
-                if (isSamePerson) {
-                  // Secondary sell
-                  return handleListed()
-                }
-                if (wallet) {
-                  onSubmit('formProgress', 'auction')
-                } else {
-                  setOpen(true)
-                }
-              }}
-              variant={ifAuctionEnds ? 'outlined' : 'contained'}
-              color={'primary'}
-              fullWidth
-              disableElevation
-              className={classes.bitBtn}
-              classes={{ disabled: classes.bitBtnDisabled }}
-              disabled={isSamePerson || Boolean(isAuctionExpired)}
-            >
-              {ifAuctionEnds && !isAuctionExpired
-                ? 'I understand, let me bid anyway'
-                : isSamePerson
-                ? 'Sell'
-                : 'Place a Bid'}
-            </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (isSamePerson) {
+                    // Secondary sell
+                    return handleListed()
+                  }
+                  if (wallet) {
+                    onSubmit('formProgress', 'auction')
+                  } else {
+                    setOpen(true)
+                  }
+                }}
+                variant={ifAuctionEnds ? 'outlined' : 'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+                disabled={isSamePerson || Boolean(isAuctionExpired)}
+              >
+                {ifAuctionEnds && !isAuctionExpired
+                  ? 'I understand, let me bid anyway'
+                  : isSamePerson
+                  ? 'Sell'
+                  : 'Place a Bid'}
+              </Button>
+            </Box>
           </MUITooltip>
         ) : (
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
             disableHoverListener={!isSamePerson}
-            interactive
           >
-            <Button
-              onClick={() => {
-                if (wallet) {
-                  onSubmit('formProgress', 'make offer')
-                }
-              }}
-              variant={'contained'}
-              color={'primary'}
-              fullWidth
-              disableElevation
-              className={classes.bitBtn}
-              classes={{ disabled: classes.bitBtnDisabled }}
-              disabled={isSamePerson}
-            >
-              Make offer
-            </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (wallet) {
+                    onSubmit('formProgress', 'make offer')
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+                disabled={isSamePerson}
+              >
+                Make offer
+              </Button>
+            </Box>
           </MUITooltip>
         )}
 
