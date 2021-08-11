@@ -29,7 +29,7 @@ import {
   validateUserIdSuccess,
   validateUserIdFailure,
 } from 'stores/reducers/user'
-import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
+import { getMainAssetStatus } from 'stores/sagas/assets'
 import { UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
@@ -186,10 +186,9 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: asset.uri,
   })
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
-
+  const marketplaceData = asset.marketplace.length ? asset.marketplace : createDummyMarketplaceData()
   // We need to use dummy marketplace data in order to use common cards component
-  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
+  return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -374,7 +373,6 @@ export function* getPromotion(api: IApi) {
 }
 
 function* getPromotionAssetById(api: IApi, assetId: number) {
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(assetId)),
   })
@@ -384,8 +382,9 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
   })
+  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace : null
   return {
-    marketData: marketplaceData ? marketplaceData : null,
+    marketData: marketplaceData,
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
