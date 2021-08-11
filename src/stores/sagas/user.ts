@@ -28,9 +28,11 @@ import {
   updatePromotionSuccess,
   validateUserIdSuccess,
   validateUserIdFailure,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
 } from 'stores/reducers/user'
 import { getMainAssetStatus } from 'stores/sagas/assets'
-import { UserStateType } from 'stores/reducers/user/types'
+import { IActiveUserBids, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -284,6 +286,18 @@ export function* getUserBids(api: IApi) {
     yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
   } catch (e) {
     yield put(getUserBidsFailure(e.message || e))
+  }
+}
+
+export function* getActiveBidsByUser(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const activeBids: IActiveUserBids[] = yield call(api, {
+      url: APP_CONFIG.getActiveUserBidsById(user.id),
+    })
+    yield put(getActiveBidsByUserSuccess({ activeBids: activeBids }))
+  } catch (e) {
+    yield put(getActiveBidsByUserFailure(e.message || e))
   }
 }
 
