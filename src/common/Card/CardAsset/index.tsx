@@ -9,7 +9,7 @@ import { useTimer } from 'hooks'
 import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 
 export default function CardAsset(props: ICardAssetProps) {
   const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
@@ -46,7 +46,9 @@ export default function CardAsset(props: ICardAssetProps) {
             {Boolean(asset.userData) && (
               <Box display={'flex'} mb={4} alignItems={'center'}>
                 <Avatar className={classes.avatar} alt="Avatar" src={asset.userData.profile_image} />
-                <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
+                <Typography variant={'h4'}>
+                  {asset.userData.userid ? `@${shortCutName(asset.userData.userid)}` : '@you'}
+                </Typography>
               </Box>
             )}
             {withAction && (
