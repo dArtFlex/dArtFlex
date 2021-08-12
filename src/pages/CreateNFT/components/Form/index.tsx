@@ -50,11 +50,12 @@ export default function Form() {
     dispatch(clearLazyMintingData())
   }
 
-  useEffect(() => {
-    return () => {
-      dispatch(clearLazyMintingData())
-    }
-  }, [])
+  // Should be done different
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(clearLazyMintingData())
+  //   }
+  // }, [])
 
   return (
     <Box className={classes.mintFormWrapper}>
