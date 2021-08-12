@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
@@ -13,6 +13,7 @@ import routes from '../../../../routes'
 import { ICreateNFT } from '../../types'
 import { useStyles } from './styles'
 import clsx from 'clsx'
+import { shortCutName } from '../../../../utils'
 
 export default function Form() {
   const classes = useStyles()
@@ -49,6 +50,12 @@ export default function Form() {
     dispatch(clearLazyMintingData())
   }
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearLazyMintingData())
+    }
+  }, [])
+
   return (
     <Box className={classes.mintFormWrapper}>
       <Box className={clsx(classes.flexBox, classes.mintedCardInfo)}>
@@ -80,7 +87,7 @@ export default function Form() {
                   src={user ? user.profile_image : '/images/avatar/1.jpg'}
                 />
                 <Typography component={'span'} variant={'h4'}>
-                  {user ? `@${user.userid}` : '@'}
+                  {user ? `@${shortCutName(user.userid)}` : '@'}
                 </Typography>
               </Box>
               {values.name.length || data.name ? (
