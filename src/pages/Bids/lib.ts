@@ -29,13 +29,13 @@ export function useComposeBidsData({
       const currentBidAmount = new BigNumber(bid.marketData?.end_price || '0')
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
+        .toFixed(5)
       const yourBidAmount = new BigNumber(bid.bid_amount)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
-      const currentBidAmountUsd = new BigNumber(currentBidAmount).multipliedBy(rateETH).toNumber().toFixed(2)
-      const yourBidAmountUsd = new BigNumber(yourBidAmount).multipliedBy(rateETH).toNumber().toFixed(2)
+        .toFixed(5)
+      const currentBidAmountUsd = new BigNumber(currentBidAmount).multipliedBy(rateETH).toNumber().toFixed(5)
+      const yourBidAmountUsd = new BigNumber(yourBidAmount).multipliedBy(rateETH).toNumber().toFixed(5)
 
       return {
         itemId: bid.item_id,
