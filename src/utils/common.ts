@@ -30,3 +30,10 @@ export function creatArrayFromNumber(n = 10): number[] {
   }
   return array
 }
+
+export function shortCutName(account: string) {
+  if (account.length < 20) {
+    return account
+  }
+  return `${account?.substring(0, 6)}...${account?.substring(account.length - 4)}`
+}
