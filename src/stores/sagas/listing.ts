@@ -19,6 +19,10 @@ function getIdFromString(v) {
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
+    // The debugger is needed as in the stage environment this event is fallen down.
+    // Should be removed affter tests.
+    debugger
+
     const { lazyMintData, lazyMintItemId, lazymint }: ReturnType<typeof selector> = yield select(
       (state) => state.minting
     )
