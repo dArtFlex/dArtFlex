@@ -26,7 +26,7 @@ export function useComposeBidsData({
       // When we use only ETH or WETH we know for sure token decimals
       // In this case the same for both is 18
       // If we add some new token to buying system we shold change this logic
-      const currentBidAmount = new BigNumber(bid.marketData?.end_price || '0')
+      const currentBidAmount = new BigNumber(bid.marketData?.current_price || '0')
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
         .toFixed(5)
