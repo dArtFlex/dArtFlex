@@ -58,7 +58,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
-          photoUrl={user?.profile_image ? user?.profile_image : image}
+          photoUrl={user?.profile_image}
           variant="avatar"
         />
         <UploadFileSection
@@ -66,7 +66,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
-          photoUrl={user?.cover_image ? user?.cover_image : cover}
+          photoUrl={user?.cover_image ? (user?.cover_image === 'blank' ? cover : user.cover_image) : cover}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field

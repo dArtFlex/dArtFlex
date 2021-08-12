@@ -180,11 +180,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <>
                   {wallet !== null && (
                     <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                      {user?.profile_image ? (
-                        <Avatar src={user?.profile_image} className={classes.avatar} />
-                      ) : (
-                        <SmileyFaceIcon />
-                      )}
+                      <Avatar src={user?.profile_image} className={classes.avatar} />
                     </IconButton>
                   )}
 
@@ -266,13 +262,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       variant={'outlined'}
                       color={'primary'}
                       disableElevation
-                      startIcon={
-                        user?.profile_image ? (
-                          <Avatar src={user.profile_image} className={classes.avatar} />
-                        ) : (
-                          <SmileyFaceIcon />
-                        )
-                      }
+                      startIcon={<Avatar src={user?.profile_image} className={classes.avatar} />}
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
@@ -361,11 +351,7 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Paper className={classes.mobileMenuUserInfo}>
                 <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
-                    {user?.profile_image ? (
-                      <Avatar src={user?.profile_image} className={classes.avatar} />
-                    ) : (
-                      <SmileyFaceIcon />
-                    )}
+                    <Avatar src={user?.profile_image} className={classes.avatar} />
                   </Icon>
                   <Typography>{`${wallet?.balance.toFixed(4)} ${wallet?.meta.coinAbbr}`}</Typography>
                   <IconButton

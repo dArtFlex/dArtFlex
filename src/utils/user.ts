@@ -1,10 +1,11 @@
 import { IAccountSettings } from 'pages/AccountSettings/types'
+import { v4 as uuidv4 } from 'uuid'
 
 export function setDummyAccount(): IAccountSettings {
   return {
     fullname: 'unfilled',
     id: '',
-    email: 'unfilled',
+    email: uuidv4(),
     wallet: 'unfilled',
     overview: 'unfilled',
     profile_image: 'blank',
