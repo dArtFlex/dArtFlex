@@ -89,6 +89,7 @@ If you receive a bid above the starting value but below your reserve price - you
             />
           ),
         }}
+        typeValue="number"
       />
 
       <Divider className={classes.divider} />
@@ -120,6 +121,7 @@ If you receive a bid above the starting value but below your reserve price - you
             />
           ),
         }}
+        typeValue="number"
       />
 
       <Divider className={classes.divider} />
