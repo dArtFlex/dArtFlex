@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { Box, Typography, Button } from '@material-ui/core'
+import { Box, Typography, Button, Avatar } from '@material-ui/core'
 import { Image, Field } from 'common'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
@@ -26,7 +26,7 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
       <Box className={classes.box}>
         <Box className={classes.image}>
           {variant === 'avatar' ? (
-            <Image file={values[name] as File | string} className={classes.avatar} src={photoUrl} />
+            <Avatar className={classes.avatar} src={photoUrl} />
           ) : (
             <Image file={values[name] as File | string} className={classes.cover} src={photoUrl} />
           )}
