@@ -1,6 +1,4 @@
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import image from 'common/icons/smiley_face.svg'
-import cover from 'common/icons/cover-default.svg'
 
 export function setDummyAccount(): IAccountSettings {
   return {
@@ -9,8 +7,8 @@ export function setDummyAccount(): IAccountSettings {
     email: 'unfilled',
     wallet: 'unfilled',
     overview: 'unfilled',
-    profile_image: image,
-    cover_image: cover,
+    profile_image: 'blank',
+    cover_image: 'blank',
     created_at: '',
     updated_at: '',
     role: '',

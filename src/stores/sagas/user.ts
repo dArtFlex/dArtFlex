@@ -28,9 +28,11 @@ import {
   updatePromotionSuccess,
   validateUserIdSuccess,
   validateUserIdFailure,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
 } from 'stores/reducers/user'
-import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
-import { UserStateType } from 'stores/reducers/user/types'
+import { getMainAssetStatus } from 'stores/sagas/assets'
+import { IActiveUserBids, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -186,10 +188,10 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: asset.uri,
   })
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
 
+  const marketplaceData = asset.marketplace?.length ? asset.marketplace[0] : createDummyMarketplaceData()
   // We need to use dummy marketplace data in order to use common cards component
-  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
+  return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -287,6 +289,18 @@ export function* getUserBids(api: IApi) {
   }
 }
 
+export function* getActiveBidsByUser(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const activeBids: IActiveUserBids[] = yield call(api, {
+      url: APP_CONFIG.getActiveUserBidsById(user.id),
+    })
+    yield put(getActiveBidsByUserSuccess({ activeBids: activeBids }))
+  } catch (e) {
+    yield put(getActiveBidsByUserFailure(e.message || e))
+  }
+}
+
 function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, userBids: IBidsHistory) {
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(item_id)),
@@ -374,7 +388,6 @@ export function* getPromotion(api: IApi) {
 }
 
 function* getPromotionAssetById(api: IApi, assetId: number) {
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(assetId)),
   })
@@ -384,8 +397,10 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
   })
+
+  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
   return {
-    marketData: marketplaceData ? marketplaceData : null,
+    marketData: marketplaceData,
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
