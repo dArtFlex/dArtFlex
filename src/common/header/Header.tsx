@@ -34,7 +34,6 @@ import {
   CurrentDownIcon,
   LogoIcon,
   CoolIcon,
-  SmileyFaceIcon,
   BellIcon,
   SearchIcon,
   BurgerMenuIcon,

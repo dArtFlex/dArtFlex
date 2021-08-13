@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { selectBuy } from 'stores/selectors'
 import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -6,19 +8,24 @@ import { CircularProgressLoader } from 'common'
 import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
 import { useStyles } from '../styles'
 import routes from 'routes'
+import APP_CONFIG from 'config'
 
 export default function FormApproved() {
   const classes = useStyles()
-  const [fetch, setFetch] = useState<boolean>(true)
-  const history = useHistory()
 
-  useEffect(() => {
-    setTimeout(() => {
-      setFetch(false)
-    }, 2000)
-  }, [])
+  const {
+    buy: { transactionHash, fetchingTransacting, error },
+  } = useSelector(selectBuy())
 
-  return fetch ? (
+  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
+
+  if (error.length) {
+    return (
+      <SubFormTransaction title={`Your transaction wasn't successful`} icon={null} linkEthescan={etherscanViewTx} />
+    )
+  }
+
+  return fetchingTransacting ? (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
@@ -44,27 +51,45 @@ export default function FormApproved() {
             </Box>
           </Box>
         </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
-        </Box>
       </Box>
     </Box>
   ) : (
+    <SubFormTransaction title={`Your transaction succeeded`} icon={null} linkEthescan={etherscanViewTx} />
+  )
+}
+
+interface ISubFormTransaction {
+  title: string
+  icon?: React.ReactElement | null
+  linkEthescan: string
+}
+
+function SubFormTransaction(props: ISubFormTransaction) {
+  const classes = useStyles()
+  const { title, icon = <SuccessfullyIcon />, linkEthescan } = props
+
+  const history = useHistory()
+
+  return (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
           <Typography variant="h1" component="p">
-            Your transaction succeeded
+            {title}
           </Typography>
         </Box>
-        <Box mb={5.5}>
-          <SuccessfullyIcon />
-        </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
-        </Box>
+        <Box mb={5.5}>{icon}</Box>
+        {linkEthescan.length ? (
+          <Link
+            href={linkEthescan}
+            underline={'none'}
+            target="_blank"
+            className={clsx(classes.externalLink, classes.mb)}
+          >
+            <ExternalLinkIcon />
+            <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
+          </Link>
+        ) : null}
         <Button
           onClick={() => history.push(routes.dashboard)}
           variant={'outlined'}
