@@ -76,7 +76,7 @@ export function* getUserDataByOwner(api: IApi, owner: string) {
     })
     return userData[0]
   } catch (e) {
-    yield put(getUserDataFailure(e.message || e))
+    yield put(getUserDataFailure(e))
   }
 }
 
@@ -87,7 +87,7 @@ export function* getUserDataById(api: IApi, id: string) {
     })
     return userData[0]
   } catch (e) {
-    throw new Error(e.message || e)
+    throw new Error(e)
   }
 }
 
@@ -175,12 +175,12 @@ export function* createNewUser(
 
     yield put(createNewUserSuccess({ userData: userData[0] }))
   } catch (e) {
-    const code: number = getIdFromString(e.message || e)
+    const code: number = getIdFromString(e)
     if (code === 413) {
       yield put(createNewUserFailure('User image or cover image is too large!'))
       return
     }
-    yield put(createNewUserFailure(e.message || e))
+    yield put(createNewUserFailure(e))
   }
 }
 
@@ -269,7 +269,7 @@ export function* getUserAssets(api: IApi) {
       })
     )
   } catch (e) {
-    yield put(getUserAssetsFailure(e.message || e))
+    yield put(getUserAssetsFailure(e))
   }
 }
 
@@ -285,7 +285,7 @@ export function* getUserBids(api: IApi) {
     )
     yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
   } catch (e) {
-    yield put(getUserBidsFailure(e.message || e))
+    yield put(getUserBidsFailure(e))
   }
 }
 
@@ -297,7 +297,7 @@ export function* getActiveBidsByUser(api: IApi) {
     })
     yield put(getActiveBidsByUserSuccess({ activeBids: activeBids }))
   } catch (e) {
-    yield put(getActiveBidsByUserFailure(e.message || e))
+    yield put(getActiveBidsByUserFailure(e))
   }
 }
 
@@ -333,7 +333,7 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
     const promotionData: IAddPromotionEntities = yield call(_addPromotion, api, Number(payload.promotionId))
     yield put(addPromotionSuccess({ promotionIdLastAdded: promotionData.id[0] }))
   } catch (e) {
-    yield put(addPromotionFailure(e.message || e))
+    yield put(addPromotionFailure(e))
   }
 }
 
@@ -358,7 +358,7 @@ export function* deletePromotion(
     yield call(_deletePromotion, api, payload.promotionItemId)
     yield put(deletePromotionSuccess({ promotionIdLastDelete: payload.promotionId }))
   } catch (e) {
-    yield put(deletePromotionFailure(e.message || e))
+    yield put(deletePromotionFailure(e))
   }
 }
 
@@ -383,7 +383,7 @@ export function* getPromotion(api: IApi) {
 
     yield put(getPromotionSuccess({ promotionAssets, promotionIds }))
   } catch (e) {
-    yield put(getPromotionFailure(e.message || e))
+    yield put(getPromotionFailure(e))
   }
 }
 
@@ -415,7 +415,7 @@ export function* getAllUsers(api: IApi) {
 
     yield put(getAllUsersSuccess({ userAll }))
   } catch (e) {
-    yield put(getAllUsersFailure(e.message || e))
+    yield put(getAllUsersFailure(e))
   }
 }
 
@@ -442,7 +442,7 @@ export function* tradingHistory(api: IApi, { payload }: PayloadAction<{ userId: 
     }))
     yield put(getTradingHistorySuccess({ tradingHistoryAll: composeData }))
   } catch (e) {
-    yield put(getTradingHistoryFailure(e.message || e))
+    yield put(getTradingHistoryFailure(e))
   }
 }
 
@@ -454,7 +454,7 @@ export function* checkAssetId(api: IApi, { payload }: PayloadAction<{ item_id: s
 
     yield put(checkAssetIdSuccess({ isId: Boolean(getAsset.length) }))
   } catch (e) {
-    yield put(checkAssetIdFailure(e.message || e))
+    yield put(checkAssetIdFailure(e))
   }
 }
 
@@ -466,7 +466,7 @@ export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promoti
 
     yield put(updatePromotionSuccess())
   } catch (e) {
-    yield put(updatePromotionFailure(e.message || e))
+    yield put(updatePromotionFailure(e))
   }
 }
 

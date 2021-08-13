@@ -125,7 +125,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     history.push(routes.createNFT)
   } catch (e) {
-    yield put(listingFailure(e.message || e))
+    yield put(listingFailure(e))
   }
 }
 
@@ -140,6 +140,6 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
     })
     yield put(unlistingSuccess())
   } catch (e) {
-    yield put(unlistingFailure(e.message || e))
+    yield put(unlistingFailure(e))
   }
 }

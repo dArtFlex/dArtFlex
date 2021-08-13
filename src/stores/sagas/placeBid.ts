@@ -90,7 +90,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
-    yield put(placeBidFailure(e.message || e))
+    yield put(placeBidFailure(e))
   }
 }
 
@@ -143,7 +143,7 @@ export function* acceptBid(
 
     yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
-    yield put(acceptBidFailure(e.message || e))
+    yield put(acceptBidFailure(e))
   }
 }
 
@@ -156,7 +156,7 @@ export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: stri
     const bids = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
     yield put(getBidsSuccess({ bids }))
   } catch (e) {
-    yield put(getBidsFailure(e.message || e))
+    yield put(getBidsFailure(e))
   }
 }
 
@@ -171,6 +171,6 @@ export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: strin
     })
     yield put(cancelBidSuccess())
   } catch (e) {
-    yield put(cancelBidFailure(e.message || e))
+    yield put(cancelBidFailure(e))
   }
 }
