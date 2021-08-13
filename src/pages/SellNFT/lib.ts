@@ -6,9 +6,16 @@ export function useValidationSchema() {
     endDate: yup.date().min(new Date(), 'Incorrect date'),
     reservePrice: yup
       .number()
+      .test('money-format', 'Incorrect number format', (value) => /^\d+(\.\d+)?$/.test(`${value}`))
       .moreThan(0, 'Reserve price should be more then 0')
       .moreThan(yup.ref('minimumBid'), 'Reserve price should be more then minimum bid'),
-    minimumBid: yup.number().moreThan(0, 'Minimin bid should be more then 0'),
-    price: yup.number().moreThan(0, 'Price bid should be more then 0'),
+    minimumBid: yup
+      .number()
+      .test('money-format', 'Incorrect number format', (value) => /^\d+(\.\d+)?$/.test(`${value}`))
+      .moreThan(0, 'Minimin bid should be more then 0'),
+    price: yup
+      .number()
+      .test('money-format', 'Incorrect number format', (value) => /^\d+(\.\d+)?$/.test(`${value}`))
+      .moreThan(0, 'Price bid should be more then 0'),
   })
 }
