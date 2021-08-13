@@ -2,9 +2,9 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, Link, Button } from '@material-ui/core'
+import { Box, Typography, Button } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
-import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
+import { SuccessfullyIcon } from 'common/icons'
 import { selectBid } from 'stores/selectors'
 import { useStyles } from '../styles'
 import { ApprovedFormState } from '../../../types'
@@ -44,10 +44,6 @@ export default function FormApproved() {
             >{`Your bid is being confirmed on the Ethereum blockchain. You are free to leave this page if you like`}</Typography>
           </Box>
         </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
-        </Box>
       </Box>
     </Box>
   ) : (
@@ -68,7 +64,7 @@ interface ISubFormTransaction {
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const { title, desc, icon = <SuccessfullyIcon />, linkEthescan } = props
+  const { title, desc, icon = <SuccessfullyIcon /> } = props
 
   const { setFieldValue } = useFormikContext<ApprovedFormState>()
 
@@ -85,10 +81,6 @@ function SubFormTransaction(props: ISubFormTransaction) {
           <Box className={classes.infoRowIcon}>
             <Typography className={classes.warningText}>{desc}</Typography>
           </Box>
-        </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Link href={linkEthescan} className={classes.externalLinkText}>{`View on Ethescan`}</Link>
         </Box>
         <Button
           onClick={() => setFieldValue('formProgress', 'details')}

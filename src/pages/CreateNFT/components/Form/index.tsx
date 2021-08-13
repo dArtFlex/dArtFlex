@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMinting, selectListing, selectUser } from 'stores/selectors'
@@ -7,6 +7,7 @@ import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { lazyMintingRequest, clearLazyMintingData } from 'stores/reducers/minting'
+import { clearListingData } from 'stores/reducers/listing'
 import MintingForm from './MintingForm'
 import ListingForm from './ListingForm'
 import routes from '../../../../routes'
@@ -48,14 +49,8 @@ export default function Form() {
 
   const handleViewArtwork = () => {
     dispatch(clearLazyMintingData())
+    dispatch(clearListingData())
   }
-
-  // Should be done different
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(clearLazyMintingData())
-  //   }
-  // }, [])
 
   return (
     <Box className={classes.mintFormWrapper}>

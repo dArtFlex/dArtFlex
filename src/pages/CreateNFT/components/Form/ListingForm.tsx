@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Button, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
 import { Link, useLocation } from 'react-router-dom'
@@ -13,6 +13,12 @@ export default function ListingForm(props: IListingForm) {
   const { onViewArtwork, isTabletMobile } = props
   const classes = useStyles()
   const { pathname } = useLocation()
+
+  useEffect(() => {
+    return () => {
+      onViewArtwork()
+    }
+  }, [])
 
   return (
     <Box className={classes.confirming}>
