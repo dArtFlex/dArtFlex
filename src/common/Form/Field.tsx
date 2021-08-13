@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextFieldProps } from '@material-ui/core'
-import { Field as FormikField } from 'formik'
+import { Field as FormikField, FieldValidator } from 'formik'
 import FormUpload from './controls/Upload'
 import FormTextInput from './controls/Input'
 import FormSwitch from './controls/Switch'
@@ -44,13 +44,14 @@ export type IFieldProps = IFormSelectProps &
   IFormDatePickerProps & {
     name: string
     type: FieldType
+    validate?: FieldValidator
   }
 
 export default function Field(props: IFieldProps) {
-  const { name, type, ...rest } = props
+  const { name, type, validate, ...rest } = props
 
   return (
-    <FormikField key={name} name={name}>
+    <FormikField key={name} name={name} validate={validate}>
       {({ form, field }: FieldRenderProps) => {
         switch (type) {
           case 'upload': {
