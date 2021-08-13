@@ -8,7 +8,7 @@ export function useValidationSchema() {
       .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet'),
     userid: yup
       .string()
-      .max(32)
+      .max(42)
       .required('Username is required')
       .matches(/^[A-Za-z0-9\s_]+$/, 'Use latin alphabet'),
     overview: yup
