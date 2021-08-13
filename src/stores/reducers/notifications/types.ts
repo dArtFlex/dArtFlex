@@ -1,9 +1,9 @@
-import { INotifications } from 'types'
+import { INotifications, IError } from 'types'
 
 export interface NotificationsStateType {
   fetching: boolean
   transacting: boolean
-  error: string
+  error: IError
   notifications: INotifications[]
   bids: number
 }

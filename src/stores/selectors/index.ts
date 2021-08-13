@@ -128,6 +128,13 @@ export const selectBuy = () =>
     ({ buy }: stateType) => ({ buy })
   )
 
+// MakeOffer
+export const selectMakeOffer = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ offer }: stateType) => ({ offer })
+  )
+
 // Notifications
 export const selectNotifications = () =>
   createSelector(
@@ -139,5 +146,5 @@ export const selectNotifications = () =>
 export const selectManagement = () =>
   createSelector(
     (store: stateType) => store,
-    ({ management: { works, users } }: stateType) => ({ works, users })
+    ({ management: { works, users, error } }: stateType) => ({ works, users, error })
   )

@@ -1,9 +1,9 @@
-import { ILazyMintData, IHashtag, IHashtagNew } from 'types'
+import { ILazyMintData, IHashtag, IHashtagNew, IError } from 'types'
 export interface MintingStateType {
   fetching: boolean
   uploading?: boolean
   minting: IProcess
-  error: string
+  error: IError
   file: null | File
   data: {
     name: string

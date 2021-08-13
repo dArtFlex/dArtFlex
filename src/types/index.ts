@@ -33,3 +33,10 @@ export interface IImageEntity extends IDatedEntity, IEntity {
 
 export type IChainId = '0x1' | '0x4'
 export type IPaymentToken = 'ETH' | 'WETH'
+
+export type IError =
+  | string
+  | {
+      message: string
+      code?: number
+    }

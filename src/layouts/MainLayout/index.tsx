@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
+import {
+  selectMinting,
+  selectWalletError,
+  selectUser,
+  selectListing,
+  selectBuy,
+  selectBid,
+  selectMakeOffer,
+  selectManagement,
+} from 'stores/selectors'
 import { Footer, Header, Modal, WalletError } from 'common'
-import { selectMinting, selectWalletError, selectUser } from 'stores/selectors'
 import { useStyles } from './styles'
 import { Box } from '@material-ui/core'
 import { clearMintError } from '../../stores/reducers/minting'
@@ -16,24 +24,38 @@ interface IMainLayoutProps {
 
 export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMainLayoutProps): JSX.Element {
   const classes = useStyles()
-  const { error } = useSelector(selectWalletError())
+  const { error: errorWallet } = useSelector(selectWalletError())
   const {
-    minting: { error: mintingError },
+    minting: { error: errorMinting },
   } = useSelector(selectMinting())
-  const { error: userError } = useSelector(selectUser())
+  const { error: errorUser } = useSelector(selectUser())
+  const {
+    listing: { error: errorListing },
+  } = useSelector(selectListing())
+  const {
+    buy: { error: errorBuy },
+  } = useSelector(selectBuy())
+  const {
+    bid: { error: errorBid },
+  } = useSelector(selectBid())
+  const {
+    offer: { error: errorOffer },
+  } = useSelector(selectMakeOffer())
+  const { error: errorManagement } = useSelector(selectManagement())
 
   const dispatch = useDispatch()
 
   const [open, setOpen] = useState<boolean>(false)
   const [snackbarOpen, setSnackBarOpen] = useState<boolean>(false)
-  const errorMessage = mintingError || userError
 
   useEffect(() => {
-    setOpen(Boolean(error.length))
-  }, [error])
+    typeof errorWallet === 'string' && setOpen(Boolean(errorWallet.length))
+  }, [errorWallet])
 
+  const errorMessage =
+    errorMinting || errorUser || errorListing || errorBuy || errorBid || errorOffer || errorManagement
   useEffect(() => {
-    setSnackBarOpen(Boolean(errorMessage.length))
+    typeof errorMessage === 'object' && errorMessage?.message && setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
   function onCloseSnackbar() {
@@ -48,7 +70,11 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
         {children}
         {!hiddenFooter && <Footer />}
       </Box>
-      <Snack message={errorMessage} open={snackbarOpen} onClose={onCloseSnackbar} />
+      <Snack
+        message={typeof errorMessage === 'object' && errorMessage?.message ? errorMessage.message : ''}
+        open={snackbarOpen}
+        onClose={onCloseSnackbar}
+      />
       <Modal open={open} onClose={() => setOpen(false)} body={<WalletError />} withAside />
     </div>
   )

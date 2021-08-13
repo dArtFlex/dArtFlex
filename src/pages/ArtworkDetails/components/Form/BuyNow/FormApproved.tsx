@@ -19,7 +19,7 @@ export default function FormApproved() {
 
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
 
-  if (error.length) {
+  if ((error as string).length) {
     return (
       <SubFormTransaction title={`Your transaction wasn't successful`} icon={null} linkEthescan={etherscanViewTx} />
     )
