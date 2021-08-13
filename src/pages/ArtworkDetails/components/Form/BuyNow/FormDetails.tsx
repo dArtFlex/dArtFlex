@@ -7,7 +7,7 @@ import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
 import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
 import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes } from 'types'
 
@@ -96,7 +96,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </Typography>
             <Box className={classes.avatarBox}>
               <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>@{creatorData?.userid}</span>
+              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
             </Box>
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
@@ -106,7 +106,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               </Typography>
               <Box className={classes.avatarBox}>
                 <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.userid !== creatorData?.userid ? `@${ownerData?.userid}` : '@you'}</span>
+                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
               </Box>
             </Box>
           )}
