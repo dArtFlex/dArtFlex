@@ -6,6 +6,7 @@ import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
+import { validateMinimumBid, validateReservePrice } from '../../lib'
 import { daysInMonth } from 'utils'
 
 const {
@@ -75,6 +76,7 @@ If you receive a bid above the starting value but below your reserve price - you
       <Field
         type="input"
         name="minimumBid"
+        validate={validateMinimumBid}
         variant="outlined"
         fullWidth={false}
         InputProps={{
@@ -107,6 +109,7 @@ If you receive a bid above the starting value but below your reserve price - you
       <Field
         type="input"
         name="reservePrice"
+        validate={(value) => validateReservePrice(value, values.minimumBid)}
         variant="outlined"
         fullWidth={false}
         InputProps={{
