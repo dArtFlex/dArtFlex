@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { validateUserIdRequest } from 'stores/reducers/user'
+import { selectUser } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Button } from '@material-ui/core'
 import { Field, InputAdornment } from 'common'
@@ -16,11 +19,11 @@ import {
   SuccessIcon,
 } from 'common/icons'
 import { UploadFileSection } from '../../components'
-import { IAccountSettings } from '../../types'
+import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
-import image from 'common/icons/smiley_face.svg'
 import cover from 'common/icons/cover-default.svg'
+import { debounce } from 'lodash'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
@@ -30,7 +33,20 @@ interface IFormAccountSettings {
 export default function FormAccountSettings(props: IFormAccountSettings) {
   const { setOpenVerification, user } = props
   const classes = useStyles()
-  const { values, handleSubmit } = useFormikContext<IAccountSettings>()
+  const dispatch = useDispatch()
+  const { userIdValid, fetching } = useSelector(selectUser())
+
+  const { values, handleSubmit } = useFormikContext<ICustomAccountSettings>()
+
+  const callRequest = debounce(() => dispatch(validateUserIdRequest({ userId: String(values.userid) })), 1000, {
+    leading: true,
+  })
+
+  useEffect(() => {
+    if (user?.userid !== values.userid) {
+      callRequest()
+    }
+  }, [values.userid, user])
 
   return (
     <Box className={classes.form}>
@@ -41,7 +57,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="profile_image"
           label="User Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 1000x1000px.`}
-          photoUrl={user?.profile_image ? user?.profile_image : image}
+          photoUrl={user?.profile_image && user?.profile_image !== 'blank' ? user?.profile_image : image}
           variant="avatar"
         />
         <UploadFileSection
@@ -49,7 +65,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
-          photoUrl={user?.cover_image ? user?.cover_image : cover}
+          photoUrl={user?.cover_image && user?.cover_image !== 'blank' ? user?.cover_image : cover}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
@@ -62,12 +78,18 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             startAdornment: <InputAdornment icon={<AtIcon />} />,
           }}
           helperText={
-            Boolean(values.id.length && values.id.match(/^[A-Za-z0-9]+$/)) && (
-              <Box className={classes.successTextHelper}>
-                <SuccessIcon className={classes.successIcon} />
-                <Typography>Username is Valid</Typography>
-              </Box>
-            )
+            user?.userid !== values.userid && !fetching ? (
+              userIdValid === false ? (
+                <Box className={classes.errorTextHelper}>
+                  <Typography>{`Username isn't unique`}</Typography>
+                </Box>
+              ) : (
+                <Box className={classes.successTextHelper}>
+                  <SuccessIcon className={classes.successIcon} />
+                  <Typography>{`Username is Valid`}</Typography>
+                </Box>
+              )
+            ) : null
           }
         />
         <Field
@@ -204,7 +226,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
         </Button>
       </Box>
       <Button
-        disabled={!Boolean(values.id.length)}
+        disabled={!Boolean(values.id.length || values?.userid?.length) || userIdValid === false || fetching}
         variant={'contained'}
         onClick={() => handleSubmit()}
         className={classes.btnSubmit}

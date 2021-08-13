@@ -16,7 +16,7 @@ export default function FormAuction() {
     assetDetails: { marketData },
   } = useSelector(selectAssetDetails())
   const {
-    bid: { bidHistory },
+    bid: { bids },
   } = useSelector(selectBid())
 
   switch (values.formProgress) {
@@ -27,7 +27,7 @@ export default function FormAuction() {
         <FormBuy
           onSubmit={() => {
             setFieldValue('formProgress', 'approved')
-            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bidHistory[1].order_id }))
+            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bids && bids[0].order_id })) // Should first element
           }}
           onMakeOffer={() => {
             setFieldValue('formProgress', 'approved')

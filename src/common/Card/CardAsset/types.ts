@@ -39,6 +39,7 @@ export interface ICardAssetProps {
   emptyBottom?: boolean
   button?: {
     onListed?: () => void
+    onSell?: () => void
   }
   menu?: {
     onUnlisted?: () => void

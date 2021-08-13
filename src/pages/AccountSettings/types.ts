@@ -12,6 +12,10 @@ export interface IAccountSettings extends ISocials {
   ban: boolean
 }
 
+export interface ICustomAccountSettings extends IAccountSettings {
+  userid: string
+}
+
 export interface ISocials {
   website: string
   twitter: string

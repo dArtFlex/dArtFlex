@@ -5,7 +5,7 @@ import Modal from './Modal'
 import { Popover, PopoverLinks } from './Popover'
 import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
 import CircularProgressLoader from './Loaders'
-import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids } from './Card'
+import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids, CardSkeleton } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
 import Tooltip from './Tooltip'
@@ -52,4 +52,5 @@ export {
   AvatarUser,
   Timer,
   Slider,
+  CardSkeleton,
 }

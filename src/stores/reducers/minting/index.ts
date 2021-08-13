@@ -73,8 +73,8 @@ const mintingSlice = createSlice({
       state.lazyMintItemId = payload.lazyMintItemId
       state.lazymint = payload.lazymint
     },
-    lazyMintingFailure: (state, { payload }: PayloadAction<string>) => {
-      state.error = payload
+    lazyMintingFailure: (state, { payload }: PayloadAction<Error>) => {
+      state.error = typeof payload.message === 'string' ? 'Image already exists' : 'Name already exists'
       state.minting = 'failed'
     },
 
@@ -120,6 +120,10 @@ const mintingSlice = createSlice({
       state.lazyMintData = undefined
       state.file = null
     },
+
+    clearMintError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -134,6 +138,7 @@ export const {
 
   setLazyMintingData,
   clearLazyMintingData,
+  clearMintError,
 } = mintingSlice.actions
 
 export const { reducer } = mintingSlice

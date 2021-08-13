@@ -50,15 +50,15 @@ export function* getAssetsAllData(api: IApi) {
     const getItemAssetsAll: AssetTypes[] = yield call(api, {
       url: APP_CONFIG.getItemAll,
     })
-    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = yield all(
-      getItemAssetsAll.map((item) => call(getMarketplaceData, api, item.id))
+
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = getItemAssetsAll.map((asset) =>
+      asset.marketplace.length ? asset.marketplace[0] : createDummyMarketplaceData()
     )
+
     const getAssetsListAllData: AssetDataTypes[] = yield all(
-      getMarketplactAssetsAll
-        .map((mpD) => (mpD ? mpD : createDummyMarketplaceData()))
-        .map((asset, index) =>
-          call(getAssetData, api, asset, { owner: getItemAssetsAll[index].owner, uri: getItemAssetsAll[index].uri })
-        )
+      getMarketplactAssetsAll.map((asset, index) =>
+        call(getAssetData, api, asset, { owner: getItemAssetsAll[index].owner, uri: getItemAssetsAll[index].uri })
+      )
     )
 
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
@@ -75,7 +75,6 @@ export function* getAssetsAllData(api: IApi) {
 
 export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
   try {
-    const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(payload))
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
 
     const assetById: AssetTypes[] = yield call(api, {
@@ -90,6 +89,8 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: assetById[0].uri,
     })
+
+    const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
 
     let status
     if (marketplaceData) {
@@ -114,7 +115,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
         imageData: imageData[0],
         ownerData: userByOwner[0],
         creatorData: userByCreator[0],
-        marketData: marketplaceData ? marketplaceData : null,
+        marketData: marketplaceData,
       })
     )
   } catch (e) {
@@ -139,7 +140,7 @@ export function* getMarketplaceData(api: IApi, itemId: number) {
 export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
   try {
     // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
-    if (asset.item_id.length === 0) {
+    if (asset?.item_id.length === 0) {
       return {
         ...asset,
         status: MINTED,

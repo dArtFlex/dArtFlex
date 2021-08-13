@@ -31,9 +31,11 @@ export interface UserStateType {
   promotionIdLastAdded?: number
   promotionIdLastDelete?: number
   userAll?: UserDataTypes[]
+  userIdValid?: boolean
   tradingHistoryAll?: Array<
     ITradingHistory & { imageData: IImageData; fromUserData: UserDataTypes; toUserData: UserDataTypes }
   >
+  activeBids: IActiveUserBids[]
 }
 
 export interface IUserAsset extends AssetDataTypesWithStatus {
@@ -51,4 +53,14 @@ export interface IPromotionAsset {
   ownerData: UserDataTypes
   imageData: AssetDataTypes['imageData']
   tokenData: AssetTypes
+}
+
+export interface IActiveUserBids {
+  id: number
+  item_id: number
+  order_id: number
+  user_id: number
+  market_id: number
+  bid_amount: number
+  status: string
 }

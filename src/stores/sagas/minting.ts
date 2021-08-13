@@ -27,8 +27,8 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
     })
 
     yield put(uploadImageSuccess({ image, image_data: file?.name }))
-  } catch ({ message = '' }) {
-    yield put(uploadImageFailure(message))
+  } catch (e) {
+    yield put(uploadImageFailure(e.message || e))
   }
 }
 
@@ -46,7 +46,7 @@ export function* minting(
   try {
     const { data }: ReturnType<typeof selector> = yield select((state) => state.minting)
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)
-    debugger
+
     const hashtagsIds = hashtags.reduce((acc, curr) => {
       if (curr?.id) {
         acc.push(curr.id)
@@ -87,6 +87,7 @@ export function* minting(
       },
     })
 
+    const lazymint = true // true as primary sale
     const createItemId = yield call(api, {
       url: APP_CONFIG.createItem,
       method: 'POST',
@@ -99,7 +100,7 @@ export function* minting(
         owner: user.id,
         royalty: '',
         royaltyFee: '',
-        lazymint: true,
+        lazymint: lazymint,
         signature: lm.signatures[0],
         hashtagIdList: [...hashtagsIds, ...newHashtagsIds],
       },

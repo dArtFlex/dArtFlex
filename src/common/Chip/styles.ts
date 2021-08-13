@@ -14,6 +14,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiButton-iconSizeMedium > *:first-child': {
         fontSize: 14,
       },
+      [theme.breakpoints.down(1024)]: {
+        padding: theme.spacing(2.5, 2),
+      },
+      [theme.breakpoints.down(840)]: {
+        padding: theme.spacing(2.5, 0),
+      },
     },
     avatar: {
       width: 20,

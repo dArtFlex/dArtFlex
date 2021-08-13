@@ -10,6 +10,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 336,
       padding: theme.spacing(8, 0, 12),
     },
+    modalTitle: {
+      color: theme.palette.text.primary,
+    },
     section: {
       paddingBottom: theme.spacing(10),
     },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectMinting } from 'stores/selectors'
 import DucolLayout from 'layouts/DucolLayout'
 import { Box, Typography, useMediaQuery } from '@material-ui/core'
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
@@ -11,6 +12,8 @@ import { SetPriceForm, AuctionForm } from './components'
 import { listingRequest } from 'stores/reducers/listing'
 import { ISellArtwork } from './types'
 import { useValidationSchema } from './lib'
+import { history } from '../../navigation'
+import routes from '../../routes'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -46,7 +49,13 @@ const initialData = {
 export default function SellNFT() {
   const classes = useStyles()
   const [form, setForm] = useState(INSTANT_BY)
+
   const dispatch = useDispatch()
+  const { minting } = useSelector(selectMinting())
+
+  if (!minting?.lazyMintData) {
+    history.push(routes.createNFT)
+  }
 
   const onSubmit = (values: ISellArtwork) => {
     const type = form === 'instant_buy' ? 'instant_buy' : 'auction'

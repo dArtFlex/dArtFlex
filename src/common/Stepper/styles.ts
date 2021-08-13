@@ -35,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.background.default,
     },
     step: {
-      [theme.breakpoints.down(320)]: {
+      [theme.breakpoints.down(321)]: {
         paddingLeft: 0,
       },
     },

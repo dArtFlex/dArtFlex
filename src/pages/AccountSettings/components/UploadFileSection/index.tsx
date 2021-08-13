@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { Box, Typography, Button } from '@material-ui/core'
+import { Box, Typography, Button, Avatar } from '@material-ui/core'
 import { Image, Field } from 'common'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'

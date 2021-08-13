@@ -5,7 +5,7 @@ import { stateType } from 'stores/reducers'
 export const selectAssets = () =>
   createSelector(
     (store: stateType) => store,
-    ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
+    ({ assets: { assets, fetching, fetchingAll } }: stateType) => ({ assets, fetching, fetchingAll })
   )
 export const selectAssetFromList = (id: string) =>
   createSelector(
@@ -43,6 +43,9 @@ export const selectUser = () =>
         fetchingBids,
         isId,
         fetchingId,
+        userIdValid,
+        error,
+        activeBids,
       },
     }: stateType) => ({
       user,
@@ -54,6 +57,9 @@ export const selectUser = () =>
       fetchingBids,
       isId,
       fetchingId,
+      userIdValid,
+      error,
+      activeBids,
     })
   )
 export const selectUserRole = () =>
@@ -113,6 +119,13 @@ export const selectBid = () =>
   createSelector(
     (store: stateType) => store,
     ({ bid }: stateType) => ({ bid })
+  )
+
+// Buy
+export const selectBuy = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ buy }: stateType) => ({ buy })
   )
 
 // Notifications

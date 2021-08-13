@@ -4,8 +4,11 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     logo: {
       marginRight: theme.spacing(16),
-      [theme.breakpoints.down(840)]: {
+      [theme.breakpoints.down(1024)]: {
         marginRight: theme.spacing(4),
+      },
+      [theme.breakpoints.down(840)]: {
+        marginRight: theme.spacing(1.5),
       },
     },
     mobileToolBar: {
@@ -64,8 +67,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3, 0),
       '&>button+button': {
         marginLeft: theme.spacing(4),
-        [theme.breakpoints.down(780)]: {
-          marginLeft: theme.spacing(2),
+        [theme.breakpoints.down(840)]: {
+          marginLeft: theme.spacing(1),
+          padding: theme.spacing(2),
         },
       },
     },
@@ -159,7 +163,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     createButton: {
       border: `2px solid ${theme.palette.grey.A100}`,
-      [theme.breakpoints.down(741)]: {
+      [theme.breakpoints.down(800)]: {
         padding: theme.spacing(2),
       },
     },

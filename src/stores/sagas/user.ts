@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select, all } from 'redux-saga/effects'
@@ -25,9 +26,13 @@ import {
   checkAssetIdFailure,
   updatePromotionFailure,
   updatePromotionSuccess,
+  validateUserIdSuccess,
+  validateUserIdFailure,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
 } from 'stores/reducers/user'
-import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
-import { UserStateType } from 'stores/reducers/user/types'
+import { getMainAssetStatus } from 'stores/sagas/assets'
+import { IActiveUserBids, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -43,7 +48,7 @@ import {
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
-import { getIdFromString, createDummyMarketplaceData } from 'utils'
+import { getIdFromString, createDummyMarketplaceData, setDummyAccount } from 'utils'
 import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -87,33 +92,50 @@ export function* getUserDataById(api: IApi, id: string) {
 }
 
 function* uploadImage(api: IApi, file: File) {
-  try {
-    const formData = new FormData()
-    formData.append('file', file as File)
-    const imageUrl: string = yield call(api, {
-      method: 'POST',
-      url: APP_CONFIG.uploadImage,
-      data: formData,
-      transform: false,
+  const formData = new FormData()
+  formData.append('file', file as File)
+  const imageUrl: string = yield call(api, {
+    method: 'POST',
+    url: APP_CONFIG.uploadImage,
+    data: formData,
+    transform: false,
+  })
+  return imageUrl
+}
+
+export function* initialConnection(api: IApi, { payload }: PayloadAction<{ accounts: string }>) {
+  const userData: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(payload.accounts),
+  })
+  if (!userData.length) {
+    yield call(createNewUser, api, {
+      payload: {
+        accountSettings: { ...setDummyAccount(), userid: payload.accounts.slice(0, 31), wallet: payload.accounts },
+        wallet: payload.accounts,
+        isNewProfileImage: false,
+        isNewCoverImage: false,
+      },
     })
-    return imageUrl
-  } catch (e) {
-    throw new Error(e.message || e)
   }
 }
 
 export function* createNewUser(
   api: IApi,
-  { payload: { accountSettings, wallet } }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
+  {
+    payload: { accountSettings, wallet, isNewProfileImage, isNewCoverImage },
+  }: PayloadAction<{
+    accountSettings: IAccountSettings
+    wallet: string
+    isNewProfileImage: boolean
+    isNewCoverImage: boolean
+  }>
 ) {
   try {
-    const { profile_image, cover_image, fullname, id: userid, email, overview, ...socials } = accountSettings
+    const { profile_image, cover_image, fullname, userid, email, overview, ...socials } = accountSettings
     const { website, twitter, instagram, discord, facebook, youtube, tiktok, other_url: otherUrl } = socials
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const coverImageUrl: string = yield call(uploadImage as any, api, cover_image)
+    const profileImageUrl: string = isNewProfileImage ? yield call(uploadImage, api, profile_image) : profile_image
+    const coverImageUrl: string = isNewCoverImage ? yield call(uploadImage, api, cover_image) : cover_image
 
     const formData = new FormData()
     formData.append('profile_image', profileImageUrl)
@@ -152,8 +174,13 @@ export function* createNewUser(
     })
 
     yield put(createNewUserSuccess({ userData: userData[0] }))
-  } catch ({ message = '' }) {
-    yield put(createNewUserFailure(message))
+  } catch (e) {
+    const code: number = getIdFromString(e.message || e)
+    if (code === 413) {
+      yield put(createNewUserFailure('User image or cover image is too large!'))
+      return
+    }
+    yield put(createNewUserFailure(e.message || e))
   }
 }
 
@@ -161,10 +188,10 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: asset.uri,
   })
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
 
+  const marketplaceData = asset.marketplace?.length ? asset.marketplace[0] : createDummyMarketplaceData()
   // We need to use dummy marketplace data in order to use common cards component
-  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
+  return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -262,6 +289,18 @@ export function* getUserBids(api: IApi) {
   }
 }
 
+export function* getActiveBidsByUser(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const activeBids: IActiveUserBids[] = yield call(api, {
+      url: APP_CONFIG.getActiveUserBidsById(user.id),
+    })
+    yield put(getActiveBidsByUserSuccess({ activeBids: activeBids }))
+  } catch (e) {
+    yield put(getActiveBidsByUserFailure(e.message || e))
+  }
+}
+
 function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, userBids: IBidsHistory) {
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(item_id)),
@@ -349,7 +388,6 @@ export function* getPromotion(api: IApi) {
 }
 
 function* getPromotionAssetById(api: IApi, assetId: number) {
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(assetId)),
   })
@@ -359,8 +397,10 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
   })
+
+  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
   return {
-    marketData: marketplaceData ? marketplaceData : null,
+    marketData: marketplaceData,
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
@@ -427,5 +467,20 @@ export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promoti
     yield put(updatePromotionSuccess())
   } catch (e) {
     yield put(updatePromotionFailure(e.message || e))
+  }
+}
+
+export function* validateUserId(api: IApi, { payload }: PayloadAction<{ userId: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.userValidation,
+      method: 'POST',
+      data: {
+        userId: payload.userId,
+      },
+    })
+    yield put(validateUserIdSuccess({ userIdValid: true }))
+  } catch (e) {
+    yield put(validateUserIdFailure())
   }
 }

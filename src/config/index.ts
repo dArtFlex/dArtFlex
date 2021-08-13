@@ -36,6 +36,7 @@ const APP_CONFIG = {
   getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
   getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
+  getActiveUserBidsById: (user_id: number) => `${STAGE_URL}/bid/get_active_by_user/${user_id}`,
 
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,
@@ -59,6 +60,7 @@ const APP_CONFIG = {
   unbanUser: `${STAGE_URL}/super_admin/unban_user`,
   banItem: `${STAGE_URL}/super_admin/ban_item`,
   unbanItem: `${STAGE_URL}/super_admin/unban_item`,
+  userValidation: `${STAGE_URL}/user/validate`,
 } as const
 
 export default APP_CONFIG

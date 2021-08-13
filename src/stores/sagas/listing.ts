@@ -22,11 +22,13 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const { lazyMintData, lazyMintItemId, lazymint }: ReturnType<typeof selector> = yield select(
       (state) => state.minting
     )
+
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
 
-    const startPrice = yield web3.utils.toWei(data.startPrice, 'ether')
-    const endPrice = yield web3.utils.toWei(data.endPrice.length ? data.endPrice : '0', 'ether')
+    // Prices before converting must be as string
+    const startPrice = yield web3.utils.toWei(String(data.startPrice), 'ether')
+    const endPrice = yield web3.utils.toWei(data.endPrice ? String(data.endPrice) : '0', 'ether')
 
     const chainId: IChainId = walletService.getChainId()
     const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id
@@ -35,6 +37,22 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     const dateStartTime = data.start_time ? data.start_time.getTime() : new Date().getTime()
     const dateEndTime = data.type === 'instant_buy' ? dateStartTime : normalizeDate(data.end_time).getTime()
+
+    const order = yield listingService.generateOrder({
+      body: {
+        contract: lazyMintData.contract,
+        tokenId: lazyMintData.tokenId,
+        // todo: check lm.maker, it should be address from lazyMintData.maker
+        maker: accounts[0],
+        taker: '0x0000000000000000000000000000000000000000',
+        price: startPrice,
+        uri: lazyMintData.uri,
+        // erc20 - 0x only ETH
+        erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
+        signature: lazyMintData.signatures[0],
+        lazymint,
+      },
+    })
 
     const marketId = yield call(api, {
       url: APP_CONFIG.createSalesDetail,
@@ -55,22 +73,6 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         // for ETH don't have addresse that's why use 0x
         // token contract address ETH, DAFPage etc.
         platfromFee: data.platfromFee,
-      },
-    })
-
-    const order = yield listingService.generateOrder({
-      body: {
-        contract: lazyMintData.contract,
-        tokenId: lazyMintData.tokenId,
-        // todo: check lm.maker, it should be address from lazyMintData.maker
-        maker: accounts[0],
-        taker: '0x0000000000000000000000000000000000000000',
-        price: startPrice,
-        uri: lazyMintData.uri,
-        // erc20 - 0x only ETH
-        erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
-        signature: lazyMintData.signatures[0],
-        lazymint,
       },
     })
 
