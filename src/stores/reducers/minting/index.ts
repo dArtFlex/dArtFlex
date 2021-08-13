@@ -74,7 +74,7 @@ const mintingSlice = createSlice({
       state.lazymint = payload.lazymint
     },
     lazyMintingFailure: (state, { payload }: PayloadAction<Error>) => {
-      state.error = typeof payload.message === 'string' ? 'Image already exists' : 'Name already exists'
+      state.error = typeof payload.message === 'string' ? 'User denied transaction signature.' : 'Name already exists'
       state.minting = 'failed'
     },
 
