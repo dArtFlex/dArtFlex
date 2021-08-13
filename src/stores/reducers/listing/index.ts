@@ -64,6 +64,9 @@ const listingSlice = createSlice({
     clearListingData: (state) => {
       state.listing = 'none'
     },
+    clearListingError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -77,6 +80,7 @@ export const {
   unlistingFailure,
 
   clearListingData,
+  clearListingError,
 } = listingSlice.actions
 
 export const { reducer } = listingSlice

@@ -25,9 +25,13 @@ const buyNowSlice = createSlice({
       state.transactionHash = payload.transactionHash
       state.fetchingTransacting = false
     },
+
+    clearBuyNowError: (state) => {
+      state.error = ''
+    },
   },
 })
 
-export const { buyNowRequest, buyNowSuccess, buyNowFailure } = buyNowSlice.actions
+export const { buyNowRequest, buyNowSuccess, buyNowFailure, clearBuyNowError } = buyNowSlice.actions
 
 export const { reducer } = buyNowSlice

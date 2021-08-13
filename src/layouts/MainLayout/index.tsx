@@ -14,6 +14,12 @@ import { Footer, Header, Modal, WalletError } from 'common'
 import { useStyles } from './styles'
 import { Box } from '@material-ui/core'
 import { clearMintError } from '../../stores/reducers/minting'
+import { clearUserError } from '../../stores/reducers/user'
+import { clearListingError } from '../../stores/reducers/listing'
+import { clearBuyNowError } from '../../stores/reducers/buyNow'
+import { clearBidError } from '../../stores/reducers/placeBid'
+import { clearMakeOfferError } from '../../stores/reducers/makeOffer'
+import { clearManagementError } from '../../stores/reducers/management'
 import Snack from '../../common/Snack'
 
 interface IMainLayoutProps {
@@ -61,6 +67,12 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
   function onCloseSnackbar() {
     setSnackBarOpen(false)
     dispatch(clearMintError())
+    dispatch(clearUserError())
+    dispatch(clearListingError())
+    dispatch(clearBuyNowError())
+    dispatch(clearMakeOfferError())
+    dispatch(clearBidError())
+    dispatch(clearManagementError())
   }
 
   return (
