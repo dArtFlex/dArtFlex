@@ -110,7 +110,7 @@ export function* initialConnection(api: IApi, { payload }: PayloadAction<{ accou
   if (!userData.length) {
     yield call(createNewUser, api, {
       payload: {
-        accountSettings: { ...setDummyAccount(), userid: payload.accounts, wallet: payload.accounts },
+        accountSettings: { ...setDummyAccount(), userid: payload.accounts.slice(0, 31), wallet: payload.accounts },
         wallet: payload.accounts,
         isNewProfileImage: false,
         isNewCoverImage: false,

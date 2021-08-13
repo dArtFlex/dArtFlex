@@ -372,5 +372,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(4),
       color: theme.palette.greyDark,
     },
+    mb: {
+      marginBottom: theme.spacing(5.5),
+    },
   })
 )

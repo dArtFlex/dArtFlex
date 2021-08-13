@@ -121,6 +121,13 @@ export const selectBid = () =>
     ({ bid }: stateType) => ({ bid })
   )
 
+// Buy
+export const selectBuy = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ buy }: stateType) => ({ buy })
+  )
+
 // Notifications
 export const selectNotifications = () =>
   createSelector(

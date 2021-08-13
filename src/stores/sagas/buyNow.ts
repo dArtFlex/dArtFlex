@@ -42,8 +42,8 @@ export function* buyNow(
       },
     })
 
-    yield put(buyNowSuccess({ buyItemId: marketData.id }))
+    yield put(buyNowSuccess({ buyItemId: marketData.id, transactionHash: acceptBidTransaction.transactionHash }))
   } catch (e) {
-    yield put(buyNowFailure(e.message || e))
+    yield put(buyNowFailure({ message: e.message || e, transactionHash: e.receipt.transactionHash }))
   }
 }
