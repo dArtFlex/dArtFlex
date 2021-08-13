@@ -21,9 +21,13 @@ const makeOfferSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    clearMakeOfferError: (state) => {
+      state.error = ''
+    },
   },
 })
 
-export const { makeOfferRequest, makeOfferSuccess, makeOfferFailure } = makeOfferSlice.actions
+export const { makeOfferRequest, makeOfferSuccess, makeOfferFailure, clearMakeOfferError } = makeOfferSlice.actions
 
 export const { reducer } = makeOfferSlice

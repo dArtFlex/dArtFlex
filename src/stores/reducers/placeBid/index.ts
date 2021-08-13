@@ -76,6 +76,10 @@ const placeBidSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    clearBidError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -99,6 +103,8 @@ export const {
   cancelBidRequest,
   cancelBidSuccess,
   cancelBidFailure,
+
+  clearBidError,
 } = placeBidSlice.actions
 
 export const { reducer } = placeBidSlice

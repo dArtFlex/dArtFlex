@@ -57,6 +57,10 @@ const managementSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    clearManagementError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -76,6 +80,8 @@ export const {
   unbanUserRequest,
   unbanUserSuccess,
   unbanUserFailure,
+
+  clearManagementError,
 } = managementSlice.actions
 
 export const { reducer } = managementSlice
