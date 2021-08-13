@@ -22,6 +22,7 @@ import { UploadFileSection } from '../../components'
 import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
+import image from 'common/icons/smiley_face.svg'
 import cover from 'common/icons/cover-default.svg'
 import { debounce } from 'lodash'
 
