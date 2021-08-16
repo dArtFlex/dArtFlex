@@ -15,7 +15,7 @@ import { getUserAssetsRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutWallet } from 'utils'
+import { shortCutName, shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
@@ -140,7 +140,7 @@ export default function Dashboard() {
           <Aside
             avatar={user.profile_image}
             name={user.fullname}
-            userName={user.userid}
+            userName={shortCutName(user.userid)}
             walletAddress={shortCutWallet(user.wallet)}
             content={user.overview}
             links={links.filter((l) => l.link !== undefined)}

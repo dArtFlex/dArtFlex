@@ -12,9 +12,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       flexDirection: 'column',
       gap: theme.spacing(10),
-      [theme.breakpoints.down(640)]: {
+      [theme.breakpoints.down(680)]: {
         minWidth: 'unset',
-        width: '94vw',
+        margin: 'auto',
+        width: '88vw',
       },
     },
     text: {
