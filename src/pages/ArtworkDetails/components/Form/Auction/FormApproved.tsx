@@ -15,7 +15,7 @@ export default function FormApproved() {
     bid: { transacting, error, data },
   } = useSelector(selectBid())
 
-  if ((error as string).length || typeof error === 'object' || (!transacting && data === null)) {
+  if (!transacting && (data === null || (error as string).length || typeof error === 'object')) {
     return (
       <SubFormTransaction
         title={'Your bid was unplaced!'}
