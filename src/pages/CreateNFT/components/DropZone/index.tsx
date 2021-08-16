@@ -1,15 +1,16 @@
 //@ts-nocheck
 import React, { useMemo, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import clsx from 'clsx'
 import { useFormikContext } from 'formik'
 import { DropZone as DropZoneContainer } from 'common'
 import { Box, Typography } from '@material-ui/core'
 import { UploadIcon } from 'common/icons'
 import { ICreateNFT } from '../../types'
-import { uploadImageRequest } from 'stores/reducers/minting'
+import { clearLazyMintingData, uploadImageRequest } from 'stores/reducers/minting'
 import { acceptFileTypes } from 'utils'
 import { useStyles } from './styles'
+import { selectListing, selectMinting } from '../../../../stores/selectors'
 
 const MAZ_SIZE_40 = 40000000
 const FILE_EXT = '.jpg'
@@ -19,6 +20,13 @@ export default function DropZone() {
   const dispatch = useDispatch()
   const { values, setFieldValue, setFieldError } = useFormikContext<ICreateNFT>()
 
+  const {
+    minting: { minting },
+  } = useSelector(selectMinting())
+  const {
+    listing: { listing },
+  } = useSelector(selectListing())
+
   const asseptType = useMemo(() => (FILE_EXT ? acceptFileTypes(FILE_EXT) : ''), [FILE_EXT])
 
   useEffect(() => {
@@ -26,6 +34,12 @@ export default function DropZone() {
       dispatch(uploadImageRequest({ file: values.file }))
     }
   }, [values.file])
+
+  useEffect(() => {
+    if (minting !== 'done' || listing !== 'done') {
+      dispatch(clearLazyMintingData())
+    }
+  }, [])
 
   return (
     <DropZoneContainer

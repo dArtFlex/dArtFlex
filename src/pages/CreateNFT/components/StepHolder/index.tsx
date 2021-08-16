@@ -31,7 +31,7 @@ export default function StepHolder(props: IStepHolderProps) {
 
   useEffect(() => {
     if (listing !== 'done' && minting === 'done') {
-      return setStep(STEPS_NFT.MINTED)
+      return setStep((prevState) => (prevState !== STEPS_NFT.UPLOAD_FILE ? STEPS_NFT.MINTED : STEPS_NFT.UPLOAD_FILE))
     }
   }, [minting])
 
