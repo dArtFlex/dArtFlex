@@ -24,6 +24,7 @@ const placeBidSlice = createSlice({
     placeBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.transacting = false
+      state.data = null
     },
 
     getBidsHistoryRequest: (state) => {

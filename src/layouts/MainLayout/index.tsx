@@ -61,7 +61,12 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
   const errorMessage =
     errorMinting || errorUser || errorListing || errorBuy || errorBid || errorOffer || errorManagement
   useEffect(() => {
-    typeof errorMessage === 'object' && errorMessage?.message && setSnackBarOpen(Boolean(errorMessage.message.length))
+    typeof errorMessage === 'object' &&
+      // We need to show notificaton only when
+      // 4001 code is reject transaction in metamask
+      errorMessage?.code === 4001 &&
+      errorMessage?.message &&
+      setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
   function onCloseSnackbar() {
