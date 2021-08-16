@@ -67,7 +67,7 @@ export default function TabBids(props: ITabHistoryPropa) {
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
 
-  if (history.length > 4 && !showMore) {
+  if (history?.length > 4 && !showMore) {
     return (
       <Box mt={3} mb={3}>
         {historyReverse.slice(0, 4).map((props, i) => {
