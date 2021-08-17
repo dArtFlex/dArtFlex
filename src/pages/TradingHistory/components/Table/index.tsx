@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { Box, IconButton, Link, Button } from '@material-ui/core'
 import { Table, Image } from 'common'
 import { ExternalLinkIcon } from 'common/icons'
 import { ITradingHistory } from '../../types'
 import { ITradingHistoryTable } from './types'
-import { tabelTimeFormat } from 'utils'
+import { shortCutName, tabelTimeFormat } from 'utils'
 import { useStyles } from './styles'
+import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
+import { useDispatch } from 'react-redux'
 
 export default function TradingHistoryTable(props: ITradingHistoryTable) {
   const { data } = props
@@ -16,6 +18,8 @@ export default function TradingHistoryTable(props: ITradingHistoryTable) {
 
 function useColumns() {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const [isButtonVisible, setIsButtonVisible] = useState(true)
 
   return [
     {
@@ -43,7 +47,7 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => (
         <Link href={'#'} underline={'none'}>
-          {'@' + cell.from}
+          {'@' + shortCutName(cell.from)}
         </Link>
       ),
     },
@@ -54,7 +58,7 @@ function useColumns() {
       render: (cell: ITradingHistory) => {
         return cell.to.length ? (
           <Link href={'#'} underline={'none'}>
-            {'@' + cell.to}
+            {'@' + shortCutName(cell.to)}
           </Link>
         ) : (
           '-'
@@ -84,14 +88,25 @@ function useColumns() {
       },
     },
     {
-      accessor: 'cancelBid',
+      accessor: 'status',
       header: '',
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => {
-        return cell.cancelBid ? (
-          <Button variant={'outlined'} className={classes.btnCancelBid}>
-            Cancel Bid
-          </Button>
+        return cell.status === 'offered' && cell.isLastActionOnItem ? (
+          <>
+            {isButtonVisible && (
+              <Button
+                variant={'outlined'}
+                className={classes.btnCancelBid}
+                onClick={() => {
+                  dispatch(cancelOfferRequest({ id: cell.bid_id }))
+                  setIsButtonVisible(false)
+                }}
+              >
+                Cancel Offer
+              </Button>
+            )}
+          </>
         ) : (
           ''
         )

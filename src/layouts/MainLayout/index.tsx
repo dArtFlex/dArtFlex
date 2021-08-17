@@ -18,7 +18,7 @@ import { clearUserError } from '../../stores/reducers/user'
 import { clearListingError } from '../../stores/reducers/listing'
 import { clearBuyNowError } from '../../stores/reducers/buyNow'
 import { clearBidError } from '../../stores/reducers/placeBid'
-import { clearMakeOfferError } from '../../stores/reducers/makeOffer'
+import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
 import Snack from '../../common/Snack'
 
@@ -45,7 +45,7 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
     bid: { error: errorBid },
   } = useSelector(selectBid())
   const {
-    offer: { error: errorOffer },
+    offer: { error: errorOffer, success: successMessage },
   } = useSelector(selectMakeOffer())
   const { error: errorManagement } = useSelector(selectManagement())
 
@@ -69,6 +69,10 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
       setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
+  useEffect(() => {
+    successMessage.length && setSnackBarOpen(Boolean(successMessage.length))
+  }, [successMessage])
+
   function onCloseSnackbar() {
     setSnackBarOpen(false)
     dispatch(clearMintError())
@@ -78,6 +82,7 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
     dispatch(clearMakeOfferError())
     dispatch(clearBidError())
     dispatch(clearManagementError())
+    dispatch(clearMakeOfferSuccessMessage())
   }
 
   return (
@@ -88,9 +93,10 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
         {!hiddenFooter && <Footer />}
       </Box>
       <Snack
-        message={typeof errorMessage === 'object' && errorMessage?.message ? errorMessage.message : ''}
+        errorMessage={typeof errorMessage === 'object' && errorMessage?.message ? errorMessage.message : ''}
         open={snackbarOpen}
         onClose={onCloseSnackbar}
+        successMessage={successMessage}
       />
       <Modal open={open} onClose={() => setOpen(false)} body={<WalletError />} withAside />
     </div>

@@ -8,6 +8,7 @@ import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
 import { getBidsHistoryRequest, getBidsRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
+import { useValidationSchema } from './lib'
 
 const { INTERVALS } = appConst
 
@@ -61,7 +62,11 @@ export default function ArtworkDetails() {
       {assetDetails.tokenData === null ? (
         <CircularProgressLoader />
       ) : (
-        <Form initialValues={formData} onSubmit={(state: ApprovedFormState) => console.log('y', state)}>
+        <Form
+          initialValues={formData}
+          onSubmit={(state: ApprovedFormState) => console.log('y', state)}
+          validationSchema={useValidationSchema()}
+        >
           <FormContainer />
         </Form>
       )}

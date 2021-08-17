@@ -29,11 +29,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     cardImage: {
-      width: 'inherit',
       objectFit: 'contain',
       borderRadius: theme.spacing(3),
-      maxHeight: 630,
-      maxWidth: '96%',
+      maxHeight: '88%',
+      maxWidth: '88%',
     },
   })
 )

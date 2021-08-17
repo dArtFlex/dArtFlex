@@ -8,6 +8,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
+    snackBarSuccess: {
+      backgroundColor: theme.palette.green,
+    },
     errorIcon: {
       color: `${theme.palette.white} !important`,
     },
