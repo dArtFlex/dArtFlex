@@ -9,6 +9,7 @@ import {
   AssetDataTypes,
   IPromotionId,
   ITradingHistory,
+  IError,
 } from 'types'
 
 export interface UserStateType {
@@ -18,7 +19,7 @@ export interface UserStateType {
   fetchingPromo: boolean
   isId: boolean
   fetchingId: boolean
-  error: string
+  error: IError
   search: string
   user: UserDataTypes | null
   role?: IUserRole

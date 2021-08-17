@@ -125,7 +125,7 @@ export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ walle
     const tokensBalances = balances.filter((b) => b && b.balance !== '0')
     yield put(getTokensBalancesSuccess(tokensBalances as ITokenBalances[] | []))
   } catch (e) {
-    yield put(getTokensBalancesFailure(e.message || e))
+    yield put(getTokensBalancesFailure(e))
   }
 }
 

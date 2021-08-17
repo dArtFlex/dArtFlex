@@ -73,6 +73,6 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
 
     yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) }))
   } catch (e) {
-    yield put(makeOfferFailure(e.message || e))
+    yield put(makeOfferFailure(e))
   }
 }

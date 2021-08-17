@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { selectMinting } from 'stores/selectors'
 import { Box } from '@material-ui/core'
 import { PageWrapper, Form } from 'common'
 import { DropZone, StepHolder, Uploading, Form as FormCreateNFT, Stepper } from './components'
@@ -27,13 +29,24 @@ const initialData: ICreateNFT = {
 
 export default function CreateNFT() {
   const classes = useStyles()
+  const { minting } = useSelector(selectMinting())
+  const {
+    file,
+    data: { name, description },
+  } = minting
+
+  const [initialValues, setInitialValues] = useState<ICreateNFT>(initialData)
+  useEffect(() => {
+    setInitialValues({ ...initialValues, file, name, description })
+  }, [file, name, description])
 
   return (
     <PageWrapper className={classes.container}>
       <Form
-        initialValues={initialData}
+        initialValues={initialValues}
         onSubmit={(state: ICreateNFT) => console.log('y', state)}
         validationSchema={useValidationSchema()}
+        enableReinitialize
       >
         <Box>
           <StepHolder>

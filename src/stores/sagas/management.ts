@@ -37,7 +37,7 @@ export function* getAllWorks(api: IApi) {
     const works: ManagementStateType['works'] = yield all(getItemAssetsAll.map((it) => call(composeWorkData, api, it)))
     yield put(getAllWorksSuccess({ works }))
   } catch (e) {
-    yield put(getAllWorksFailure(e.message || e))
+    yield put(getAllWorksFailure(e))
   }
 }
 
@@ -48,7 +48,7 @@ export function* getAllUsersList(api: IApi) {
     })
     yield put(getAllUsersListSuccess({ users }))
   } catch (e) {
-    yield put(getAllUsersListFailure(e.message || e))
+    yield put(getAllUsersListFailure(e))
   }
 }
 
@@ -65,7 +65,7 @@ export function* banUser(api: IApi, { payload }: PayloadAction<{ user_id: string
     })
     yield put(banUserSuccess())
   } catch (e) {
-    yield put(banUserFailure(e.message || e))
+    yield put(banUserFailure(e))
   }
 }
 
@@ -82,6 +82,6 @@ export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: stri
     })
     yield put(unbanUserSuccess())
   } catch (e) {
-    yield put(unbanUserFailure(e.message || e))
+    yield put(unbanUserFailure(e))
   }
 }

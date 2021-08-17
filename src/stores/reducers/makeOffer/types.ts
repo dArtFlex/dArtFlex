@@ -1,5 +1,6 @@
+import { IError } from 'types'
 export interface MakeOfferStateType {
   fetching: boolean
-  error: string
+  error: IError
   offerId?: number
 }

@@ -1,7 +1,8 @@
+import { IError } from 'types'
 export interface BuyNowStateType {
   fetching: boolean
   fetchingTransacting: boolean
-  error: string
+  error: IError
   buyItemId?: number
   transactionHash: string
 }

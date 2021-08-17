@@ -12,10 +12,10 @@ import { ApprovedFormState } from '../../../types'
 export default function FormApproved() {
   const classes = useStyles()
   const {
-    bid: { transacting, error },
+    bid: { transacting, error, data },
   } = useSelector(selectBid())
 
-  if (error.length) {
+  if (!transacting && (data === null || (error as string).length || typeof error === 'object')) {
     return (
       <SubFormTransaction
         title={'Your bid was unplaced!'}

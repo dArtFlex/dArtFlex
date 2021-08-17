@@ -66,7 +66,7 @@ export function* getNotifications(api: IApi) {
 
     yield put(getNotificationsSuccess({ notifications }))
   } catch (e) {
-    yield put(getNotificationsFailure(e.message || e))
+    yield put(getNotificationsFailure(e))
   }
 }
 

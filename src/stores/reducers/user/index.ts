@@ -235,6 +235,10 @@ const userSlice = createSlice({
     validateUserIdFailure: (state) => {
       state.userIdValid = false
     },
+
+    clearUserError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -294,6 +298,8 @@ export const {
   validateUserIdRequest,
   validateUserIdSuccess,
   validateUserIdFailure,
+
+  clearUserError,
 } = userSlice.actions
 
 export const { reducer } = userSlice
