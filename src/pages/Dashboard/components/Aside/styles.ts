@@ -57,8 +57,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     linkBox: {
       display: 'flex',
       justifyContent: 'flex-start',
-      alignItems: 'center',
       paddingBottom: theme.spacing(5.5),
+      wordBreak: 'break-all',
+      '&>svg': {
+        marginTop: theme.spacing(0.75),
+      },
     },
     link: {
       fontSize: 16,
