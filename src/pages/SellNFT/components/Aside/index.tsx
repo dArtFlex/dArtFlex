@@ -57,7 +57,9 @@ export default function Aside(props: IAsideProps) {
           <Box pb={5}>
             {values.futureTime ? (
               <Typography className={classes.textListing}>
-                Your item will be listed for 0.01 ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.
+                {`Your item will be listed for ${
+                  values.price || 0
+                } ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.`}
               </Typography>
             ) : (
               <Typography className={classes.textListing}>{`Your item will be listed for ${
