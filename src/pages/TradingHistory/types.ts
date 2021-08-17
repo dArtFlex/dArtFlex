@@ -28,6 +28,10 @@ export interface ITradingHistory {
   cancelBid?: () => void
   etherscanLink: string
   txHash?: string
+  status: string
+  order_id: string
+  bid_id: string
+  isLastActionOnItem?: boolean
 }
 
 export interface ITradingHistoryFilter {

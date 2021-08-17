@@ -9,22 +9,32 @@ export function useComposeTradingData({
   if (!tradingHistoryAll?.length) {
     return []
   }
-  return tradingHistoryAll.map((th) => {
-    return {
-      action: th.status,
-      token: {
-        tokenId: th.item_id,
-        name: th.imageData.name,
-        image: th.imageData.image,
-      },
-      from: th.fromUserData.userid,
-      to: th.toUserData.userid,
-      date: th.created_at,
-      amount: th.bid_amount,
-      expDate: '',
-      etherscanLink: '',
-    }
+  const tradingHistoryIds: string[] = []
+  tradingHistoryAll.forEach((item) => {
+    tradingHistoryIds.push(item.item_id)
   })
+  return tradingHistoryAll
+    .map((th, index) => {
+      return {
+        action: th.status,
+        token: {
+          tokenId: th.item_id,
+          name: th.imageData.name,
+          image: th.imageData.image,
+        },
+        from: th.fromUserData.userid,
+        to: th.toUserData.userid,
+        date: th.created_at,
+        amount: th.bid_amount,
+        expDate: '',
+        etherscanLink: '',
+        status: th.status,
+        order_id: th.order_id,
+        bid_id: th.bid_id,
+        isLastActionOnItem: tradingHistoryIds.lastIndexOf(th.item_id) === index,
+      }
+    })
+    .reverse()
 }
 
 export function useTradingHistoryByFilter({

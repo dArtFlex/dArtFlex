@@ -332,6 +332,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
         fontSize: 30,
       },
+      '& .Mui-error': {
+        fontSize: 14,
+        color: theme.palette.redMiddle,
+      },
     },
     tooltip: {
       '& > p': {

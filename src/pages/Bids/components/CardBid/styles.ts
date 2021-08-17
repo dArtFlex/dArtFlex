@@ -61,18 +61,26 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     cardBidBids: {
-      flex: '1',
       order: 2,
-      justifyContent: 'center',
       marginLeft: 'auto',
       gap: 16,
       rowGap: 16,
-      display: 'flex',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      '&>div:first-child': {
+        gridColumn: 1,
+      },
+      '&>div:last-child': {
+        gridColumn: 2,
+      },
       [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
       },
       [theme.breakpoints.down(1025)]: {
         marginLeft: 0,
+      },
+      [theme.breakpoints.down(680)]: {
+        minWidth: 'unset',
       },
       [theme.breakpoints.down(550)]: {
         order: 1,
@@ -145,6 +153,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnView: {
       border: `2px solid ${theme.palette.text.primary}`,
+    },
+    btnCancel: {
+      border: `2px solid ${theme.palette.redMiddle}`,
+      color: theme.palette.redMiddle,
     },
     btnPlaceBid: {
       color: theme.palette.white,

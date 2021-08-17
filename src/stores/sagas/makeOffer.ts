@@ -2,7 +2,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
-import { makeOfferSuccess, makeOfferFailure } from 'stores/reducers/makeOffer'
+import { makeOfferSuccess, makeOfferFailure, cancelOfferFailure, cancelOfferSuccess } from 'stores/reducers/makeOffer'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
@@ -74,5 +74,19 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
     yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) }))
   } catch (e) {
     yield put(makeOfferFailure(e))
+  }
+}
+
+export function* cancelOffer(api: IApi, { payload }: PayloadAction<{ id: number }>) {
+  try {
+    const res = yield call(api, {
+      url: APP_CONFIG.cancelOffer,
+      method: 'POST',
+      data: payload,
+    })
+
+    yield put(cancelOfferSuccess(res))
+  } catch (e) {
+    yield put(cancelOfferFailure(e))
   }
 }

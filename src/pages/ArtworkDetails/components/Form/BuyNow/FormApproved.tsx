@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { selectBuy } from 'stores/selectors'
+import { selectBuy, selectMakeOffer } from 'stores/selectors'
 import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -17,6 +17,10 @@ export default function FormApproved() {
     buy: { transactionHash, fetchingTransacting, error },
   } = useSelector(selectBuy())
 
+  const {
+    offer: { fetching },
+  } = useSelector(selectMakeOffer())
+
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
 
   if ((error as string).length) {
@@ -25,7 +29,7 @@ export default function FormApproved() {
     )
   }
 
-  return fetchingTransacting ? (
+  return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
