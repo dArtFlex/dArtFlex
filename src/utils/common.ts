@@ -18,8 +18,9 @@ export function normalizeDate(date: string): Date {
   return isTimestamp ? new Date(date) : new Date(Number(date))
 }
 
-export function tabelTimeFormat(date: string) {
-  return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(false).format('hh:mm')}`
+export function tabelTimeFormat(date: string, utc?: boolean) {
+  const _utc = utc || false
+  return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(_utc).format('hh:mm')}`
 }
 
 export function creatArrayFromNumber(n = 10): number[] {

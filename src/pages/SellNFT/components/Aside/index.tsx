@@ -49,7 +49,7 @@ export default function Aside(props: IAsideProps) {
           <Box pb={5}>
             <Typography className={classes.textListing}>
               Your item will be auctioned. The highest bidder will win it on{' '}
-              {tabelTimeFormat(values.endDate || `${new Date()}`)}, as long as their bid is at least Ξ
+              {tabelTimeFormat(values.endDate || `${new Date()}`, true)}, as long as their bid is at least Ξ
               {`${values.minimumBid || 0}`}.
             </Typography>
           </Box>
