@@ -1,6 +1,6 @@
 import React from 'react'
 import { Snackbar, Typography } from '@material-ui/core'
-import { Alert, Color } from '@material-ui/lab'
+import { Alert } from '@material-ui/lab'
 import { useStyles } from './styles'
 import clsx from 'clsx'
 

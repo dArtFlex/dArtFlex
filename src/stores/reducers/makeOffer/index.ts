@@ -44,6 +44,21 @@ const makeOfferSlice = createSlice({
       state.fetching = false
       state.error = payload
     },
+
+    acceptOfferRequest: (state, i) => {
+      state.fetching = true
+    },
+    acceptOfferSuccess: (
+      state,
+      { payload }: PayloadAction<{ acceptOfferTransaction: MakeOfferStateType['acceptOfferTransaction'] }>
+    ) => {
+      state.fetching = false
+      state.acceptOfferTransaction = payload.acceptOfferTransaction
+    },
+    acceptOfferFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -51,11 +66,17 @@ export const {
   makeOfferRequest,
   makeOfferSuccess,
   makeOfferFailure,
+
   clearMakeOfferError,
   clearMakeOfferSuccessMessage,
+
   cancelOfferRequest,
   cancelOfferSuccess,
   cancelOfferFailure,
+
+  acceptOfferRequest,
+  acceptOfferSuccess,
+  acceptOfferFailure,
 } = makeOfferSlice.actions
 
 export const { reducer } = makeOfferSlice
