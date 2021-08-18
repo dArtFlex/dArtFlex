@@ -11,4 +11,4 @@ export interface ApprovedFormState {
   offerExpiration?: string
 }
 
-type IFormProgress = 'details' | 'auction' | 'buy' | 'approved' | 'make offer'
+type IFormProgress = 'details' | 'auction' | 'buy' | 'approved' | 'make offer' | 'confirm offer'

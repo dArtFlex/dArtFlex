@@ -26,7 +26,7 @@ export default function Promotions(props: IPromotion) {
     <React.Fragment>
       <Swiper
         autoplay={{
-          delay: 4000,
+          delay: 10000,
           disableOnInteraction: false,
         }}
         navigation={{

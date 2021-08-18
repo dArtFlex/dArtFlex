@@ -9,10 +9,6 @@ export function useComposeTradingData({
   if (!tradingHistoryAll?.length) {
     return []
   }
-  const tradingHistoryIds: string[] = []
-  tradingHistoryAll.forEach((item) => {
-    tradingHistoryIds.push(item.item_id)
-  })
   return tradingHistoryAll
     .map((th, index) => {
       return {
@@ -28,10 +24,6 @@ export function useComposeTradingData({
         amount: th.bid_amount,
         expDate: '',
         etherscanLink: '',
-        status: th.status,
-        order_id: th.order_id,
-        bid_id: th.bid_id,
-        isLastActionOnItem: tradingHistoryIds.lastIndexOf(th.item_id) === index,
       }
     })
     .reverse()
