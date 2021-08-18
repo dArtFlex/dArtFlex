@@ -109,6 +109,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           multiline
           rows={4}
           className={classes.formField}
+          maxLength={200}
         />
       </Box>
       <Box className={classes.section}>

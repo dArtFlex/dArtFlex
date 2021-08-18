@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { TextField, TextFieldProps, Typography } from '@material-ui/core'
+import { Box, TextField, TextFieldProps, Typography } from '@material-ui/core'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
 import { FieldRenderProps, ITextInput } from '../../types'
@@ -28,7 +28,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
     fullWidth,
     className,
     typeValue,
-    maxLength = 200,
+    maxLength = 500,
     ...rest
   } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
@@ -37,8 +37,26 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
   return (
     <FormControl
       error={hasError}
-      errorText={errorText}
-      helperText={helperText}
+      errorText={
+        !multiline ? (
+          errorText
+        ) : (
+          <Box className={classes.helperTextWrapper}>
+            {hasError && <Typography component="span">{errorText}</Typography>}
+            <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
+          </Box>
+        )
+      }
+      helperText={
+        multiline ? (
+          <Box className={classes.helperTextWrapper}>
+            {hasError && <Typography component="span">{errorText}</Typography>}
+            <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
+          </Box>
+        ) : (
+          helperText
+        )
+      }
       className={className}
       fullWidth={fullWidth}
     >
@@ -52,7 +70,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
         {...field}
         {...rest}
         variant={variant}
-        InputProps={InputProps}
+        InputProps={{ ...InputProps, classes: { root: classes.inputBackground } }}
         InputLabelProps={{ shrink, classes: { root: classes.label } }}
         error={hasError}
         className={classes.textInput}
@@ -60,8 +78,8 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
           type: typeValue,
           className: classes.numberInput,
         }}
+        FormHelperTextProps={{ classes: { root: classes.helperText } }}
       />
-      {multiline && <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>}
     </FormControl>
   )
 }

@@ -45,6 +45,7 @@ export type IFieldProps = IFormSelectProps &
     name: string
     type: FieldType
     validate?: FieldValidator
+    maxLength?: number
   }
 
 export default function Field(props: IFieldProps) {
