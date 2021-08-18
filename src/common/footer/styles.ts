@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(800)]: {
         flexWrap: 'wrap',
       },
-      [theme.breakpoints.down(910)]: {
+      [theme.breakpoints.down(1000)]: {
         justifyContent: 'center',
       },
       [theme.breakpoints.down(641)]: {

@@ -136,6 +136,8 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
                     />
                   ),
                 }}
+                typeValue="number"
+                defaultValue={0}
                 helperText={`$${bidValueAmountUsd}`}
               />
               <Box mt={6}>

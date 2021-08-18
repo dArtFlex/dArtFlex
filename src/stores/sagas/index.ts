@@ -46,7 +46,7 @@ import {
   updateForSocketMessagesDataRequest,
 } from '../reducers/notifications'
 import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
-import { makeOfferRequest } from '../reducers/makeOffer'
+import { cancelOfferRequest, makeOfferRequest } from '../reducers/makeOffer'
 
 import {
   getUserData,
@@ -77,7 +77,7 @@ import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../saga
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
-import { makeOffer } from '../sagas/makeOffer'
+import { cancelOffer, makeOffer } from '../sagas/makeOffer'
 
 export default function* root() {
   yield all([
@@ -141,5 +141,6 @@ export default function* root() {
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
+    takeLatest(cancelOfferRequest.type, cancelOffer, apiMiddleware),
   ])
 }

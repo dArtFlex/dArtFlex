@@ -58,7 +58,9 @@ export default function TradingHistory() {
           <CircularProgressLoader />
         ) : (
           <Box className={classes.cardBidContainer}>
-            {composeUserBidsData.map((bid, i) => bid.status !== 'winner' && <CardBid key={i} bid={bid} />)}
+            {composeUserBidsData.map((bid, i) => (
+              <CardBid key={i} bid={bid} />
+            ))}
           </Box>
         )}
       </Box>

@@ -3,4 +3,5 @@ export interface MakeOfferStateType {
   fetching: boolean
   error: IError
   offerId?: number
+  success: string
 }

@@ -281,7 +281,7 @@ export function* getUserBids(api: IApi) {
     })
 
     const composeUserBidsData: UserStateType['userBids'] = yield all(
-      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid))
+      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid, bid.id))
     )
     yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
   } catch (e) {
