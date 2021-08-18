@@ -65,7 +65,7 @@ export default function SellNFT() {
           type,
           startPrice: form === 'instant_buy' ? values.price : values.minimumBid,
           endPrice: values.reservePrice,
-          start_time: values.startDate,
+          start_time: new Date(values.startDate),
           end_time: values.endDate,
           platfromFee: values.fee,
         },

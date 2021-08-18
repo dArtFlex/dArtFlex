@@ -6,8 +6,7 @@ import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
-import { daysInMonth } from 'utils'
-import { validatePrice } from '../../lib'
+import { daysInMonth, validatePrice } from 'utils'
 import clsx from 'clsx'
 
 const {

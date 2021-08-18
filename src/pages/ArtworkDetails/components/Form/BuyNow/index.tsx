@@ -8,6 +8,7 @@ import FormDetails from './FormDetails'
 import FormBuy from './FormBuy'
 import FormApproved from './FormApproved'
 import { ApprovedFormState } from '../../../types'
+import FormMakeOffer from './FormMakeOffer'
 
 export default function FormAuction() {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
@@ -21,7 +22,7 @@ export default function FormAuction() {
 
   switch (values.formProgress) {
     case 'details':
-      return <FormDetails onSubmit={() => setFieldValue('formProgress', 'buy')} />
+      return <FormDetails onSubmit={setFieldValue} />
     case 'buy':
       return (
         <FormBuy
@@ -29,7 +30,12 @@ export default function FormAuction() {
             setFieldValue('formProgress', 'approved')
             dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bids && bids[0].order_id })) // Should first element
           }}
-          onMakeOffer={() => {
+        />
+      )
+    case 'make offer':
+      return (
+        <FormMakeOffer
+          onSubmit={() => {
             setFieldValue('formProgress', 'approved')
             dispatch(makeOfferRequest({ amount: values.bid }))
           }}
