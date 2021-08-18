@@ -74,7 +74,7 @@ export function useInnerAssetsFilter({
     return isTrue
   })
 
-  const compare =
+  let compare =
     sortBy === ENDING_SOON
       ? compareSortByEndingSoon
       : sortBy === RECENT
@@ -84,6 +84,10 @@ export function useInnerAssetsFilter({
       : sortBy === PRICE_HIGH_LOW
       ? compareSortByHighToLow
       : null
+
+  if (!!price.from || !!price.to) {
+    compare = compareSortByLowToHigh
+  }
 
   return compare ? _assets.sort(compare) : _assets
 }
