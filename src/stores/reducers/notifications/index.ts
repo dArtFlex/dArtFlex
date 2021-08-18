@@ -13,7 +13,7 @@ const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    getNotificationsRequest: (state) => {
+    getNotificationsRequest: (state, i) => {
       state.transacting = true
     },
     getNotificationsSuccess: (
@@ -27,9 +27,19 @@ const notificationsSlice = createSlice({
       state.error = payload
       state.transacting = false
     },
+
+    listenForSocketMessagesRequest: (state, i) => state,
+    updateForSocketMessagesDataRequest: (state, i) => state,
   },
 })
 
-export const { getNotificationsRequest, getNotificationsSuccess, getNotificationsFailure } = notificationsSlice.actions
+export const {
+  getNotificationsRequest,
+  getNotificationsSuccess,
+  getNotificationsFailure,
+
+  listenForSocketMessagesRequest,
+  updateForSocketMessagesDataRequest,
+} = notificationsSlice.actions
 
 export const { reducer } = notificationsSlice

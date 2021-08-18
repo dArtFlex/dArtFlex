@@ -244,7 +244,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       <Badge
                         color={'primary'}
                         variant="dot"
-                        invisible={!notifications.length}
+                        invisible={!notifications.length || notifications.every((n) => n.read)}
                         className={classes.notification}
                         classes={{ badge: classes.notificationBadge }}
                       >
@@ -364,7 +364,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <Badge
                       color={'primary'}
                       variant="dot"
-                      invisible={!notifications.length}
+                      invisible={!notifications.length || notifications.every((n) => n.read)}
                       className={classes.notification}
                       classes={{ badge: classes.notificationBadge }}
                     >
