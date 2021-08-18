@@ -239,6 +239,12 @@ const userSlice = createSlice({
     clearUserError: (state) => {
       state.error = ''
     },
+
+    deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
+      if (state.user) {
+        payload === 'profile_image' ? (state.user.profile_image = '') : (state.user.cover_image = '')
+      }
+    },
   },
 })
 
@@ -300,6 +306,8 @@ export const {
   validateUserIdFailure,
 
   clearUserError,
+
+  deleteUserPhoto,
 } = userSlice.actions
 
 export const { reducer } = userSlice
