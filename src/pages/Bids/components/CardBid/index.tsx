@@ -7,7 +7,7 @@ import { ExclamationCircleIcon } from 'common/icons'
 import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
 import routes from '../../../../routes'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 import { useDispatch } from 'react-redux'
 import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
 
@@ -28,7 +28,7 @@ export default function CardBid(props: ICardBidProps) {
         <Box>
           <AvatarUser image={creator.avatar} name={creator.name} fontSize={14} />
           <Typography variant={'h4'} noWrap>
-            {name}
+            {shortCutName(name)}
           </Typography>
         </Box>
         {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}

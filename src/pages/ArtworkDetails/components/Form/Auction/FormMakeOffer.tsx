@@ -95,8 +95,6 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
               />
             ),
           }}
-          typeValue="number"
-          defaultValue={0}
           helperText={`$${bidValueAmountUsd}`}
         />
         <Box mt={6}>
