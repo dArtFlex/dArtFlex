@@ -10,9 +10,10 @@ import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, sel
 import { normalizeDate, shortCutName } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes } from 'types'
+import appConst from '../../../../../config/consts'
 
 interface IDetailsFormProps {
-  onSubmit: () => void
+  onSubmit: (field: string, value: string) => void
 }
 
 const tabsItems = [
@@ -30,6 +31,10 @@ const tabsItems = [
   },
 ]
 
+const {
+  STATUSES: { MINTED, SOLD },
+} = appConst
+
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
@@ -40,9 +45,10 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
+    assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const makeOfferStatus = status === SOLD || status === MINTED
 
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
@@ -59,6 +65,16 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
     marketData?.start_price && tokenInfo
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       : 0
+
+  function getPriceStatusHeader() {
+    if (status === MINTED) {
+      return 'Reserve price'
+    } else if (status === SOLD) {
+      return 'Sold for'
+    } else {
+      return 'Buy now Price'
+    }
+  }
 
   return (
     <>
@@ -114,11 +130,9 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.infoRow} mb={6}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              <span>{marketData ? 'Buy Now Price ' : 'Sold for'}</span>
-              {marketData?.sold && <span>Sold for</span>}
+              <span>{getPriceStatusHeader()}</span>
             </Typography>
-            <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
-            {!marketData && <Typography>{`$${(startPriceToToken / tokenRate).toFixed(2)}`}</Typography>}
+            <Typography variant={'h2'}>{status === MINTED ? '-' : `${startPriceToToken} ETH`}</Typography>
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
@@ -131,17 +145,17 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </span>
           </Box>
         </Box>
-        {marketData ? (
+        {!makeOfferStatus ? (
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
-            disableHoverListener={user?.id !== creatorData?.id}
+            disableHoverListener={user?.id !== ownerData?.id}
           >
             <Box>
               <Button
                 onClick={() => {
                   if (wallet) {
-                    onSubmit()
+                    onSubmit('formProgress', 'buy')
                   } else {
                     setOpen(true)
                   }
@@ -150,7 +164,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
                 color={'primary'}
                 fullWidth
                 disableElevation
-                disabled={user?.id === creatorData?.id}
+                disabled={user?.id === ownerData?.id}
                 className={classes.bitBtn}
                 classes={{ disabled: classes.bitBtnDisabled }}
               >
@@ -162,13 +176,13 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
-            disableHoverListener={user?.id !== creatorData?.id}
+            disableHoverListener={user?.id !== ownerData?.id}
           >
             <Box>
               <Button
                 onClick={() => {
                   if (wallet) {
-                    onSubmit()
+                    onSubmit('formProgress', 'make offer')
                   } else {
                     setOpen(true)
                   }
@@ -177,7 +191,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
                 color={'primary'}
                 fullWidth
                 disableElevation
-                disabled={user?.id === creatorData?.id}
+                disabled={user?.id === ownerData?.id}
                 className={classes.bitBtn}
                 classes={{ disabled: classes.bitBtnDisabled }}
               >

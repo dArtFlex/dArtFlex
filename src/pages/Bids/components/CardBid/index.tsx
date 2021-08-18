@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { useHistory } from 'react-router-dom'
 import { Card, Box, Typography, Button } from '@material-ui/core'
@@ -62,8 +62,10 @@ function CardInfoBox(props: ICardInfoBox) {
   const { status, timeExpired, itemId, id } = props
   const history = useHistory()
   const dispatch = useDispatch()
+  const [isButtonShown, setButtonShown] = useState(true)
 
   const handleCancelOffer = ({ id }: { id: number }) => {
+    setButtonShown(false)
     dispatch(cancelOfferRequest({ id: id }))
   }
 
@@ -71,14 +73,16 @@ function CardInfoBox(props: ICardInfoBox) {
     case 'offered':
       return (
         <Box className={classes.cardBidAction}>
-          <Button
-            onClick={() => handleCancelOffer({ id: id })}
-            className={clsx(classes.btnAction, classes.btnCancel)}
-            variant={'outlined'}
-            fullWidth
-          >
-            Cancel offer
-          </Button>
+          {isButtonShown && (
+            <Button
+              onClick={() => handleCancelOffer({ id: id })}
+              className={clsx(classes.btnAction, classes.btnCancel)}
+              variant={'outlined'}
+              fullWidth
+            >
+              Cancel offer
+            </Button>
+          )}
         </Box>
       )
     case 'bid':

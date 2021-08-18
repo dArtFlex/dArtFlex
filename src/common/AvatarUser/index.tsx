@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Avatar, Typography } from '@material-ui/core'
 import { useStyles } from './styles'
+import { shortCutName } from '../../utils'
 
 interface IAvatarUserProps {
   name: string
@@ -17,7 +18,7 @@ export default function AvatarUser(props: IAvatarUserProps) {
     <Box className={classes.card}>
       <Avatar className={classes.avatar} alt="Avatar" src={image} />
       <Typography component={'span'} className={classes.userName}>
-        {`@${name}`}
+        {`@${shortCutName(name)}`}
       </Typography>
     </Box>
   )
