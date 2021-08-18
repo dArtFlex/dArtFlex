@@ -28,3 +28,8 @@ export function getWalletsFromHistory() {
   const connectedWalletConnect = parseJS(localStorage.getItem(APP_CONSTS.WALLET_CONNECT))
   return { activeWallet, connectedMetaMask, connectedWalletConnect }
 }
+
+export function notSupportedNetwork(chainId: string | number) {
+  const allowedNetworks = ['0x1', '0x4', 1, 4]
+  return !allowedNetworks.some((network) => network === chainId)
+}
