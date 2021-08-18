@@ -4,7 +4,7 @@ import { signTypedData_v4 } from 'eth-sig-util'
 
 export class CommonService extends Web3Service {
   async signTypedData(data) {
-    const resp = await this.connectMetaMaskWallet()
+    const resp = await this.web3.eth.getAccounts()
     const from = resp[0]
 
     if (this.web3.currentProvider.isMetaMask) {

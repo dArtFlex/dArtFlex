@@ -59,6 +59,7 @@ export class Web3Service {
     await provider.enable()
     const web3 = new Web3(provider)
     this.web3 = web3
+    window.connector = provider
     return web3
   }
 
