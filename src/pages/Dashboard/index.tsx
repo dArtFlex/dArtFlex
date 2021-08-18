@@ -21,7 +21,7 @@ import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 import { unlistingRequest } from 'stores/reducers/listing'
 import BigNumber from 'bignumber.js'
-import image from 'common/icons/cover-default.svg'
+import image from 'common/icons/cover_photo.png'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
