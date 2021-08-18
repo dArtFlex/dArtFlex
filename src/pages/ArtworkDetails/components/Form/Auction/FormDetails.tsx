@@ -203,7 +203,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </span>
             </Box>
           )}
-          {!isAuctionExpired && marketData?.end_time ? (
+          {!isAuctionExpired && marketData?.end_time && !marketData.sold ? (
             <Box>
               <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
 
