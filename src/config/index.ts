@@ -66,6 +66,7 @@ const APP_CONFIG = {
   unbanItem: `${STAGE_URL}/super_admin/unban_item`,
   userValidation: `${STAGE_URL}/user/validate`,
   cancelOffer: `${STAGE_URL}/bid/withdraw_offer`,
+  acceptOffer: `${STAGE_URL}/bid/accept_offer`,
 } as const
 
 export default APP_CONFIG

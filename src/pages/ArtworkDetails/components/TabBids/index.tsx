@@ -57,6 +57,7 @@ export default function TabBids(props: ITabHistoryPropa) {
         market_id: historyReverse[0].market_id,
         buyerId: historyReverse[0].order_id,
         bid_id: historyReverse[0]?.id,
+        assetOwnerId: tokenData?.owner,
       })
     )
   }

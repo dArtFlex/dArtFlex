@@ -32,10 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export default function FormControl(props: IFormControlProps) {
-  const { children, className, error, errorText = '', helperText = '', gap = false, fullWidth = true, variant } = props
+  const { children, className, error, errorText = '', helperText = '', fullWidth = true, variant } = props
   const classes = useStyles({ display: fullWidth ? 'flex' : 'inline-flex' })
-
-  const showHelperText = gap || error || helperText
 
   return (
     <MUIFormControl
