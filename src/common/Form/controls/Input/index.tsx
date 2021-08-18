@@ -35,7 +35,31 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
   const { multiline } = rest
 
   return (
-    <FormControl error={hasError} helperText={helperText} className={className} fullWidth={fullWidth}>
+    <FormControl
+      error={hasError}
+      errorText={
+        !multiline ? (
+          errorText
+        ) : (
+          <Box className={classes.helperTextWrapper}>
+            {hasError && <Typography component="span">{errorText}</Typography>}
+            <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
+          </Box>
+        )
+      }
+      helperText={
+        multiline ? (
+          <Box className={classes.helperTextWrapper}>
+            {hasError && <Typography component="span">{errorText}</Typography>}
+            <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
+          </Box>
+        ) : (
+          helperText
+        )
+      }
+      className={className}
+      fullWidth={fullWidth}
+    >
       {label && (
         <Typography className={clsx(classes.label, required && classes.star)} component="span">
           {label}
@@ -55,19 +79,6 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
           className: classes.numberInput,
         }}
         FormHelperTextProps={{ classes: { root: classes.helperText } }}
-        helperText={
-          multiline ? (
-            <Box className={classes.helperTextWrapper}>
-              {hasError && <Typography component="span">{errorText}</Typography>}
-              <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
-            </Box>
-          ) : (
-            <Box className={classes.helperTextWrapper}>
-              {helperText}
-              {hasError && <Typography component="span">{errorText}</Typography>}
-            </Box>
-          )
-        }
       />
     </FormControl>
   )

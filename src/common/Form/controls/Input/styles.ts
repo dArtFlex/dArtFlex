@@ -12,6 +12,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       marginTop: theme.spacing(1),
       minHeight: 18,
+      '&>span': {
+        fontSize: 12,
+      },
     },
     helperText: {
       margin: theme.spacing(0, 1),
@@ -45,6 +48,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     counter: {
       fontSize: 14,
+      minHeight: 18,
       fontWeight: 700,
       textAlign: 'right',
       marginLeft: 'auto',
