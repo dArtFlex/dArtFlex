@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   helperText: {
-    minHeight: 18,
     fontSize: 12,
     lineHeight: '16px',
     padding: theme.spacing(0, 3),

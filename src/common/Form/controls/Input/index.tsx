@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { TextField, TextFieldProps, Typography } from '@material-ui/core'
+import { Box, TextField, TextFieldProps, Typography } from '@material-ui/core'
 import FormControl from '../FormControl'
 import { getFormikFieldError } from '../../lib'
 import { FieldRenderProps, ITextInput } from '../../types'
@@ -28,20 +28,14 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
     fullWidth,
     className,
     typeValue,
-    maxLength = 200,
+    maxLength = 500,
     ...rest
   } = props
   const { errorText, hasError } = getFormikFieldError({ form, field })
   const { multiline } = rest
 
   return (
-    <FormControl
-      error={hasError}
-      errorText={errorText}
-      helperText={helperText}
-      className={className}
-      fullWidth={fullWidth}
-    >
+    <FormControl error={hasError} helperText={helperText} className={className} fullWidth={fullWidth}>
       {label && (
         <Typography className={clsx(classes.label, required && classes.star)} component="span">
           {label}
@@ -52,7 +46,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
         {...field}
         {...rest}
         variant={variant}
-        InputProps={InputProps}
+        InputProps={{ ...InputProps, classes: { root: classes.inputBackground } }}
         InputLabelProps={{ shrink, classes: { root: classes.label } }}
         error={hasError}
         className={classes.textInput}
@@ -60,8 +54,21 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
           type: typeValue,
           className: classes.numberInput,
         }}
+        FormHelperTextProps={{ classes: { root: classes.helperText } }}
+        helperText={
+          multiline ? (
+            <Box className={classes.helperTextWrapper}>
+              {hasError && <Typography component="span">{errorText}</Typography>}
+              <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>
+            </Box>
+          ) : (
+            <Box className={classes.helperTextWrapper}>
+              {helperText}
+              {hasError && <Typography component="span">{errorText}</Typography>}
+            </Box>
+          )
+        }
       />
-      {multiline && <Typography className={classes.counter}>{`${field.value.length}/${maxLength}`}</Typography>}
     </FormControl>
   )
 }
