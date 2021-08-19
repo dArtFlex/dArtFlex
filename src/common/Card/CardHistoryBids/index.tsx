@@ -19,12 +19,15 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     userData,
     onCancel,
     onAccept,
+    expireDate,
   } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
 
   switch (status) {
+    case 'accepted':
     case 'pending':
       return (
         <CardContainer
@@ -46,7 +49,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {''}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
               {onCancel && (
                 <Button
                   classes={{ root: classes.cardBtn }}
