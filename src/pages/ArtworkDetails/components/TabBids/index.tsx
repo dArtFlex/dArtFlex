@@ -67,6 +67,7 @@ export default function TabBids(props: ITabHistoryPropa) {
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
+  const expireDate = marketData ? normalizeDate(marketData.end_time) : normalizeDate(String(new Date().getTime()))
 
   const availableToAccept = (i: number) => {
     return i === 0 && tokenData && user?.id === +tokenData.owner && marketData && marketData?.type === 'auction'
@@ -88,6 +89,7 @@ export default function TabBids(props: ITabHistoryPropa) {
                   ? handleCancelOffer
                   : undefined
               }
+              expireDate={expireDate}
             />
           )
         })}
@@ -119,6 +121,7 @@ export default function TabBids(props: ITabHistoryPropa) {
                 ? handleCancelOffer
                 : undefined
             }
+            expireDate={expireDate}
           />
         )
       })}
