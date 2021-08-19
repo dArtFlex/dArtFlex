@@ -1,6 +1,6 @@
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
-// const STAGE_URL_OLD = 'http://dartflex-dev.ml:8888/api'
-// const DEV_URL = 'https://3.11.202.153:8888/api'
+const BASE_URL = STAGE_URL.replace('/api', '')
+const LOCAL_URL = 'http://localhost:3000'
 
 const APP_CONFIG = {
   rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
@@ -8,6 +8,10 @@ const APP_CONFIG = {
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
+
+  WSUrl: `${BASE_URL}`,
+  baseURL: `${BASE_URL}`,
+  localURL: `${LOCAL_URL}`,
 
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,
@@ -61,6 +65,8 @@ const APP_CONFIG = {
   banItem: `${STAGE_URL}/super_admin/ban_item`,
   unbanItem: `${STAGE_URL}/super_admin/unban_item`,
   userValidation: `${STAGE_URL}/user/validate`,
+  cancelOffer: `${STAGE_URL}/bid/withdraw_offer`,
+  acceptOffer: `${STAGE_URL}/bid/accept_offer`,
 } as const
 
 export default APP_CONFIG

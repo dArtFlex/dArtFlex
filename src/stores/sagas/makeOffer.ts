@@ -2,7 +2,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
-import { makeOfferSuccess, makeOfferFailure } from 'stores/reducers/makeOffer'
+import { makeOfferSuccess, makeOfferFailure, cancelOfferFailure, cancelOfferSuccess } from 'stores/reducers/makeOffer'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
@@ -74,5 +74,54 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
     yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) }))
   } catch (e) {
     yield put(makeOfferFailure(e))
+  }
+}
+
+export function* cancelOffer(api: IApi, { payload }: PayloadAction<{ id: number }>) {
+  try {
+    const res = yield call(api, {
+      url: APP_CONFIG.cancelOffer,
+      method: 'POST',
+      data: payload,
+    })
+
+    yield put(cancelOfferSuccess(res))
+  } catch (e) {
+    yield put(cancelOfferFailure(e))
+  }
+}
+
+export function* acceptOffer(
+  api: IApi,
+  {
+    payload,
+  }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string; assetOwnerId: string }>
+) {
+  try {
+    const marketData = yield call(api, {
+      url: APP_CONFIG.getHistory(payload.market_id),
+    })
+    const creatorOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
+    })
+    const buyerOrder = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
+    })
+
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+
+    yield call(api, {
+      url: APP_CONFIG.acceptOffer,
+      method: 'POST',
+      data: {
+        id: payload.bid_id,
+        sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
+        txHash: acceptBidTransaction.transactionHash,
+      },
+    })
+
+    yield put(acceptBidSuccess({ acceptBidTransaction }))
+  } catch (e) {
+    yield put(acceptBidFailure(e))
   }
 }

@@ -21,6 +21,7 @@ import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 import { unlistingRequest } from 'stores/reducers/listing'
 import BigNumber from 'bignumber.js'
+import image from 'common/icons/cover_photo.png'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -135,7 +136,7 @@ export default function Dashboard() {
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={user.cover_image}
+        coverURL={user.cover_image !== 'blank' ? user.cover_image : image}
         aside={
           <Aside
             avatar={user.profile_image}

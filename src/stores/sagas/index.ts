@@ -40,9 +40,13 @@ import {
   cancelBidRequest,
 } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
-import { getNotificationsRequest } from '../reducers/notifications'
+import {
+  getNotificationsRequest,
+  listenForSocketMessagesRequest,
+  updateForSocketMessagesDataRequest,
+} from '../reducers/notifications'
 import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
-import { makeOfferRequest } from '../reducers/makeOffer'
+import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
 
 import {
   getUserData,
@@ -71,9 +75,9 @@ import { minting, uploadImage } from '../sagas/minting'
 import { listing, unlisting } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
-import { getNotifications } from '../sagas/notifications'
+import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
-import { makeOffer } from '../sagas/makeOffer'
+import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
 
 export default function* root() {
   yield all([
@@ -126,6 +130,8 @@ export default function* root() {
 
     /** Notifications **/
     takeLatest(getNotificationsRequest.type, getNotifications, apiMiddleware),
+    takeLatest(listenForSocketMessagesRequest, listenForSocketMessages),
+    takeLatest(updateForSocketMessagesDataRequest, updateForSocketMessagesData),
 
     /** Management **/
     takeLatest(getAllWorksRequest.type, getAllWorks, apiMiddleware),
@@ -135,5 +141,7 @@ export default function* root() {
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
+    takeLatest(cancelOfferRequest.type, cancelOffer, apiMiddleware),
+    takeLatest(acceptOfferRequest.type, acceptOffer, apiMiddleware),
   ])
 }

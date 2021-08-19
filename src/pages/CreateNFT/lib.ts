@@ -10,7 +10,8 @@ export function useValidationSchema() {
     description: yup
       .string()
       .required()
-      .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet'),
+      .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet')
+      .max(500, 'Max length is 500 symbols'),
     royalties: yup
       .string()
       .max(50)

@@ -22,8 +22,7 @@ import { UploadFileSection } from '../../components'
 import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
-import image from 'common/icons/smiley_face.svg'
-import cover from 'common/icons/cover-default.svg'
+import image from 'common/icons/cover_photo.png'
 import { debounce } from 'lodash'
 
 interface IFormAccountSettings {
@@ -66,7 +65,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
-          photoUrl={user?.cover_image && user?.cover_image !== 'blank' ? user?.cover_image : cover}
+          photoUrl={user?.cover_image && user?.cover_image !== 'blank' ? user?.cover_image : image}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
@@ -110,6 +109,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           multiline
           rows={4}
           className={classes.formField}
+          maxLength={200}
         />
       </Box>
       <Box className={classes.section}>

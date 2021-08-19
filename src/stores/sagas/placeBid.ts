@@ -117,7 +117,9 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string }>
+  {
+    payload,
+  }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
     const marketData = yield call(api, {
@@ -137,6 +139,7 @@ export function* acceptBid(
       method: 'POST',
       data: {
         id: payload.bid_id,
+        sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
         txHash: acceptBidTransaction.transactionHash,
       },
     })

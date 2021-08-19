@@ -38,3 +38,15 @@ export function shortCutName(account?: string) {
   }
   return `${account?.substring(0, 6)}...${account?.substring(account.length - 4)}`
 }
+
+export function validatePrice(value: string | number) {
+  let error
+  if (typeof value === 'string' && !value.length) {
+    error = 'Required'
+  } else if (value <= 0) {
+    error = 'Price bid should be more then 0'
+  } else if (!/^\d+(\.\d+)?$/.test(`${value}`)) {
+    error = 'Incorrect number format'
+  }
+  return error
+}

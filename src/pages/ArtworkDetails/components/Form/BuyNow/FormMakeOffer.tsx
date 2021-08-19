@@ -45,10 +45,6 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
-  const {
-    assetDetails: { tokenData },
-  } = useSelector(selectAssetDetails())
-  const { user } = useSelector(selectUser())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
@@ -56,6 +52,13 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
     values.bid && parseFloat(`${values.bid}`)
       ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
       : 0
+
+  const { user } = useSelector(selectUser())
+
+  const {
+    assetDetails: { tokenData },
+  } = useSelector(selectAssetDetails())
+
   const disabledButton =
     values.bid > 0 && Boolean(values.acknowledge) && Boolean(values.agreeTerms) && Number(tokenData?.owner) !== user?.id
 

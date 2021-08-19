@@ -30,7 +30,7 @@ export default function Aside(props: IAsideProps) {
           <Typography className={classes.text}>{walletAddress}</Typography>
           <Button className={classes.actionText}>Copy</Button>
         </Box>
-        <Box pb={11}>
+        <Box pb={11} textAlign="center">
           <Typography variant={'body1'} color={'textSecondary'}>
             {content}
           </Typography>

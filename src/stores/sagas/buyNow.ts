@@ -36,6 +36,7 @@ export function* buyNow(
         orderId: '0',
         itemId: tokenData.id,
         userId,
+        sellerId: Number(tokenData.owner),
         marketId: Number(marketData.id),
         bidAmount: amount,
         txHash: acceptBidTransaction.transactionHash,
