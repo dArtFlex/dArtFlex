@@ -48,6 +48,7 @@ import {
 } from 'common/icons'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import image from '../icons/cover_photo.png'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -179,7 +180,10 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <>
                   {wallet !== null && (
                     <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                      <Avatar src={user?.profile_image} className={classes.avatar} />
+                      <Avatar
+                        src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                        className={classes.avatar}
+                      />
                     </IconButton>
                   )}
 
@@ -261,7 +265,12 @@ export default function Header({ toggleTheme }: HeaderType) {
                       variant={'outlined'}
                       color={'primary'}
                       disableElevation
-                      startIcon={<Avatar src={user?.profile_image} className={classes.avatar} />}
+                      startIcon={
+                        <Avatar
+                          src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                          className={classes.avatar}
+                        />
+                      }
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
@@ -350,7 +359,10 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Paper className={classes.mobileMenuUserInfo}>
                 <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
-                    <Avatar src={user?.profile_image} className={classes.avatar} />
+                    <Avatar
+                      src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                      className={classes.avatar}
+                    />
                   </Icon>
                   <Typography>{`${wallet?.balance.toFixed(4)} ${wallet?.meta.coinAbbr}`}</Typography>
                   <IconButton

@@ -3,6 +3,7 @@ import { Box, Button, TableCell } from '@material-ui/core'
 import { IWorksRow } from '../types'
 import { StyledTableRow, useStyles } from '../styles'
 import clsx from 'clsx'
+import { shortCutName } from '../../../utils'
 
 interface IWorksRowInterface {
   row: IWorksRow
@@ -27,10 +28,10 @@ export default function WorksRow(props: IWorksRowInterface) {
         </Box>
       </TableCell>
       <TableCell classes={{ root: classes.tableTextItem }} className={classes.tableCellRoot}>
-        @{props.row.creator}
+        @{shortCutName(props.row.creator)}
       </TableCell>
       <TableCell classes={{ root: classes.tableTextItem }} className={classes.tableCellRoot}>
-        @{props.row.owner}
+        @{shortCutName(props.row.owner)}
       </TableCell>
       <TableCell className={clsx(classes.tableCellRoot, classes.userStatus)}>
         {isBanned ? (
