@@ -286,7 +286,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     paginationText: {
       margin: theme.spacing(0, 4),
-      width: theme.spacing(10),
+
       textAlign: 'center',
     },
     flexBoxInit: {
