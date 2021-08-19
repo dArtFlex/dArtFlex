@@ -37,6 +37,7 @@ export interface UserStateType {
     ITradingHistory & { imageData: IImageData; fromUserData: UserDataTypes; toUserData: UserDataTypes }
   >
   activeBids: IActiveUserBids[]
+  success: string
 }
 
 export interface IUserAsset extends AssetDataTypesWithStatus {

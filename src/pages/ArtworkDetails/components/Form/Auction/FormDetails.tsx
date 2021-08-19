@@ -65,7 +65,7 @@ export default function FormDetails(props: IDetailsFormProps) {
     bid: { bidHistory, bids },
   } = useSelector(selectBid())
   const {
-    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
+    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
 
@@ -238,7 +238,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
             </Box>
           )}
-        {ifAuctionEnds && !isAuctionExpired ? (
+        {ifAuctionEnds && !isAuctionExpired && status !== 'sold' ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
               This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
@@ -246,7 +246,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
           </Box>
         ) : null}
-        {!isAuctionExpired ? (
+        {!isAuctionExpired && status !== 'sold' ? (
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
