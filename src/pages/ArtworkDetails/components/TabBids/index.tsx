@@ -84,7 +84,14 @@ export default function TabBids(props: ITabHistoryPropa) {
   const expireDate = marketData ? normalizeDate(marketData.end_time) : normalizeDate(String(new Date().getTime()))
 
   const availableToAcceptBid = (i: number) => {
-    return i === 0 && tokenData && user?.id === +tokenData.owner && marketData && marketData?.type === 'auction'
+    return (
+      i === 0 &&
+      tokenData &&
+      user?.id === +tokenData.owner &&
+      marketData &&
+      marketData?.type === 'auction' &&
+      !marketData?.sold
+    )
   }
 
   const availableToAcceptOffer = (i: number) => {
