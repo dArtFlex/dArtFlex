@@ -140,6 +140,10 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
     })
     yield put(unlistingSuccess())
   } catch (e) {
-    yield put(unlistingFailure(e))
+    const error = {
+      code: 4001,
+      message: 'Unlist Artwork was faild as NFT has been bidded.',
+    }
+    yield put(unlistingFailure(error))
   }
 }

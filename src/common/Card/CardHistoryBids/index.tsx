@@ -18,7 +18,8 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     bidAmountUsd,
     userData,
     onCancel,
-    onAccept,
+    onAcceptBid,
+    onAcceptOffer,
     expireDate,
   } = props
   const classes = useStyles()
@@ -59,11 +60,21 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                   Cancel Bid
                 </Button>
               )}
-              {onAccept && (
+              {onAcceptBid && (
                 <Button
                   classes={{ root: classes.cardAcceptBtn }}
                   disableRipple
-                  onClick={onAccept}
+                  onClick={onAcceptBid}
+                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                >
+                  Accept Bid
+                </Button>
+              )}
+              {onAcceptOffer && (
+                <Button
+                  classes={{ root: classes.cardAcceptBtn }}
+                  disableRipple
+                  onClick={onAcceptOffer}
                   startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
                 >
                   Accept Offer
