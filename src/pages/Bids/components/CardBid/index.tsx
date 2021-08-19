@@ -36,7 +36,11 @@ export default function CardBid(props: ICardBidProps) {
       <Box className={classes.cardBidBids}>
         {bid.status !== 'offered' && <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />}
 
-        <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
+        <Bids
+          title={bid.status === 'offered' ? 'Your Offer' : 'Your Bid'}
+          bidAmount={yourBid}
+          bidAmountUsd={yourBidUsd}
+        />
       </Box>
       <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} id={bid.id} />
     </Card>
