@@ -17,6 +17,7 @@ export interface ICardHistoryBidsProps extends IBids {
     user_id: string
     market_id: string
   }) => void
+  expireDate: Date
 }
 
 export interface ICardContainerProps {
