@@ -26,7 +26,7 @@ export function* buyNow(
     const acceptBidTransaction: IAcceptBidTransaction = yield buyNowService.performMint(
       creatorOrder,
       accounts[0],
-      `${+amount + +amount * 0.05}` // need to add 5% to amount
+      `${+amount}`
     )
 
     yield call(api, {
