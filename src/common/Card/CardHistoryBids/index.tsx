@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent, Avatar, Typography, Box, Link, Divider, 
 import { SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
+import { shortCutName } from '../../../utils'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -41,7 +42,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -89,7 +90,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -106,7 +107,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }

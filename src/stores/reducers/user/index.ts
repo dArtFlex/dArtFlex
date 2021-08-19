@@ -18,6 +18,7 @@ const initialState: UserStateType = {
   isId: false,
   fetchingId: false,
   activeBids: [],
+  success: '',
 }
 
 const userSlice = createSlice({
@@ -50,6 +51,7 @@ const userSlice = createSlice({
     },
     createNewUserSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
       state.fetching = false
+      state.success = 'Changes saved'
       state.user = payload.userData
     },
     createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
@@ -240,6 +242,10 @@ const userSlice = createSlice({
       state.error = ''
     },
 
+    clearUserSuccessMessage: (state) => {
+      state.success = ''
+    },
+
     deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
       if (state.user) {
         payload === 'profile_image' ? (state.user.profile_image = 'blank') : (state.user.cover_image = 'blank')
@@ -306,6 +312,7 @@ export const {
   validateUserIdFailure,
 
   clearUserError,
+  clearUserSuccessMessage,
 
   deleteUserPhoto,
 } = userSlice.actions

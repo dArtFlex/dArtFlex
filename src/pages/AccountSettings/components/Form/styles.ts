@@ -46,7 +46,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     socialsIcon: {
-      fill: theme.palette.greyDark,
+      color: theme.palette.greyDark,
     },
     btnSubmit: {
       background: theme.palette.primary.main,

@@ -59,7 +59,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-start',
       paddingBottom: theme.spacing(5.5),
       wordBreak: 'break-all',
-      '&>svg': {
+      '&>div': {
         marginTop: theme.spacing(0.75),
       },
     },
