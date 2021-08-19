@@ -32,6 +32,7 @@ const APP_CONFIG = {
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
+  getOrderByItemId: (item_id: string) => `${STAGE_URL}/bid/get_offer_by_item/${item_id}`,
   getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
   getSoldHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_sold_history/${user_id}`,
 

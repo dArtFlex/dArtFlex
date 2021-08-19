@@ -93,7 +93,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       onClick: () => history.push(routes.tradingHistory),
     },
     {
-      lable: 'My Bids',
+      lable: 'My Bids and Offers',
       icon: <BidsIcon />,
       onClick: () => history.push(routes.bids),
     },
