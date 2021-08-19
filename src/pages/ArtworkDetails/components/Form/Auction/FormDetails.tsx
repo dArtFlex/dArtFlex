@@ -62,7 +62,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
 
   const {
-    bid: { bidHistory, bids },
+    bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
@@ -326,7 +326,12 @@ export default function FormDetails(props: IDetailsFormProps) {
           </div>
         )}
         {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
+        {tab === 2 && (
+          <TabBids
+            bids={bids as Array<IBids & { userData: UserDataTypes }>}
+            offers={offers as Array<IBids & { userData: UserDataTypes }>}
+          />
+        )}
         {tab === 3 && <About creator={creatorData} />}
       </Box>
 

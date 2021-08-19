@@ -40,7 +40,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const classes = useStyles()
 
   const {
-    bid: { bidHistory, bids },
+    bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
@@ -219,7 +219,12 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
           </div>
         )}
         {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
+        {tab === 2 && (
+          <TabBids
+            bids={bids as Array<IBids & { userData: UserDataTypes }>}
+            offers={offers as Array<IBids & { userData: UserDataTypes }>}
+          />
+        )}
         {tab === 3 && <About creator={creatorData} />}
       </Box>
 

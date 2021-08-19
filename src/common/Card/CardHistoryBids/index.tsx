@@ -28,6 +28,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
 
   switch (status) {
+    case 'offered':
     case 'accepted':
     case 'pending':
       return (
@@ -85,6 +86,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
         </CardContainer>
       )
     case 'canceled':
+    case 'canceled offer':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}

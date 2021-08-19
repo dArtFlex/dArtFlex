@@ -23,21 +23,24 @@ const useStyles = makeStyles(() =>
 )
 
 interface ITabHistoryPropa {
-  history: Array<IBids & { userData: UserDataTypes }>
+  bids: Array<IBids & { userData: UserDataTypes }>
+  offers: Array<IBids & { userData: UserDataTypes }>
 }
 
 export default function TabBids(props: ITabHistoryPropa) {
-  const { history } = props
+  const { bids, offers } = props
   const [showMore, setShowMore] = useState<boolean>(false)
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const historyReverse = history ? history.slice().reverse() : []
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
     assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
+
+  const history = marketData?.sold ? offers : bids
+  const historyReverse = history ? history.slice().reverse() : []
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
