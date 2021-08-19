@@ -88,6 +88,12 @@ export const selectAllTradingHistory = () =>
     ({ user: { tradingHistoryAll } }: stateType) => ({ tradingHistoryAll })
   )
 
+export const selectUserSuccessMessage = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ user: { success } }: stateType) => ({ success })
+  )
+
 // Wallet
 export const selectWallet = () =>
   createSelector(

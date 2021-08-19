@@ -10,6 +10,7 @@ import routes from '../../../../routes'
 import { normalizeDate, shortCutName } from 'utils'
 import { useDispatch } from 'react-redux'
 import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
+import { cancelBidRequest } from '../../../../stores/reducers/placeBid'
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
@@ -36,7 +37,11 @@ export default function CardBid(props: ICardBidProps) {
       <Box className={classes.cardBidBids}>
         {bid.status !== 'offered' && <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />}
 
-        <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
+        <Bids
+          title={bid.status === 'offered' ? 'Your Offer' : 'Your Bid'}
+          bidAmount={yourBid}
+          bidAmountUsd={yourBidUsd}
+        />
       </Box>
       <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} id={bid.id} />
     </Card>
@@ -69,6 +74,11 @@ function CardInfoBox(props: ICardInfoBox) {
     dispatch(cancelOfferRequest({ id: id }))
   }
 
+  const handleCancelBid = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
   switch (status) {
     case 'offered':
       return (
@@ -88,9 +98,16 @@ function CardInfoBox(props: ICardInfoBox) {
     case 'bid':
       return (
         <Box className={classes.cardBidAction}>
-          <Button className={clsx(classes.btnAction, classes.btnCancel)} variant={'outlined'} fullWidth>
-            Cancel bid
-          </Button>
+          {isButtonShown && (
+            <Button
+              className={clsx(classes.btnAction, classes.btnCancel)}
+              variant={'outlined'}
+              fullWidth
+              onClick={() => handleCancelBid({ id: id })}
+            >
+              Cancel bid
+            </Button>
+          )}
         </Box>
       )
     case 'outbid':

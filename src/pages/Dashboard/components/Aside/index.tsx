@@ -39,8 +39,8 @@ export default function Aside(props: IAsideProps) {
         {links
           ? links.map(({ link, icon, href }: ILink) => (
               <Box key={link} className={classes.linkBox}>
-                {icon}
-                <Link className={classes.link} href={href} underline="none">
+                <Box>{icon}</Box>
+                <Link className={classes.link} href={href} underline="none" target="_blank">
                   {link}
                 </Link>
               </Box>

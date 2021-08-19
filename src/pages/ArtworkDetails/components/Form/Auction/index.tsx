@@ -8,7 +8,7 @@ import FormApproved from './FormApproved'
 import { ApprovedFormState } from '../../../types'
 import FormMakeOffer from './FormMakeOffer'
 import { makeOfferRequest } from '../../../../../stores/reducers/makeOffer'
-import FormApprovedOffer from './FormApprovedOffer'
+import FormApprovedOffer from '../FormApprovedOffer'
 
 export default function FormAuctionContainer() {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
