@@ -24,7 +24,7 @@ const tabsItems = [
     title: 'History',
   },
   {
-    title: 'Bids',
+    title: 'Bids and Offers',
   },
   {
     title: 'About Creator',

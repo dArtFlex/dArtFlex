@@ -12,6 +12,7 @@ export interface IBidsHistory {
   tx_hash: string
 }
 
+export type IOrderHistory = Omit<IBidsHistory, 'bid_id' & 'tx_hash'>
 export interface IBids extends Omit<IBidsHistory, 'tx_hash' | 'bid_id' | 'id'> {
   id: IBidsHistory['bid_id']
   user_id: string

@@ -8,7 +8,8 @@ import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes } from 'types'
+import { UserDataTypes, IOrderHistory } from 'types'
+import { acceptBidService } from 'services/accept_bid_service'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
   try {
@@ -95,7 +96,14 @@ export function* acceptOffer(
   api: IApi,
   {
     payload,
-  }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string; assetOwnerId: string }>
+  }: PayloadAction<{
+    creatorId: string
+    buyerId: string
+    market_id: string
+    bid_id: string
+    assetOwnerId: string
+    item_id: strign
+  }>
 ) {
   try {
     const marketData = yield call(api, {
@@ -104,8 +112,11 @@ export function* acceptOffer(
     const creatorOrder = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
     })
+    const buyerOrderData: IOrderHistory[] = yield call(api, {
+      url: APP_CONFIG.getOrderByItemId(payload.item_id),
+    })
     const buyerOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
+      url: APP_CONFIG.getOrderByOrderId(buyerOrderData[0].order_id),
     })
 
     const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)

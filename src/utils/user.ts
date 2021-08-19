@@ -1,11 +1,10 @@
 import { IAccountSettings } from 'pages/AccountSettings/types'
-import { v4 as uuidv4 } from 'uuid'
 
 export function setDummyAccount(): IAccountSettings {
   return {
     fullname: ' ',
     id: '',
-    email: `${uuidv4().slice(0, 12)}@gmail.com`,
+    email: ``,
     wallet: ' ',
     overview: ' ',
     profile_image: 'blank',
