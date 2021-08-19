@@ -52,7 +52,7 @@ export default function ArtworkDetails() {
     }
     dispatch(getBidsHistoryRequest())
     assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
-    assetDetails.marketData?.item_id && dispatch(getOffersRequest({ item_id: assetDetails.marketData.item_id }))
+    assetDetails.tokenData?.id && dispatch(getOffersRequest({ item_id: assetDetails.tokenData.id }))
     const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
     return () => {
       clearInterval(iId)

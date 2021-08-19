@@ -39,7 +39,7 @@ export default function TabBids(props: ITabHistoryPropa) {
     assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
-  const history = marketData?.sold ? offers : bids
+  const history = marketData?.sold || marketData === null ? offers : bids
   const historyReverse = history ? history.slice().reverse() : []
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
