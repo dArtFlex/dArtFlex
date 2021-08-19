@@ -68,7 +68,7 @@ export default function ContentManagementWorks({ search }: { search: string }) {
               <ArrowLeftIcon />
             </IconButton>
             <span className={classes.paginationText}>
-              {page} / {worksContent.length / rowsPerPage}
+              {page} / {Math.ceil(worksContent.length / rowsPerPage)}
             </span>
             <IconButton
               onClick={handleNextPage}

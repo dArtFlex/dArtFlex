@@ -5,6 +5,7 @@ import { IUsersRow } from '../types'
 import { StyledTableRow, useStyles } from '../styles'
 import { Box, Button, TableCell } from '@material-ui/core'
 import clsx from 'clsx'
+import { shortCutName } from '../../../utils'
 
 interface IUsersRowInterface {
   row: IUsersRow
@@ -31,7 +32,7 @@ export default function UsersRow(props: IUsersRowInterface) {
           </Box>
         </Box>
       </TableCell>
-      <TableCell classes={{ root: classes.tableTextItem }}>@{props.row.username}</TableCell>
+      <TableCell classes={{ root: classes.tableTextItem }}>@{shortCutName(props.row.username)}</TableCell>
       <TableCell className={clsx(classes.tableCellRoot, classes.userStatus)}>
         {props.row.isActive ? (
           <span className={classes.statusTextActive}>Active</span>

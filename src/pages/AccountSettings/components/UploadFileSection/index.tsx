@@ -40,7 +40,7 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
             <Field type="upload" name={name} fullWidth={false} />
             <Button
               onClick={() => {
-                setFieldValue(name, '')
+                setFieldValue(name, 'blank')
                 dispatch(deleteUserPhoto(name))
                 handleSubmit()
               }}

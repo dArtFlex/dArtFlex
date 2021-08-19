@@ -4,6 +4,7 @@ import { PopoverLinks } from 'common'
 import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
 import { IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
+import image from 'common/icons/cover_photo.png'
 
 export default function Aside(props: IAsideProps) {
   const { avatar, name, userName, walletAddress, content, links, joinedToArtworks } = props
@@ -22,7 +23,7 @@ export default function Aside(props: IAsideProps) {
           }}
           badgeContent={<VerificationIcon />}
         >
-          <Avatar src={avatar} className={classes.avatar} />
+          <Avatar src={avatar === 'blank' ? image : avatar} className={classes.avatar} />
         </Badge>
         <Typography className={classes.name}>{name}</Typography>
         <Typography className={classes.userName}>@{userName}</Typography>
