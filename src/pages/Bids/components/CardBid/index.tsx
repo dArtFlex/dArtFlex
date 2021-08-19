@@ -10,6 +10,7 @@ import routes from '../../../../routes'
 import { normalizeDate, shortCutName } from 'utils'
 import { useDispatch } from 'react-redux'
 import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
+import { cancelBidRequest } from '../../../../stores/reducers/placeBid'
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
@@ -69,6 +70,11 @@ function CardInfoBox(props: ICardInfoBox) {
     dispatch(cancelOfferRequest({ id: id }))
   }
 
+  const handleCancelBid = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
   switch (status) {
     case 'offered':
       return (
@@ -88,9 +94,16 @@ function CardInfoBox(props: ICardInfoBox) {
     case 'bid':
       return (
         <Box className={classes.cardBidAction}>
-          <Button className={clsx(classes.btnAction, classes.btnCancel)} variant={'outlined'} fullWidth>
-            Cancel bid
-          </Button>
+          {isButtonShown && (
+            <Button
+              className={clsx(classes.btnAction, classes.btnCancel)}
+              variant={'outlined'}
+              fullWidth
+              onClick={() => handleCancelBid({ id: id })}
+            >
+              Cancel bid
+            </Button>
+          )}
         </Box>
       )
     case 'outbid':
