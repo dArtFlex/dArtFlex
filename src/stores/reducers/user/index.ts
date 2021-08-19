@@ -242,7 +242,7 @@ const userSlice = createSlice({
 
     deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
       if (state.user) {
-        payload === 'profile_image' ? (state.user.profile_image = '') : (state.user.cover_image = '')
+        payload === 'profile_image' ? (state.user.profile_image = 'blank') : (state.user.cover_image = 'blank')
       }
     },
   },

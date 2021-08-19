@@ -69,7 +69,7 @@ export default function ContentManagementUsers({ search }: { search: string }) {
               <ArrowLeftIcon />
             </IconButton>
             <span className={classes.paginationText}>
-              {page} / {usersContent.length / rowsPerPage}
+              {page} / {Math.ceil(usersContent.length / rowsPerPage)}
             </span>
             <IconButton
               onClick={handleNextPage}
