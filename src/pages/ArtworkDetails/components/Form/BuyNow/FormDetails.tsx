@@ -18,9 +18,6 @@ interface IDetailsFormProps {
 
 const tabsItems = [
   {
-    title: 'Description',
-  },
-  {
     title: 'History',
   },
   {
@@ -28,6 +25,9 @@ const tabsItems = [
   },
   {
     title: 'About Creator',
+  },
+  {
+    title: 'Description',
   },
 ]
 
@@ -213,19 +213,19 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Tab key={title} label={title} classes={{ selected: classes.activeTabColor }} />
           ))}
         </Tabs>
-        {tab === 0 && (
-          <div className={classes.tabContant}>
-            <p>{imageData?.description}</p>
-          </div>
-        )}
-        {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && (
+        {tab === 0 && <TabHistory history={bidHistory} />}
+        {tab === 1 && (
           <TabBids
             bids={bids as Array<IBids & { userData: UserDataTypes }>}
             offers={offers as Array<IBids & { userData: UserDataTypes }>}
           />
         )}
-        {tab === 3 && <About creator={creatorData} />}
+        {tab === 2 && <About creator={creatorData} />}
+        {tab === 3 && (
+          <div className={classes.tabContant}>
+            <p>{imageData?.description}</p>
+          </div>
+        )}
       </Box>
 
       <Modal
