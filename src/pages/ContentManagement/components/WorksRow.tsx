@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { banWorkRequest, unbanWorkRequest } from 'stores/reducers/management'
 import { Box, Button, TableCell } from '@material-ui/core'
 import { IWorksRow } from '../types'
 import { StyledTableRow, useStyles } from '../styles'
@@ -10,9 +12,13 @@ interface IWorksRowInterface {
 }
 
 export default function WorksRow(props: IWorksRowInterface) {
-  const [isBanned, setIsBanned] = useState(props.row.isActive)
-  const handleStatusChange = () => {
-    setIsBanned((prevState) => !prevState)
+  const dispatch = useDispatch()
+
+  const handleBanWork = () => {
+    dispatch(banWorkRequest({ item_id: props.row.id }))
+  }
+  const handleUnbanWork = () => {
+    dispatch(unbanWorkRequest({ item_id: props.row.id }))
   }
 
   const classes = useStyles()
@@ -34,19 +40,19 @@ export default function WorksRow(props: IWorksRowInterface) {
         @{shortCutName(props.row.owner)}
       </TableCell>
       <TableCell className={clsx(classes.tableCellRoot, classes.userStatus)}>
-        {isBanned ? (
+        {props.row.isActive ? (
           <span className={classes.statusTextActive}>Active</span>
         ) : (
           <span className={classes.statusTextBanned}>Banned</span>
         )}
       </TableCell>
       <TableCell className={classes.tableCellRoot}>
-        {isBanned ? (
-          <Button className={clsx(classes.statusTextBanned, classes.worksRowActionButton)} onClick={handleStatusChange}>
+        {props.row.isActive ? (
+          <Button className={clsx(classes.statusTextBanned, classes.worksRowActionButton)} onClick={handleBanWork}>
             Ban
           </Button>
         ) : (
-          <Button className={clsx(classes.statusTextUnban, classes.worksRowActionButton)} onClick={handleStatusChange}>
+          <Button className={clsx(classes.statusTextUnban, classes.worksRowActionButton)} onClick={handleUnbanWork}>
             Unban
           </Button>
         )}

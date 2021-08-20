@@ -9,6 +9,10 @@ import {
   banUserFailure,
   unbanUserSuccess,
   unbanUserFailure,
+  banWorkSuccess,
+  banWorkFailure,
+  unbanWorkSuccess,
+  unbanWorkFailure,
 } from 'stores/reducers/management'
 import { ManagementStateType } from 'stores/reducers/management/types'
 import { IApi } from '../../services/types'
@@ -83,5 +87,40 @@ export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: stri
     yield put(unbanUserSuccess())
   } catch (e) {
     yield put(unbanUserFailure(e))
+  }
+}
+
+export function* banWork(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
+  try {
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+
+    yield call(api, {
+      url: APP_CONFIG.banItem,
+      method: 'POST',
+      data: {
+        itemId: payload.item_id,
+        ...signature,
+      },
+    })
+    yield put(banWorkSuccess())
+  } catch (e) {
+    yield put(banWorkFailure(e))
+  }
+}
+
+export function* unbanWork(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
+  try {
+    const signature: { data: string; signature: string } = yield walletService.generateSignature()
+    yield call(api, {
+      url: APP_CONFIG.unbanItem,
+      method: 'POST',
+      data: {
+        itemId: payload.item_id,
+        ...signature,
+      },
+    })
+    yield put(unbanWorkSuccess())
+  } catch (e) {
+    yield put(unbanWorkFailure(e))
   }
 }

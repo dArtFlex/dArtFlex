@@ -46,7 +46,14 @@ import {
   listenForSocketMessagesRequest,
   updateForSocketMessagesDataRequest,
 } from '../reducers/notifications'
-import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
+import {
+  getAllWorksRequest,
+  getAllUsersListRequest,
+  banUserRequest,
+  unbanUserRequest,
+  banWorkRequest,
+  unbanWorkRequest,
+} from '../reducers/management'
 import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
 
 import {
@@ -77,7 +84,7 @@ import { listing, unlisting } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
-import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
+import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
 import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
 
 export default function* root() {
@@ -140,6 +147,8 @@ export default function* root() {
     takeLatest(getAllUsersListRequest.type, getAllUsersList, apiMiddleware),
     takeLatest(banUserRequest.type, banUser, apiMiddleware),
     takeLatest(unbanUserRequest.type, unbanUser, apiMiddleware),
+    takeLatest(banWorkRequest.type, banWork, apiMiddleware),
+    takeLatest(unbanWorkRequest.type, unbanWork, apiMiddleware),
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
