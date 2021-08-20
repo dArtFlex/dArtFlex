@@ -152,5 +152,5 @@ export const selectNotifications = () =>
 export const selectManagement = () =>
   createSelector(
     (store: stateType) => store,
-    ({ management: { works, users, error } }: stateType) => ({ works, users, error })
+    ({ management: { works, users, error, fetching } }: stateType) => ({ works, users, error, fetching })
   )
