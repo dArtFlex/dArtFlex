@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
 import { acceptBidRequest, cancelBidRequest } from 'stores/reducers/placeBid'
-import { acceptOfferRequest } from 'stores/reducers/makeOffer'
+import { acceptOfferRequest, cancelOfferRequest } from 'stores/reducers/makeOffer'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
 import { CardHistoryBids } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -23,21 +23,24 @@ const useStyles = makeStyles(() =>
 )
 
 interface ITabHistoryPropa {
-  history: Array<IBids & { userData: UserDataTypes }>
+  bids: Array<IBids & { userData: UserDataTypes }>
+  offers: Array<IBids & { userData: UserDataTypes }>
 }
 
 export default function TabBids(props: ITabHistoryPropa) {
-  const { history } = props
+  const { bids, offers } = props
   const [showMore, setShowMore] = useState<boolean>(false)
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const historyReverse = history ? history.slice().reverse() : []
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { marketData, tokenData },
+    assetDetails: { marketData, tokenData, status },
   } = useSelector(selectAssetDetails())
+
+  const history = marketData?.sold || marketData === null ? offers : bids
+  const historyReverse = history ? history.slice().reverse() : []
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
@@ -72,19 +75,31 @@ export default function TabBids(props: ITabHistoryPropa) {
         bid_id: historyReverse[0]?.id,
         assetOwnerId: tokenData?.owner,
         item_id: marketData?.item_id,
+        type: marketData?.type,
       })
     )
   }
 
-  const handleCancelOffer = ({ id }: { id: number }) => {
+  const handleCancelBid = ({ id }: { id: number }) => {
     dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
+  const handleCancelOffer = ({ id }: { id: number }) => {
+    dispatch(cancelOfferRequest({ bid_id: id }))
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
   const expireDate = marketData ? normalizeDate(marketData.end_time) : normalizeDate(String(new Date().getTime()))
 
   const availableToAcceptBid = (i: number) => {
-    return i === 0 && tokenData && user?.id === +tokenData.owner && marketData && marketData?.type === 'auction'
+    return (
+      i === 0 &&
+      tokenData &&
+      user?.id === +tokenData.owner &&
+      marketData &&
+      marketData?.type === 'auction' &&
+      !marketData?.sold
+    )
   }
 
   const availableToAcceptOffer = (i: number) => {
@@ -104,8 +119,10 @@ export default function TabBids(props: ITabHistoryPropa) {
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
               onCancel={
-                user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
-                  ? handleCancelOffer
+                user?.id === +props.user_id && (expireTime || status === 'sold') && marketData
+                  ? status === 'sold'
+                    ? handleCancelBid
+                    : handleCancelOffer
                   : undefined
               }
               expireDate={expireDate}
@@ -137,8 +154,10 @@ export default function TabBids(props: ITabHistoryPropa) {
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
             onCancel={
-              user?.id === +props.userData?.id && expireTime && marketData && marketData?.type === 'auction'
-                ? handleCancelOffer
+              user?.id === +props.userData?.id && (expireTime || status === 'sold') && marketData
+                ? status === 'sold'
+                  ? handleCancelBid
+                  : handleCancelOffer
                 : undefined
             }
             expireDate={expireDate}

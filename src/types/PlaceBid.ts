@@ -31,6 +31,7 @@ export type HistoryStatusType =
   | 'purchased'
   | 'offered'
   | 'accepted'
+  | 'canceled offer'
 
 export interface IOrderData {
   data: string

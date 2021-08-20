@@ -13,6 +13,8 @@ import {
   getBidsFailure,
   cancelBidSuccess,
   cancelBidFailure,
+  getOffersSuccess,
+  getOffersFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
@@ -160,6 +162,19 @@ export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: stri
     yield put(getBidsSuccess({ bids }))
   } catch (e) {
     yield put(getBidsFailure(e))
+  }
+}
+
+export function* getOffers(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
+  try {
+    const getHistory: IBids[] = yield call(api, {
+      url: APP_CONFIG.getHistoryOffers(payload.item_id),
+    })
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+    const offers = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+    yield put(getOffersSuccess({ offers }))
+  } catch (e) {
+    yield put(getOffersFailure(e))
   }
 }
 

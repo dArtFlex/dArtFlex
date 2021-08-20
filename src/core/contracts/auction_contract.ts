@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-export const AUCTION_CONTRACT_ADDRESS = '0x1e1B6E13F0eB4C570628589e3c088BC92aD4dB45'
+export const AUCTION_CONTRACT_ADDRESS = '0xd45E0eF493276d17ED3625C8e48346A21C8299a8'
 
 export const ABI: AbiItem[] = [
   {

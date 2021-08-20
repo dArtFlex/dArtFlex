@@ -40,6 +40,7 @@ const APP_CONFIG = {
   getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,
   getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
   getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
+  getHistoryOffers: (item_id: number) => `${STAGE_URL}/bid/get_offer_by_item/${item_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
   getActiveUserBidsById: (user_id: number) => `${STAGE_URL}/bid/get_active_by_user/${user_id}`,
 

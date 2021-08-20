@@ -7,5 +7,6 @@ export interface PlaceBidStateType {
   bidAmount: number | null
   bidHistory: Array<IBidsHistory & { userData: UserDataTypes }>
   bids?: IBids[]
+  offers?: IBids[]
   acceptBidTransaction?: IAcceptBidTransaction
 }

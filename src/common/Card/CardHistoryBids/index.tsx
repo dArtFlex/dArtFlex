@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent, Avatar, Typography, Box, Link, Divider, 
 import { SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
+import { shortCutName } from '../../../utils'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -28,6 +29,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
 
   switch (status) {
+    case 'offered':
     case 'accepted':
     case 'pending':
       return (
@@ -42,7 +44,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -85,6 +87,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
         </CardContainer>
       )
     case 'canceled':
+    case 'canceled offer':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
@@ -100,7 +103,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -117,7 +120,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }

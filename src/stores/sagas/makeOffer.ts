@@ -8,7 +8,7 @@ import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes, IOrderHistory } from 'types'
+import { UserDataTypes, IOrderHistory, IAssetType } from 'types'
 import { acceptBidService } from 'services/accept_bid_service'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
@@ -103,15 +103,20 @@ export function* acceptOffer(
     bid_id: string
     assetOwnerId: string
     item_id: strign
+    type: IAssetType
   }>
 ) {
   try {
     const marketData = yield call(api, {
       url: APP_CONFIG.getHistory(payload.market_id),
     })
-    const creatorOrder = yield call(api, {
+    const order0 = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
     })
+    const order1 = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(marketData.slice().reverse()[0].order_id),
+    })
+
     const buyerOrderData: IOrderHistory[] = yield call(api, {
       url: APP_CONFIG.getOrderByItemId(payload.item_id),
     })
@@ -119,7 +124,10 @@ export function* acceptOffer(
       url: APP_CONFIG.getOrderByOrderId(buyerOrderData[0].order_id),
     })
 
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+    // We need to check creatorOrder and buyerOrder and they masn't be same
+    const creatorOrder = buyerOrder.maker !== order0.maker ? order0 : order1
+
+    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptOffer,
@@ -127,12 +135,12 @@ export function* acceptOffer(
       data: {
         id: payload.bid_id,
         sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
-        txHash: acceptBidTransaction.transactionHash,
+        txHash: acceptOfferTransaction.transactionHash,
       },
     })
 
-    yield put(acceptBidSuccess({ acceptBidTransaction }))
+    yield put(acceptOfferSuccess({ acceptOfferTransaction }))
   } catch (e) {
-    yield put(acceptBidFailure(e))
+    yield put(acceptOfferFailure(e))
   }
 }

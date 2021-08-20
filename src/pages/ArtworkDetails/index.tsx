@@ -5,7 +5,7 @@ import { PageWrapper, Form, CircularProgressLoader } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
-import { getBidsHistoryRequest, getBidsRequest } from 'stores/reducers/placeBid'
+import { getBidsHistoryRequest, getBidsRequest, getOffersRequest } from 'stores/reducers/placeBid'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
 import { useValidationSchema } from './lib'
@@ -33,14 +33,17 @@ export default function ArtworkDetails() {
     if (assetDetails) {
       dispatch(getBidsHistoryRequest())
       assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
+      assetDetails.marketData?.item_id && dispatch(getOffersRequest({ item_id: assetDetails.marketData.item_id }))
     }
   }
 
   useEffect(() => {
     fetchAssetDetails()
-    const iId = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
+    const iId0 = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
+    const iId1 = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
     return () => {
-      clearInterval(iId)
+      clearInterval(iId0)
+      clearInterval(iId1)
       dispatch(clearAssetDetails())
     }
   }, [])
@@ -51,10 +54,7 @@ export default function ArtworkDetails() {
     }
     dispatch(getBidsHistoryRequest())
     assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
-    const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
-    return () => {
-      clearInterval(iId)
-    }
+    assetDetails.tokenData?.id && dispatch(getOffersRequest({ item_id: assetDetails.tokenData.id }))
   }, [assetDetails])
 
   return (
