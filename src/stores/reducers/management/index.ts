@@ -58,6 +58,28 @@ const managementSlice = createSlice({
       state.fetching = false
     },
 
+    banWorkRequest: (state, i) => {
+      state.fetching = true
+    },
+    banWorkSuccess: (state) => {
+      state.fetching = false
+    },
+    banWorkFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    unbanWorkRequest: (state, i) => {
+      state.fetching = true
+    },
+    unbanWorkSuccess: (state) => {
+      state.fetching = false
+    },
+    unbanWorkFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
     clearManagementError: (state) => {
       state.error = ''
     },
@@ -80,6 +102,14 @@ export const {
   unbanUserRequest,
   unbanUserSuccess,
   unbanUserFailure,
+
+  banWorkRequest,
+  banWorkSuccess,
+  banWorkFailure,
+
+  unbanWorkRequest,
+  unbanWorkSuccess,
+  unbanWorkFailure,
 
   clearManagementError,
 } = managementSlice.actions
