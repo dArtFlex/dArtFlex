@@ -1,4 +1,4 @@
-import { put, call, all } from 'redux-saga/effects'
+import { put, call, all, select } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import {
   getAllWorksSuccess,
@@ -16,7 +16,7 @@ import {
 } from 'stores/reducers/management'
 import { ManagementStateType } from 'stores/reducers/management/types'
 import { IApi } from '../../services/types'
-import { AssetTypes, UserDataTypes, AssetDataTypes } from 'types'
+import { AssetTypes, UserDataTypes, AssetDataTypes, IBaseManagementUsers, IBaseManagementWorks } from 'types'
 import APP_CONFIG from 'config'
 import { walletService } from 'services/wallet_service'
 
@@ -67,7 +67,12 @@ export function* banUser(api: IApi, { payload }: PayloadAction<{ user_id: string
         ...signature,
       },
     })
-    yield put(banUserSuccess())
+
+    const { users: currentUsersData }: { users: IBaseManagementUsers[] } = yield select((state) => state.management)
+    const users = currentUsersData.map((user: IBaseManagementUsers) =>
+      user.id === Number(payload.user_id) ? { ...user, ban: true } : user
+    )
+    yield put(banUserSuccess({ users }))
   } catch (e) {
     yield put(banUserFailure(e))
   }
@@ -84,7 +89,12 @@ export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: stri
         ...signature,
       },
     })
-    yield put(unbanUserSuccess())
+
+    const { users: currentUsersData }: { users: IBaseManagementUsers[] } = yield select((state) => state.management)
+    const users = currentUsersData.map((user: IBaseManagementUsers) =>
+      user.id === Number(payload.user_id) ? { ...user, ban: false } : user
+    )
+    yield put(unbanUserSuccess({ users }))
   } catch (e) {
     yield put(unbanUserFailure(e))
   }
@@ -93,7 +103,6 @@ export function* unbanUser(api: IApi, { payload }: PayloadAction<{ user_id: stri
 export function* banWork(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
   try {
     const signature: { data: string; signature: string } = yield walletService.generateSignature()
-
     yield call(api, {
       url: APP_CONFIG.banItem,
       method: 'POST',
@@ -102,7 +111,12 @@ export function* banWork(api: IApi, { payload }: PayloadAction<{ item_id: string
         ...signature,
       },
     })
-    yield put(banWorkSuccess())
+
+    const { works: currentWorksData }: { works: IBaseManagementWorks[] } = yield select((state) => state.management)
+    const works = currentWorksData.map((work: IBaseManagementWorks) =>
+      work.id === Number(payload.item_id) ? { ...work, ban: true } : work
+    )
+    yield put(banWorkSuccess({ works }))
   } catch (e) {
     yield put(banWorkFailure(e))
   }
@@ -119,7 +133,12 @@ export function* unbanWork(api: IApi, { payload }: PayloadAction<{ item_id: stri
         ...signature,
       },
     })
-    yield put(unbanWorkSuccess())
+
+    const { works: currentWorksData }: { works: IBaseManagementWorks[] } = yield select((state) => state.management)
+    const works = currentWorksData.map((work: IBaseManagementWorks) =>
+      work.id === Number(payload.item_id) ? { ...work, ban: false } : work
+    )
+    yield put(unbanWorkSuccess({ works }))
   } catch (e) {
     yield put(unbanWorkFailure(e))
   }

@@ -39,8 +39,9 @@ const managementSlice = createSlice({
     banUserRequest: (state, i) => {
       state.fetching = true
     },
-    banUserSuccess: (state) => {
+    banUserSuccess: (state, { payload }: PayloadAction<{ users: ManagementStateType['users'] }>) => {
       state.fetching = false
+      state.users = payload.users
     },
     banUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -50,8 +51,9 @@ const managementSlice = createSlice({
     unbanUserRequest: (state, i) => {
       state.fetching = true
     },
-    unbanUserSuccess: (state) => {
+    unbanUserSuccess: (state, { payload }: PayloadAction<{ users: ManagementStateType['users'] }>) => {
       state.fetching = false
+      state.users = payload.users
     },
     unbanUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -61,8 +63,9 @@ const managementSlice = createSlice({
     banWorkRequest: (state, i) => {
       state.fetching = true
     },
-    banWorkSuccess: (state) => {
+    banWorkSuccess: (state, { payload }: PayloadAction<{ works: ManagementStateType['works'] }>) => {
       state.fetching = false
+      state.works = payload.works
     },
     banWorkFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -72,8 +75,9 @@ const managementSlice = createSlice({
     unbanWorkRequest: (state, i) => {
       state.fetching = true
     },
-    unbanWorkSuccess: (state) => {
+    unbanWorkSuccess: (state, { payload }: PayloadAction<{ works: ManagementStateType['works'] }>) => {
       state.fetching = false
+      state.works = payload.works
     },
     unbanWorkFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
