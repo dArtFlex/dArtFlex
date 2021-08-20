@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
@@ -9,7 +9,12 @@ import { selectBid } from 'stores/selectors'
 import { useStyles } from '../styles'
 import { ApprovedFormState } from '../../../types'
 
-export default function FormApproved() {
+interface IFormApproved {
+  onSubmit: () => void
+}
+
+export default function FormApproved(props: IFormApproved) {
+  const { onSubmit } = props
   const classes = useStyles()
   const {
     bid: { transacting, error, data },
@@ -22,6 +27,7 @@ export default function FormApproved() {
         desc={`Your bid was unconfirmed on the Ethereum blockchain.`}
         icon={null}
         linkEthescan=""
+        onSubmit={onSubmit}
       />
     )
   }
@@ -51,6 +57,7 @@ export default function FormApproved() {
       title={'Your bid was placed successfully!'}
       desc={`Your bid was confirmed on the Ethereum blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
       linkEthescan=""
+      onSubmit={onSubmit}
     />
   )
 }
@@ -60,13 +67,18 @@ interface ISubFormTransaction {
   desc: string
   icon?: React.ReactElement | null
   linkEthescan: string
+  onSubmit: () => void
 }
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const { title, desc, icon = <SuccessfullyIcon /> } = props
+  const { title, desc, icon = <SuccessfullyIcon />, onSubmit } = props
 
   const { setFieldValue } = useFormikContext<ApprovedFormState>()
+
+  useEffect(() => {
+    setTimeout(() => onSubmit(), 5000)
+  }, [])
 
   return (
     <Box className={classes.formContainer}>

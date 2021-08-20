@@ -43,9 +43,16 @@ export default function FormAuction() {
         />
       )
     case 'approved':
-      return <FormApproved />
+      return <FormApproved onSubmit={() => setFieldValue('formProgress', 'details')} />
     case 'confirm offer':
-      return <FormApprovedOffer onSubmit={() => setFieldValue('formProgress', 'details')} />
+      return (
+        <FormApprovedOffer
+          onSubmit={() => {
+            setFieldValue('bid', '0')
+            setFieldValue('formProgress', 'details')
+          }}
+        />
+      )
     default:
       return null
   }
