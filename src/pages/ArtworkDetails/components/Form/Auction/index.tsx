@@ -38,7 +38,7 @@ export default function FormAuctionContainer() {
     case 'approved':
       return <FormApproved />
     case 'confirm offer':
-      return <FormApprovedOffer />
+      return <FormApprovedOffer onSubmit={() => setFieldValue('formProgress', 'details')} />
     default:
       return null
   }
