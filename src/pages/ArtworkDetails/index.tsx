@@ -39,9 +39,11 @@ export default function ArtworkDetails() {
 
   useEffect(() => {
     fetchAssetDetails()
-    const iId = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
+    const iId0 = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
+    const iId1 = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
     return () => {
-      clearInterval(iId)
+      clearInterval(iId0)
+      clearInterval(iId1)
       dispatch(clearAssetDetails())
     }
   }, [])
@@ -53,10 +55,6 @@ export default function ArtworkDetails() {
     dispatch(getBidsHistoryRequest())
     assetDetails.marketData?.id && dispatch(getBidsRequest({ market_id: assetDetails.marketData.id }))
     assetDetails.tokenData?.id && dispatch(getOffersRequest({ item_id: assetDetails.tokenData.id }))
-    const iId = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
-    return () => {
-      clearInterval(iId)
-    }
   }, [assetDetails])
 
   return (

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
 import { acceptBidRequest, cancelBidRequest } from 'stores/reducers/placeBid'
-import { acceptOfferRequest } from 'stores/reducers/makeOffer'
+import { acceptOfferRequest, cancelOfferRequest } from 'stores/reducers/makeOffer'
 import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
 import { CardHistoryBids } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -36,7 +36,7 @@ export default function TabBids(props: ITabHistoryPropa) {
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { marketData, tokenData },
+    assetDetails: { marketData, tokenData, status },
   } = useSelector(selectAssetDetails())
 
   const history = marketData?.sold || marketData === null ? offers : bids
@@ -75,12 +75,17 @@ export default function TabBids(props: ITabHistoryPropa) {
         bid_id: historyReverse[0]?.id,
         assetOwnerId: tokenData?.owner,
         item_id: marketData?.item_id,
+        type: marketData?.type,
       })
     )
   }
 
-  const handleCancelOffer = ({ id }: { id: number }) => {
+  const handleCancelBid = ({ id }: { id: number }) => {
     dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
+  const handleCancelOffer = ({ id }: { id: number }) => {
+    dispatch(cancelOfferRequest({ bid_id: id }))
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
@@ -114,8 +119,10 @@ export default function TabBids(props: ITabHistoryPropa) {
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
               onCancel={
-                user?.id === +props.user_id && expireTime && marketData && marketData?.type === 'auction'
-                  ? handleCancelOffer
+                user?.id === +props.user_id && (expireTime || status === 'sold') && marketData
+                  ? status === 'sold'
+                    ? handleCancelBid
+                    : handleCancelOffer
                   : undefined
               }
               expireDate={expireDate}
@@ -147,8 +154,10 @@ export default function TabBids(props: ITabHistoryPropa) {
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
             onCancel={
-              user?.id === +props.userData?.id && expireTime && marketData && marketData?.type === 'auction'
-                ? handleCancelOffer
+              user?.id === +props.userData?.id && (expireTime || status === 'sold') && marketData
+                ? status === 'sold'
+                  ? handleCancelBid
+                  : handleCancelOffer
                 : undefined
             }
             expireDate={expireDate}
