@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectAssetDetails, selectBid } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { buyNowRequest } from 'stores/reducers/buyNow'
-import { makeOfferRequest } from 'stores/reducers/makeOffer'
+import { clearMakeOfferError, makeOfferRequest } from 'stores/reducers/makeOffer'
 import FormDetails from './FormDetails'
 import FormBuy from './FormBuy'
 import FormApproved from './FormApproved'
@@ -45,7 +45,7 @@ export default function FormAuction() {
     case 'approved':
       return <FormApproved />
     case 'confirm offer':
-      return <FormApprovedOffer />
+      return <FormApprovedOffer onSubmit={() => setFieldValue('formProgress', 'details')} />
     default:
       return null
   }

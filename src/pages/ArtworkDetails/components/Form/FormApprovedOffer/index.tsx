@@ -1,16 +1,34 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectMakeOffer } from '../../../../../stores/selectors'
 import { useStyles } from '../styles'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Button, Typography } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
 import { SuccessfullyIcon } from 'common/icons'
+import { clearMakeOfferError } from '../../../../../stores/reducers/makeOffer'
 
-export default function FormApprovedOffer() {
+interface IFormApprovedOffer {
+  onSubmit: () => void
+}
+
+export default function FormApprovedOffer(props: IFormApprovedOffer) {
+  const { onSubmit } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
   const {
-    offer: { fetching },
+    offer: { fetching, error },
   } = useSelector(selectMakeOffer())
+
+  const handleViewArtwork = () => {
+    dispatch(clearMakeOfferError())
+    onSubmit()
+  }
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMakeOfferError())
+    }
+  }, [])
 
   return fetching ? (
     <Box className={classes.formContainer}>
@@ -23,6 +41,19 @@ export default function FormApprovedOffer() {
         <Box mb={5.5}>
           <CircularProgressLoader />
         </Box>
+      </Box>
+    </Box>
+  ) : error ? (
+    <Box className={classes.formContainer}>
+      <Box className={classes.formContant}>
+        <Box mb={4}>
+          <Typography variant="h1" component="p">
+            Your offer was rejected
+          </Typography>
+        </Box>
+        <Button variant={'outlined'} onClick={handleViewArtwork}>
+          View artwork{' '}
+        </Button>
       </Box>
     </Box>
   ) : (
