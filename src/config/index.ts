@@ -1,10 +1,17 @@
+import { getProviderAddress } from 'utils'
+
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
 const BASE_URL = STAGE_URL.replace('/api', '')
 const LOCAL_URL = 'http://localhost:3000'
 
+const ETHEREUM_PROVIDER = 'http://mainnet.infura.io/v3/6c7fceaca1a3433dad73cb537f87644b'
+const RINKEBY_PROVIDER = 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899'
+
 const APP_CONFIG = {
-  rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
-  ethereumProvider: 'http://mainnet.infura.io/v3/b55d5c248991487b915a693d9b0b11ad',
+  ethereumProvider: ETHEREUM_PROVIDER,
+  ethereumProviderAddress: getProviderAddress(ETHEREUM_PROVIDER),
+  rinkebyProvider: RINKEBY_PROVIDER,
+  rinkebyProviderAddress: getProviderAddress(RINKEBY_PROVIDER),
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',

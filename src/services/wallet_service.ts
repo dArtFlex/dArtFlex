@@ -28,11 +28,11 @@ class WalletService extends Web3Service {
       this.accounts = JSON.parse(wallet as string).accounts
     } else {
       const web3 = await this.setWeb3WalletConnectProvider()
-      this.accounts = await web3.eth.getAccounts()
+      this.accounts = await this.web3.eth.getAccounts()
       this.web3 = web3
     }
 
-    this.balance = await web3.eth.getBalance(this.accounts[0])
+    this.balance = await this.web3.eth.getBalance(this.accounts[0])
     this.chainId = await this.web3.eth.getChainId()
     return this
   }

@@ -33,3 +33,8 @@ export function notSupportedNetwork(chainId: string | number) {
   const allowedNetworks = ['0x1', '0x4', 1, 4]
   return !allowedNetworks.some((network) => network === chainId)
 }
+
+export function getProviderAddress(url: string) {
+  const regExp: string | RegExp = new RegExp('(http://mainnet.infura.io/v3/)|(http://rinkeby.infura.io/v3/)', 'i')
+  return url.replace(regExp, '')
+}
