@@ -5,6 +5,7 @@ import { call, put, select } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import routes from '../../routes'
 import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
+import { getUserAssetsRequest } from 'stores/reducers/user'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { IChainId } from 'types'
 import { walletService } from 'services/wallet_service'
@@ -139,6 +140,8 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
       },
     })
     yield put(unlistingSuccess())
+
+    yield put(getUserAssetsRequest())
   } catch (e) {
     const error = {
       code: 4001,

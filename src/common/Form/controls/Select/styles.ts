@@ -1,5 +1,4 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { unset } from 'lodash'
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
