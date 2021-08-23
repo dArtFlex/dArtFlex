@@ -57,9 +57,7 @@ export default function TabBids(props: ITabHistoryPropa) {
   const handleAcceptBid = () => {
     dispatch(
       acceptBidRequest({
-        creatorId: history[0].order_id,
         market_id: historyReverse[0].market_id,
-        buyerId: historyReverse[0].order_id,
         bid_id: historyReverse[0]?.id,
         assetOwnerId: tokenData?.owner,
       })
@@ -69,13 +67,9 @@ export default function TabBids(props: ITabHistoryPropa) {
   const handleAcceptOffer = () => {
     dispatch(
       acceptOfferRequest({
-        creatorId: history[0].order_id,
-        market_id: historyReverse[0].market_id,
         buyerId: historyReverse[0].order_id,
         bid_id: historyReverse[0]?.id,
         assetOwnerId: tokenData?.owner,
-        item_id: marketData?.item_id,
-        type: marketData?.type,
       })
     )
   }
