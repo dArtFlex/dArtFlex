@@ -2,13 +2,20 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
-import { makeOfferSuccess, makeOfferFailure, cancelOfferFailure, cancelOfferSuccess } from 'stores/reducers/makeOffer'
+import {
+  makeOfferSuccess,
+  makeOfferFailure,
+  cancelOfferFailure,
+  cancelOfferSuccess,
+  acceptOfferSuccess,
+  acceptOfferFailure,
+} from 'stores/reducers/makeOffer'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes, IOrderHistory, IAssetType } from 'types'
+import { UserDataTypes } from 'types'
 import { acceptBidService } from 'services/accept_bid_service'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
@@ -97,37 +104,17 @@ export function* acceptOffer(
   {
     payload,
   }: PayloadAction<{
-    creatorId: string
     buyerId: string
-    market_id: string
     bid_id: string
     assetOwnerId: string
-    item_id: strign
-    type: IAssetType
   }>
 ) {
   try {
-    const marketData = yield call(api, {
-      url: APP_CONFIG.getHistory(payload.market_id),
-    })
-    const order0 = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
-    })
-    const order1 = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData.slice().reverse()[0].order_id),
-    })
-
-    const buyerOrderData: IOrderHistory[] = yield call(api, {
-      url: APP_CONFIG.getOrderByItemId(payload.item_id),
-    })
     const buyerOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(buyerOrderData[0].order_id),
+      url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
     })
 
-    // We need to check creatorOrder and buyerOrder and they masn't be same
-    const creatorOrder = buyerOrder.maker !== order0.maker ? order0 : order1
-
-    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptOffer,

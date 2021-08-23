@@ -119,22 +119,17 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  {
-    payload,
-  }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string; assetOwnerId: string }>
+  { payload }: PayloadAction<{ market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
     const marketData = yield call(api, {
       url: APP_CONFIG.getHistory(payload.market_id),
     })
-    const creatorOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
-    })
     const buyerOrder = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
     })
 
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptBid,
