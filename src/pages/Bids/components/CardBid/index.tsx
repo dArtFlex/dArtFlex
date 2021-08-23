@@ -16,13 +16,14 @@ export default function CardBid(props: ICardBidProps) {
   const { bid } = props
   const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status, itemId } = bid
   const classes = useStyles()
+  const history = useHistory()
 
   const nowTime = new Date().getTime()
   const timeExpired = nowTime > normalizeDate(endDate).getTime()
 
   return (
     <Card classes={{ root: classes.cardBid }}>
-      <Box className={classes.cardBidImage}>
+      <Box className={classes.cardBidImage} onClick={() => history.push(`${routes.artworks}/${itemId}`)}>
         <Image src={image} className={classes.image} />
       </Box>
       <Box className={classes.cardBidInfo}>

@@ -28,6 +28,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      cursor: 'pointer',
       [theme.breakpoints.down(380)]: {
         minWidth: 280,
       },
