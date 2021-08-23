@@ -18,7 +18,7 @@ export default function Snack(props: ISnack) {
     <Snackbar
       open={open}
       onClose={onClose}
-      autoHideDuration={3000}
+      autoHideDuration={10000}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
       {successMessage?.length ? (
