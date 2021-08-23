@@ -5,7 +5,7 @@ import { signTypedData_v4 } from 'eth-sig-util'
 
 export class CommonService extends Web3Service {
   async signTypedData(data) {
-    // Connect to curren web3 provider
+    // Connect to current web3 provider
     const web3 = await walletService.getWeb3()
 
     const resp = await web3.eth.getAccounts()

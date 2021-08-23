@@ -55,7 +55,6 @@ export default function Sales() {
 
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
-    dispatch(getUserAssetsRequest())
   }
 
   return (
