@@ -44,31 +44,32 @@ export default function FormApprovedOffer(props: IFormApprovedOffer) {
       </Box>
     </Box>
   ) : error ? (
-    <Box className={classes.formContainer}>
-      <Box className={classes.formContant}>
-        <Box mb={4}>
-          <Typography variant="h1" component="p">
-            Your offer was rejected
-          </Typography>
-        </Box>
+    <SubFormTransaction title={'You rejected your offer'} onSubmit={onSubmit} icon={null}>
+      <Box mt={4}>
         <Button variant={'outlined'} onClick={handleViewArtwork}>
           View artwork{' '}
         </Button>
       </Box>
-    </Box>
+    </SubFormTransaction>
   ) : (
-    <SubFormTransaction title={'Your offer was submitted successfully'} />
+    <SubFormTransaction title={'Your offer was submitted successfully'} onSubmit={onSubmit} />
   )
 }
 
 interface ISubFormTransaction {
   title: string
   icon?: React.ReactElement | null
+  onSubmit: () => void
+  children?: JSX.Element
 }
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const { title, icon = <SuccessfullyIcon /> } = props
+  const { title, icon = <SuccessfullyIcon />, onSubmit, children } = props
+
+  useEffect(() => {
+    setTimeout(() => onSubmit(), 5000)
+  }, [])
 
   return (
     <Box className={classes.formContainer}>
@@ -79,6 +80,7 @@ function SubFormTransaction(props: ISubFormTransaction) {
           </Typography>
         </Box>
         <Box mb={5.5}>{icon}</Box>
+        {children}
       </Box>
     </Box>
   )
