@@ -19,7 +19,10 @@ class AcceptBidService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async performMint(creator: IOrderData, buyer: IOrderData): Promise<any> {
+  public async performMint(buyer: IOrderData): Promise<any> {
+    // Creator is owner of Nft
+    const creator = walletService.getAccoutns()[0]
+
     const invocation = this.contract.methods.matchOrders(
       // for buyer
       [
@@ -37,7 +40,7 @@ class AcceptBidService {
 
       // for creator & for buyer
       [
-        creator.maker,
+        creator,
         [[buyer.takeAsset.assetType.assetClass, buyer.takeAsset.assetType.data], buyer.takeAsset.value],
 
         buyer.maker,
@@ -56,7 +59,7 @@ class AcceptBidService {
     return await this.web3.eth.sendTransaction({
       data: invocation.encodeABI(),
       to: AUCTION_CONTRACT_ADDRESS,
-      from: creator.maker,
+      from: creator,
       chainId: chaingIdNumber ? +chaingIdNumber[1] : 4, // Default network Rinkeby
       gasPrice: '6000000000',
       gas: '10000000',
