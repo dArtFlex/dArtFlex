@@ -9,13 +9,5 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       flex: '1 1 auto',
     },
-    banner: {
-      borderRadius: 20,
-      margin: '4px auto',
-      padding: theme.spacing(2, 4),
-      width: 'fit-content',
-      backgroundColor: theme.palette.lightViolet,
-      color: theme.palette.white,
-    },
   })
 )
