@@ -151,6 +151,8 @@ export function useSortedAssets({
     return assets
   }
 
+  assets = assets.filter((asset) => !asset?.ban)
+
   const now_time = new Date().getTime()
   switch (filter) {
     case LIVE_AUCTION:

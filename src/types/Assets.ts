@@ -9,6 +9,7 @@ export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTime
   platform_fee: string
   sales_token_contract: string
   sold: boolean
+  ban?: boolean
 }
 
 export interface AssetTypes extends IEntity, IDatedEntity {
