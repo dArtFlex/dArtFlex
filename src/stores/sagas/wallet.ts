@@ -197,11 +197,16 @@ function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
 
 export function* walletsDisconet() {
   try {
+    if (typeof connector !== 'undefined' && connector.connected) {
+      // In reason to disconnect wallet connect we have to close wallet connect socket
+      yield connector.close()
+      localStorage.removeItem(APP_CONSTS.WALLET_CONNECT)
+    }
     if (ethereum.isConnected()) {
       ethereum.on('disconnect', (error) => console.log(error))
       localStorage.removeItem(APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     }
-    localStorage.removeItem(APP_CONSTS.WALLET_CONNECT)
+
     localStorage.removeItem(APP_CONSTS.ACTIVE_WALLET_STORAGE)
 
     yield put(walletsDisconeSuccess())

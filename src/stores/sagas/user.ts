@@ -476,7 +476,7 @@ export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promoti
     const currentPromotionIds: UserStateType['promotionIds'] = yield call(api, { url: APP_CONFIG.getPromotionAll })
 
     yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id), signature)))
-    for (let i = 0; i <= payload.promotionIds.length; i++) {
+    for (let i = 0; i < payload.promotionIds.length; i++) {
       yield call(_addPromotion, api, Number(payload.promotionIds[i]), signature)
     }
     yield put(updatePromotionSuccess())
