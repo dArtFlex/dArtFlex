@@ -337,14 +337,20 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
   }
 }
 
-function* _addPromotion(api: IApi, promotionId: number) {
-  const signature: { data: string; signature: string } = yield walletService.generateSignature()
+function* _addPromotion(api: IApi, promotionId: number, signature?: { data: string; signature: string }) {
+  let signatureData: { data: string; signature: string }
+  if (signature) {
+    signatureData = signature
+  } else {
+    signatureData = yield walletService.generateSignature()
+  }
+
   const promotionData: IAddPromotionEntities = yield call(api, {
     url: APP_CONFIG.addPromotion,
     method: 'POST',
     data: {
       itemId: Number(promotionId),
-      ...signature,
+      ...signatureData,
     },
   })
   return promotionData
@@ -362,14 +368,20 @@ export function* deletePromotion(
   }
 }
 
-function* _deletePromotion(api: IApi, promotionItemId: number) {
-  const signature: { data: string; signature: string } = yield walletService.generateSignature()
-  yield call(api, {
+function* _deletePromotion(api: IApi, promotionItemId: number, signature?: { data: string; signature: string }) {
+  let signatureData: { data: string; signature: string }
+  if (signature) {
+    signatureData = signature
+  } else {
+    signatureData = yield walletService.generateSignature()
+  }
+
+  return yield call(api, {
     url: APP_CONFIG.deletePromotion,
     method: 'POST',
     data: {
       itemId: Number(promotionItemId),
-      ...signature,
+      ...signatureData,
     },
   })
 }
@@ -460,10 +472,13 @@ export function* checkAssetId(api: IApi, { payload }: PayloadAction<{ item_id: s
 
 export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: string[] }>) {
   try {
+    const signature = yield walletService.generateSignature()
     const currentPromotionIds: UserStateType['promotionIds'] = yield call(api, { url: APP_CONFIG.getPromotionAll })
-    yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id))))
-    yield all(payload.promotionIds.map((p: string) => call(_addPromotion, api, Number(p))))
 
+    yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id), signature)))
+    for (let i = 0; i <= payload.promotionIds.length; i++) {
+      yield call(_addPromotion, api, Number(payload.promotionIds[i]), signature)
+    }
     yield put(updatePromotionSuccess())
   } catch (e) {
     yield put(updatePromotionFailure(e))
