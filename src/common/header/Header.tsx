@@ -70,13 +70,6 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
   const history = useHistory()
 
-  const fetchUserBids = () => {
-    dispatch(getUserBidsRequest())
-  }
-
-  useEffect(() => {
-    user?.id && fetchUserBids()
-  }, [user?.id])
   useEffect(() => {
     user?.id && dispatch(getActiveBidsByUserRequest())
   }, [user?.id])
