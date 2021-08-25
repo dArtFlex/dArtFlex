@@ -38,7 +38,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     banner: {
-      backgroundColor: theme.palette.accentGradient,
+      backgroundColor: theme.palette.violet,
       textAlign: 'center',
       padding: theme.spacing(1, 0),
       color: theme.palette.white,
