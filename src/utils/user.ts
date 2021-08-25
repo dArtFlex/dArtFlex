@@ -14,20 +14,14 @@ import avatar_4 from 'common/icons/avatar_4.png'
 import avatar_5 from 'common/icons/avatar_5.png'
 
 export function setDummyAccount(): IAccountSettings {
-  const avatars = [avatar_1, avatar_2, avatar_3, avatar_4, avatar_5]
-  const covers = [cover_1, cover_2, cover_3, cover_4, cover_5, cover_6, cover_7, cover_8]
-  const avatar = avatars[Math.floor(Math.random() * avatars.length)]
-  console.log(avatar)
-  // const avatarLink = URL.createObjectURL(avatar)
-  // console.log(avatarLink)
   return {
     fullname: '',
     id: '',
     email: '',
     wallet: ' ',
     overview: ' ',
-    profile_image: 'blank',
-    cover_image: 'blank',
+    profile_image: setRandomAvatar(),
+    cover_image: setRandomCover(),
     created_at: '',
     updated_at: '',
     role: '',
@@ -41,4 +35,16 @@ export function setDummyAccount(): IAccountSettings {
     tiktok: '',
     other_url: '',
   }
+}
+
+export function setRandomAvatar() {
+  const avatars = [avatar_1, avatar_2, avatar_3, avatar_4, avatar_5]
+  const avatar = avatars[Math.floor(Math.random() * avatars.length)]
+  return avatar
+}
+
+export function setRandomCover() {
+  const covers = [cover_1, cover_2, cover_3, cover_4, cover_5, cover_6, cover_7, cover_8]
+  const cover = covers[Math.floor(Math.random() * covers.length)]
+  return cover
 }
