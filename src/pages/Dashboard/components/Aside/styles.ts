@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(6),
       minWidth: 325,
       [theme.breakpoints.down(375)]: {
-        minWidth: '96vw',
+        minWidth: '94vw',
       },
     },
     avatar: {

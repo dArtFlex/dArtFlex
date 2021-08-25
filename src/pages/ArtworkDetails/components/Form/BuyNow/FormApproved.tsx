@@ -28,17 +28,6 @@ export default function FormApproved(props: IFormApproved) {
 
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
 
-  if ((error as string).length) {
-    return (
-      <SubFormTransaction
-        title={`Your transaction wasn't successful`}
-        icon={null}
-        linkEthescan={etherscanViewTx}
-        onSubmit={onSubmit}
-      />
-    )
-  }
-
   return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
@@ -67,6 +56,13 @@ export default function FormApproved(props: IFormApproved) {
         </Box>
       </Box>
     </Box>
+  ) : error ? (
+    <SubFormTransaction
+      title={`Your transaction wasn't successful`}
+      icon={null}
+      linkEthescan={etherscanViewTx}
+      onSubmit={onSubmit}
+    />
   ) : (
     <SubFormTransaction
       title={`Your transaction succeeded`}

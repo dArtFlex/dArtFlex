@@ -4,7 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       position: 'relative',
-      display: 'flex',
+      //will be returned after beta ends
+      // display: 'flex',
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       width: '100%',
