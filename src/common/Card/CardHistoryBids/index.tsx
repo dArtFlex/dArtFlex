@@ -40,7 +40,8 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                {status === 'offered' ? 'Offer ' : 'Bid '}
+                <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
@@ -59,7 +60,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                   disableRipple
                   onClick={() => onCancel({ id: Number(id), order_id, user_id, market_id })}
                 >
-                  Cancel Bid
+                  Cancel {status === 'offered' ? 'offer' : 'bid'}
                 </Button>
               )}
               {onAcceptBid && (
