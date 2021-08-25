@@ -101,6 +101,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.white,
         pointerEvents: 'auto',
         cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: theme.palette.greyMid,
+        },
       },
     },
     bitBtnDisabledText: {

@@ -32,6 +32,11 @@ import { normalizeDate, shortCutName } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
 import { IBids, UserDataTypes } from 'types'
+import APP_CONSTS from 'config/consts'
+
+const {
+  STATUSES: { MINTED, SOLD },
+} = APP_CONSTS
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -68,6 +73,7 @@ export default function FormDetails(props: IDetailsFormProps) {
     assetDetails: { creatorData, ownerData, marketData, imageData, tokenData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const makeOfferStatus = status === SOLD || status === MINTED
 
   const isSamePerson = wallet?.accounts[0] === ownerData?.wallet
 
@@ -238,7 +244,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
             </Box>
           )}
-        {ifAuctionEnds && !isAuctionExpired && status !== 'sold' ? (
+        {ifAuctionEnds && !isAuctionExpired && status !== SOLD ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
               This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
@@ -246,7 +252,8 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
           </Box>
         ) : null}
-        {!isAuctionExpired && status !== 'sold' ? (
+
+        {!makeOfferStatus ? (
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
