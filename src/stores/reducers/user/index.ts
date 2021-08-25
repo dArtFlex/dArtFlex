@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserStateType } from './types'
+import { setRandomAvatar, setRandomCover } from '../../../utils'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
@@ -248,7 +249,9 @@ const userSlice = createSlice({
 
     deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
       if (state.user) {
-        payload === 'profile_image' ? (state.user.profile_image = 'blank') : (state.user.cover_image = 'blank')
+        payload === 'profile_image'
+          ? (state.user.profile_image = setRandomAvatar())
+          : (state.user.cover_image = setRandomCover())
       }
     },
   },

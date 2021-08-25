@@ -46,6 +46,7 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
               }}
               variant={'text'}
               classes={{ root: classes.deleteBtn }}
+              disabled={photoUrl?.substring(1, 7) === 'static'}
             >
               Delete
             </Button>
