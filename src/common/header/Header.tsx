@@ -49,6 +49,11 @@ import {
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 import image from '../icons/cover_photo.png'
+import avatar_1 from '../icons/avatar_1.png'
+import avatar_2 from '../icons/avatar_2.png'
+import avatar_3 from '../icons/avatar_3.png'
+import avatar_4 from '../icons/avatar_4.png'
+import avatar_5 from '../icons/avatar_5.png'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -147,6 +152,12 @@ export default function Header({ toggleTheme }: HeaderType) {
     //   id: 1,
     // },
   ]
+
+  const avatars = [avatar_1, avatar_2, avatar_3, avatar_4, avatar_5]
+  const avatar = Math.floor(Math.random() * avatars.length)
+  console.log(avatars[avatar])
+  const avatarURL = URL.createObjectURL(avatar_1)
+  console.log(avatarURL)
 
   const defaultTabValue =
     MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id || 0 : 0
