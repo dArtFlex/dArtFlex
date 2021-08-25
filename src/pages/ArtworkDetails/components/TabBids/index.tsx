@@ -10,6 +10,11 @@ import { CardHistoryBids } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { normalizeDate } from 'utils'
 import { IBids, UserDataTypes } from 'types'
+import APP_CONSTS from 'config/consts'
+
+const {
+  STATUSES: { SOLD, MINTED },
+} = APP_CONSTS
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -79,7 +84,7 @@ export default function TabBids(props: ITabHistoryPropa) {
   }
 
   const handleCancelOffer = ({ id }: { id: number }) => {
-    dispatch(cancelOfferRequest({ bid_id: id }))
+    dispatch(cancelOfferRequest({ id }))
   }
 
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
@@ -113,8 +118,8 @@ export default function TabBids(props: ITabHistoryPropa) {
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
               onCancel={
-                user?.id === +props.user_id && (expireTime || status === 'sold') && marketData
-                  ? status === 'sold'
+                user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
+                  ? status === SOLD
                     ? handleCancelBid
                     : handleCancelOffer
                   : undefined
@@ -148,8 +153,8 @@ export default function TabBids(props: ITabHistoryPropa) {
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
             onCancel={
-              user?.id === +props.userData?.id && (expireTime || status === 'sold') && marketData
-                ? status === 'sold'
+              user?.id === +props.userData?.id && (expireTime || status === SOLD || status === MINTED)
+                ? status === SOLD
                   ? handleCancelBid
                   : handleCancelOffer
                 : undefined
