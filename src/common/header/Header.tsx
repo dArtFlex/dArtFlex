@@ -170,6 +170,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   return (
     <>
       <AppBar position="static" elevation={0} color={'transparent'}>
+        <Box className={classes.banner}>
+          <Typography variant="h4">This project is in beta. DYOR</Typography>
+        </Box>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} onClick={() => history.push(routes.artworks)} />
           {isMobile ? (
