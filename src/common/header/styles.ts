@@ -37,6 +37,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginTop: theme.spacing(6),
       },
     },
+    banner: {
+      backgroundColor: theme.palette.violet,
+      textAlign: 'center',
+      padding: theme.spacing(1, 0),
+      color: theme.palette.white,
+    },
     navTabs: {
       padding: theme.spacing(5, 0),
       color: `${theme.palette.text.primary} !important`,
