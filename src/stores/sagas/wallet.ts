@@ -24,10 +24,24 @@ import { history } from '../../navigation'
 import routes from '../../routes'
 import { parseJS, notSupportedNetwork } from 'utils'
 
+function checkBlackList(account: string) {
+  return APP_CONSTS.USER.BLACK_LIST.some(
+    (blackAccount) => blackAccount.toLocaleLowerCase() === account.toLocaleLowerCase()
+  )
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function* connectMetaMask(api: IApi) {
   try {
     const { accounts, balance, chainId } = yield walletService.getMetaMaskAccount()
+
+    if (checkBlackList(accounts[0])) {
+      const error = {
+        code: 4001,
+        message: 'You wallet accounts was blocked',
+      }
+      return yield put(connectMetaMaskFailure(error))
+    }
 
     if (notSupportedNetwork(chainId)) {
       return yield put(connectMetaMaskFailure('Not supported network'))
@@ -87,6 +101,15 @@ function chainChangedChannel() {
 export function* connectWalletConnect(api: IApi) {
   try {
     const { accounts, balance, chainId } = yield walletService.getWalletConnectAccount()
+
+    if (checkBlackList(accounts[0])) {
+      yield connector.close()
+      const error = {
+        code: 4001,
+        message: 'You wallet accounts was blocked',
+      }
+      return yield put(connnectWalletConnectFailure(error))
+    }
 
     if (notSupportedNetwork(chainId)) {
       return yield put(connectTrustFailure('Not supported network'))
