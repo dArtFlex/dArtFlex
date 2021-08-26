@@ -221,8 +221,8 @@ export function* walletsHistory() {
     const history = getWalletsFromHistory()
 
     if (history.activeWallet === APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK) {
-      const accounts = yield web3.eth.getAccounts()
-      if (accounts[0].toLowerCase() === history.connectedMetaMask.accounts[0].toLowerCase()) {
+      const accounts: string[] | undefined = yield web3.eth.getAccounts()
+      if (accounts?.length && accounts[0].toLowerCase() === history.connectedMetaMask.accounts[0].toLowerCase()) {
         yield call(connectMetaMask)
       }
     } else if (history.activeWallet === APP_CONSTS.WALLET_CONNECT) {
