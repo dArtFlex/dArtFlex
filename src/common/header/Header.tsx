@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch, getUserBidsRequest, getActiveBidsByUserRequest } from 'stores/reducers/user'
+import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
