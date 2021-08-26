@@ -222,7 +222,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         )}
         {tab === 2 && <About creator={creatorData} />}
         {tab === 3 && (
-          <div className={classes.tabContant}>
+          <div className={classes.tabContent}>
             <p>{imageData?.description}</p>
           </div>
         )}

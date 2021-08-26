@@ -26,10 +26,9 @@ import Snack from '../../common/Snack'
 interface IMainLayoutProps {
   children: JSX.Element
   toggleTheme: () => void
-  hiddenFooter?: boolean
 }
 
-export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMainLayoutProps): JSX.Element {
+export default function MainLayout({ toggleTheme, children }: IMainLayoutProps): JSX.Element {
   const classes = useStyles()
   const { error: errorWallet } = useSelector(selectWalletError())
   const {
@@ -95,7 +94,7 @@ export default function MainLayout({ toggleTheme, hiddenFooter, children }: IMai
       <Header toggleTheme={toggleTheme} />
       <Box className={classes.wrapper}>
         {children}
-        {!hiddenFooter && <Footer />}
+        <Footer />
       </Box>
       <Snack
         errorMessage={typeof errorMessage === 'object' && errorMessage?.message ? errorMessage.message : ''}

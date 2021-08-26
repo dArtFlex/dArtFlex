@@ -76,7 +76,7 @@ export default function FormTextInput(props: IFormTextInputProps & FieldRenderPr
         className={classes.textInput}
         inputProps={{
           type: typeValue,
-          className: classes.numberInput,
+          className: typeValue == 'number' ? classes.numberInput : classes.preInput,
         }}
         FormHelperTextProps={{ classes: { root: classes.helperText } }}
       />

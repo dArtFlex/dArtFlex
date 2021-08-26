@@ -8,7 +8,6 @@ export interface IAppRouterProps {
   path?: string
   component: JSX.Element
   rest?: Record<string, unknown>
-  hiddenFooter?: boolean
 }
 
 export interface ISecureRouteParams extends Omit<IAppRouterProps, 'component' | 'path'> {
