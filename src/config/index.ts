@@ -16,7 +16,7 @@ const APP_CONFIG = {
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
 
-  WSUrl: 'wss://dartflex-dev.ml:8887',
+  WSUrl: 'http://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,
   localURL: `${LOCAL_URL}`,
 
