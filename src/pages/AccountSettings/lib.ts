@@ -15,14 +15,22 @@ export function useValidationSchema() {
       .string()
       .max(200)
       .matches(/^[A-Za-z0-9\s]+$/, 'Use latin alphabet'),
-    website: yup
-      .string()
-      .matches(/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/, 'Invalid url'),
-    other_url: yup
-      .string()
-      .matches(/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/, 'Invalid url'),
     discord: yup.number().typeError('Please provide discord code'),
   })
+}
+
+export function validateWebSite(value: string) {
+  let error
+  if (!value.startsWith('https://')) {
+    error = 'Invalid url'
+  }
+  if (value.startsWith('http://')) {
+    error = 'http links are not allowed'
+  }
+  if (!value.length) {
+    error = ''
+  }
+  return error
 }
 
 export function validateTwitter(value: string) {

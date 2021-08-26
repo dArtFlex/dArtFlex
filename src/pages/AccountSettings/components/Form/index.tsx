@@ -24,7 +24,14 @@ import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
 import image from 'common/icons/cover_photo.png'
 import { debounce } from 'lodash'
-import { validateFacebook, validateInstagram, validateTikTok, validateTwitter, validateYouTube } from '../../lib'
+import {
+  validateFacebook,
+  validateInstagram,
+  validateTikTok,
+  validateTwitter,
+  validateWebSite,
+  validateYouTube,
+} from '../../lib'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
@@ -123,6 +130,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<WorldIcon className={classes.socialsIcon} />} />,
           }}
+          validate={validateWebSite}
           placeholder={'https://'}
           className={classes.formField}
         />
@@ -230,6 +238,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
           }}
+          validate={validateWebSite}
           className={classes.formField}
         />
       </Box>
