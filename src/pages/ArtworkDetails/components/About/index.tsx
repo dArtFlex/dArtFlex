@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, CardHeader, CardContent, Avatar, Typography } from '@material-ui/core'
 import { IAssetDetails } from 'stores/reducers/assets/types'
 import { useStyles } from './styles'
+import { shortCutName } from '../../../../utils'
 
 interface IAbout {
   creator: IAssetDetails['creatorData']
@@ -20,7 +21,7 @@ export default function About(props: IAbout) {
         }}
         avatar={<Avatar aria-label={status} className={styles.avatar} src={creator?.profile_image} />}
         title={creator?.fullname}
-        subheader={<Typography className={styles.subheader}>@{creator?.userid}</Typography>}
+        subheader={<Typography className={styles.subheader}>@{shortCutName(creator?.userid)}</Typography>}
       />
       <CardContent classes={{ root: styles.footer }}>
         <Typography className={styles.footerText}>{creator?.overview}</Typography>
