@@ -4,6 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       margin: theme.spacing(1, 0),
+      maxHeight: 240,
+      overflow: 'scroll',
     },
     header: {
       padding: theme.spacing(3, 4),
@@ -31,6 +33,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     footerText: {
       fontSize: 16,
       fontWeight: 'normal',
+      whiteSpace: 'pre',
     },
   })
 )
