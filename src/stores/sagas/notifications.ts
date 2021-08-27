@@ -47,9 +47,7 @@ function createSocketChannel(userId: string) {
     socket = io(APP_CONFIG.WSUrl, { query: { userId } })
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    socket.on('connection', () => {
-      console.log(socket.connected)
-    })
+    socket.on('connection', () => {})
 
     socket.on('notification', (data) => {
       emit({ data })
