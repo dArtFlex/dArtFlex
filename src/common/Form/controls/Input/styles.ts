@@ -39,6 +39,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         '-webkit-appearance': 'none',
       },
     },
+    preInput: {
+      whiteSpace: 'pre',
+    },
     star: {
       '&::after': {
         content: "'*'",

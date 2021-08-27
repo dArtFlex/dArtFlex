@@ -249,7 +249,7 @@ export function usePromotionMultiplyData({
         name: p.ownerData?.userid || '',
         profilePhoto: p.ownerData?.profile_image || '',
       },
-      name: p.imageData.name,
+      name: p?.imageData.name || '',
       bid: p.marketData ? new BigNumber(p.marketData.end_price).dividedBy(`10e${18 - 1}`).toNumber() : 0,
       endDate: p.marketData ? Number(p.marketData.end_time) : 0,
       url: p.imageData.image,

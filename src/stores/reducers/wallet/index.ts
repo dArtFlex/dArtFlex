@@ -76,6 +76,10 @@ const walletSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    clearWalletsError: (state) => {
+      state.error = ''
+    },
   },
 })
 
@@ -101,6 +105,8 @@ export const {
   walletsHistoryRequest,
   walletsHistorySuccess,
   walletsHistoryFailure,
+
+  clearWalletsError,
 } = walletSlice.actions
 
 export const { reducer } = walletSlice

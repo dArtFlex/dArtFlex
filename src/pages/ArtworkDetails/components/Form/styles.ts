@@ -110,8 +110,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.white,
       lineHeight: 1.75,
     },
-    tabContant: {
-      overflow: 'auto',
+    tabContent: {
+      maxHeight: 270,
+      overflow: 'scroll',
+      '&>p': {
+        whiteSpace: 'pre',
+      },
     },
     indicator: {
       backgroundColor: theme.palette.text.primary,
