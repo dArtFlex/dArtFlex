@@ -22,8 +22,20 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     tabContentScroll: {
       margin: theme.spacing(3, 0),
-      maxHeight: 240,
+      maxHeight: 248,
       overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        width: '0.4em',
+      },
+      '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        margin: theme.spacing(1, 0),
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.grey['400'],
+        borderRadius: 30,
+      },
     },
     previewContainer: {
       position: 'relative',
