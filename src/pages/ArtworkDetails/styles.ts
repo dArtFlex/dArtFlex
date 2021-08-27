@@ -14,6 +14,17 @@ export const useStyles = makeStyles((theme: Theme) =>
         gridTemplateRows: 'minmax(100%, auto)',
       },
     },
+    showMoreBtn: {
+      fontSize: 16,
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
+    },
+    tabContentScroll: {
+      margin: theme.spacing(3, 0),
+      maxHeight: 240,
+      overflow: 'scroll',
+    },
     previewContainer: {
       position: 'relative',
       display: 'flex',

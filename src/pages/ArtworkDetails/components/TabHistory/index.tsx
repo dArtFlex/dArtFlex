@@ -2,21 +2,11 @@ import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectUser } from 'stores/selectors'
-import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
+import { Box, Button } from '@material-ui/core'
 import { CardHistory } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { IBidsHistory, UserDataTypes } from 'types'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    showMoreBtn: {
-      fontSize: 16,
-      '&:hover': {
-        backgroundColor: 'transparent',
-      },
-    },
-  })
-)
+import { useStyles } from '../../styles'
 
 interface ITabHistoryPropa {
   history: Array<IBidsHistory & { userData: UserDataTypes }>
@@ -45,7 +35,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
 
   if (history.length > 4 && !showMore) {
     return (
-      <Box mt={3} mb={3}>
+      <Box className={classes.tabContentScroll}>
         {historyReverse.slice(0, 4).map((props, i) => {
           return (
             <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
@@ -65,7 +55,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
   }
 
   return (
-    <Box mt={3} mb={3}>
+    <Box className={classes.tabContentScroll}>
       {historyReverse.map((props, i) => {
         return (
           <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
