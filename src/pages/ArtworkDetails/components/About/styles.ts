@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       margin: theme.spacing(1, 0),
       maxHeight: 240,
-      overflow: 'scroll',
+      overflowY: 'scroll',
     },
     header: {
       padding: theme.spacing(3, 4),
