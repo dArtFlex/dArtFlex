@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     tabContentScroll: {
       margin: theme.spacing(3, 0),
       maxHeight: 240,
-      overflow: 'scroll',
+      overflowY: 'scroll',
     },
     previewContainer: {
       position: 'relative',
