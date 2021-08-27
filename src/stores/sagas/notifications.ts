@@ -44,7 +44,8 @@ let socket: Socket
 
 function createSocketChannel(userId: string) {
   return eventChannel((emit) => {
-    socket = io(APP_CONFIG.WSUrl, { query: { userId } })
+    // Need to add transports in case to avoid cors blocking
+    socket = io(APP_CONFIG.WSUrl, { query: { userId }, transports: ['websocket', 'polling', 'flashsocket'] })
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     socket.on('connection', () => {
