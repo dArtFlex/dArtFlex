@@ -111,7 +111,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       lineHeight: 1.75,
     },
     tabContent: {
-      maxHeight: 270,
+      margin: theme.spacing(3, 0),
+      maxHeight: 240,
       overflow: 'scroll',
       '&>p': {
         whiteSpace: 'pre',
