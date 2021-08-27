@@ -16,8 +16,9 @@ export function* getNotifications(api: IApi, { payload }: PayloadAction<{ socket
   try {
     const notificationsImages: string[] = yield all(payload.socketData.map((n) => call(getImage, api, n.item_id)))
     const notifications: INotifications[] = payload.socketData.flatMap((n, i) => {
-      const message = 'Please be informed about significant updates to your item'
+      const message = n.message
       const updated_at = n.updated_at
+
       const item_id = n.item_id
       const read = n.read
       const id = n.id
