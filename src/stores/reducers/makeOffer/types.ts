@@ -1,5 +1,8 @@
+import { IError, IAcceptBidTransaction } from 'types'
 export interface MakeOfferStateType {
   fetching: boolean
-  error: string
+  error: IError
   offerId?: number
+  success: string
+  acceptOfferTransaction?: IAcceptBidTransaction
 }

@@ -16,14 +16,16 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 import { useStyles } from '../styles'
 import UsersRow from './UsersRow'
+import UserRowSkeleton from './UserRowSkeleton'
 import clsx from 'clsx'
 import { UserDataTypes } from 'types'
 import { useFilterByUser } from '../lib'
+import { creatArrayFromNumber } from 'utils'
 
 export default function ContentManagementUsers({ search }: { search: string }) {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { users } = useSelector(selectManagement())
+  const { users, fetching } = useSelector(selectManagement())
 
   useEffect(() => {
     dispatch(getAllUsersListRequest())
@@ -56,9 +58,11 @@ export default function ContentManagementUsers({ search }: { search: string }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {usersContent.slice((page - 1) * 10, page * 10).map((item, index) => {
-              return <UsersRow row={item} key={index} />
-            })}
+            {fetching
+              ? creatArrayFromNumber(10).map((e, i) => <UserRowSkeleton key={i} />)
+              : usersContent.slice((page - 1) * 10, page * 10).map((item, index) => {
+                  return <UsersRow row={item} key={index} />
+                })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -69,7 +73,7 @@ export default function ContentManagementUsers({ search }: { search: string }) {
               <ArrowLeftIcon />
             </IconButton>
             <span className={classes.paginationText}>
-              {page} / {usersContent.length / rowsPerPage}
+              {page} / {Math.ceil(usersContent.length / rowsPerPage)}
             </span>
             <IconButton
               onClick={handleNextPage}

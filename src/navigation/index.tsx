@@ -68,7 +68,6 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.artworkDetails,
       component: <ArtworkDetails />,
-      hiddenFooter: true,
     },
 
     {

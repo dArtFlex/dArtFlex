@@ -5,7 +5,7 @@ import { Table, Image } from 'common'
 import { ExternalLinkIcon } from 'common/icons'
 import { ITradingHistory } from '../../types'
 import { ITradingHistoryTable } from './types'
-import { tabelTimeFormat } from 'utils'
+import { shortCutName, tabelTimeFormat } from 'utils'
 import { useStyles } from './styles'
 
 export default function TradingHistoryTable(props: ITradingHistoryTable) {
@@ -43,7 +43,7 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => (
         <Link href={'#'} underline={'none'}>
-          {'@' + cell.from}
+          {'@' + shortCutName(cell.from)}
         </Link>
       ),
     },
@@ -54,7 +54,7 @@ function useColumns() {
       render: (cell: ITradingHistory) => {
         return cell.to.length ? (
           <Link href={'#'} underline={'none'}>
-            {'@' + cell.to}
+            {'@' + shortCutName(cell.to)}
           </Link>
         ) : (
           '-'

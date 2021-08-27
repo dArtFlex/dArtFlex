@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectBuy } from 'stores/selectors'
+import { selectBuy, selectMakeOffer } from 'stores/selectors'
 import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -10,22 +10,25 @@ import { useStyles } from '../styles'
 import routes from 'routes'
 import APP_CONFIG from 'config'
 
-export default function FormApproved() {
+interface IFormApproved {
+  onSubmit: () => void
+}
+
+export default function FormApproved(props: IFormApproved) {
   const classes = useStyles()
+  const { onSubmit } = props
 
   const {
     buy: { transactionHash, fetchingTransacting, error },
   } = useSelector(selectBuy())
 
+  const {
+    offer: { fetching },
+  } = useSelector(selectMakeOffer())
+
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
 
-  if (error.length) {
-    return (
-      <SubFormTransaction title={`Your transaction wasn't successful`} icon={null} linkEthescan={etherscanViewTx} />
-    )
-  }
-
-  return fetchingTransacting ? (
+  return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
@@ -53,8 +56,20 @@ export default function FormApproved() {
         </Box>
       </Box>
     </Box>
+  ) : error ? (
+    <SubFormTransaction
+      title={`Your transaction wasn't successful`}
+      icon={null}
+      linkEthescan={etherscanViewTx}
+      onSubmit={onSubmit}
+    />
   ) : (
-    <SubFormTransaction title={`Your transaction succeeded`} icon={null} linkEthescan={etherscanViewTx} />
+    <SubFormTransaction
+      title={`Your transaction succeeded`}
+      icon={null}
+      linkEthescan={etherscanViewTx}
+      onSubmit={onSubmit}
+    />
   )
 }
 
@@ -62,13 +77,18 @@ interface ISubFormTransaction {
   title: string
   icon?: React.ReactElement | null
   linkEthescan: string
+  onSubmit: () => void
 }
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const { title, icon = <SuccessfullyIcon />, linkEthescan } = props
+  const { title, icon = <SuccessfullyIcon />, linkEthescan, onSubmit } = props
 
   const history = useHistory()
+
+  useEffect(() => {
+    setTimeout(() => onSubmit(), 5000)
+  }, [])
 
   return (
     <Box className={classes.formContainer}>

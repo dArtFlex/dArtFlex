@@ -5,12 +5,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     cover: {
       width: '100vw',
       height: 300,
-      margin: theme.spacing(-4, -10, 0),
+      margin: theme.spacing(-15, -10, 0),
       [theme.breakpoints.between(425, 768)]: {
-        margin: theme.spacing(-4, -6, 0),
+        margin: theme.spacing(0, -4, 0),
       },
       [theme.breakpoints.down(425)]: {
-        margin: theme.spacing(-4, -2, 0),
+        margin: theme.spacing(0, -4, 0),
       },
     },
     container: {

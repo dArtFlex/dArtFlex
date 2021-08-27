@@ -3,13 +3,14 @@ import { useStyles } from '../styles'
 import { useFormikContext } from 'formik'
 import { ApprovedFormState } from '../../../types'
 import { useSelector } from 'react-redux'
-import { selectAssetTokenRates, selectWallet } from '../../../../../stores/selectors'
+import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } from '../../../../../stores/selectors'
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
 import { Field, InputAdornment, Tooltip } from 'common'
 import clsx from 'clsx'
 import BigNumber from 'bignumber.js'
 import appConst from '../../../../../config/consts'
+import { validatePrice } from '../../../../../utils'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
@@ -44,6 +45,10 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const {
+    assetDetails: { tokenData },
+  } = useSelector(selectAssetDetails())
+  const { user } = useSelector(selectUser())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
@@ -51,6 +56,8 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
     values.bid && parseFloat(`${values.bid}`)
       ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
       : 0
+  const disabledButton =
+    values.bid > 0 && Boolean(values.acknowledge) && Boolean(values.agreeTerms) && Number(tokenData?.owner) !== user?.id
 
   return (
     <Box className={classes.formContainer}>
@@ -83,6 +90,7 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           name="bid"
           variant="outlined"
           className={classes.rootField}
+          validate={validatePrice}
           InputProps={{
             endAdornment: (
               <InputAdornment
@@ -135,7 +143,8 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           color={'primary'}
           fullWidth
           disableElevation
-          className={classes.bitBtn}
+          disabled={!disabledButton}
+          className={clsx(classes.bitBtn, !disabledButton && classes.bitBtnDisabled)}
         >
           <Typography>Make offer</Typography>
         </Button>

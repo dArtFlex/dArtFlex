@@ -4,17 +4,8 @@ import { MainLayout } from '../layouts'
 
 import { ISecureRouteParams } from './types'
 
-const RouteHOC = ({ children, toggleTheme, hiddenFooter, ...rest }: ISecureRouteParams) => {
-  return (
-    <Route
-      {...rest}
-      render={() => (
-        <MainLayout toggleTheme={toggleTheme} hiddenFooter={hiddenFooter}>
-          {children}
-        </MainLayout>
-      )}
-    />
-  )
+const RouteHOC = ({ children, toggleTheme, ...rest }: ISecureRouteParams) => {
+  return <Route {...rest} render={() => <MainLayout toggleTheme={toggleTheme}>{children}</MainLayout>} />
 }
 
 export default RouteHOC

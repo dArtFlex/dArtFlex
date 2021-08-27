@@ -38,6 +38,7 @@ export function useComposeBidsData({
       const yourBidAmountUsd = new BigNumber(yourBidAmount).multipliedBy(rateETH).toNumber().toFixed(5)
 
       return {
+        id: bid.id,
         itemId: bid.item_id,
         tokenId: bid.id,
         image: bid.imageData.image,
@@ -80,7 +81,7 @@ function useStatus({ status }: IUseStatus): IBidStatus {
   }
 }
 
-type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered'
+type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered' | 'pending'
 
 export function useSearchBids({ userBids, search }: { userBids: UserStateType['userBids']; search: string }) {
   if (!userBids) {

@@ -5,7 +5,8 @@ export interface ICardHistoryBidsProps extends IBids {
   bidAmountToToken: string
   bidAmountUsd: string
   userWalletId?: number
-  onAccept?: () => void
+  onAcceptBid?: () => void
+  onAcceptOffer?: () => void
   onCancel?: ({
     id,
     order_id,
@@ -17,6 +18,7 @@ export interface ICardHistoryBidsProps extends IBids {
     user_id: string
     market_id: string
   }) => void
+  expireDate: Date
 }
 
 export interface ICardContainerProps {

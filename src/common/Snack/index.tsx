@@ -2,31 +2,44 @@ import React from 'react'
 import { Snackbar, Typography } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import { useStyles } from './styles'
+import clsx from 'clsx'
 
 interface ISnack {
-  message: string
+  errorMessage?: string
+  successMessage?: string
   open: boolean
   onClose: () => void
 }
 
 export default function Snack(props: ISnack) {
   const classes = useStyles()
-  const { message, open, onClose } = props
+  const { errorMessage, successMessage, open, onClose } = props
   return (
     <Snackbar
       open={open}
       onClose={onClose}
-      autoHideDuration={3000}
+      autoHideDuration={10000}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Alert
-        severity="error"
-        onClose={onClose}
-        className={classes.snackbarWrapper}
-        classes={{ icon: classes.errorIcon }}
-      >
-        <Typography variant={'h3'}>{message}</Typography>
-      </Alert>
+      {successMessage?.length ? (
+        <Alert
+          severity="success"
+          onClose={onClose}
+          className={clsx(classes.snackBarSuccess, classes.snackbarWrapper)}
+          classes={{ icon: classes.errorIcon }}
+        >
+          <Typography variant={'h3'}>{successMessage}</Typography>
+        </Alert>
+      ) : (
+        <Alert
+          severity="error"
+          onClose={onClose}
+          className={classes.snackbarWrapper}
+          classes={{ icon: classes.errorIcon }}
+        >
+          <Typography variant={'h3'}>{errorMessage}</Typography>
+        </Alert>
+      )}
     </Snackbar>
   )
 }

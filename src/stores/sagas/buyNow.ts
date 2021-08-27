@@ -26,7 +26,7 @@ export function* buyNow(
     const acceptBidTransaction: IAcceptBidTransaction = yield buyNowService.performMint(
       creatorOrder,
       accounts[0],
-      `${+amount + +amount * 0.05}` // need to add 5% to amount
+      `${+amount}`
     )
 
     yield call(api, {
@@ -36,6 +36,7 @@ export function* buyNow(
         orderId: '0',
         itemId: tokenData.id,
         userId,
+        sellerId: Number(tokenData.owner),
         marketId: Number(marketData.id),
         bidAmount: amount,
         txHash: acceptBidTransaction.transactionHash,
@@ -44,6 +45,6 @@ export function* buyNow(
 
     yield put(buyNowSuccess({ buyItemId: marketData.id, transactionHash: acceptBidTransaction.transactionHash }))
   } catch (e) {
-    yield put(buyNowFailure({ message: e.message || e, transactionHash: e.receipt.transactionHash }))
+    yield put(buyNowFailure({ message: e }))
   }
 }

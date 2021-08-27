@@ -101,14 +101,21 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.white,
         pointerEvents: 'auto',
         cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: theme.palette.greyMid,
+        },
       },
     },
     bitBtnDisabledText: {
       color: theme.palette.white,
       lineHeight: 1.75,
     },
-    tabContant: {
-      overflow: 'auto',
+    tabContent: {
+      maxHeight: 270,
+      overflow: 'scroll',
+      '&>p': {
+        whiteSpace: 'pre',
+      },
     },
     indicator: {
       backgroundColor: theme.palette.text.primary,
@@ -331,6 +338,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       '& .MuiInputAdornment-root > p': {
         fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
         fontSize: 30,
+      },
+      '& .Mui-error': {
+        fontSize: 14,
+        color: theme.palette.redMiddle,
       },
     },
     tooltip: {

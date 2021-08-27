@@ -38,11 +38,23 @@ import {
   acceptBidRequest,
   getBidsRequest,
   cancelBidRequest,
+  getOffersRequest,
 } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
-import { getNotificationsRequest } from '../reducers/notifications'
-import { getAllWorksRequest, getAllUsersListRequest, banUserRequest, unbanUserRequest } from '../reducers/management'
-import { makeOfferRequest } from '../reducers/makeOffer'
+import {
+  getNotificationsRequest,
+  listenForSocketMessagesRequest,
+  updateForSocketMessagesDataRequest,
+} from '../reducers/notifications'
+import {
+  getAllWorksRequest,
+  getAllUsersListRequest,
+  banUserRequest,
+  unbanUserRequest,
+  banWorkRequest,
+  unbanWorkRequest,
+} from '../reducers/management'
+import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
 
 import {
   getUserData,
@@ -69,11 +81,11 @@ import {
 } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing, unlisting } from '../sagas/listing'
-import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid } from '../sagas/placeBid'
+import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
-import { getNotifications } from '../sagas/notifications'
-import { getAllWorks, getAllUsersList, banUser, unbanUser } from '../sagas/management'
-import { makeOffer } from '../sagas/makeOffer'
+import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
+import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
+import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
 
 export default function* root() {
   yield all([
@@ -120,20 +132,27 @@ export default function* root() {
     takeLatest(acceptBidRequest.type, acceptBid, apiMiddleware),
     takeLatest(getBidsRequest.type, getBids, apiMiddleware),
     takeLatest(cancelBidRequest.type, cancelBid, apiMiddleware),
+    takeLatest(getOffersRequest.type, getOffers, apiMiddleware),
 
     /** Buy Now **/
     takeLatest(buyNowRequest.type, buyNow, apiMiddleware),
 
     /** Notifications **/
     takeLatest(getNotificationsRequest.type, getNotifications, apiMiddleware),
+    takeLatest(listenForSocketMessagesRequest, listenForSocketMessages),
+    takeLatest(updateForSocketMessagesDataRequest, updateForSocketMessagesData),
 
     /** Management **/
     takeLatest(getAllWorksRequest.type, getAllWorks, apiMiddleware),
     takeLatest(getAllUsersListRequest.type, getAllUsersList, apiMiddleware),
     takeLatest(banUserRequest.type, banUser, apiMiddleware),
     takeLatest(unbanUserRequest.type, unbanUser, apiMiddleware),
+    takeLatest(banWorkRequest.type, banWork, apiMiddleware),
+    takeLatest(unbanWorkRequest.type, unbanWork, apiMiddleware),
 
     /** Make Offer **/
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
+    takeLatest(cancelOfferRequest.type, cancelOffer, apiMiddleware),
+    takeLatest(acceptOfferRequest.type, acceptOffer, apiMiddleware),
   ])
 }

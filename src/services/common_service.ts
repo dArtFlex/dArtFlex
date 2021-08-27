@@ -1,13 +1,17 @@
 //@ts-nocheck
 import { Web3Service } from 'services/web3_service'
+import { walletService } from 'services/wallet_service'
 import { signTypedData_v4 } from 'eth-sig-util'
 
 export class CommonService extends Web3Service {
   async signTypedData(data) {
-    const resp = await this.connectMetaMaskWallet()
+    // Connect to current web3 provider
+    const web3 = await walletService.getWeb3()
+
+    const resp = await web3.eth.getAccounts()
     const from = resp[0]
 
-    if (this.web3.currentProvider.isMetaMask) {
+    if (web3.currentProvider) {
       const msgData = JSON.stringify(data)
       return (
         await new Promise((resolve, reject) => {
@@ -23,7 +27,7 @@ export class CommonService extends Web3Service {
           }
 
           // @ts-ignore
-          return this.web3.currentProvider.sendAsync(
+          return web3.currentProvider.sendAsync(
             {
               jsonrpc: '2.0',
               method: 'eth_signTypedData_v4',
@@ -36,7 +40,7 @@ export class CommonService extends Web3Service {
         })
       ).sig
     } else {
-      return signTypedData_v4(this.web3.currentProvider.wallets[from.toLowerCase()].privateKey, { data })
+      return signTypedData_v4(web3.currentProvider.wallets[from.toLowerCase()].privateKey, { data })
     }
   }
 }

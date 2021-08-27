@@ -1,6 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectNotifications } from 'stores/selectors'
+import { updateForSocketMessagesDataRequest } from 'stores/reducers/notifications'
 import moment from 'moment'
 import clsx from 'clsx'
 import { Box, Typography, Badge } from '@material-ui/core'
@@ -36,18 +37,22 @@ export default function NotificationActionMenu(props: INotificationActionMenu) {
 
 function NotificationCard(props: INotifications) {
   const classes = useStyles()
-  const { status, image, message, updated_at } = props
+  const { id, read, image, message, updated_at } = props
+  const dispatch = useDispatch()
 
   return (
     <Badge
+      onClick={() => {
+        dispatch(updateForSocketMessagesDataRequest({ id }))
+      }}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'left',
       }}
       variant="dot"
       classes={{
-        root: clsx(classes.notificationCard, !status && classes.notificationBadgeUnread),
-        badge: clsx(!status && classes.notificationCardBadge),
+        root: clsx(classes.notificationCard, !read && classes.notificationBadgeUnread),
+        badge: clsx(!read && classes.notificationCardBadge),
       }}
       component="div"
     >

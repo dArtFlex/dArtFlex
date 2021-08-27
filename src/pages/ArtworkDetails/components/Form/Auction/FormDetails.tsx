@@ -28,10 +28,15 @@ import {
 } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
 import { IBids, UserDataTypes } from 'types'
+import APP_CONSTS from 'config/consts'
+
+const {
+  STATUSES: { MINTED, SOLD },
+} = APP_CONSTS
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -39,16 +44,16 @@ interface IDetailsFormProps {
 
 const tabsItems = [
   {
-    title: 'Description',
-  },
-  {
     title: 'History',
   },
   {
-    title: 'Bids',
+    title: 'Bids and Offers',
   },
   {
     title: 'About Creator',
+  },
+  {
+    title: 'Description',
   },
 ]
 
@@ -62,12 +67,13 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
 
   const {
-    bid: { bidHistory, bids },
+    bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const {
-    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
+    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const makeOfferStatus = status === SOLD || status === MINTED
 
   const isSamePerson = wallet?.accounts[0] === ownerData?.wallet
 
@@ -153,7 +159,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
             <Box className={classes.avatarBox}>
               <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>@{creatorData?.userid}</span>
+              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
             </Box>
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
@@ -163,7 +169,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
               <Box className={classes.avatarBox}>
                 <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.userid !== creatorData?.userid ? `@${ownerData?.userid}` : '@you'}</span>
+                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
               </Box>
             </Box>
           )}
@@ -203,7 +209,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </span>
             </Box>
           )}
-          {!isAuctionExpired && marketData?.end_time ? (
+          {!isAuctionExpired && marketData?.end_time && !marketData.sold ? (
             <Box>
               <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
 
@@ -238,7 +244,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
             </Box>
           )}
-        {ifAuctionEnds && !isAuctionExpired ? (
+        {ifAuctionEnds && !isAuctionExpired && status !== SOLD ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
               This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
@@ -246,7 +252,8 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
           </Box>
         ) : null}
-        {!isAuctionExpired ? (
+
+        {!makeOfferStatus ? (
           <MUITooltip
             title={'You own this item'}
             classes={{ tooltip: classes.boldText }}
@@ -320,14 +327,19 @@ export default function FormDetails(props: IDetailsFormProps) {
             <Tab key={title} label={title} classes={{ selected: classes.tabSelected }} />
           ))}
         </Tabs>
-        {tab === 0 && (
-          <div className={classes.tabContant}>
+        {tab === 0 && <TabHistory history={bidHistory} />}
+        {tab === 1 && (
+          <TabBids
+            bids={bids as Array<IBids & { userData: UserDataTypes }>}
+            offers={offers as Array<IBids & { userData: UserDataTypes }>}
+          />
+        )}
+        {tab === 2 && <About creator={creatorData} />}
+        {tab === 3 && (
+          <div className={classes.tabContent}>
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
-        {tab === 3 && <About creator={creatorData} />}
       </Box>
 
       <Modal

@@ -10,14 +10,17 @@ import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
 import { normalizeDate, shortCutName } from 'utils'
+import { useSelector } from 'react-redux'
+import { selectWallet } from '../../../stores/selectors'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
+  const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
 
   const classes = useStyles()
   const history = useHistory()
 
   const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
+  const { wallet } = useSelector(selectWallet())
   const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
@@ -28,6 +31,7 @@ export default function CardAsset(props: ICardAssetProps) {
         history.push(`${routes.artworks}/${asset.item_id}`)
         break
       case routes.dashboard:
+      case routes.sales:
         asset.id
           ? history.push(`${routes.artworks}/${asset.item_id}`)
           : history.push(`${routes.artworks}/${asset.tokenData?.id}`)
@@ -78,8 +82,8 @@ export default function CardAsset(props: ICardAssetProps) {
           burnTime={burnTime}
           timer={timer}
           button={button}
-          userWallet={userWallet}
-          ownerWallet={asset.userData?.wallet}
+          userWallet={wallet?.accounts[0]}
+          ownerWallet={asset.userData.wallet}
           emptyBottom={emptyBottom}
         />
       </Card>

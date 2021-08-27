@@ -39,8 +39,9 @@ const managementSlice = createSlice({
     banUserRequest: (state, i) => {
       state.fetching = true
     },
-    banUserSuccess: (state) => {
+    banUserSuccess: (state, { payload }: PayloadAction<{ users: ManagementStateType['users'] }>) => {
       state.fetching = false
+      state.users = payload.users
     },
     banUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -50,12 +51,41 @@ const managementSlice = createSlice({
     unbanUserRequest: (state, i) => {
       state.fetching = true
     },
-    unbanUserSuccess: (state) => {
+    unbanUserSuccess: (state, { payload }: PayloadAction<{ users: ManagementStateType['users'] }>) => {
       state.fetching = false
+      state.users = payload.users
     },
     unbanUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
+    },
+
+    banWorkRequest: (state, i) => {
+      state.fetching = true
+    },
+    banWorkSuccess: (state, { payload }: PayloadAction<{ works: ManagementStateType['works'] }>) => {
+      state.fetching = false
+      state.works = payload.works
+    },
+    banWorkFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    unbanWorkRequest: (state, i) => {
+      state.fetching = true
+    },
+    unbanWorkSuccess: (state, { payload }: PayloadAction<{ works: ManagementStateType['works'] }>) => {
+      state.fetching = false
+      state.works = payload.works
+    },
+    unbanWorkFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    clearManagementError: (state) => {
+      state.error = ''
     },
   },
 })
@@ -76,6 +106,16 @@ export const {
   unbanUserRequest,
   unbanUserSuccess,
   unbanUserFailure,
+
+  banWorkRequest,
+  banWorkSuccess,
+  banWorkFailure,
+
+  unbanWorkRequest,
+  unbanWorkSuccess,
+  unbanWorkFailure,
+
+  clearManagementError,
 } = managementSlice.actions
 
 export const { reducer } = managementSlice

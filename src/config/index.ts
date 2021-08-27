@@ -1,13 +1,24 @@
+import { getProviderAddress } from 'utils'
+
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
-// const STAGE_URL_OLD = 'http://dartflex-dev.ml:8888/api'
-// const DEV_URL = 'https://3.11.202.153:8888/api'
+const BASE_URL = STAGE_URL.replace('/api', '')
+const LOCAL_URL = 'http://localhost:3000'
+
+const ETHEREUM_PROVIDER = 'http://mainnet.infura.io/v3/6c7fceaca1a3433dad73cb537f87644b'
+const RINKEBY_PROVIDER = 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899'
 
 const APP_CONFIG = {
-  rinkebyProvider: 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899',
-  ethereumProvider: 'http://mainnet.infura.io/v3/b55d5c248991487b915a693d9b0b11ad',
+  ethereumProvider: ETHEREUM_PROVIDER,
+  ethereumProviderAddress: getProviderAddress(ETHEREUM_PROVIDER),
+  rinkebyProvider: RINKEBY_PROVIDER,
+  rinkebyProviderAddress: getProviderAddress(RINKEBY_PROVIDER),
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
+
+  WSUrl: 'https://dartflex-dev.ml:8887',
+  baseURL: `${BASE_URL}`,
+  localURL: `${LOCAL_URL}`,
 
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,
@@ -28,6 +39,7 @@ const APP_CONFIG = {
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
+  getOrderByItemId: (item_id: string) => `${STAGE_URL}/bid/get_offer_by_item/${item_id}`,
   getPurchasedHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_purchased_history/${user_id}`,
   getSoldHistoryByUser: (user_id: number) => `${STAGE_URL}/activity/get_sold_history/${user_id}`,
 
@@ -35,6 +47,7 @@ const APP_CONFIG = {
   getHistoryNFT: (item_id: number) => `${STAGE_URL}/activity/get_nft_history/${item_id}`,
   getHistoryTradingByUserId: (user_id: number) => `${STAGE_URL}/activity/get_trading_history/${user_id}`,
   getHistory: (market_id: number) => `${STAGE_URL}/bid/get_by_market/${market_id}`,
+  getHistoryOffers: (item_id: number) => `${STAGE_URL}/bid/get_offer_by_item/${item_id}`,
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
   getActiveUserBidsById: (user_id: number) => `${STAGE_URL}/bid/get_active_by_user/${user_id}`,
 
@@ -61,6 +74,8 @@ const APP_CONFIG = {
   banItem: `${STAGE_URL}/super_admin/ban_item`,
   unbanItem: `${STAGE_URL}/super_admin/unban_item`,
   userValidation: `${STAGE_URL}/user/validate`,
+  cancelOffer: `${STAGE_URL}/bid/withdraw_offer`,
+  acceptOffer: `${STAGE_URL}/bid/accept_offer`,
 } as const
 
 export default APP_CONFIG

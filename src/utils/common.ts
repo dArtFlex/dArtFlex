@@ -18,8 +18,9 @@ export function normalizeDate(date: string): Date {
   return isTimestamp ? new Date(date) : new Date(Number(date))
 }
 
-export function tabelTimeFormat(date: string) {
-  return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(false).format('hh:mm')}`
+export function tabelTimeFormat(date: string, utc?: boolean) {
+  const _utc = utc || false
+  return `${moment(date).utc(false).format('DD MMMM YYYY')} at ${moment(date).utc(_utc).format('hh:mm')}`
 }
 
 export function creatArrayFromNumber(n = 10): number[] {
@@ -31,9 +32,21 @@ export function creatArrayFromNumber(n = 10): number[] {
   return array
 }
 
-export function shortCutName(account: string) {
-  if (account.length < 20) {
+export function shortCutName(account?: string) {
+  if (account && account?.length < 20) {
     return account
   }
   return `${account?.substring(0, 6)}...${account?.substring(account.length - 4)}`
+}
+
+export function validatePrice(value: string | number) {
+  let error
+  if (typeof value === 'string' && !value.length) {
+    error = 'Required'
+  } else if (value <= 0) {
+    error = 'Price bid should be more then 0'
+  } else if (!/^\d+(\.\d+)?$/.test(`${value}`)) {
+    error = 'Incorrect number format'
+  }
+  return error
 }

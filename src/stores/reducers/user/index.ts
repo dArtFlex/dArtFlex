@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserStateType } from './types'
+import { setRandomAvatar, setRandomCover } from '../../../utils'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
@@ -18,6 +19,7 @@ const initialState: UserStateType = {
   isId: false,
   fetchingId: false,
   activeBids: [],
+  success: '',
 }
 
 const userSlice = createSlice({
@@ -50,6 +52,7 @@ const userSlice = createSlice({
     },
     createNewUserSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
       state.fetching = false
+      state.success = 'Changes saved'
       state.user = payload.userData
     },
     createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
@@ -235,6 +238,22 @@ const userSlice = createSlice({
     validateUserIdFailure: (state) => {
       state.userIdValid = false
     },
+
+    clearUserError: (state) => {
+      state.error = ''
+    },
+
+    clearUserSuccessMessage: (state) => {
+      state.success = ''
+    },
+
+    deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
+      if (state.user) {
+        payload === 'profile_image'
+          ? (state.user.profile_image = setRandomAvatar())
+          : (state.user.cover_image = setRandomCover())
+      }
+    },
   },
 })
 
@@ -294,6 +313,11 @@ export const {
   validateUserIdRequest,
   validateUserIdSuccess,
   validateUserIdFailure,
+
+  clearUserError,
+  clearUserSuccessMessage,
+
+  deleteUserPhoto,
 } = userSlice.actions
 
 export const { reducer } = userSlice

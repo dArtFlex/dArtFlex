@@ -6,7 +6,7 @@ import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
-import { daysInMonth } from 'utils'
+import { daysInMonth, validatePrice } from 'utils'
 import clsx from 'clsx'
 
 const {
@@ -104,6 +104,7 @@ export default function SetPriceForm() {
           <Field
             type="input"
             name="price"
+            validate={validatePrice}
             variant="outlined"
             fullWidth={false}
             InputProps={{

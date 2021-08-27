@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent, Avatar, Typography, Box, Link, Divider, 
 import { SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
+import { shortCutName } from '../../../utils'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -18,13 +19,18 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     bidAmountUsd,
     userData,
     onCancel,
-    onAccept,
+    onAcceptBid,
+    onAcceptOffer,
+    expireDate,
   } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
 
   switch (status) {
+    case 'offered':
+    case 'accepted':
     case 'pending':
       return (
         <CardContainer
@@ -34,11 +40,12 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                {status === 'offered' ? 'Offer ' : 'Bid '}
+                <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -46,21 +53,31 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {''}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
               {onCancel && (
                 <Button
                   classes={{ root: classes.cardBtn }}
                   disableRipple
                   onClick={() => onCancel({ id: Number(id), order_id, user_id, market_id })}
                 >
-                  Cancel Bid
+                  Cancel {status === 'offered' ? 'offer' : 'bid'}
                 </Button>
               )}
-              {onAccept && (
+              {onAcceptBid && (
                 <Button
                   classes={{ root: classes.cardAcceptBtn }}
                   disableRipple
-                  onClick={onAccept}
+                  onClick={onAcceptBid}
+                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                >
+                  Accept Bid
+                </Button>
+              )}
+              {onAcceptOffer && (
+                <Button
+                  classes={{ root: classes.cardAcceptBtn }}
+                  disableRipple
+                  onClick={onAcceptOffer}
                   startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
                 >
                   Accept Offer
@@ -71,6 +88,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
         </CardContainer>
       )
     case 'canceled':
+    case 'canceled offer':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
@@ -86,7 +104,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -103,7 +121,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }

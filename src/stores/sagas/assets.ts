@@ -41,7 +41,7 @@ function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: 
 
     return { ...asset, imageData: imageData[0], userData }
   } catch (e) {
-    yield put(getAssetsAllFailure(e.message || e))
+    yield put(getAssetsAllFailure(e))
   }
 }
 
@@ -65,11 +65,11 @@ export function* getAssetsAllData(api: IApi) {
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
     const assets = getAssetsListAllWithStatuses
-      .map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag }))
+      .map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag, ban: getItemAssetsAll[i].ban }))
       .map((item, index) => ({ ...item, item_id: `${getItemAssetsAll[index].id}` }))
     yield put(getAssetsAllSuccess(assets))
   } catch (e) {
-    yield put(getAssetsAllFailure(e.message || e))
+    yield put(getAssetsAllFailure(e))
   }
 }
 
@@ -110,7 +110,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
 
     yield put(
       getAssetByIdSuccess({
-        status,
+        status: status ? status : 'minted',
         tokenData: assetById[0],
         imageData: imageData[0],
         ownerData: userByOwner[0],
@@ -119,7 +119,7 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
       })
     )
   } catch (e) {
-    yield put(getAssetByIdFailure(e.message || e))
+    yield put(getAssetByIdFailure(e))
   }
 }
 
@@ -133,7 +133,7 @@ export function* getMarketplaceData(api: IApi, itemId: number) {
     )
     return marketplaceData
   } catch (e) {
-    throw new Error(e.message || e)
+    throw new Error(e)
   }
 }
 
@@ -166,7 +166,7 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
       status,
     }
   } catch (e) {
-    throw new Error(e.message || e)
+    throw new Error(e)
   }
 }
 
@@ -178,7 +178,7 @@ function* getPrice(api: IApi, symbol: string) {
     })
     return { priceUSD: price?.USD || 0 }
   } catch (e) {
-    throw new Error(e.message || e)
+    throw new Error(e)
   }
 }
 
@@ -194,7 +194,7 @@ export function* getExchangeRateTokens(api: IApi) {
     }))
     yield put(getExchangeRateTokensSuccess(exchangeRates))
   } catch (e) {
-    yield put(getExchangeRateTokensFailure(e.message || e))
+    yield put(getExchangeRateTokensFailure(e))
   }
 }
 
@@ -205,7 +205,7 @@ export function* getHashtagsAll(api: IApi) {
     })
     yield put(getHashtagsAllSuccess({ hashtags }))
   } catch (e) {
-    yield put(getHashtagsAllFailure(e.message || e))
+    yield put(getHashtagsAllFailure(e))
   }
 }
 

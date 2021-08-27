@@ -6,6 +6,7 @@ import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import { tabelTimeFormat } from 'utils'
 
 const {
   TYPES: { AUCTION },
@@ -47,18 +48,24 @@ export default function Aside(props: IAsideProps) {
         {form === AUCTION ? (
           <Box pb={5}>
             <Typography className={classes.textListing}>
-              Your item will be auctioned. The highest bidder will win it on Mon, May 10, 2021 11:18 AM, as long as
-              their bid is at least Ξ1.
+              Your item will be auctioned. The highest bidder will win it on{' '}
+              {tabelTimeFormat(values.endDate || `${new Date()}`, true)}, as long as their bid is at least Ξ
+              {`${values.minimumBid || 0}`}.
             </Typography>
           </Box>
         ) : (
           <Box pb={5}>
             {values.futureTime ? (
               <Typography className={classes.textListing}>
-                Your item will be listed for 0.01 ETH and is scheduled to list on Fri, May 3, 2021 12:00 PM.
+                {`Your item will be listed for ${values.price || 0} ETH and is scheduled to list on ${tabelTimeFormat(
+                  values.startDate || `${new Date()}`,
+                  true
+                )}.`}
               </Typography>
             ) : (
-              <Typography className={classes.textListing}>Your item will be listed for 0.01 ETH</Typography>
+              <Typography className={classes.textListing}>{`Your item will be listed for ${
+                values.price || 0
+              } ETH`}</Typography>
             )}
           </Box>
         )}

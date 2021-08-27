@@ -1,7 +1,7 @@
-import { IWallet, ITokenBalances } from 'types'
+import { IWallet, ITokenBalances, IError } from 'types'
 export interface WalletsStateType {
   wallet: IWallet | null
   tokensBalances: ITokenBalances[] | []
   fetching: boolean
-  error: string
+  error: IError
 }

@@ -10,6 +10,7 @@ import { ArrowLeftIcon } from 'common/icons'
 import { useTokenInfo } from 'hooks'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
+import { validatePrice } from '../../../../../utils'
 
 interface IFormAuctionProps {
   onSubmit: () => void
@@ -94,6 +95,7 @@ export default function FormAuction(props: IFormAuctionProps) {
             type="input"
             name="bid"
             variant="outlined"
+            validate={validatePrice}
             className={classes.rootField}
             InputProps={{
               endAdornment: (

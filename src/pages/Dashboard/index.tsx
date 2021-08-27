@@ -7,7 +7,16 @@ import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
-import { InstagramOutlinedIcon, TwitterIcon, YouTubeIcon } from 'common/icons'
+import {
+  CodeIcon,
+  FacebookIcon,
+  InstagramOutlinedIcon,
+  LinkIcon,
+  TikTokIcon,
+  TwitterIcon,
+  WorldIcon,
+  YouTubeIcon,
+} from 'common/icons'
 import { selectUser, selectSearch } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
@@ -15,12 +24,13 @@ import { getUserAssetsRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutWallet } from 'utils'
+import { shortCutName, shortCutWallet } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 import { unlistingRequest } from 'stores/reducers/listing'
 import BigNumber from 'bignumber.js'
+import image from 'common/icons/cover_photo.png'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -93,9 +103,33 @@ export default function Dashboard() {
       href: `https://twitter.com/${user.twitter}`,
     },
     {
-      link: user.youtube.length ? `youtube.com/user/${user.youtube}` : undefined,
+      link: user.youtube.length ? `${user.youtube}` : undefined,
       icon: <YouTubeIcon className={classes.linkIcon} />,
-      href: `https://youtube.com/user/${user.youtube}`,
+      href: `${user.youtube}`,
+    },
+    {
+      link: user.facebook.length ? `${user.facebook}` : undefined,
+      icon: <FacebookIcon className={classes.linkIcon} />,
+      href: `https://facebook.com/${user.facebook}`,
+    },
+    {
+      link: user.tiktok.length ? `${user.tiktok}` : undefined,
+      icon: <TikTokIcon className={classes.linkIcon} />,
+      href: `https://tiktok.com/@${user.tiktok}`,
+    },
+    {
+      link: user.discord.length ? `${user.discord}` : undefined,
+      icon: <CodeIcon className={classes.linkIcon} />,
+    },
+    {
+      link: user.website.length ? `${user.website}` : undefined,
+      icon: <WorldIcon className={classes.linkIcon} />,
+      href: `${user.website}`,
+    },
+    {
+      link: user.other_url.length ? `${user.other_url}` : undefined,
+      icon: <LinkIcon className={classes.linkIcon} />,
+      href: `${user.other_url}`,
     },
   ]
 
@@ -135,12 +169,12 @@ export default function Dashboard() {
   return (
     <PageWrapper className={classes.wrapper}>
       <ProfileLayout
-        coverURL={user.cover_image}
+        coverURL={user.cover_image !== 'blank' ? user.cover_image : image}
         aside={
           <Aside
             avatar={user.profile_image}
             name={user.fullname}
-            userName={user.userid}
+            userName={shortCutName(user.userid)}
             walletAddress={shortCutWallet(user.wallet)}
             content={user.overview}
             links={links.filter((l) => l.link !== undefined)}

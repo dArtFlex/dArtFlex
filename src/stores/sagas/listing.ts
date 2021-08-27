@@ -5,6 +5,7 @@ import { call, put, select } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import routes from '../../routes'
 import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
+import { getUserAssetsRequest } from 'stores/reducers/user'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { IChainId } from 'types'
 import { walletService } from 'services/wallet_service'
@@ -125,7 +126,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     history.push(routes.createNFT)
   } catch (e) {
-    yield put(listingFailure(e.message || e))
+    yield put(listingFailure(e))
   }
 }
 
@@ -139,7 +140,13 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
       },
     })
     yield put(unlistingSuccess())
+
+    yield put(getUserAssetsRequest())
   } catch (e) {
-    yield put(unlistingFailure(e.message || e))
+    const error = {
+      code: 4001,
+      message: 'Unlist Artwork was faild as NFT has been bidded.',
+    }
+    yield put(unlistingFailure(error))
   }
 }

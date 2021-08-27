@@ -13,6 +13,8 @@ import {
   getBidsFailure,
   cancelBidSuccess,
   cancelBidFailure,
+  getOffersSuccess,
+  getOffersFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
@@ -90,7 +92,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
     yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
-    yield put(placeBidFailure(e.message || e))
+    yield put(placeBidFailure(e))
   }
 }
 
@@ -117,33 +119,31 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  { payload }: PayloadAction<{ creatorId: string; buyerId: string; market_id: string; bid_id: string }>
+  { payload }: PayloadAction<{ market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
     const marketData = yield call(api, {
       url: APP_CONFIG.getHistory(payload.market_id),
     })
-    const creatorOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[0].order_id),
-    })
     const buyerOrder = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
     })
 
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(creatorOrder, buyerOrder)
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptBid,
       method: 'POST',
       data: {
         id: payload.bid_id,
+        sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
         txHash: acceptBidTransaction.transactionHash,
       },
     })
 
     yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
-    yield put(acceptBidFailure(e.message || e))
+    yield put(acceptBidFailure(e))
   }
 }
 
@@ -156,7 +156,20 @@ export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: stri
     const bids = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
     yield put(getBidsSuccess({ bids }))
   } catch (e) {
-    yield put(getBidsFailure(e.message || e))
+    yield put(getBidsFailure(e))
+  }
+}
+
+export function* getOffers(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
+  try {
+    const getHistory: IBids[] = yield call(api, {
+      url: APP_CONFIG.getHistoryOffers(payload.item_id),
+    })
+    const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
+    const offers = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+    yield put(getOffersSuccess({ offers }))
+  } catch (e) {
+    yield put(getOffersFailure(e))
   }
 }
 
@@ -171,6 +184,6 @@ export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: strin
     })
     yield put(cancelBidSuccess())
   } catch (e) {
-    yield put(cancelBidFailure(e.message || e))
+    yield put(cancelBidFailure(e))
   }
 }

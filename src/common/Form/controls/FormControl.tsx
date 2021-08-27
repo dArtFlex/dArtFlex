@@ -5,8 +5,8 @@ import { FormControlProps, FormHelperText, FormControl as MUIFormControl, makeSt
 import clsx from 'clsx'
 
 interface IFormControlProps extends Pick<FormControlProps, 'error' | 'className' | 'children'> {
-  errorText?: string
-  helperText?: React.ReactNode
+  errorText?: React.ReactNode | string
+  helperText?: React.ReactNode | string
   gap?: boolean
   fullWidth?: boolean
   variant?: 'filled' | 'outlined' | 'standard'
@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   helperText: {
-    minHeight: 18,
     fontSize: 12,
     lineHeight: '16px',
     padding: theme.spacing(0, 3),
@@ -33,10 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export default function FormControl(props: IFormControlProps) {
-  const { children, className, error, errorText, helperText, gap = false, fullWidth = true, variant } = props
+  const { children, className, error, errorText = '', helperText = '', fullWidth = true, variant } = props
   const classes = useStyles({ display: fullWidth ? 'flex' : 'inline-flex' })
-
-  const showHelperText = gap || error || helperText
 
   return (
     <MUIFormControl
@@ -47,9 +44,7 @@ export default function FormControl(props: IFormControlProps) {
       variant={variant}
     >
       {children}
-      {showHelperText && (
-        <FormHelperText className={classes.helperText}>{error ? errorText : helperText}</FormHelperText>
-      )}
+      <FormHelperText className={classes.helperText}>{error ? errorText : helperText}</FormHelperText>
     </MUIFormControl>
   )
 }

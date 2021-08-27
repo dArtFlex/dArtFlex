@@ -74,7 +74,7 @@ export function useInnerAssetsFilter({
     return isTrue
   })
 
-  const compare =
+  let compare =
     sortBy === ENDING_SOON
       ? compareSortByEndingSoon
       : sortBy === RECENT
@@ -84,6 +84,10 @@ export function useInnerAssetsFilter({
       : sortBy === PRICE_HIGH_LOW
       ? compareSortByHighToLow
       : null
+
+  if (!!price.from || !!price.to) {
+    compare = compareSortByLowToHigh
+  }
 
   return compare ? _assets.sort(compare) : _assets
 }
@@ -146,6 +150,8 @@ export function useSortedAssets({
   if (assets === null) {
     return assets
   }
+
+  assets = assets.filter((asset) => !asset?.ban)
 
   const now_time = new Date().getTime()
   switch (filter) {
@@ -243,7 +249,7 @@ export function usePromotionMultiplyData({
         name: p.ownerData?.userid || '',
         profilePhoto: p.ownerData?.profile_image || '',
       },
-      name: p.imageData.name,
+      name: p?.imageData.name || '',
       bid: p.marketData ? new BigNumber(p.marketData.end_price).dividedBy(`10e${18 - 1}`).toNumber() : 0,
       endDate: p.marketData ? Number(p.marketData.end_time) : 0,
       url: p.imageData.image,

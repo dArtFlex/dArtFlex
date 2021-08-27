@@ -42,8 +42,8 @@ const appConst = {
     NEVER: 'never',
   },
   INTERVALS: {
-    UPDATE_ASSETS: 30000, // in 0,5 min
-    UPDATE_BIDS_HISTORY: 10000, // in 0,1 min
+    UPDATE_ASSETS: 10000, // every 10 second
+    UPDATE_BIDS_HISTORY: 5000, // every 5 seconds
   },
 
   ACTIVE_WALLET_STORAGE: 'active.wallet',
@@ -63,7 +63,9 @@ const appConst = {
       '0x5c763f9C2111a61e154d0A05a526E332c12957CE',
       '0xC8B41dEcb99FDadb63b90F6E3BEB5DfE9B2E693c',
       '0x00418a685a1368CD69aDECAb675E310877222509',
+      '0x9d5ef64d820f2b4bff570f9067d8dc0c1197b7d4',
     ],
+    BLACK_LIST: ['0x45546c0D0C5e94A7EA978862D6bA985e8EDaFb94', '0x49a4C27EB3FD892557BaA884909195a8C80ffcC6'],
   },
 
   ACCEPT_COMMUNITY_GUIDELINES: '_aGui',

@@ -22,8 +22,16 @@ import { UploadFileSection } from '../../components'
 import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
-import cover from 'common/icons/cover-default.svg'
+import image from 'common/icons/cover_photo.png'
 import { debounce } from 'lodash'
+import {
+  validateFacebook,
+  validateInstagram,
+  validateTikTok,
+  validateTwitter,
+  validateWebSite,
+  validateYouTube,
+} from '../../lib'
 
 interface IFormAccountSettings {
   setOpenVerification: () => void
@@ -65,7 +73,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="Cover Image"
           description={`10MB max size, JPG, PNG or GIF. Recommended size: 500x1500px.`}
           variant={'cover'}
-          photoUrl={user?.cover_image && user?.cover_image !== 'blank' ? user?.cover_image : cover}
+          photoUrl={user?.cover_image && user?.cover_image !== 'blank' ? user?.cover_image : image}
         />
         <Field type="input" name="fullname" label="Name" variant="outlined" className={classes.formField} />
         <Field
@@ -109,6 +117,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           multiline
           rows={4}
           className={classes.formField}
+          maxLength={200}
         />
       </Box>
       <Box className={classes.section}>
@@ -119,8 +128,10 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           label="Website"
           variant="outlined"
           InputProps={{
-            startAdornment: <InputAdornment position="start" icon={<WorldIcon />} placeholder={'https://'} />,
+            startAdornment: <InputAdornment position="start" icon={<WorldIcon className={classes.socialsIcon} />} />,
           }}
+          validate={validateWebSite}
+          placeholder={'https://'}
           className={classes.formField}
         />
         <Field
@@ -128,6 +139,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="twitter"
           label="Twitter"
           variant="outlined"
+          validate={validateTwitter}
           placeholder={'Twitter Username'}
           InputProps={{
             startAdornment: (
@@ -145,9 +157,16 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="instagram"
           label="Instagram"
           variant="outlined"
+          validate={validateInstagram}
           placeholder={'Instagram User name'}
           InputProps={{
-            startAdornment: <InputAdornment position="start" icon={<InstagramIcon />} placeholder={'Instagram.com/'} />,
+            startAdornment: (
+              <InputAdornment
+                position="start"
+                icon={<InstagramIcon className={classes.socialsIcon} />}
+                placeholder={'Instagram.com/'}
+              />
+            ),
           }}
           className={classes.formField}
         />
@@ -158,7 +177,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           variant="outlined"
           placeholder={'Code #'}
           InputProps={{
-            startAdornment: <InputAdornment position="start" icon={<CodeIcon />} />,
+            startAdornment: <InputAdornment position="start" icon={<CodeIcon className={classes.socialsIcon} />} />,
           }}
           className={classes.formField}
         />
@@ -167,9 +186,16 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="facebook"
           label="Facebook"
           variant="outlined"
+          validate={validateFacebook}
           placeholder={'Facebook Username'}
           InputProps={{
-            startAdornment: <InputAdornment position="start" icon={<FacebookIcon />} placeholder={'facebook.com/'} />,
+            startAdornment: (
+              <InputAdornment
+                position="start"
+                icon={<FacebookIcon className={classes.socialsIcon} />}
+                placeholder={'facebook.com/'}
+              />
+            ),
           }}
           className={classes.formField}
         />
@@ -178,6 +204,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="youtube"
           label="YouTube"
           variant="outlined"
+          validate={validateYouTube}
           placeholder={'Channel URL'}
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<YouTubeIcon className={classes.socialsIcon} />} />,
@@ -189,9 +216,16 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           name="tiktok"
           label="TikTok"
           variant="outlined"
+          validate={validateTikTok}
           placeholder={'Tik Tok Username'}
           InputProps={{
-            startAdornment: <InputAdornment position="start" icon={<TikTokIcon />} placeholder={'tiktok.com/'} />,
+            startAdornment: (
+              <InputAdornment
+                position="start"
+                icon={<TikTokIcon className={classes.socialsIcon} />}
+                placeholder={'tiktok.com/'}
+              />
+            ),
           }}
           className={classes.formField}
         />
@@ -204,6 +238,7 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           InputProps={{
             startAdornment: <InputAdornment position="start" icon={<LinkIcon className={classes.socialsIcon} />} />,
           }}
+          validate={validateWebSite}
           className={classes.formField}
         />
       </Box>

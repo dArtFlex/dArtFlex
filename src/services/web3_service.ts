@@ -14,8 +14,8 @@ export class Web3Service {
 
   constructor() {
     const web3Provider = window?.ethereum || Web3.givenProvider || APP_CONFIG.rinkebyProvider
-    window.web3 = new Web3(web3Provider)
-    this.web3 = window.web3
+    this.web3 = new Web3(web3Provider)
+    window.web3 = this.web3
   }
 
   getNetworkType(): Promise<string> {
@@ -51,14 +51,12 @@ export class Web3Service {
 
   async setWeb3WalletConnectProvider() {
     const provider = new WalletConnectProvider({
-      rpc: {
-        1: APP_CONFIG.baseURL,
-        2: APP_CONFIG.localURL,
-      },
+      infuraId: APP_CONFIG.rinkebyProviderAddress,
     })
     await provider.enable()
     const web3 = new Web3(provider)
     this.web3 = web3
+    window.connector = provider
     return web3
   }
 

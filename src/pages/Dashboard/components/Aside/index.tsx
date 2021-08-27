@@ -4,6 +4,7 @@ import { PopoverLinks } from 'common'
 import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
 import { IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
+import image from 'common/icons/cover_photo.png'
 
 export default function Aside(props: IAsideProps) {
   const { avatar, name, userName, walletAddress, content, links, joinedToArtworks } = props
@@ -22,7 +23,7 @@ export default function Aside(props: IAsideProps) {
           }}
           badgeContent={<VerificationIcon />}
         >
-          <Avatar src={avatar} className={classes.avatar} />
+          <Avatar src={avatar === 'blank' ? image : avatar} className={classes.avatar} />
         </Badge>
         <Typography className={classes.name}>{name}</Typography>
         <Typography className={classes.userName}>@{userName}</Typography>
@@ -30,7 +31,7 @@ export default function Aside(props: IAsideProps) {
           <Typography className={classes.text}>{walletAddress}</Typography>
           <Button className={classes.actionText}>Copy</Button>
         </Box>
-        <Box pb={11}>
+        <Box pb={11} textAlign="center">
           <Typography variant={'body1'} color={'textSecondary'}>
             {content}
           </Typography>
@@ -38,8 +39,8 @@ export default function Aside(props: IAsideProps) {
         {links
           ? links.map(({ link, icon, href }: ILink) => (
               <Box key={link} className={classes.linkBox}>
-                {icon}
-                <Link className={classes.link} href={href} underline="none">
+                <Box>{icon}</Box>
+                <Link className={classes.link} href={href} underline="none" target="_blank">
                   {link}
                 </Link>
               </Box>

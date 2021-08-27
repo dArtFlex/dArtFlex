@@ -8,11 +8,12 @@ import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Pagination, Navigation, Autoplay } from 'swiper/core'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 import clsx from 'clsx'
 import routes from '../../../routes'
 import { ArrowLeftIcon, ArrowRightIcon } from 'common/icons'
 import { useHistory } from 'react-router-dom'
+import image from 'common/icons/cover_photo.png'
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -26,7 +27,7 @@ export default function Promotions(props: IPromotion) {
     <React.Fragment>
       <Swiper
         autoplay={{
-          delay: 4000,
+          delay: 10000,
           disableOnInteraction: false,
         }}
         navigation={{
@@ -49,10 +50,14 @@ export default function Promotions(props: IPromotion) {
                 <Box className={classes.promotionInfoWrapper}>
                   <Box display="flex" alignItems="center" mb={2}>
                     <div
-                      style={{ backgroundImage: `url(${item.author.profilePhoto})` }}
+                      style={{
+                        backgroundImage: `url(${
+                          item.author.profilePhoto === 'blank' ? image : item.author.profilePhoto
+                        })`,
+                      }}
                       className={classes.promotionAuthorAva}
                     />
-                    <Typography variant={'h4'}>@{item.author.name}</Typography>
+                    <Typography variant={'h4'}>@{shortCutName(item.author.name)}</Typography>
                   </Box>
                   <Typography variant={'h2'} className={classes.promotionCardName}>
                     {item.name}

@@ -10,6 +10,8 @@ import { useStyles } from './styles'
 import { useSearchAssets } from 'hooks'
 import routes from 'routes'
 import appConst from 'config/consts'
+import { IUserAssets } from '../Dashboard/types'
+import { setLazyMintingData } from '../../stores/reducers/minting'
 
 const { STATUSES } = appConst
 
@@ -31,9 +33,28 @@ export default function Sales() {
     return null
   }
 
+  const handleListed = (userAsset: IUserAssets) => {
+    dispatch(
+      setLazyMintingData({
+        data: {
+          ...userAsset.imageData,
+          royalties: String(userAsset.tokenData.royalty),
+        },
+        lazyMintItemId: userAsset.tokenData.id,
+        lazyMintData: {
+          contract: userAsset.tokenData.contract,
+          tokenId: userAsset.tokenData.token_id,
+          uri: userAsset.tokenData.uri,
+          signatures: [userAsset.tokenData.signature],
+        },
+        lazymint: userAsset.tokenData.lazymint,
+      })
+    )
+    history.push(routes.sellNFT)
+  }
+
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
-    dispatch(getUserAssetsRequest())
   }
 
   return (
@@ -55,6 +76,10 @@ export default function Sales() {
                     asset={userAsset}
                     withLabel
                     withAction={Boolean(userAsset.status === STATUSES.LISTED)}
+                    button={{
+                      onListed: () => handleListed(userAsset),
+                      onSell: () => handleListed(userAsset),
+                    }}
                     menu={{
                       onUnlisted: () => handleUnlisted(String(userAsset.id)),
                     }}

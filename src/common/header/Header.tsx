@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch, getUserBidsRequest, getActiveBidsByUserRequest } from 'stores/reducers/user'
+import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -48,6 +48,7 @@ import {
 } from 'common/icons'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import image from '../icons/cover_photo.png'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -69,13 +70,6 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
   const history = useHistory()
 
-  const fetchUserBids = () => {
-    dispatch(getUserBidsRequest())
-  }
-
-  useEffect(() => {
-    user?.id && fetchUserBids()
-  }, [user?.id])
   useEffect(() => {
     user?.id && dispatch(getActiveBidsByUserRequest())
   }, [user?.id])
@@ -92,7 +86,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       onClick: () => history.push(routes.tradingHistory),
     },
     {
-      lable: 'My Bids',
+      lable: 'My Bids and Offers',
       icon: <BidsIcon />,
       onClick: () => history.push(routes.bids),
     },
@@ -169,6 +163,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   return (
     <>
       <AppBar position="static" elevation={0} color={'transparent'}>
+        <Box className={classes.banner}>
+          <Typography variant="h4">This project is in beta. DYOR</Typography>
+        </Box>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} onClick={() => history.push(routes.artworks)} />
           {isMobile ? (
@@ -179,7 +176,10 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <>
                   {wallet !== null && (
                     <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                      <Avatar src={user?.profile_image} className={classes.avatar} />
+                      <Avatar
+                        src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                        className={classes.avatar}
+                      />
                     </IconButton>
                   )}
 
@@ -244,7 +244,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       <Badge
                         color={'primary'}
                         variant="dot"
-                        invisible={!notifications.length}
+                        invisible={!notifications.length || notifications.every((n) => n.read)}
                         className={classes.notification}
                         classes={{ badge: classes.notificationBadge }}
                       >
@@ -261,7 +261,12 @@ export default function Header({ toggleTheme }: HeaderType) {
                       variant={'outlined'}
                       color={'primary'}
                       disableElevation
-                      startIcon={<Avatar src={user?.profile_image} className={classes.avatar} />}
+                      startIcon={
+                        <Avatar
+                          src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                          className={classes.avatar}
+                        />
+                      }
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
@@ -350,7 +355,10 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Paper className={classes.mobileMenuUserInfo}>
                 <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
-                    <Avatar src={user?.profile_image} className={classes.avatar} />
+                    <Avatar
+                      src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                      className={classes.avatar}
+                    />
                   </Icon>
                   <Typography>{`${wallet?.balance.toFixed(4)} ${wallet?.meta.coinAbbr}`}</Typography>
                   <IconButton
@@ -364,7 +372,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <Badge
                       color={'primary'}
                       variant="dot"
-                      invisible={!notifications.length}
+                      invisible={!notifications.length || notifications.every((n) => n.read)}
                       className={classes.notification}
                       classes={{ badge: classes.notificationBadge }}
                     >
