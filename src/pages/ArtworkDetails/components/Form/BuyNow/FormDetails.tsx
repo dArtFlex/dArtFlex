@@ -127,7 +127,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </Box>
           )}
         </Box>
-        <Box className={classes.infoRow} mb={6}>
+        <Box className={classes.infoRow}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
               <span>{getPriceStatusHeader()}</span>
