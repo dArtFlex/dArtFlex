@@ -36,6 +36,7 @@ const APP_CONFIG = {
   getItemByTokenId: (token_id: number) => `${STAGE_URL}/item/get_by_token_id/${token_id}`,
   getItemByItemId: (id: number) => `${STAGE_URL}/item/get/${id}`,
   getItemsByOwnerId: (owner_id: number) => `${STAGE_URL}/item/get_by_owner/${owner_id}`,
+  getItemsByCreatorId: (owner_id: number) => `${STAGE_URL}/item/get_by_creator/${owner_id}`,
   getMetadata: (id: number) => `${STAGE_URL}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${STAGE_URL}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${STAGE_URL}/order/get/${order_id}`,
