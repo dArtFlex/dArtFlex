@@ -22,7 +22,7 @@ import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { parseJS, notSupportedNetwork } from 'utils'
+import { parseJS, notSupportedNetwork, networkConvertor } from 'utils'
 
 function checkBlackList(account: string) {
   return APP_CONSTS.USER.BLACK_LIST.some(
@@ -172,7 +172,8 @@ function chainListenerWalletConnect() {
 
 export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
-    const chainId: IChainId = walletService.getChainId()
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
     const tokens: Array<IBaseTokens> = tokensAll[chainId].filter((t) => t.id.length > 2 && t.id.startsWith('0x'))
 
     const balances: Array<ITokenBalances | undefined> = yield all(
