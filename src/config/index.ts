@@ -31,6 +31,7 @@ const APP_CONFIG = {
   getUserProfileByUserId: (id: number) => `${STAGE_URL}/user/get/${id}`,
   getUserProfileByOwner: (owner: string) => `${STAGE_URL}/user/get/wallet/${owner}`,
   getUserByWallet: (wallet: string) => `${STAGE_URL}/user/get/wallet/${wallet}`,
+  getUserSalesData: (id: number) => `${STAGE_URL}/item/get_salesdata_by_owner/${id}`,
 
   // GET Asset
   getItemByTokenId: (token_id: number) => `${STAGE_URL}/item/get_by_token_id/${token_id}`,

@@ -8,6 +8,7 @@ const initialState: PlaceBidStateType = {
   data: null,
   bidHistory: [],
   bidAmount: null,
+  bidSuccess: '',
 }
 
 const placeBidSlice = createSlice({
@@ -49,6 +50,7 @@ const placeBidSlice = createSlice({
     ) => {
       state.fetching = false
       state.acceptBidTransaction = payload.acceptBidTransaction
+      state.bidSuccess = 'Successfully accepted bid'
     },
     acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -93,6 +95,10 @@ const placeBidSlice = createSlice({
     clearBidError: (state) => {
       state.error = ''
     },
+
+    clearBidSuccessMessage: (state) => {
+      state.bidSuccess = ''
+    },
   },
 })
 
@@ -118,6 +124,7 @@ export const {
   cancelBidFailure,
 
   clearBidError,
+  clearBidSuccessMessage,
 
   getOffersRequest,
   getOffersSuccess,

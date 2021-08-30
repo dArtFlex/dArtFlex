@@ -40,6 +40,8 @@ export interface ICardAssetProps {
   button?: {
     onListed?: () => void
     onSell?: () => void
+    acceptOffer?: () => void
+    acceptBid?: () => void
   }
   menu?: {
     onUnlisted?: () => void

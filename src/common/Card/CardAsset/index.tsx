@@ -40,8 +40,8 @@ export default function CardAsset(props: ICardAssetProps) {
 
   return (
     <>
-      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
-        <Box className={classes.artContainer}>
+      <Card key={asset.item_id} elevation={1} className={classes.root}>
+        <Box className={classes.artContainer} onClick={cardActionEvent}>
           <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>

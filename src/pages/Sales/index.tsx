@@ -1,60 +1,67 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectUser, selectSearch } from 'stores/selectors'
-import { getUserAssetsRequest } from 'stores/reducers/user'
+import { selectUser } from 'stores/selectors'
+import { getSalesDataByOwnerRequest, getUserAssetsRequest } from 'stores/reducers/user'
 import { unlistingRequest } from 'stores/reducers/listing'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, CircularProgressLoader, CardAsset } from 'common'
 import { useStyles } from './styles'
-import { useSearchAssets } from 'hooks'
 import routes from 'routes'
 import appConst from 'config/consts'
-import { IUserAssets } from '../Dashboard/types'
-import { setLazyMintingData } from '../../stores/reducers/minting'
+import { useComposeAssetsData } from './lib'
+import { acceptBidRequest } from '../../stores/reducers/placeBid'
+import { acceptOfferRequest } from '../../stores/reducers/makeOffer'
 
-const { STATUSES } = appConst
+const { STATUSES, INTERVALS } = appConst
 
 export default function Sales() {
   const classes = useStyles()
   const history = useHistory()
-  const { user, userAssets, fetching } = useSelector(selectUser())
-  const { search } = useSelector(selectSearch())
+  const { user, userAssets, fetching, biddedOfferedAssets } = useSelector(selectUser())
   const dispatch = useDispatch()
-
-  const searchUserAsset = useSearchAssets({ assets: userAssets, search })
 
   useEffect(() => {
     dispatch(getUserAssetsRequest())
+    const iId = setInterval(() => dispatch(getUserAssetsRequest()), INTERVALS.UPDATE_BIDS_HISTORY)
+    return () => {
+      clearInterval(iId)
+    }
   }, [])
+
+  useEffect(() => {
+    dispatch(getSalesDataByOwnerRequest())
+  }, [])
+
+  const composeData = useComposeAssetsData(biddedOfferedAssets, userAssets)
 
   if (!user) {
     history.push(routes.home)
     return null
   }
 
-  const handleListed = (userAsset: IUserAssets) => {
-    dispatch(
-      setLazyMintingData({
-        data: {
-          ...userAsset.imageData,
-          royalties: String(userAsset.tokenData.royalty),
-        },
-        lazyMintItemId: userAsset.tokenData.id,
-        lazyMintData: {
-          contract: userAsset.tokenData.contract,
-          tokenId: userAsset.tokenData.token_id,
-          uri: userAsset.tokenData.uri,
-          signatures: [userAsset.tokenData.signature],
-        },
-        lazymint: userAsset.tokenData.lazymint,
-      })
-    )
-    history.push(routes.sellNFT)
-  }
-
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
+  }
+
+  const handleAcceptBid = (bid_id: number, market_id: string) => {
+    dispatch(
+      acceptBidRequest({
+        bid_id: `${bid_id}`,
+        market_id: market_id,
+        assetOwnerId: user.id,
+      })
+    )
+  }
+
+  const handleAcceptOffer = (offer_id: number, buyerId: string) => {
+    dispatch(
+      acceptOfferRequest({
+        buyerId: buyerId,
+        bid_id: offer_id,
+        assetOwnerId: `${user.id}`,
+      })
+    )
   }
 
   return (
@@ -68,23 +75,30 @@ export default function Sales() {
             <CircularProgressLoader />
           ) : (
             <Box className={classes.grid}>
-              {searchUserAsset
-                ?.filter((el) => !el.sold)
-                .map((userAsset, i) => (
-                  <CardAsset
-                    key={i}
-                    asset={userAsset}
-                    withLabel
-                    withAction={Boolean(userAsset.status === STATUSES.LISTED)}
-                    button={{
-                      onListed: () => handleListed(userAsset),
-                      onSell: () => handleListed(userAsset),
-                    }}
-                    menu={{
-                      onUnlisted: () => handleUnlisted(String(userAsset.id)),
-                    }}
-                  />
-                ))}
+              {composeData
+                .filter((item) => item.highest_bid?.length || item.highest_offer?.length)
+                .map((userAsset, i) => {
+                  return (
+                    <CardAsset
+                      key={i}
+                      asset={userAsset}
+                      withLabel
+                      button={{
+                        acceptOffer: () => {
+                          userAsset.highest_offer?.length &&
+                            handleAcceptOffer(userAsset.highest_offer[0].id, userAsset.highest_offer[0].order_id)
+                        },
+                        acceptBid: () =>
+                          userAsset.highest_bid?.length &&
+                          handleAcceptBid(userAsset.highest_bid[0].id, userAsset.highest_bid[0].market_id),
+                      }}
+                      withAction={Boolean(userAsset.status === STATUSES.LISTED)}
+                      menu={{
+                        onUnlisted: () => handleUnlisted(String(userAsset.id)),
+                      }}
+                    />
+                  )
+                })}
             </Box>
           )}
         </Box>

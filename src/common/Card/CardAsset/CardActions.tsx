@@ -10,6 +10,7 @@ import { useStyles } from './styles'
 import { normalizeDate } from 'utils'
 import routes from '../../../routes'
 import { useHistory } from 'react-router-dom'
+import CardActionButton from './CardActionButton'
 
 const {
   FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD, LISTED },
@@ -68,9 +69,13 @@ export default function CardActions(props: ICardActionsProps) {
               ) : (
                 <Box className={classes.actionBtnBox}>
                   {userWallet === ownerWallet ? (
-                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-                      List
-                    </Button>
+                    history.location.pathname === routes.sales ? (
+                      <CardActionButton acceptOffer={button?.acceptOffer} />
+                    ) : (
+                      <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                        List
+                      </Button>
+                    )
                   ) : (
                     <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
                       Make offer
@@ -84,26 +89,34 @@ export default function CardActions(props: ICardActionsProps) {
       )
     case LIVE_AUCTION:
       return (
-        <Box className={classes.cardAction}>
-          <Section
-            text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={
-              now_time < normalizeDate(endTime).getTime()
-                ? `${parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin} ETH`
-                : '-'
-            }
-          />
-          {now_time < normalizeDate(endTime).getTime() ? (
-            <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
-              {expire_time ? (
-                <BurnIcon className={classes.actionBtnIcon} />
-              ) : (
-                <TimeIcon className={classes.actionBtnIcon} />
-              )}
-              {timer}
-            </ButtonBase>
-          ) : null}
-        </Box>
+        <>
+          {history.location.pathname === routes.sales ? (
+            <Box className={classes.actionBtnBox}>
+              <CardActionButton acceptBid={button?.acceptBid} />
+            </Box>
+          ) : (
+            <Box className={classes.cardAction}>
+              <Section
+                text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
+                value={
+                  now_time < normalizeDate(endTime).getTime()
+                    ? `${parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin} ETH`
+                    : '-'
+                }
+              />
+              {now_time < normalizeDate(endTime).getTime() ? (
+                <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
+                  {expire_time ? (
+                    <BurnIcon className={classes.actionBtnIcon} />
+                  ) : (
+                    <TimeIcon className={classes.actionBtnIcon} />
+                  )}
+                  {timer}
+                </ButtonBase>
+              ) : null}
+            </Box>
+          )}
+        </>
       )
     case BUY_NOW:
       return (
@@ -119,9 +132,17 @@ export default function CardActions(props: ICardActionsProps) {
       )
     case SOLD:
       return (
-        <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
-          <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
-        </Box>
+        <>
+          {history.location.pathname === routes.sales ? (
+            <Button onClick={button?.acceptOffer} variant={'outlined'} fullWidth className={classes.acceptBtn}>
+              Accept offer
+            </Button>
+          ) : (
+            <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
+              <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
+            </Box>
+          )}
+        </>
       )
     case COLLECTED:
       return (
