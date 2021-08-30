@@ -32,7 +32,8 @@ class WalletService extends Web3Service {
       this.web3 = web3
     }
 
-    this.balance = await this.web3.eth.getBalance(this.accounts[0])
+    const balance = await this.web3.eth.getBalance(this.accounts[0])
+    this.balance = BigNumber(balance).dividedBy(10e17).toNumber()
     this.chainId = await this.web3.eth.getChainId()
     return this
   }
