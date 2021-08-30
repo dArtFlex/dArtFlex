@@ -32,7 +32,7 @@ export default function Aside(props: IAsideProps) {
           <Button className={classes.actionText}>Copy</Button>
         </Box>
         <Box pb={11} textAlign="center">
-          <Typography variant={'body1'} color={'textSecondary'}>
+          <Typography variant={'body1'} color={'textSecondary'} className={classes.biography}>
             {content}
           </Typography>
         </Box>

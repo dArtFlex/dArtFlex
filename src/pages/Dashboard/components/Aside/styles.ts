@@ -43,6 +43,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     actionText: {
       color: theme.palette.lightViolet,
     },
+    biography: {
+      whiteSpace: 'pre',
+    },
     text: {
       fontSize: 16,
       fontWeight: 400,

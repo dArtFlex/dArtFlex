@@ -34,6 +34,17 @@ export function notSupportedNetwork(chainId: string | number) {
   return !allowedNetworks.some((network) => network === chainId)
 }
 
+export function networkConvertor(chainId: string | number) {
+  switch (chainId) {
+    case 1:
+      return '0x1'
+    case 4:
+      return '0x4'
+    default:
+      return chainId
+  }
+}
+
 export function getProviderAddress(url: string) {
   const regExp: string | RegExp = new RegExp('(http://mainnet.infura.io/v3/)|(http://rinkeby.infura.io/v3/)', 'i')
   return url.replace(regExp, '')
