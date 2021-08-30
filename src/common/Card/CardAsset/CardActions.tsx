@@ -134,9 +134,9 @@ export default function CardActions(props: ICardActionsProps) {
       return (
         <>
           {history.location.pathname === routes.sales ? (
-            <Button onClick={button?.acceptOffer} variant={'outlined'} fullWidth className={classes.acceptBtn}>
-              Accept offer
-            </Button>
+            <Box className={classes.actionBtnBox}>
+              <CardActionButton acceptOffer={button?.acceptOffer} />
+            </Box>
           ) : (
             <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
               <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
