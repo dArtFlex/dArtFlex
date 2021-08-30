@@ -24,7 +24,7 @@ export function useSortedAssets({
         return a.status === SOLD ? { ...a, status: COLLECTED } : a
       })
     case CREATED:
-      return userAssets.filter((a) => a.tokenData.creator === a.tokenData.owner && !Boolean(a.sold))
+      return userAssets
     case COLLECTED:
       return userAssets.map((a: IUserAssets) => {
         return a.status === SOLD || a.status === LISTED

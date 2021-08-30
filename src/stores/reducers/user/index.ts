@@ -6,7 +6,8 @@ const initialState: UserStateType = {
   isOpenSideBar: true,
   userAssets: [],
   userCollectedAssets: [],
-  userSolddAssets: [],
+  userSoldAssets: [],
+  userCreatedAssets: [],
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
@@ -70,13 +71,15 @@ const userSlice = createSlice({
       }: PayloadAction<{
         userAssets: UserStateType['userAssets']
         userCollectedAssets: UserStateType['userCollectedAssets']
-        userSolddAssets: UserStateType['userSolddAssets']
+        userSoldAssets: UserStateType['userSoldAssets']
+        userCreatedAssets: UserStateType['userCreatedAssets']
       }>
     ) => {
       state.fetching = false
       state.userAssets = payload.userAssets
       state.userCollectedAssets = payload.userCollectedAssets
-      state.userSolddAssets = payload.userSolddAssets
+      state.userSoldAssets = payload.userSoldAssets
+      state.userCreatedAssets = payload.userCreatedAssets
     },
     getUserAssetsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
