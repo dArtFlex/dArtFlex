@@ -12,7 +12,7 @@ import { walletService } from 'services/wallet_service'
 import { listingService } from 'services/listing_service'
 import APP_CONFIG from 'config'
 import tokensAll from 'core/tokens'
-import { normalizeDate } from 'utils'
+import { normalizeDate, networkConvertor } from 'utils'
 
 function getIdFromString(v) {
   return +v.match(/\d/g).join('')
@@ -31,7 +31,8 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const startPrice = yield web3.utils.toWei(String(data.startPrice), 'ether')
     const endPrice = yield web3.utils.toWei(data.endPrice ? String(data.endPrice) : '0', 'ether')
 
-    const chainId: IChainId = walletService.getChainId()
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
     const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id
     const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
     const tokenContract = data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH

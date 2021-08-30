@@ -58,18 +58,24 @@ export default function Dashboard() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { user, userAssets, userCollectedAssets, userSolddAssets, fetching } = useSelector(selectUser())
+  const { user, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetching } = useSelector(
+    selectUser()
+  )
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
   const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
-  const searchSoldAssets = useSearchAssets({ assets: userSolddAssets, search })
+  const searchSoldAssets = useSearchAssets({ assets: userSoldAssets, search })
+  const searchCreatedAssets = useSearchAssets({ assets: userCreatedAssets, search })
+
   const sortedAssets = useSortedAssets({
     userAssets:
       filter === FILTER_VALUES.COLLECTED
         ? searchCollectedAssets
         : filter === FILTER_VALUES.SOLD
         ? searchSoldAssets
+        : filter === FILTER_VALUES.CREATED
+        ? searchCreatedAssets
         : searchAssets,
     filter,
   })
@@ -158,7 +164,7 @@ export default function Dashboard() {
     dispatch(getUserAssetsRequest())
   }
 
-  const totalSales = userSolddAssets
+  const totalSales = userSoldAssets
     .map((a: { current_price: string }) => a.current_price)
     .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
   const totalSalesToEth = new BigNumber(totalSales)

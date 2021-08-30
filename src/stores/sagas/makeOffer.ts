@@ -13,14 +13,15 @@ import {
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
-import { getIdFromString } from 'utils'
+import { getIdFromString, networkConvertor } from 'utils'
 import tokensAll from 'core/tokens'
 import { UserDataTypes } from 'types'
 import { acceptBidService } from 'services/accept_bid_service'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
   try {
-    const chainId: IChainId = walletService.getChainId()
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
     const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
     const { tokenData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
     const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)

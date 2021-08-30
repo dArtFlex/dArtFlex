@@ -25,7 +25,8 @@ export interface UserStateType {
   role?: IUserRole
   userAssets: IUserAsset[] | []
   userCollectedAssets: IUserAsset[] | []
-  userSolddAssets: IUserAsset[] | []
+  userSoldAssets: IUserAsset[] | []
+  userCreatedAssets: IUserAsset[] | []
   userBids: IUserBid[] | []
   promotionAssets: IPromotionAsset[] | []
   promotionIds: IPromotionId[] | []
