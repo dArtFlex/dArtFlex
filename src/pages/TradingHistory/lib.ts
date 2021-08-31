@@ -24,6 +24,7 @@ export function useComposeTradingData({
         amount: th.bid_amount,
         expDate: '',
         etherscanLink: '',
+        item_id: th.item_id,
       }
     })
     .reverse()

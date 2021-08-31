@@ -3,8 +3,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing(4, 0),
-      maxHeight: 244,
+      margin: theme.spacing(3, 0),
+      height: 248,
       overflowY: 'auto',
       '&::-webkit-scrollbar': {
         width: '0.4em',

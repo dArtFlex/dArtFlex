@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
       gap: 8,
+      cursor: 'pointer',
     },
     image: {
       width: 40,
@@ -20,6 +21,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnLink: {
       fill: theme.palette.text.primary,
+    },
+    textLight: {
+      fontWeight: 400,
     },
   })
 )

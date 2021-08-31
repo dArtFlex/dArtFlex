@@ -45,7 +45,7 @@ const sm = '@media (min-width:600px)'
 const xl = '@media (min-width:1920px)' // eslint-disable-line @typescript-eslint/no-unused-vars
 
 const TextPrimary = '#222A2C'
-const PrimaryMain = '#5239AE'
+const PrimaryMain = '#8566FF'
 const PrimaryLight = '#EEEBF7'
 
 const lightPalette = {
@@ -78,6 +78,7 @@ const lightPalette = {
     400: palette.greyLight,
     500: palette.greyPale,
     A100: palette.lightViolet,
+    A200: palette.greyMid,
   },
   ...palette,
 }
@@ -112,6 +113,7 @@ const DarkPalette = {
     400: palette.blackLight,
     500: palette.blackMain,
     A100: palette.white,
+    A200: palette.greyDark,
   },
   ...palette,
 }

@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 12,
     lineHeight: '16px',
     padding: theme.spacing(0, 3),
+    marginLeft: 0,
     marginTop: 0,
   },
 }))

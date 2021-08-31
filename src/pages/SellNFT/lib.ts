@@ -1,10 +1,22 @@
 import * as yup from 'yup'
+import appConst from '../../config/consts'
+const {
+  TYPES: { AUCTION },
+} = appConst
 
 export function useValidationSchema() {
   return yup.object().shape({
     startDate: yup.date().min(new Date(), 'Incorrect date'),
     endDate: yup.date().min(new Date(), 'Incorrect date'),
   })
+}
+
+export function validateExpirationDate(form: string, value: string) {
+  let error
+  if (form === AUCTION && !value) {
+    error = 'Required'
+  }
+  return error
 }
 
 export function validateMinimumBid(value: string | number) {

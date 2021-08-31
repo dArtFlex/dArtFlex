@@ -23,7 +23,7 @@ const initialData: ICreateNFT = {
   name: '',
   description: '',
   hashtags: [],
-  royalties: 1,
+  royalties: 10,
   step: STEPS_NFT.UPLOAD_FILE,
 }
 
