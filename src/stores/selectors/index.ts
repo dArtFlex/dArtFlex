@@ -47,6 +47,7 @@ export const selectUser = () =>
         userIdValid,
         error,
         activeBids,
+        biddedOfferedAssets,
       },
     }: stateType) => ({
       user,
@@ -62,6 +63,7 @@ export const selectUser = () =>
       userIdValid,
       error,
       activeBids,
+      biddedOfferedAssets,
     })
   )
 export const selectUserRole = () =>

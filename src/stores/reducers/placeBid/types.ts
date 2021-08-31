@@ -9,4 +9,5 @@ export interface PlaceBidStateType {
   bids?: IBids[]
   offers?: IBids[]
   acceptBidTransaction?: IAcceptBidTransaction
+  bidSuccess: string
 }

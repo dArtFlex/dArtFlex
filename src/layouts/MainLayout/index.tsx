@@ -18,7 +18,7 @@ import { clearMintError } from '../../stores/reducers/minting'
 import { clearUserError, clearUserSuccessMessage } from '../../stores/reducers/user'
 import { clearListingError } from '../../stores/reducers/listing'
 import { clearBuyNowError } from '../../stores/reducers/buyNow'
-import { clearBidError } from '../../stores/reducers/placeBid'
+import { clearBidError, clearBidSuccessMessage } from '../../stores/reducers/placeBid'
 import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
 import { clearWalletsError } from '../../stores/reducers/wallet'
@@ -50,6 +50,9 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
   } = useSelector(selectMakeOffer())
   const { error: errorManagement } = useSelector(selectManagement())
   const { success: successUserMessage } = useSelector(selectUserSuccessMessage())
+  const {
+    bid: { bidSuccess },
+  } = useSelector(selectBid())
 
   const dispatch = useDispatch()
 
@@ -71,7 +74,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
       setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
-  const successGlobalMessage = successMessage || successUserMessage
+  const successGlobalMessage = successMessage || successUserMessage || bidSuccess
 
   useEffect(() => {
     successGlobalMessage && setSnackBarOpen(Boolean(successGlobalMessage.length))
@@ -89,6 +92,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     dispatch(clearMakeOfferSuccessMessage())
     dispatch(clearUserSuccessMessage())
     dispatch(clearWalletsError())
+    dispatch(clearBidSuccessMessage())
   }
 
   return (

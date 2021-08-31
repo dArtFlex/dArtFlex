@@ -30,9 +30,11 @@ import {
   validateUserIdFailure,
   getActiveBidsByUserSuccess,
   getActiveBidsByUserFailure,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } from 'stores/reducers/user'
 import { getMainAssetStatus } from 'stores/sagas/assets'
-import { IActiveUserBids, UserStateType } from 'stores/reducers/user/types'
+import { IActiveUserBids, IBiddedOfferedAsset, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -514,5 +516,17 @@ export function* validateUserId(api: IApi, { payload }: PayloadAction<{ userId: 
     yield put(validateUserIdSuccess({ userIdValid: true }))
   } catch (e) {
     yield put(validateUserIdFailure())
+  }
+}
+
+export function* getSalesDataByOwner(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const userSalesData: IBiddedOfferedAsset[] = yield call(api, {
+      url: APP_CONFIG.getUserSalesData(user.id),
+    })
+    yield put(getSalesDataByOwnerSuccess(userSalesData))
+  } catch (e) {
+    yield put(getSalesDataByOwnerFailure(e))
   }
 }

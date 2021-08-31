@@ -91,6 +91,15 @@ export const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.text.primary,
       },
     },
+    acceptBtn: {
+      border: `2px solid ${theme.palette.green}`,
+      color: theme.palette.green,
+    },
+    loaderWrapper: {
+      height: 50,
+      display: 'flex',
+      alignItems: 'ccenter',
+    },
     mintedBottom: {
       height: 72,
     },
