@@ -28,7 +28,7 @@ export default function CardActionButton(props: ICardActionButton) {
     if (!bid.fetching && !offer.fetching) {
       setIsFetching(false)
     }
-  })
+  }, [!bid.fetching && !offer.fetching])
 
   return (
     <>
