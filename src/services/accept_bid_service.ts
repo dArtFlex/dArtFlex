@@ -1,7 +1,7 @@
 import { web3Service } from 'services/web3_service'
 import { walletService } from 'services/wallet_service'
 import { ABI, AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
-import { IOrderData, IChainId } from 'types'
+import { IOrderData, IChainIdFormat } from 'types'
 
 class AcceptBidService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,7 +54,7 @@ class AcceptBidService {
       '0x'
     )
 
-    const chainId: IChainId = walletService.getChainId()
+    const chainId: IChainIdFormat = walletService.getChainId()
     const chaingIdNumber = chainId.match(/^0x(.+)/)
     return await this.web3.eth.sendTransaction({
       data: invocation.encodeABI(),
