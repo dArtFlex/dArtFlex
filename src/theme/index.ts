@@ -88,7 +88,7 @@ const DarkPalette = {
   primary: {
     main: PrimaryMain,
     light: PrimaryLight,
-    contrastText: '#fff',
+    contrastText: palette.white,
   },
   secondary: {
     main: palette.white,

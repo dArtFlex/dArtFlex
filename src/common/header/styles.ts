@@ -186,7 +186,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: 32,
     },
     createButton: {
-      color: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
       border: `2px solid ${theme.palette.grey.A100}`,
       [theme.breakpoints.down(810)]: {
         padding: theme.spacing(2),
