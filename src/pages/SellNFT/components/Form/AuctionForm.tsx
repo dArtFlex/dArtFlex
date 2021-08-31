@@ -10,7 +10,7 @@ import { validateMinimumBid, validateReservePrice } from '../../lib'
 import { daysInMonth } from 'utils'
 
 const {
-  SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC, NEVER },
+  SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC },
 } = appConst
 
 const schedule = [
@@ -33,10 +33,6 @@ const schedule = [
   {
     value: SPECIFIC,
     label: 'Set a specific day',
-  },
-  {
-    value: NEVER,
-    label: 'never',
   },
 ]
 

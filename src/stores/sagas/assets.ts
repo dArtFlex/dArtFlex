@@ -23,7 +23,7 @@ import {
   IHashtagNew,
 } from 'types'
 import tokensAll from 'core/tokens'
-import { getAssetStatus, createDummyMarketplaceData, getIdFromString } from 'utils'
+import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
@@ -184,8 +184,10 @@ function* getPrice(api: IApi, symbol: string) {
 
 export function* getExchangeRateTokens(api: IApi) {
   try {
-    const chainId: IChainId = walletService.getChainId()
-    const tAll = tokensAll[chainId || '0x1']
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
+
+    const tAll = tokensAll[chainId]
     const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
     const exchangeRates = tAll.map((t, i) => ({
       id: t.id,

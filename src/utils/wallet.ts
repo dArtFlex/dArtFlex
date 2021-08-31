@@ -1,5 +1,5 @@
 import APP_CONSTS from 'config/consts'
-import { IWallet } from 'types'
+import { IWallet, IChainId, IChainIdFormat } from 'types'
 
 export function storageActiveWallet(wallet: IWallet, walletStorageKey: string) {
   localStorage.setItem(walletStorageKey, JSON.stringify(wallet))
@@ -34,7 +34,7 @@ export function notSupportedNetwork(chainId: string | number) {
   return !allowedNetworks.some((network) => network === chainId)
 }
 
-export function networkConvertor(chainId: string | number) {
+export function networkConvertor(chainId: IChainId): IChainIdFormat {
   switch (chainId) {
     case 1:
       return '0x1'

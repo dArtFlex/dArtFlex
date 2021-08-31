@@ -62,7 +62,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                Bid <strong>{`${bidAmountToToken} WETH`}</strong> (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
@@ -97,7 +97,7 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
+                  Bid <strong>{`${bidAmountToToken} WETH`}</strong> (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>
