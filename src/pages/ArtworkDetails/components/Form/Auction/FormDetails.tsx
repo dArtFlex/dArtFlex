@@ -180,8 +180,8 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${priceToToken} ETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ETH` : '-') : ''}
+              {!isAuctionExpired ? `${priceToToken} WETH` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} WETH` : '-') : ''}
             </Typography>
             <span>
               {!isAuctionExpired
@@ -201,7 +201,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               <Typography variant={'body1'} className={classes.infoTitle}>
                 <span>Sold For</span>
               </Typography>
-              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ETH`}</Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} WETH`}</Typography>
               <span>
                 {marketData?.sold &&
                   marketData?.end_price &&
