@@ -1,6 +1,7 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
 import { IHashtag } from 'types'
+import { IHighestBid, IMarketPlaceInfo } from '../stores/reducers/user/types'
 
 const { TYPES, STATUSES, FILTER_VALUES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
@@ -31,6 +32,9 @@ export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
   tokenData?: AssetTypes
+  highest_bid?: IHighestBid[]
+  highest_offer?: IHighestBid[]
+  marketplace?: IMarketPlaceInfo[]
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {

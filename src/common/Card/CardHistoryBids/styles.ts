@@ -62,6 +62,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     cardAcceptBtn: {
       color: theme.palette.green,
+      minWidth: 120,
       fontSize: 14,
       '&:hover': {
         backgroundColor: 'transparent',

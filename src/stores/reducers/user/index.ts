@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UserStateType } from './types'
+import { IBiddedOfferedAsset, UserStateType } from './types'
 import { setRandomAvatar, setRandomCover } from '../../../utils'
 
 const initialState: UserStateType = {
@@ -21,6 +21,7 @@ const initialState: UserStateType = {
   fetchingId: false,
   activeBids: [],
   success: '',
+  biddedOfferedAssets: [],
 }
 
 const userSlice = createSlice({
@@ -257,6 +258,20 @@ const userSlice = createSlice({
           : (state.user.cover_image = setRandomCover())
       }
     },
+
+    getSalesDataByOwnerRequest: (state) => {
+      state.fetching = true
+    },
+
+    getSalesDataByOwnerSuccess: (state, { payload }: PayloadAction<IBiddedOfferedAsset[]>) => {
+      state.fetching = false
+      state.biddedOfferedAssets = payload
+    },
+
+    getSalesDataByOwnerFailure: (state, { payload }: PayloadAction<string>) => {
+      state.fetching = false
+      state.error = payload
+    },
   },
 })
 
@@ -321,6 +336,10 @@ export const {
   clearUserSuccessMessage,
 
   deleteUserPhoto,
+
+  getSalesDataByOwnerRequest,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice
