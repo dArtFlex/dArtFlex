@@ -92,7 +92,8 @@ export default function TabBids(props: ITabHistoryProps) {
   }
 
   const availableToAcceptOffer = (i: number) => {
-    return i === 0 && tokenData && user?.id === +tokenData.owner && marketData && marketData?.sold
+    const checkMarketData = (marketData && marketData?.sold) || status === MINTED
+    return i === 0 && tokenData && user?.id === +tokenData.owner && checkMarketData
   }
 
   if (history?.length > 4 && !showMore) {

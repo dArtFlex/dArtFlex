@@ -15,15 +15,18 @@ import { ISocketDataNotification } from 'types'
 export function* getNotifications(api: IApi, { payload }: PayloadAction<{ socketData: ISocketDataNotification[] }>) {
   try {
     const notificationsImages: string[] = yield all(payload.socketData.map((n) => call(getImage, api, n.item_id)))
-    const notifications: INotifications[] = payload.socketData.flatMap((n, i) => {
-      const message = n.message
-      const updated_at = n.updated_at
+    const notifications: INotifications[] = payload.socketData
+      .flatMap((n, i) => {
+        const message = n.message
+        const updated_at = n.updated_at
 
-      const item_id = n.item_id
-      const read = n.read
-      const id = n.id
-      return { id, message, updated_at, item_id, read, image: notificationsImages[i] }
-    })
+        const item_id = n.item_id
+        const read = n.read
+        const id = n.id
+        return { id, message, updated_at, item_id, read, image: notificationsImages[i] }
+      })
+      .filter((n) => !n.read)
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
 
     yield put(getNotificationsSuccess({ notifications }))
   } catch (e) {
