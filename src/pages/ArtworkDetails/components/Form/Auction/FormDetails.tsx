@@ -12,7 +12,7 @@ import {
 } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Divider, Tooltip as MUITooltip } from '@material-ui/core'
-import { Popover, Modal, WalletConnect, Tooltip } from 'common'
+import { Popover, Modal, WalletConnect } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import {
   TwitterIcon,
