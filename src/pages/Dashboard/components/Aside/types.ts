@@ -13,3 +13,5 @@ export interface ILink {
   icon: JSX.Element
   href?: string
 }
+
+export type CopyType = 'Copy' | 'Copied'

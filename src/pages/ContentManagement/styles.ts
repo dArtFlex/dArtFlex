@@ -51,6 +51,18 @@ export const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.background.paper,
       },
     },
+    menuList: {
+      top: '270px !important',
+      [theme.breakpoints.down(961)]: {
+        top: '334px !important',
+      },
+      [theme.breakpoints.down(681)]: {
+        top: '312px !important',
+      },
+      [theme.breakpoints.down(383)]: {
+        top: '374px !important',
+      },
+    },
     sortItem: {
       '&:hover': {
         backgroundColor: theme.palette.type === 'dark' && theme.palette.blackDark,

@@ -2,15 +2,27 @@ import React, { useState } from 'react'
 import { Box, Typography, Card, Avatar, Badge, Button, Link } from '@material-ui/core'
 import { PopoverLinks } from 'common'
 import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
-import { IAsideProps, ILink } from './types'
+import { CopyType, IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
 import image from 'common/icons/cover_photo.png'
+import { shortCutWallet } from '../../../../utils'
 
 export default function Aside(props: IAsideProps) {
   const { avatar, name, userName, walletAddress, content, links, joinedToArtworks } = props
   const classes = useStyles()
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+  const [copyButton, setCopyButton] = useState<CopyType>('Copy')
+
+  function copyLink() {
+    navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+      if (result.state === 'granted' || result.state === 'prompt') {
+        navigator.clipboard.writeText(walletAddress).then(() => {
+          setCopyButton('Copied')
+        })
+      }
+    })
+  }
 
   return (
     <>
@@ -28,8 +40,10 @@ export default function Aside(props: IAsideProps) {
         <Typography className={classes.name}>{name}</Typography>
         <Typography className={classes.userName}>@{userName}</Typography>
         <Box className={classes.wallet}>
-          <Typography className={classes.text}>{walletAddress}</Typography>
-          <Button className={classes.actionText}>Copy</Button>
+          <Typography className={classes.text}>{shortCutWallet(walletAddress)}</Typography>
+          <Button className={classes.actionText} onClick={copyLink}>
+            {copyButton}
+          </Button>
         </Box>
         <Box pb={11} textAlign="center">
           <Typography variant={'body1'} color={'textSecondary'} className={classes.biography}>

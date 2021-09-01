@@ -12,6 +12,7 @@ import { ICardAssetProps } from './types'
 import { normalizeDate, shortCutName } from 'utils'
 import { useSelector } from 'react-redux'
 import { selectWallet } from '../../../stores/selectors'
+import BigNumber from 'bignumber.js'
 
 export default function CardAsset(props: ICardAssetProps) {
   const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
@@ -37,6 +38,12 @@ export default function CardAsset(props: ICardAssetProps) {
           : history.push(`${routes.artworks}/${asset.tokenData?.id}`)
     }
   }
+
+  const convertPrice = (price: string) =>
+    new BigNumber(price)
+      .dividedBy(`10e${18 - 1}`)
+      .toNumber()
+      .toFixed(4)
 
   return (
     <>
@@ -69,6 +76,16 @@ export default function CardAsset(props: ICardAssetProps) {
             )}
           </Box>
           <Typography variant={'h4'}>{asset.imageData.name}</Typography>
+          {asset.highest_bid?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest bid {convertPrice(asset.highest_bid[0].bid_amount)} WETH
+            </Typography>
+          ) : null}
+          {asset.highest_offer?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest offer {convertPrice(asset.highest_offer[0].bid_amount)} ETH
+            </Typography>
+          ) : null}
         </Box>
         <CardActions
           status={asset.status}

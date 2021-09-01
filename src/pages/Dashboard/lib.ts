@@ -27,11 +27,7 @@ export function useSortedAssets({
       return userAssets
     case COLLECTED:
       return userAssets.map((a: IUserAssets) => {
-        return a.status === SOLD || a.status === LISTED
-          ? { ...a, status: COLLECTED }
-          : a.status === MINTED
-          ? { ...a, status: UNLISTED }
-          : a
+        return a.status === SOLD || a.status === LISTED ? { ...a, status: COLLECTED } : a
       })
     case SOLD:
       return userAssets.map((a: IUserAssets) => ({ ...a, status: SOLD }))

@@ -22,7 +22,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     filtersBtnActive: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: '#8566FF1A !important',
+      color: theme.palette.primary.main,
     },
     customFiltersContainer: {
       // whiteSpace: 'nowrap',
@@ -266,6 +267,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       [theme.breakpoints.down(560)]: {
         overflow: 'scroll',
+      },
+    },
+    menuList: {
+      top: '234px !important',
+      [theme.breakpoints.down(681)]: {
+        top: '214px !important',
       },
     },
     sortButtons: {
