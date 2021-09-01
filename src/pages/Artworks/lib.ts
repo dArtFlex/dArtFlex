@@ -171,10 +171,10 @@ export function useSortedAssets({
       return assets.filter((a) => a.type === INSTANT_BY && !Boolean(a.sold) && a.status !== 'minted')
     case RESERVE_NOT_MET:
       return assets.filter((a) => {
-        if (a.type === AUCTION && !Boolean(a.sold)) {
+        if (a.type === AUCTION && !Boolean(a.sold) && !a.isBidded) {
           return normalizeDate(a.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
         }
-        return a.type === BUY_NOW && normalizeDate(a.end_time).getTime() > now_time - 1000 * 60 * 60 * 24
+        return false
       })
     case SOLD:
       return assets.filter((a) => Boolean(a.sold))
