@@ -133,6 +133,8 @@ export default function FormDetails(props: IDetailsFormProps) {
     history.push(routes.sellNFT)
   }
 
+  const isBidded = bids && bids.length > 1
+
   return (
     <>
       <Box pt={14}>
@@ -237,7 +239,8 @@ export default function FormDetails(props: IDetailsFormProps) {
           !isAuctionExpired &&
           marketData?.start_price &&
           marketData?.end_price &&
-          marketData.start_price !== marketData.end_price && (
+          marketData.start_price !== marketData.end_price &&
+          !isBidded && (
             <Box className={classes.warningBox}>
               <Typography component="span" className={classes.warningText}>
                 Once a bid has been placed and the reserve price has been met, a 24 hour auction for this artwork will

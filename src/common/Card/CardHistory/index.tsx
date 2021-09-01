@@ -8,10 +8,11 @@ import APP_CONFIG from 'config'
 import { shortCutName } from '../../../utils'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData } = props
+  const { tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData, expireDate } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
 
   switch (status) {
@@ -74,7 +75,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
             </Box>
           </CardContent>
         </CardContainer>
