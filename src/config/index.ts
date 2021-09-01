@@ -1,6 +1,7 @@
 import { getProviderAddress } from 'utils'
 
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
+const STAGE_AI = 'https://api.nft.inga.technology'
 const BASE_URL = STAGE_URL.replace('/api', '')
 const LOCAL_URL = 'http://localhost:3000'
 
@@ -78,6 +79,8 @@ const APP_CONFIG = {
   userValidation: `${STAGE_URL}/user/validate`,
   cancelOffer: `${STAGE_URL}/bid/withdraw_offer`,
   acceptOffer: `${STAGE_URL}/bid/accept_offer`,
+  constructorStyleTransfer: (priority: number, endScale: number) =>
+    `${STAGE_AI}/style_transfer?priority=${priority}&end_scale=${endScale}`,
 } as const
 
 export default APP_CONFIG
