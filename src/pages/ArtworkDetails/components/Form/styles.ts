@@ -112,7 +112,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     tabContent: {
       margin: theme.spacing(3, 0),
-      maxHeight: 248,
+      height: 248,
       overflowY: 'auto',
       '&>p': {
         whiteSpace: 'pre',

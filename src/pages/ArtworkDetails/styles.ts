@@ -22,7 +22,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     tabContentScroll: {
       margin: theme.spacing(3, 0),
-      maxHeight: 248,
+      height: 248,
       overflowY: 'auto',
       '&::-webkit-scrollbar': {
         width: '0.4em',

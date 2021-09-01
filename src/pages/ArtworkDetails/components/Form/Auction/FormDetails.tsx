@@ -211,8 +211,9 @@ export default function FormDetails(props: IDetailsFormProps) {
           )}
           {!isAuctionExpired && marketData?.end_time && !marketData.sold ? (
             <Box>
-              <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
-
+              <Typography variant={'body1'} className={classes.infoTitle}>
+                <span>Auction Ending In</span>
+              </Typography>
               <Box
                 className={clsx(
                   classes.timerBox,
