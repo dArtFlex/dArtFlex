@@ -16,6 +16,7 @@ export interface AssetsStateType {
   assetDetails: IAssetDetails
   exchangeRates?: IExchangeRates[]
   hashtags?: IHashtag[]
+  isBidded?: boolean[]
 }
 
 export type IUserAssets = AssetDataTypesWithStatus & { hashtag: IHashtag[] }

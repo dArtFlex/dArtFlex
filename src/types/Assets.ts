@@ -35,6 +35,7 @@ export interface AssetDataTypes extends AssetMarketplaceTypes {
   highest_bid?: IHighestBid[]
   highest_offer?: IHighestBid[]
   marketplace?: IMarketPlaceInfo[]
+  isBidded?: boolean
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {

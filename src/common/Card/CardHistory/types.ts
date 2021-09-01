@@ -7,6 +7,7 @@ export interface ICardHistoryProps extends IBidsHistory {
   userWalletId?: number
   onAccept?: () => void
   onCancel?: ({ id }: { id: number }) => void
+  expireDate: Date
 }
 
 export interface ICardContainerProps {
