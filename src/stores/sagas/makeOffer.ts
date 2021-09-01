@@ -31,6 +31,8 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
     // Todo: Should only be once, so we need to check if it's approved
     yield placeBidService.approveToken(accounts[0])
 
+    const lazymint = tokenData.lazymint
+
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
     })
@@ -45,6 +47,7 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
         uri: tokenData.uri,
         erc20: tokenContractWETH,
         signature: tokenData.signature,
+        lazymint,
       },
     })
 
