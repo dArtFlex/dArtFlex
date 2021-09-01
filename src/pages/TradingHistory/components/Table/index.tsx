@@ -1,12 +1,14 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
-import { Box, IconButton, Link, Button } from '@material-ui/core'
+import { Box, IconButton, Link, Button, Typography } from '@material-ui/core'
 import { Table, Image } from 'common'
 import { ExternalLinkIcon } from 'common/icons'
 import { ITradingHistory } from '../../types'
 import { ITradingHistoryTable } from './types'
 import { shortCutName, tabelTimeFormat } from 'utils'
 import { useStyles } from './styles'
+import { useHistory } from 'react-router-dom'
+import routes from '../../../../routes'
 
 export default function TradingHistoryTable(props: ITradingHistoryTable) {
   const { data } = props
@@ -16,6 +18,7 @@ export default function TradingHistoryTable(props: ITradingHistoryTable) {
 
 function useColumns() {
   const classes = useStyles()
+  const history = useHistory()
 
   return [
     {
@@ -28,7 +31,7 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => {
         return (
-          <Box className={classes.imageBox}>
+          <Box className={classes.imageBox} onClick={() => history.push(`${routes.artworks}/${cell.item_id}`)}>
             <Image src={cell.token.image} className={classes.image} />
             <Link href={'#'} underline={'none'}>
               {cell.token.name}
@@ -42,9 +45,9 @@ function useColumns() {
       header: 'From',
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => (
-        <Link href={'#'} underline={'none'}>
+        <Typography color={'primary'} className={classes.textLight}>
           {'@' + shortCutName(cell.from)}
-        </Link>
+        </Typography>
       ),
     },
     {
@@ -53,9 +56,9 @@ function useColumns() {
       // eslint-disable-next-line react/display-name
       render: (cell: ITradingHistory) => {
         return cell.to.length ? (
-          <Link href={'#'} underline={'none'}>
+          <Typography color={'primary'} className={classes.textLight}>
             {'@' + shortCutName(cell.to)}
-          </Link>
+          </Typography>
         ) : (
           '-'
         )

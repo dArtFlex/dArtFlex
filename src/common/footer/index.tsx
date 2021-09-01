@@ -58,11 +58,13 @@ export default function Footer() {
     <footer className={classes.footer}>
       <Box className={classes.social} display={'flex'} alignItems={'center'}>
         <LogoIcon className={classes.logo} />
-        {social.map((s) => (
-          <Link key={s.title} color={'inherit'} underline={'hover'} href={s.href}>
-            {s.title}
-          </Link>
-        ))}
+        <Box className={classes.socialWrapper}>
+          {social.map((s) => (
+            <Link key={s.title} color={'inherit'} underline={'hover'} href={s.href}>
+              {s.title}
+            </Link>
+          ))}
+        </Box>
       </Box>
       <Box className={classes.linksWrapper}>
         {links.map((s) => (

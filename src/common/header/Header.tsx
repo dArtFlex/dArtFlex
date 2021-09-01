@@ -126,6 +126,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [open, setOpen] = useState<boolean>(false)
 
   const isMobile = useMediaQuery('(max-width: 680px)')
+  const showBidsMessage = useMediaQuery('(max-width: 850px)')
 
   const MenuItems: IMenuItems[] = [
     {
@@ -211,7 +212,7 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Box className={classes.buttonContainer}>
                 {Boolean(activeBids.length) && (
                   <Chip avatar={`${activeBids.length}`} endIcon>
-                    Bids
+                    {showBidsMessage ? '' : 'Bids'}
                   </Chip>
                 )}
                 <SearchField onSearch={handleSearch} />
@@ -225,7 +226,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   classes={{ root: classes.createButton }}
                   endIcon={<CurrentDownIcon />}
                 >
-                  Create
+                  {showBidsMessage ? '+' : 'Create'}
                 </Button>
                 {wallet === null ? (
                   <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
@@ -237,7 +238,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       aria-label="notification"
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
                         const target = event.currentTarget as HTMLElement
-                        notifications.length && setAnchorElNotification(target)
+                        setAnchorElNotification(target)
                       }}
                       className={classes.notificationButton}
                     >

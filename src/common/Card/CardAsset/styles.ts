@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 325,
-      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.15)',
       cursor: 'pointer',
       display: 'flex',
       flexDirection: 'column',
@@ -165,7 +165,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     cardImage: {
-      borderRadius: 10,
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 10,
     },
   })
 )

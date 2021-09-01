@@ -6,7 +6,7 @@ import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
 import { useStyles } from './styles'
-import { validateMinimumBid, validateReservePrice } from '../../lib'
+import { validateExpirationDate, validateMinimumBid, validateReservePrice } from '../../lib'
 import { daysInMonth } from 'utils'
 
 const {
@@ -133,7 +133,13 @@ If you receive a bid above the starting value but below your reserve price - you
         Your listing will automatically end at this time. No need to cancel it!
       </Typography>
       <Box pt={6} pb={10} className={classes.flexBox}>
-        <Field type="select" options={schedule} name="expirationTime" fullWidth={false} />
+        <Field
+          type="select"
+          options={schedule}
+          name="expirationTime"
+          fullWidth={false}
+          validate={() => validateExpirationDate('auction', values.expirationTime)}
+        />
         {values.expirationTime === SPECIFIC && <Field type="pickerTime" name="endDate" fullWidth={false} />}
       </Box>
 

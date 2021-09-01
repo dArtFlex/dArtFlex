@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(0),
     },
     externalLinkMenuWrapper: {
-      [theme.breakpoints.down(600)]: {
+      [theme.breakpoints.down(681)]: {
         '& .MuiPaper-root': {
           left: 16,
           width: '100%',

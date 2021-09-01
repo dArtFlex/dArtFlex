@@ -85,9 +85,6 @@ export default function MintingForm(props: IMintingForm) {
                   <Typography component={'span'} className={classes.royaltiesAmount}>
                     {`${values.royalties}% `}
                   </Typography>
-                  <Typography component={'span'} className={classes.royalties}>
-                    (Suggested: 10%)
-                  </Typography>
                 </>
               }
               className={classes.inputField}
@@ -114,7 +111,7 @@ export default function MintingForm(props: IMintingForm) {
                 onMinting()
               }}
               className={classes.btnMint}
-              disabled={!Boolean(values.name.length) || !Boolean(values.description.length)}
+              disabled={!Boolean(values.name.length)}
             >
               Mint NFT
             </Button>
