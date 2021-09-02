@@ -32,7 +32,7 @@ const rootReducer = {
   offer: makeOfferReducer,
   notifications: notificationsReducer,
   management: managementReducer,
-  constructor: constructorReducer,
+  constructorAI: constructorReducer,
 }
 
 export interface stateType {
@@ -46,7 +46,7 @@ export interface stateType {
   offer: MakeOfferStateType
   notifications: NotificationsStateType
   management: ManagementStateType
-  constructor: ConstructorStateType
+  constructorAI: ConstructorStateType
 }
 
 export default rootReducer

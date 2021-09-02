@@ -54,6 +54,9 @@ const APP_CONFIG = {
   getBidsByUserId: (user_id: number) => `${STAGE_URL}/bid/get_by_user/${user_id}`,
   getActiveUserBidsById: (user_id: number) => `${STAGE_URL}/bid/get_active_by_user/${user_id}`,
 
+  // GET Constructor AI
+  getTransferStatus: (task_id: string) => `${STAGE_AI}/style_transfer/result/${task_id}/status_only`,
+
   // POST
   uploadImage: `${STAGE_URL}/image/upload`,
   createMetadata: `${STAGE_URL}/metadata/create`,

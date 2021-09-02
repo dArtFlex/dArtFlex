@@ -8,7 +8,7 @@ import { useStyles } from './styles'
 
 export default function UploaderConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
-  const { values } = useFormikContext<IConstructor>()
+  const { values, handleSubmit } = useFormikContext<IConstructor>()
 
   const disabled = typeof values.file0 !== 'object' || typeof values.file1 !== 'object'
 
@@ -41,7 +41,10 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
         color={disabled ? 'secondary' : 'primary'}
         className={classes.btnGenerate}
         disabled={disabled}
-        onClick={setFilesSource}
+        onClick={() => {
+          handleSubmit()
+          setFilesSource()
+        }}
       >
         <Typography className={classes.btnText}>Generate</Typography>
       </Button>
