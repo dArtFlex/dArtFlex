@@ -14,11 +14,23 @@ export default function Stepper(props: IStepperProps) {
   const StepStateLabel = ({ state, label }: IStateStep) => {
     switch (state) {
       case 'none':
-        return <StepLabel StepIconComponent={CommonStepIcon}>{label}</StepLabel>
+        return (
+          <StepLabel StepIconComponent={CommonStepIcon} classes={{ label: classes.textBold }}>
+            {label}
+          </StepLabel>
+        )
       case 'progress':
-        return <StepLabel StepIconComponent={ProgressStepIcon}>{label}</StepLabel>
+        return (
+          <StepLabel StepIconComponent={ProgressStepIcon} classes={{ label: classes.textBold }}>
+            {label}
+          </StepLabel>
+        )
       case 'done':
-        return <StepLabel StepIconComponent={CompletedStepIcon}>{label}</StepLabel>
+        return (
+          <StepLabel StepIconComponent={CompletedStepIcon} classes={{ label: classes.textBold }}>
+            {label}
+          </StepLabel>
+        )
       default:
         return null
     }
@@ -37,7 +49,7 @@ export default function Stepper(props: IStepperProps) {
             {Boolean(label.length) ? (
               <StepStateLabel label={label} state={state} />
             ) : (
-              <StepLabel StepIconComponent={EmptyStep}></StepLabel>
+              <StepLabel StepIconComponent={EmptyStep} classes={{ label: classes.textBold }} />
             )}
           </Step>
         )

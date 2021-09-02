@@ -158,3 +158,16 @@ export const selectManagement = () =>
     (store: stateType) => store,
     ({ management: { works, users, error, fetching } }: stateType) => ({ works, users, error, fetching })
   )
+
+// Constructor
+export const selectConstructor = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ constructorAI: { transfer, priority, endScale, error, fetching } }: stateType) => ({
+      transfer,
+      priority,
+      endScale,
+      error,
+      fetching,
+    })
+  )

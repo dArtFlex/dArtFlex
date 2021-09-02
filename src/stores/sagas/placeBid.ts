@@ -99,9 +99,12 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
 export function* getBidsHistory(api: IApi) {
   try {
-    const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+    const { marketData, tokenData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
+
+    const item_id = marketData ? +marketData.item_id : tokenData.id
+
     const getHistory = yield call(api, {
-      url: APP_CONFIG.getHistoryNFT(+marketData.item_id),
+      url: APP_CONFIG.getHistoryNFT(item_id),
     })
 
     const userData: UserDataTypes[] = yield all(

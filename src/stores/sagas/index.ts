@@ -56,6 +56,7 @@ import {
   unbanWorkRequest,
 } from '../reducers/management'
 import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
+import { createStyleTransferRequest } from '../reducers/constructor'
 
 import {
   getUserData,
@@ -88,6 +89,7 @@ import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
 import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
+import { createStyleTransfer } from '../sagas/constructor'
 
 export default function* root() {
   yield all([
@@ -157,5 +159,8 @@ export default function* root() {
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
     takeLatest(cancelOfferRequest.type, cancelOffer, apiMiddleware),
     takeLatest(acceptOfferRequest.type, acceptOffer, apiMiddleware),
+
+    /** Constructor **/
+    takeLatest(createStyleTransferRequest.type, createStyleTransfer, apiMiddleware),
   ])
 }

@@ -73,7 +73,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       lineHeight: 1.3,
       fontWeight: 600,
+    },
+    timerWrapper: {
       width: 159,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     actionBtnBurn: {
       color: theme.palette.warning.main,
@@ -163,6 +168,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     borderdIconButton: {
       border: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.text.primary,
+    },
+    highestBidInfo: {
+      marginTop: theme.spacing(2),
+      fontSize: 16,
     },
     cardImage: {
       borderTopRightRadius: 10,

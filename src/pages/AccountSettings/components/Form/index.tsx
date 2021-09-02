@@ -89,12 +89,12 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             user?.userid !== values.userid && !fetching ? (
               userIdValid === false ? (
                 <Box className={classes.errorTextHelper}>
-                  <Typography>{`Username isn't unique`}</Typography>
+                  <Typography className={classes.helperText}>{`Username isn't unique`}</Typography>
                 </Box>
               ) : (
                 <Box className={classes.successTextHelper}>
                   <SuccessIcon className={classes.successIcon} />
-                  <Typography>{`Username is Valid`}</Typography>
+                  <Typography className={classes.helperText}>{`Username is Valid`}</Typography>
                 </Box>
               )
             ) : null
