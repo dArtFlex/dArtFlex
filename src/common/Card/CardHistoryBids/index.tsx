@@ -5,6 +5,9 @@ import { SuccessIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
 import { shortCutName } from '../../../utils'
+import CircularProgressLoader from '../../Loaders'
+import { useSelector } from 'react-redux'
+import { selectBid, selectMakeOffer } from '../../../stores/selectors'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -27,6 +30,11 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
+
+  const { offer } = useSelector(selectMakeOffer())
+  const { bid } = useSelector(selectBid())
+
+  const isTransacting = offer.fetching || bid.transacting
 
   switch (status) {
     case 'offered':
@@ -64,24 +72,36 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                 </Button>
               )}
               {onAcceptBid && (
-                <Button
-                  classes={{ root: classes.cardAcceptBtn }}
-                  disableRipple
-                  onClick={onAcceptBid}
-                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
-                >
-                  Accept Bid
-                </Button>
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={onAcceptBid}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Accept Bid
+                    </Button>
+                  )}
+                </>
               )}
               {onAcceptOffer && (
-                <Button
-                  classes={{ root: classes.cardAcceptBtn }}
-                  disableRipple
-                  onClick={onAcceptOffer}
-                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
-                >
-                  Accept Offer
-                </Button>
+                <>
+                  {offer.fetching ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={onAcceptOffer}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Accept offer
+                    </Button>
+                  )}
+                </>
               )}
             </Box>
           </CardContent>

@@ -181,7 +181,7 @@ export default function Dashboard() {
             avatar={user.profile_image}
             name={user.fullname}
             userName={shortCutName(user.userid)}
-            walletAddress={shortCutWallet(user.wallet)}
+            walletAddress={user.wallet}
             content={user.overview}
             links={links.filter((l) => l.link !== undefined)}
             joinedToArtworks={`Joined ${moment(user.created_at).format('MMMM, YYYY')}`}
@@ -213,6 +213,8 @@ export default function Dashboard() {
             </Box>
           )}
 
+          {!userAssets?.length && <Empty />}
+
           <Box className={classes.grid} mt={2}>
             {fetching ? (
               <CircularProgressLoader />
@@ -237,7 +239,6 @@ export default function Dashboard() {
                       />
                     ))
                   : null}
-                {!userAssets?.length && <Empty />}
               </>
             )}
           </Box>

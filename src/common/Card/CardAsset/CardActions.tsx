@@ -105,14 +105,16 @@ export default function CardActions(props: ICardActionsProps) {
                 }
               />
               {now_time < normalizeDate(endTime).getTime() ? (
-                <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
-                  {expire_time ? (
-                    <BurnIcon className={classes.actionBtnIcon} />
-                  ) : (
-                    <TimeIcon className={classes.actionBtnIcon} />
-                  )}
-                  {timer}
-                </ButtonBase>
+                <Box className={classes.timerWrapper}>
+                  <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
+                    {expire_time ? (
+                      <BurnIcon className={classes.actionBtnIcon} />
+                    ) : (
+                      <TimeIcon className={classes.actionBtnIcon} />
+                    )}
+                    {timer}
+                  </ButtonBase>
+                </Box>
               ) : null}
             </Box>
           )}

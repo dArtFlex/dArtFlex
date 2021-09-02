@@ -169,6 +169,9 @@ export default function Artworks() {
                 }}
                 classes={{ select: classes.sortArtworksMenu }}
                 className={classes.sortArtworksMenu}
+                MenuProps={{
+                  classes: { paper: classes.menuList },
+                }}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:

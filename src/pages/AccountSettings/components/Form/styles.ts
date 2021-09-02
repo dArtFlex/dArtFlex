@@ -66,6 +66,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.green,
       gap: theme.spacing(1.5),
     },
+    helperText: {
+      fontSize: 12,
+    },
     errorTextHelper: {
       display: 'flex',
       justifyContent: 'flex-start',
