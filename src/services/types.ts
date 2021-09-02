@@ -1,6 +1,6 @@
-import { Method } from 'axios'
+import { Method, AxiosProxyConfig } from 'axios'
 
-export interface IApiMiddleware {
+export interface IApiMiddleware extends Pick<AxiosProxyConfig, 'auth'> {
   url: string
   method?: Method
   //@ts-ignore

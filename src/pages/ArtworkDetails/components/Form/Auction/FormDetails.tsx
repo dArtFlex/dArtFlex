@@ -90,6 +90,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const isReserveNotMet =
     marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
   const ifAuctionEnds = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60
+  const is24HourAction = isReserveNotMet
 
   const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
   const tokenRate = exchangeRates
@@ -235,7 +236,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Box>
           ) : null}
         </Box>
-        {isReserveNotMet &&
+        {!is24HourAction &&
           !isAuctionExpired &&
           marketData?.start_price &&
           marketData?.end_price &&
@@ -248,11 +249,22 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
             </Box>
           )}
+        {is24HourAction &&
+          status !== SOLD &&
+          !isAuctionExpired &&
+          marketData?.start_price &&
+          marketData?.end_price &&
+          marketData.start_price !== marketData.end_price && (
+            <Box className={classes.warningBox}>
+              <Typography component="span" className={classes.warningText}>
+                The auction is ending very soon!
+              </Typography>
+            </Box>
+          )}
         {ifAuctionEnds && !isAuctionExpired && status !== SOLD ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
-              This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
-              would result in an error.
+              If you were to place a bid at this time there is a high chance that it would result in an error.
             </Typography>
           </Box>
         ) : null}
@@ -284,11 +296,7 @@ export default function FormDetails(props: IDetailsFormProps) {
                 classes={{ disabled: classes.bitBtnDisabled }}
                 disabled={isSamePerson || Boolean(isAuctionExpired)}
               >
-                {ifAuctionEnds && !isAuctionExpired
-                  ? 'I understand, let me bid anyway'
-                  : isSamePerson
-                  ? 'Sell'
-                  : 'Place a Bid'}
+                {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
               </Button>
             </Box>
           </MUITooltip>

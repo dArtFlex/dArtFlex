@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectConstructor } from 'stores/selectors'
 import clsx from 'clsx'
 import { v4 as uuidv4 } from 'uuid'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, Form } from 'common'
 import { LibraryConstrIcon, UploadConstrIcon } from 'common/icons'
 import { CardForm, LibraryConstructorForm, UploaderConstructorForm, GeneratedConstructorForm } from './components'
+import { createStyleTransferRequest } from 'stores/reducers/constructor'
 import { IConstructor, ConstructorSource, IGalleryImage } from './types'
 import { useStyles } from './styles'
 
@@ -30,16 +33,29 @@ const initialData: IConstructor = {
 
 export default function Constructor() {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const [data, setData] = useState<IConstructor>(initialData)
   const [filesSource, setFilesSource] = useState<ConstructorSource | null>(null)
+  const { priority, endScale } = useSelector(selectConstructor())
 
   useEffect(() => {
     setData((state) => ({ ...state, images: GALLERY }))
   }, [])
 
+  const onSubmit = (values: IConstructor) => {
+    dispatch(
+      createStyleTransferRequest({
+        contentImage: values.file0,
+        styleImage: values.file1,
+        priority,
+        endScale,
+      })
+    )
+  }
+
   return (
     <PageWrapper className={clsx(classes.container, filesSource === 'generated' && classes.clear)}>
-      <Form initialValues={data} onSubmit={(state: IConstructor) => console.log('y', state)} enableReinitialize>
+      <Form initialValues={data} onSubmit={onSubmit} enableReinitialize>
         <Components filesSource={filesSource} setFilesSource={setFilesSource} />
       </Form>
     </PageWrapper>
