@@ -34,8 +34,6 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const { offer } = useSelector(selectMakeOffer())
   const { bid } = useSelector(selectBid())
 
-  const isTransacting = offer.fetching || bid.transacting
-
   switch (status) {
     case 'offered':
     case 'accepted':

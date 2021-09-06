@@ -3,7 +3,7 @@ import { IUserAssets } from './types'
 import appConst from 'config/consts'
 
 const {
-  STATUSES: { MINTED, LISTED, UNLISTED },
+  STATUSES: { LISTED },
   FILTER_VALUES: { IN_WALLET, CREATED, COLLECTED, SOLD },
 } = appConst
 
@@ -27,7 +27,7 @@ export function useSortedAssets({
       return userAssets
     case COLLECTED:
       return userAssets.map((a: IUserAssets) => {
-        return a.status === SOLD || a.status === LISTED ? { ...a, status: COLLECTED } : a
+        return a.status === SOLD || a.status === LISTED ? { ...a, status: COLLECTED, _status: a.status } : a
       })
     case SOLD:
       return userAssets.map((a: IUserAssets) => ({ ...a, status: SOLD }))
