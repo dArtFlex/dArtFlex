@@ -4,9 +4,18 @@ import { PageWrapper, Form } from 'common'
 import { FormAccountSettings, VerificationTwitter } from './components'
 import { createNewUserRequest } from 'stores/reducers/user'
 import { selectUser, selectWallet } from 'stores/selectors'
-import { IAccountSettings } from './types'
+import { IAccountSettings, INotificationSettings } from './types'
 import { useValidationSchema } from './lib'
 import { useStyles } from './styles'
+
+const notificationSettings: INotificationSettings = {
+  sold: false,
+  bidActivity: false,
+  priceChange: false,
+  auctionExpiration: false,
+  outbid: false,
+  successfulPurchase: false,
+}
 
 const data: IAccountSettings = {
   fullname: '',
@@ -28,6 +37,7 @@ const data: IAccountSettings = {
   updated_at: '',
   role: '',
   ban: false,
+  notificationSettings,
 }
 
 export default function AccountSettings() {
