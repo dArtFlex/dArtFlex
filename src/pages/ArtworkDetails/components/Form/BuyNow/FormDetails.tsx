@@ -1,16 +1,26 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { useSelector } from 'react-redux'
-import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Tooltip as MUITooltip } from '@material-ui/core'
-import { Popover, Modal, WalletConnect } from 'common'
+import { useSelector, useDispatch } from 'react-redux'
+import { useRouteMatch } from 'react-router-dom'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
-import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
-import { normalizeDate, shortCutName } from 'utils'
+import CTAPopover from '../CTAPopover'
+import { MoreHorizontalIcon } from 'common/icons'
+import {
+  selectAssetDetails,
+  selectWallet,
+  selectAssetTokenRates,
+  selectBid,
+  selectUser,
+  selectUserRole,
+} from 'stores/selectors'
+import { unlistingRequest } from 'stores/reducers/listing'
+import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes } from 'types'
 import appConst from '../../../../../config/consts'
+import APP_CONFIG from 'config'
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -38,12 +48,15 @@ const {
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const { url } = useRouteMatch()
 
   const {
     bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+  const { role } = useSelector(selectUserRole())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
   } = useSelector(selectAssetDetails())
@@ -66,6 +79,8 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       : 0
 
+  const shareTwitterLink = shareWithTwitter({ url: APP_CONFIG.baseURL + url, desc: imageData?.description })
+
   function getPriceStatusHeader() {
     if (status === MINTED) {
       return 'Reserve price'
@@ -82,27 +97,15 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {/*Todo will be implemented in next version*/}
-            {/*{marketData ? (*/}
-            {/*  <>*/}
-            {/*    <IconButton className={classes.borderdIconButton}>*/}
-            {/*      <ShareIcon />*/}
-            {/*    </IconButton>*/}
-            {/*    <IconButton*/}
-            {/*      onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
-            {/*        const target = event.currentTarget as HTMLElement*/}
-            {/*        setAnchorElExtLink(target)*/}
-            {/*      }}*/}
-            {/*      className={classes.borderdIconButton}*/}
-            {/*    >*/}
-            {/*      <ExternalLinkIcon />*/}
-            {/*    </IconButton>*/}
-            {/*  </>*/}
-            {/*) : (*/}
-            {/*  <IconButton className={classes.borderdIconButton}>*/}
-            {/*    <MoreHorizontalIcon />*/}
-            {/*  </IconButton>*/}
-            {/*)}*/}
+            <IconButton
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElExtLink(target)
+              }}
+              className={classes.borderdIconButton}
+            >
+              <MoreHorizontalIcon />
+            </IconButton>
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -235,49 +238,18 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         withAside
       />
 
-      <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box className={classes.externalLinkMenu}>
-          <Typography
-            variant="body1"
-            className={clsx(classes.externalLinkMenuItem, classes.linkTitle)}
-            color="textPrimary"
-          >
-            View on
-          </Typography>
-          <Grid container direction="column">
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<EtherscanIcon />}
-            >
-              Ethescan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              Opensea
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<IpfsIcon />}
-            >
-              IPFS
-            </Button>
-          </Grid>
-        </Box>
-      </Popover>
+      <CTAPopover
+        anchorEl={anchorElExtLink}
+        onClose={() => setAnchorElExtLink(null)}
+        twitterLink={shareTwitterLink}
+        creator={user?.id === ownerData?.id}
+        superAdmin={role === 'ROLE_SUPER_ADMIN'}
+        onCancelListing={
+          user?.id === ownerData?.id && marketData?.id !== undefined
+            ? () => dispatch(unlistingRequest({ market_id: marketData.id }))
+            : undefined
+        }
+      />
     </>
   )
 }

@@ -401,5 +401,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     mb: {
       marginBottom: theme.spacing(5.5),
     },
+    shareLink: {
+      color: theme.palette.text.primary,
+    },
+    shareLinkDisable: {
+      color: 'rgba(0, 0, 0, 0.26)',
+    },
   })
 )
