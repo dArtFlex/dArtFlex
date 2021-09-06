@@ -404,5 +404,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     shareLink: {
       color: theme.palette.text.primary,
     },
+    shareLinkDisable: {
+      color: 'rgba(0, 0, 0, 0.26)',
+    },
   })
 )

@@ -1,35 +1,12 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
-import clsx from 'clsx'
-import {
-  Box,
-  Typography,
-  Avatar,
-  Button,
-  Tabs,
-  Tab,
-  Grid,
-  Tooltip as MUITooltip,
-  IconButton,
-  Divider,
-  Link,
-} from '@material-ui/core'
-import { Popover, Modal, WalletConnect } from 'common'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
-import {
-  EtherscanIcon,
-  OpenseaIcon,
-  IpfsIcon,
-  MoreHorizontalIcon,
-  LinkIcon,
-  ArrowCurveIcon,
-  CancelIcon,
-  TwitterIcon,
-  EyeIcon,
-  ReportIcon,
-} from 'common/icons'
+import CTAPopover from '../CTAPopover'
+import { MoreHorizontalIcon } from 'common/icons'
 import {
   selectAssetDetails,
   selectWallet,
@@ -38,6 +15,7 @@ import {
   selectUser,
   selectUserRole,
 } from 'stores/selectors'
+import { unlistingRequest } from 'stores/reducers/listing'
 import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes } from 'types'
@@ -70,6 +48,7 @@ const {
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
   const { url } = useRouteMatch()
 
   const {
@@ -259,115 +238,18 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         withAside
       />
 
-      <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box>
-          <Grid container direction="column">
-            {user?.id === creatorData?.id && (
-              <>
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={classes.btnTitle}
-                  startIcon={<ArrowCurveIcon />}
-                >
-                  Price Drop
-                </Button>
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={clsx(classes.btnTitle, classes.btnTitleRed)}
-                  startIcon={<CancelIcon />}
-                >
-                  Cancel Listing
-                </Button>
-                <Divider />
-              </>
-            )}
-            <Button
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<TwitterIcon className={classes.linkIcon} />}
-            >
-              <Link underline="none" href={shareTwitterLink} target="_blank" className={classes.shareLink}>
-                Share with Twitter
-              </Link>
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<LinkIcon className={classes.linkIcon} />}
-            >
-              Copy link
-            </Button>
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<EtherscanIcon />}
-            >
-              View on Etherscan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<IpfsIcon />}
-            >
-              View on IPFS
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              View on Opensea
-            </Button>
-            {role === 'ROLE_SUPER_ADMIN' && (
-              <>
-                <Divider />
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
-                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
-                >
-                  Unban Work
-                </Button>
-              </>
-            )}
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={clsx(classes.btnTitle, classes.btnTitleRed)}
-              startIcon={<ReportIcon />}
-            >
-              Report
-            </Button>
-          </Grid>
-        </Box>
-      </Popover>
+      <CTAPopover
+        anchorEl={anchorElExtLink}
+        onClose={() => setAnchorElExtLink(null)}
+        twitterLink={shareTwitterLink}
+        creator={user?.id === ownerData?.id}
+        superAdmin={role === 'ROLE_SUPER_ADMIN'}
+        onCancelListing={
+          user?.id === ownerData?.id && marketData?.id !== undefined
+            ? () => dispatch(unlistingRequest({ market_id: marketData.id }))
+            : undefined
+        }
+      />
     </>
   )
 }
