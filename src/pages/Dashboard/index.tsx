@@ -24,7 +24,7 @@ import { getUserAssetsRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutName, shortCutWallet } from 'utils'
+import { shortCutName } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
@@ -228,10 +228,14 @@ export default function Dashboard() {
                         asset={userAsset}
                         userWallet={user?.wallet}
                         withLabel
-                        withAction={Boolean(userAsset.status === STATUSES.LISTED)}
+                        withAction={Boolean(
+                          userAsset.status === STATUSES.LISTED || userAsset?._status === STATUSES.LISTED
+                        )}
                         button={{
                           onListed: () => handleListed(userAsset),
-                          onSell: () => handleListed(userAsset),
+                          onSell: () => {
+                            if (Boolean(userAsset?._status !== STATUSES.LISTED)) handleListed(userAsset)
+                          },
                         }}
                         menu={{
                           onUnlisted: () => handleUnlisted(String(userAsset.id)),

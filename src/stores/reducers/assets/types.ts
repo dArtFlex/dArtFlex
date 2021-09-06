@@ -19,7 +19,10 @@ export interface AssetsStateType {
   isBidded?: boolean[]
 }
 
-export type IUserAssets = AssetDataTypesWithStatus & { hashtag: IHashtag[] }
+export type IUserAssets = AssetDataTypesWithStatus & {
+  hashtag: IHashtag[]
+  _status?: IAssetStatus
+}
 export interface IAssetDetails {
   status?: IAssetStatus
   imageData: null | AssetDataTypes['imageData']
