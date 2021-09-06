@@ -1,16 +1,48 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
+import { useRouteMatch } from 'react-router-dom'
 import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Tooltip as MUITooltip } from '@material-ui/core'
+import {
+  Box,
+  Typography,
+  Avatar,
+  Button,
+  Tabs,
+  Tab,
+  Grid,
+  Tooltip as MUITooltip,
+  IconButton,
+  Divider,
+  Link,
+} from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
-import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
-import { normalizeDate, shortCutName } from 'utils'
+import {
+  EtherscanIcon,
+  OpenseaIcon,
+  IpfsIcon,
+  MoreHorizontalIcon,
+  LinkIcon,
+  ArrowCurveIcon,
+  CancelIcon,
+  TwitterIcon,
+  EyeIcon,
+  ReportIcon,
+} from 'common/icons'
+import {
+  selectAssetDetails,
+  selectWallet,
+  selectAssetTokenRates,
+  selectBid,
+  selectUser,
+  selectUserRole,
+} from 'stores/selectors'
+import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes } from 'types'
 import appConst from '../../../../../config/consts'
+import APP_CONFIG from 'config'
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -38,12 +70,14 @@ const {
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+  const { url } = useRouteMatch()
 
   const {
     bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+  const { role } = useSelector(selectUserRole())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
   } = useSelector(selectAssetDetails())
@@ -66,6 +100,8 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       : 0
 
+  const shareTwitterLink = shareWithTwitter({ url: APP_CONFIG.baseURL + url, desc: imageData?.description })
+
   function getPriceStatusHeader() {
     if (status === MINTED) {
       return 'Reserve price'
@@ -82,27 +118,15 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {/*Todo will be implemented in next version*/}
-            {/*{marketData ? (*/}
-            {/*  <>*/}
-            {/*    <IconButton className={classes.borderdIconButton}>*/}
-            {/*      <ShareIcon />*/}
-            {/*    </IconButton>*/}
-            {/*    <IconButton*/}
-            {/*      onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
-            {/*        const target = event.currentTarget as HTMLElement*/}
-            {/*        setAnchorElExtLink(target)*/}
-            {/*      }}*/}
-            {/*      className={classes.borderdIconButton}*/}
-            {/*    >*/}
-            {/*      <ExternalLinkIcon />*/}
-            {/*    </IconButton>*/}
-            {/*  </>*/}
-            {/*) : (*/}
-            {/*  <IconButton className={classes.borderdIconButton}>*/}
-            {/*    <MoreHorizontalIcon />*/}
-            {/*  </IconButton>*/}
-            {/*)}*/}
+            <IconButton
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElExtLink(target)
+              }}
+              className={classes.borderdIconButton}
+            >
+              <MoreHorizontalIcon />
+            </IconButton>
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -236,15 +260,55 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       />
 
       <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box className={classes.externalLinkMenu}>
-          <Typography
-            variant="body1"
-            className={clsx(classes.externalLinkMenuItem, classes.linkTitle)}
-            color="textPrimary"
-          >
-            View on
-          </Typography>
+        <Box>
           <Grid container direction="column">
+            {user?.id === creatorData?.id && (
+              <>
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={classes.btnTitle}
+                  startIcon={<ArrowCurveIcon />}
+                >
+                  Price Drop
+                </Button>
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleRed)}
+                  startIcon={<CancelIcon />}
+                >
+                  Cancel Listing
+                </Button>
+                <Divider />
+              </>
+            )}
+            <Button
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<TwitterIcon className={classes.linkIcon} />}
+            >
+              <Link underline="none" href={shareTwitterLink} target="_blank" className={classes.shareLink}>
+                Share with Twitter
+              </Link>
+            </Button>
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<LinkIcon className={classes.linkIcon} />}
+            >
+              Copy link
+            </Button>
+            <Divider />
             <Button
               onClick={() => console.log('todo')}
               variant={'text'}
@@ -253,17 +317,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               className={classes.btnTitle}
               startIcon={<EtherscanIcon />}
             >
-              Ethescan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              Opensea
+              View on Etherscan
             </Button>
             <Button
               onClick={() => console.log('todo')}
@@ -273,7 +327,43 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               className={classes.btnTitle}
               startIcon={<IpfsIcon />}
             >
-              IPFS
+              View on IPFS
+            </Button>
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<OpenseaIcon />}
+            >
+              View on Opensea
+            </Button>
+            {role === 'ROLE_SUPER_ADMIN' && (
+              <>
+                <Divider />
+                <Button
+                  onClick={() => console.log('todo')}
+                  variant={'text'}
+                  color={'primary'}
+                  disableElevation
+                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
+                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
+                >
+                  Unban Work
+                </Button>
+              </>
+            )}
+            <Divider />
+            <Button
+              onClick={() => console.log('todo')}
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={clsx(classes.btnTitle, classes.btnTitleRed)}
+              startIcon={<ReportIcon />}
+            >
+              Report
             </Button>
           </Grid>
         </Box>

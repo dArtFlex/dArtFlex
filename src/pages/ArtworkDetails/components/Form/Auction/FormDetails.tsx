@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import {
   selectAssetDetails,
   selectWallet,
@@ -11,7 +11,19 @@ import {
   selectBid,
 } from 'stores/selectors'
 import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Divider, Tooltip as MUITooltip } from '@material-ui/core'
+import {
+  Box,
+  Typography,
+  Avatar,
+  Button,
+  Tabs,
+  Tab,
+  Grid,
+  Divider,
+  Tooltip as MUITooltip,
+  IconButton,
+  Link,
+} from '@material-ui/core'
 import { Popover, Modal, WalletConnect } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import {
@@ -25,14 +37,16 @@ import {
   ReportIcon,
   ArrowCurveIcon,
   CancelIcon,
+  MoreHorizontalIcon,
 } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
 import { useTimer, useTokenInfo } from 'hooks'
-import { normalizeDate, shortCutName } from 'utils'
+import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
 import { IBids, UserDataTypes } from 'types'
 import APP_CONSTS from 'config/consts'
+import APP_CONFIG from 'config'
 
 const {
   STATUSES: { MINTED, SOLD },
@@ -61,6 +75,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
   const history = useHistory()
+  const { url } = useRouteMatch()
   const dispatch = useDispatch()
   const { wallet } = useSelector(selectWallet())
   const { role } = useSelector(selectUserRole())
@@ -136,23 +151,23 @@ export default function FormDetails(props: IDetailsFormProps) {
 
   const isBidded = bids && bids.length > 1
 
+  const shareTwitterLink = shareWithTwitter({ url: APP_CONFIG.baseURL + url, desc: imageData?.description })
+
   return (
     <>
       <Box pt={14}>
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {/*Todo will be implemented in next version*/}
-            {/*<IconButton*/}
-            {/*  */}
-            {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
-            {/*    const target = event.currentTarget as HTMLElement*/}
-            {/*    setAnchorElExtLink(target)*/}
-            {/*  }}*/}
-            {/*  className={classes.borderdIconButton}*/}
-            {/*>*/}
-            {/*  <MoreHorizontalIcon />*/}
-            {/*</IconButton>*/}
+            <IconButton
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElExtLink(target)
+              }}
+              className={classes.borderdIconButton}
+            >
+              <MoreHorizontalIcon />
+            </IconButton>
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -390,14 +405,15 @@ export default function FormDetails(props: IDetailsFormProps) {
               </>
             )}
             <Button
-              onClick={() => console.log('todo')}
               variant={'text'}
               color={'primary'}
               disableElevation
               className={classes.btnTitle}
               startIcon={<TwitterIcon className={classes.linkIcon} />}
             >
-              Share with Twitter
+              <Link underline="none" href={shareTwitterLink} target="_blank" className={classes.shareLink}>
+                Share with Twitter
+              </Link>
             </Button>
             <Button
               onClick={() => console.log('todo')}
