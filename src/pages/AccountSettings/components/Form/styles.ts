@@ -82,5 +82,25 @@ export const useStyles = makeStyles((theme: Theme) =>
     successIcon: {
       fill: theme.palette.green,
     },
+    checkbox: {
+      background: 'transparent',
+      margin: 0,
+      '& .MuiFormControlLabel-label': {
+        fontSize: 16,
+        fontWeight: 400,
+      },
+    },
+    collapseHead: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '& > h3': {
+        marginBottom: theme.spacing(0),
+      },
+    },
+    collapseContainer: {
+      marginTop: theme.spacing(8),
+    },
   })
 )
