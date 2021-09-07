@@ -129,7 +129,8 @@ export default function FormDetails(props: IDetailsFormProps) {
 
   const isBidded = bids && bids.length > 1
 
-  const shareTwitterLink = shareWithTwitter({ url: APP_CONFIG.baseURL + url, desc: imageData?.description })
+  const currentUrl = APP_CONFIG.appUrl + url
+  const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
 
   return (
     <>
@@ -358,6 +359,7 @@ export default function FormDetails(props: IDetailsFormProps) {
         anchorEl={anchorElExtLink}
         onClose={() => setAnchorElExtLink(null)}
         twitterLink={shareTwitterLink}
+        url={currentUrl}
         creator={user?.id === ownerData?.id}
         superAdmin={role === 'ROLE_SUPER_ADMIN'}
         onCancelListing={

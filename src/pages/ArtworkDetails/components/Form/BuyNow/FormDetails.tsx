@@ -79,7 +79,8 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       : 0
 
-  const shareTwitterLink = shareWithTwitter({ url: APP_CONFIG.baseURL + url, desc: imageData?.description })
+  const currentUrl = APP_CONFIG.appUrl + url
+  const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
 
   function getPriceStatusHeader() {
     if (status === MINTED) {
@@ -242,6 +243,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         anchorEl={anchorElExtLink}
         onClose={() => setAnchorElExtLink(null)}
         twitterLink={shareTwitterLink}
+        url={currentUrl}
         creator={user?.id === ownerData?.id}
         superAdmin={role === 'ROLE_SUPER_ADMIN'}
         onCancelListing={
