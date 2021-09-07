@@ -29,6 +29,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
+      overflowX: 'hidden',
       [theme.breakpoints.down(380)]: {
         minWidth: 280,
       },
