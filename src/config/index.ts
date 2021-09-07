@@ -1,5 +1,6 @@
 import { getProviderAddress } from 'utils'
 
+const STAGE_APP_URL = 'https://dartflex-stage.ml'
 const STAGE_URL = 'https://dartflex-dev.ml:8887/api'
 const STAGE_AI = 'https://api.nft.inga.technology'
 const BASE_URL = STAGE_URL.replace('/api', '')
@@ -20,6 +21,7 @@ const APP_CONFIG = {
   WSUrl: 'wss://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,
   localURL: `${LOCAL_URL}`,
+  appUrl: `${STAGE_APP_URL}`,
 
   // GET All
   getItemAll: `${STAGE_URL}/item/get_all`,

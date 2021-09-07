@@ -1,6 +1,7 @@
 import React from 'react'
 import { Popover } from 'common'
 import clsx from 'clsx'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Box, Button, Grid, Divider, Link } from '@material-ui/core'
 import {
   TwitterIcon,
@@ -22,6 +23,7 @@ interface ICTAPopoverProps {
   etherscanLink?: string
   IPFSLink?: string
   openseaLink?: string
+  url?: string
   creator?: boolean
   superAdmin?: boolean
   onPriceDrop?: () => void
@@ -40,6 +42,7 @@ export default function CTAPopover(props: ICTAPopoverProps) {
     onCancelListing,
     onUnbanWork,
     onReport,
+    url = '',
     twitterLink = '',
     etherscanLink = '',
     IPFSLink = '',
@@ -89,16 +92,17 @@ export default function CTAPopover(props: ICTAPopoverProps) {
               Share with Twitter
             </Link>
           </Button>
-          <Button
-            onClick={() => console.log('todo')}
-            variant={'text'}
-            color={'primary'}
-            disableElevation
-            className={classes.btnTitle}
-            startIcon={<LinkIcon className={classes.linkIcon} />}
-          >
-            Copy link
-          </Button>
+          <CopyToClipboard text={url}>
+            <Button
+              variant={'text'}
+              color={'primary'}
+              disableElevation
+              className={classes.btnTitle}
+              startIcon={<LinkIcon className={classes.linkIcon} />}
+            >
+              Copy link
+            </Button>
+          </CopyToClipboard>
           <Divider />
           <Button
             variant={'text'}
