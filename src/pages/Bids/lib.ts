@@ -13,6 +13,7 @@ export function useComposeBidsData({
 }) {
   return userBids
     .filter((el) => el.status !== 'listed')
+    .sort((a: IUserBid, b: IUserBid) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
     .map((bid: IUserBid) => {
       const status = useStatus({
         status: bid.status,
