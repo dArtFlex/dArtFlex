@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
@@ -7,56 +6,55 @@ import routes from '../../routes'
 import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
 import { getUserAssetsRequest } from 'stores/reducers/user'
 import { ListingStateType } from 'stores/reducers/listing/types'
-import { IChainId } from 'types'
+import { MintingStateType } from 'stores/reducers/minting/types'
+import { IChainId, IBaseTokens, IOrderData } from 'types'
 import { walletService } from 'services/wallet_service'
 import { listingService } from 'services/listing_service'
 import APP_CONFIG from 'config'
 import tokensAll from 'core/tokens'
-import { normalizeDate, networkConvertor } from 'utils'
-
-function getIdFromString(v) {
-  return +v.match(/\d/g).join('')
-}
+import { normalizeDate, networkConvertor, getIdFromString } from 'utils'
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
-    const { lazyMintData, lazyMintItemId, lazymint }: ReturnType<typeof selector> = yield select(
-      (state) => state.minting
-    )
+    const {
+      lazyMintData,
+      lazyMintItemId,
+      lazymint,
+    }: Pick<MintingStateType, 'lazyMintData' | 'lazyMintItemId' | 'lazymint'> = yield select((state) => state.minting)
 
-    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
+    const { id: userId }: { id: number } = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
 
     // Prices before converting must be as string
-    const startPrice = yield web3.utils.toWei(String(data.startPrice), 'ether')
-    const endPrice = yield web3.utils.toWei(data.endPrice ? String(data.endPrice) : '0', 'ether')
+    const startPrice: string = yield window.web3.utils.toWei(String(data.startPrice), 'ether')
+    const endPrice: string = yield window.web3.utils.toWei(data.endPrice ? String(data.endPrice) : '0', 'ether')
 
     const getChainId: IChainId = walletService.getChainId()
     const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContractETH = tokensAll[chainId].find((t) => t.symbol === 'ETH').id
-    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
+    const tokenContractETH: string = (tokensAll[chainId].find((t) => t.symbol === 'ETH') as IBaseTokens).id
+    const tokenContractWETH: string = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
     const tokenContract = data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH
 
-    const dateStartTime = data.start_time ? data.start_time.getTime() : new Date().getTime()
+    const dateStartTime = data.start_time ? normalizeDate(data.start_time).getTime() : new Date().getTime()
     const dateEndTime = data.type === 'instant_buy' ? dateStartTime : normalizeDate(data.end_time).getTime()
 
-    const order = yield listingService.generateOrder({
+    const order: IOrderData[] = yield listingService.generateOrder({
       body: {
-        contract: lazyMintData.contract,
-        tokenId: lazyMintData.tokenId,
+        contract: lazyMintData?.contract,
+        tokenId: lazyMintData?.tokenId,
         // todo: check lm.maker, it should be address from lazyMintData.maker
         maker: accounts[0],
         taker: '0x0000000000000000000000000000000000000000',
         price: startPrice,
-        uri: lazyMintData.uri,
+        uri: lazyMintData?.uri,
         // erc20 - 0x only ETH
         erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
-        signature: lazyMintData.signatures[0],
+        signature: lazyMintData?.signatures[0],
         lazymint,
       },
     })
 
-    const marketId = yield call(api, {
+    const marketId: string = yield call(api, {
       url: APP_CONFIG.createSalesDetail,
       method: 'POST',
       data: {
@@ -78,7 +76,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       },
     })
 
-    const orderId = yield call(api, {
+    const orderId: string = yield call(api, {
       url: APP_CONFIG.createOrder,
       method: 'POST',
       data: {
@@ -99,7 +97,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       },
     })
 
-    const listItemId = yield call(api, {
+    const listItemId: string = yield call(api, {
       url: APP_CONFIG.bidListItem,
       method: 'POST',
       data: {
