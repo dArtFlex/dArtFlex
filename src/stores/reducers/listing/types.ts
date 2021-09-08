@@ -8,4 +8,5 @@ export interface ListingStateType {
   listItemId: null | number
   bidListItemId: null | number
   listing: 'none' | 'done'
+  priceChanged?: boolean
 }

@@ -32,7 +32,7 @@ import {
   walletsHistoryRequest,
 } from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
-import { listingRequest, unlistingRequest } from '../reducers/listing'
+import { listingRequest, unlistingRequest, changePriceRequest } from '../reducers/listing'
 import {
   placeBidRequest,
   getBidsHistoryRequest,
@@ -83,7 +83,7 @@ import {
   walletsHistory,
 } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
-import { listing, unlisting } from '../sagas/listing'
+import { listing, unlisting, changePrice } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
@@ -130,6 +130,7 @@ export default function* root() {
     /** Listing **/
     takeLatest(listingRequest.type, listing, apiMiddleware),
     takeLatest(unlistingRequest.type, unlisting, apiMiddleware),
+    takeLatest(changePriceRequest.type, changePrice, apiMiddleware),
 
     /** Place Bid **/
     takeLatest(placeBidRequest.type, placeBid, apiMiddleware),

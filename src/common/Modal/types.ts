@@ -8,7 +8,5 @@ export interface IModalProps {
   withoutCloseBtn?: boolean
   disableEscapeKeyDown?: boolean
   disableBackdropClick?: boolean
-  classNames?: Partial<{
-    root: ModalProps['classes']
-  }>
+  classNames?: ModalProps['classes']
 }

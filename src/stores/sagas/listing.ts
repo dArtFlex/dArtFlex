@@ -3,7 +3,14 @@ import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { listingSuccess, listingFailure, unlistingSuccess, unlistingFailure } from 'stores/reducers/listing'
+import {
+  listingSuccess,
+  listingFailure,
+  unlistingSuccess,
+  unlistingFailure,
+  changePriceSuccess,
+  changePriceFailure,
+} from 'stores/reducers/listing'
 import { getUserAssetsRequest } from 'stores/reducers/user'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { MintingStateType } from 'stores/reducers/minting/types'
@@ -147,5 +154,25 @@ export function* unlisting(api: IApi, { payload: { market_id } }: PayloadAction<
       message: 'Unlist Artwork was faild as NFT has been bidded.',
     }
     yield put(unlistingFailure(error))
+  }
+}
+
+export function* changePrice(
+  api: IApi,
+  { payload: { itemId, newPrice } }: PayloadAction<{ itemId: string; newPrice: string }>
+) {
+  try {
+    const price: string = yield window.web3.utils.toWei(newPrice, 'ether')
+    yield call(api, {
+      method: 'POST',
+      url: APP_CONFIG.changePrice,
+      data: {
+        id: itemId,
+        newPrice: price,
+      },
+    })
+    yield put(changePriceSuccess())
+  } catch (e) {
+    yield put(changePriceFailure(e.message || e))
   }
 }

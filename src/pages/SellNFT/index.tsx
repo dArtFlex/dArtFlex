@@ -35,7 +35,7 @@ const formVariant = [
 const initialData = {
   price: '',
   minimumBid: '',
-  reservePrice: '',
+  reservePrice: '100000000000000000000000000000000000000000', // Todo: This price shouldn't be mandatory, it is restrict user in max bids
   startingPrice: '',
   fee: '2.5',
   futureTime: '',
