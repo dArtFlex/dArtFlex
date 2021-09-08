@@ -12,6 +12,11 @@ export interface IBidsHistory {
   tx_hash: string
 }
 
+export interface IBidsMarketHistory extends Pick<IBidsHistory, 'item_id' | 'user_id' | 'market_id' | 'bid_amount'> {
+  status: HistoryStatusType
+  order_id: number
+}
+
 export type IOrderHistory = Omit<IBidsHistory, 'bid_id' & 'tx_hash'>
 export interface IBids extends Omit<IBidsHistory, 'tx_hash' | 'bid_id' | 'id'> {
   id: IBidsHistory['bid_id']

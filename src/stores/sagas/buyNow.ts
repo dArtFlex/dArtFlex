@@ -1,4 +1,4 @@
-//@ts-nocheck
+//ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
@@ -6,7 +6,7 @@ import { buyNowFailure, buyNowSuccess } from 'stores/reducers/buyNow'
 import { walletService } from 'services/wallet_service'
 import { buyNowService } from 'services/buynow_service'
 import APP_CONFIG from 'config'
-import { AssetTypes, IAssetMarketData, IAcceptBidTransaction } from 'types'
+import { AssetTypes, IAssetMarketData, IAcceptBidTransaction, IOrderData } from 'types'
 
 export function* buyNow(
   api: IApi,
@@ -19,7 +19,7 @@ export function* buyNow(
     const { id: userId }: { id: number } = yield select((state) => state.user.user)
     const accounts: string = walletService.getAccoutns()
 
-    const creatorOrder = yield call(api, {
+    const creatorOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(order_id),
     })
 

@@ -72,15 +72,6 @@ export interface ITokenBalances {
   symbol: string
 }
 
-export interface IBaseTokens {
-  name: string
-  id: string
-  erc20id?: string
-  symbol: string
-  decimals: number
-  logoURI: string
-}
-
 export interface IAssetMarketData {
   id: number
   item_id: string

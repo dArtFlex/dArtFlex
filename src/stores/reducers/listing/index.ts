@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ListingStateType } from './types'
+import { IError } from 'types'
 
 const initialState: ListingStateType = {
   fetching: false,
@@ -53,10 +54,10 @@ const listingSlice = createSlice({
     unlistingRequest: (state, i) => {
       state.fetching = true
     },
-    unlistingSuccess: (state, i) => {
+    unlistingSuccess: (state) => {
       state.fetching = true
     },
-    unlistingFailure: (state, { payload }: PayloadAction<string>) => {
+    unlistingFailure: (state, { payload }: PayloadAction<IError>) => {
       state.error = payload
       state.fetching = false
     },
