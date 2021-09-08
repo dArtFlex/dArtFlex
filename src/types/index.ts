@@ -43,3 +43,12 @@ export type IError =
       message: string
       code?: number
     }
+
+export interface IBaseTokens {
+  name: string
+  id: string
+  erc20id?: string
+  symbol: string
+  decimals: number
+  logoURI: string
+}

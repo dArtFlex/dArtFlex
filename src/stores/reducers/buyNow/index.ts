@@ -20,7 +20,7 @@ const buyNowSlice = createSlice({
       state.transactionHash = payload.transactionHash
       state.fetchingTransacting = false
     },
-    buyNowFailure: (state, { payload }: PayloadAction<{ message: string; transactionHash: string }>) => {
+    buyNowFailure: (state, { payload }: PayloadAction<{ message: string }>) => {
       state.error = payload.message
       state.fetchingTransacting = false
     },

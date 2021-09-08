@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
@@ -15,18 +14,18 @@ import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString, networkConvertor } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes } from 'types'
+import { UserDataTypes, IChainId, IBaseTokens, AssetTypes, IOrderData, IAcceptBidTransaction } from 'types'
 import { acceptBidService } from 'services/accept_bid_service'
 
 export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
   try {
     const getChainId: IChainId = walletService.getChainId()
     const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
-    const { tokenData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
-    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
-    const accounts = walletService.getAccoutns()
-    const endPrice = yield web3.utils.toWei(amount, 'ether') // offer amounnt
+    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
+    const { tokenData }: { tokenData: AssetTypes } = yield select((state) => state.assets.assetDetails)
+    const { id: userId }: { id: number } = yield select((state) => state.user.user)
+    const accounts: string[] = walletService.getAccoutns()
+    const endPrice: string = yield window.web3.utils.toWei(amount, 'ether') // offer amounnt
 
     // Todo: Should only be once, so we need to check if it's approved
     yield placeBidService.approveToken(accounts[0])
@@ -34,10 +33,10 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
     const lazymint = tokenData.lazymint
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
+      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
     })
 
-    const order = yield placeBidService.generateOrder({
+    const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
         tokenId: tokenData.token_id,
@@ -51,7 +50,7 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
       },
     })
 
-    const orderId = yield call(api, {
+    const orderId: string = yield call(api, {
       url: APP_CONFIG.createOrder,
       method: 'POST',
       data: {
@@ -83,7 +82,7 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
       },
     })
 
-    yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) }))
+    yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) as number }))
   } catch (e) {
     yield put(makeOfferFailure(e))
   }
@@ -91,12 +90,11 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
 
 export function* cancelOffer(api: IApi, { payload }: PayloadAction<{ id: number }>) {
   try {
-    const res = yield call(api, {
+    const res: string = yield call(api, {
       url: APP_CONFIG.cancelOffer,
       method: 'POST',
       data: payload,
     })
-
     yield put(cancelOfferSuccess(res))
   } catch (e) {
     yield put(cancelOfferFailure(e))
@@ -114,7 +112,7 @@ export function* acceptOffer(
   }>
 ) {
   try {
-    const buyerOrder = yield call(api, {
+    const buyerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
     })
 
