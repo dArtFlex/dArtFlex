@@ -3,7 +3,9 @@ import clsx from 'clsx'
 import { Box, Typography, Tooltip as MUITooltip } from '@material-ui/core'
 import { InfoIcon } from 'common/icons'
 import { useStyles } from './styles'
+import CustomTooltip from './CustomTooltip'
 
+export { CustomTooltip }
 interface ITooltipProps {
   desc: string | React.ReactElement
   text?: string
