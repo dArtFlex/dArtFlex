@@ -9,20 +9,22 @@ import {
   selectUserRole,
   selectUser,
   selectBid,
+  selectListing,
 } from 'stores/selectors'
 import clsx from 'clsx'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
 import { Modal, WalletConnect } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
-import { unlistingRequest } from 'stores/reducers/listing'
+import { unlistingRequest, changePriceRequest } from 'stores/reducers/listing'
 import { BurnIcon, MoreHorizontalIcon } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
 import CTAPopover from '../CTAPopover'
+import PriceDropModal from '../PriceDropModal'
 import { useTimer, useTokenInfo } from 'hooks'
 import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
-import { IBids, UserDataTypes } from 'types'
+import { AssetTypes, IBids, UserDataTypes } from 'types'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 
@@ -58,6 +60,9 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { wallet } = useSelector(selectWallet())
   const { role } = useSelector(selectUserRole())
   const { user } = useSelector(selectUser())
+  const {
+    listing: { fetching },
+  } = useSelector(selectListing())
 
   const {
     bid: { bidHistory, bids, offers },
@@ -77,6 +82,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+  const [openPriceDropModal, setOpenPriceDropModal] = useState(false)
 
   const now_time = new Date().getTime()
   const isAuctionExpired = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time
@@ -238,8 +244,7 @@ export default function FormDetails(props: IDetailsFormProps) {
           !isBidded && (
             <Box className={classes.warningBox}>
               <Typography component="span" className={classes.warningText}>
-                Once a bid has been placed and the reserve price has been met, a 24 hour auction for this artwork will
-                begin.
+                Once a bid has been placed and the reserve price has been met, this artwork will begin.
               </Typography>
             </Box>
           )}
@@ -355,6 +360,17 @@ export default function FormDetails(props: IDetailsFormProps) {
         withAside
       />
 
+      <PriceDropModal
+        open={openPriceDropModal}
+        onCancel={() => setOpenPriceDropModal(false)}
+        onSubmit={(value: string) => {
+          dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
+          setOpenPriceDropModal(false)
+        }}
+        tokenName={'WETH'}
+        fetching={fetching}
+      />
+
       <CTAPopover
         anchorEl={anchorElExtLink}
         onClose={() => setAnchorElExtLink(null)}
@@ -367,6 +383,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             ? () => dispatch(unlistingRequest({ market_id: marketData.id }))
             : undefined
         }
+        onPriceDrop={marketData ? () => setOpenPriceDropModal(true) : undefined}
       />
     </>
   )

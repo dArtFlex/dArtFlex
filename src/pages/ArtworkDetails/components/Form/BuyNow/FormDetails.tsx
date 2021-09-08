@@ -6,6 +6,7 @@ import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, Icon
 import { Modal, WalletConnect } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
 import CTAPopover from '../CTAPopover'
+import PriceDropModal from '../PriceDropModal'
 import { MoreHorizontalIcon } from 'common/icons'
 import {
   selectAssetDetails,
@@ -14,11 +15,12 @@ import {
   selectBid,
   selectUser,
   selectUserRole,
+  selectListing,
 } from 'stores/selectors'
-import { unlistingRequest } from 'stores/reducers/listing'
+import { unlistingRequest, changePriceRequest } from 'stores/reducers/listing'
 import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
-import { IBids, UserDataTypes } from 'types'
+import { IBids, UserDataTypes, AssetTypes } from 'types'
 import appConst from '../../../../../config/consts'
 import APP_CONFIG from 'config'
 
@@ -58,6 +60,9 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
   const { role } = useSelector(selectUserRole())
   const {
+    listing: { fetching },
+  } = useSelector(selectListing())
+  const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
@@ -66,6 +71,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+  const [openPriceDropModal, setOpenPriceDropModal] = useState(false)
 
   const now_time = new Date().getTime()
   const isReserveNotMet =
@@ -239,6 +245,17 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         withAside
       />
 
+      <PriceDropModal
+        open={openPriceDropModal}
+        onCancel={() => setOpenPriceDropModal(false)}
+        onSubmit={(value: string) => {
+          dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
+          setOpenPriceDropModal(false)
+        }}
+        tokenName={'ETH'}
+        fetching={fetching}
+      />
+
       <CTAPopover
         anchorEl={anchorElExtLink}
         onClose={() => setAnchorElExtLink(null)}
@@ -251,6 +268,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             ? () => dispatch(unlistingRequest({ market_id: marketData.id }))
             : undefined
         }
+        onPriceDrop={marketData ? () => setOpenPriceDropModal(true) : undefined}
       />
     </>
   )
