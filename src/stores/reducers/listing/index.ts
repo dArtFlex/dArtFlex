@@ -68,6 +68,19 @@ const listingSlice = createSlice({
     clearListingError: (state) => {
       state.error = ''
     },
+
+    changePriceRequest: (state, i) => {
+      state.fetching = true
+    },
+    changePriceSuccess: (state) => {
+      state.fetching = false
+      state.priceChanged = true
+    },
+    changePriceFailure: (state, { payload }: PayloadAction<IError>) => {
+      state.error = payload
+      state.fetching = false
+      state.priceChanged = false
+    },
   },
 })
 
@@ -82,6 +95,10 @@ export const {
 
   clearListingData,
   clearListingError,
+
+  changePriceRequest,
+  changePriceSuccess,
+  changePriceFailure,
 } = listingSlice.actions
 
 export const { reducer } = listingSlice

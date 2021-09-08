@@ -84,6 +84,8 @@ const APP_CONFIG = {
   userValidation: `${STAGE_URL_API}/user/validate`,
   cancelOffer: `${STAGE_URL_API}/bid/withdraw_offer`,
   acceptOffer: `${STAGE_URL_API}/bid/accept_offer`,
+  changePrice: `${STAGE_URL_API}/bid/change_price`,
+
   constructorStyleTransfer: (priority: number, endScale: number) =>
     `${STAGE_AI}/style_transfer?priority=${priority}&end_scale=${endScale}`,
 } as const

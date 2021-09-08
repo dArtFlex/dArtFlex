@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { Card, CardHeader, CardContent, Avatar, Typography, Box, Link, Divider, Button } from '@material-ui/core'
 import { SuccessIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
 import { shortCutName } from '../../../utils'
@@ -47,7 +48,10 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
             <Box>
               <Typography className={classes.subheader}>
                 {status === 'offered' ? 'Offer ' : 'Bid '}
-                <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
@@ -116,7 +120,11 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
+                  Bid{' '}
+                  <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken}.. WETH`}</strong>
+                  </CustomTooltip>{' '}
+                  (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>

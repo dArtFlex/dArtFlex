@@ -35,7 +35,7 @@ export default function FormApprovedOffer(props: IFormApprovedOffer) {
       <Box className={classes.formContant}>
         <Box mb={4}>
           <Typography variant="h1" component="p">
-            Authorising your account for this order...
+            Authorizing your account for this order...
           </Typography>
         </Box>
         <Box mb={5.5}>

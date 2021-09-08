@@ -2,7 +2,7 @@ import { IBidsHistory, UserDataTypes } from 'types'
 
 export interface ICardHistoryProps extends IBidsHistory {
   userData: UserDataTypes
-  bidAmountToToken: string
+  bidAmountToToken: number
   bidAmountUsd: string
   userWalletId?: number
   onAccept?: () => void
