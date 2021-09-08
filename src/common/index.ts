@@ -8,7 +8,7 @@ import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids, CardSkeleton } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
-import Tooltip from './Tooltip'
+import Tooltip, { CustomTooltip } from './Tooltip'
 import Stepper from './Stepper'
 import DropZone from './DropZone'
 import UploadFile from './UploadFile'
@@ -41,6 +41,7 @@ export {
   Chip,
   ButtonStartIcon,
   Tooltip,
+  CustomTooltip,
   Stepper,
   DropZone,
   UploadFile,

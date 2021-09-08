@@ -29,10 +29,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
 
   const getBidAmountToTokenAndUsd = (bid_amount: string) => {
-    const bidAmountToToken = new BigNumber(bid_amount)
-      .dividedBy(`10e${18 - 1}`)
-      .toNumber()
-      .toFixed(4)
+    const bidAmountToToken = new BigNumber(bid_amount).dividedBy(`10e${18 - 1}`).toNumber()
     const bidAmountUsd = new BigNumber(bidAmountToToken).multipliedBy(tokenRate).toNumber().toFixed(2)
     return { bidAmountToToken, bidAmountUsd }
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { Card, CardHeader, CardContent, Avatar, IconButton, Typography, Box, Link, Divider } from '@material-ui/core'
 import { ExternalLinkIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 import APP_CONFIG from 'config'
@@ -63,7 +64,11 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} WETH`}</strong> (${bidAmountUsd}) placed
+                Bid{' '}
+                <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
@@ -98,7 +103,11 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} WETH`}</strong> (${bidAmountUsd})
+                  Bid{' '}
+                  <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken}.. WETH`}</strong>
+                  </CustomTooltip>{' '}
+                  (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>
