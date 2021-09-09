@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
@@ -17,7 +17,7 @@ import {
   selectUserRole,
   selectListing,
 } from 'stores/selectors'
-import { unlistingRequest, changePriceRequest } from 'stores/reducers/listing'
+import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes, AssetTypes } from 'types'
@@ -60,7 +60,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
   const { role } = useSelector(selectUserRole())
   const {
-    listing: { fetching },
+    listing: { fetchingDropPrice, priceChanged },
   } = useSelector(selectListing())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
@@ -97,6 +97,13 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       return 'Buy now Price'
     }
   }
+
+  useEffect(() => {
+    if (priceChanged) {
+      dispatch(resetChangePrice())
+      setOpenPriceDropModal(false)
+    }
+  }, [priceChanged])
 
   return (
     <>
@@ -250,10 +257,9 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         onCancel={() => setOpenPriceDropModal(false)}
         onSubmit={(value: string) => {
           dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
-          setOpenPriceDropModal(false)
         }}
         tokenName={'ETH'}
-        fetching={fetching}
+        fetching={fetchingDropPrice}
       />
 
       <CTAPopover

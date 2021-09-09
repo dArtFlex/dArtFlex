@@ -1,7 +1,7 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Button, makeStyles, Theme, createStyles, Modal } from '@material-ui/core'
-import { Field, InputAdornment } from 'common'
+import { Field, InputAdornment, CircularProgressLoader } from 'common'
 import { ApprovedFormState } from '../../types'
 import { validatePrice } from 'utils'
 
@@ -46,12 +46,14 @@ interface IPriceDropModalProps {
   onSubmit: (value: string) => void
   tokenName: string
   fetching: boolean
+  priceChanged?: boolean
 }
 
 export default function PriceDropModal(props: IPriceDropModalProps) {
   const classes = useStyles()
   const { open, onCancel, onSubmit, tokenName, fetching } = props
   const { values, handleSubmit } = useFormikContext<ApprovedFormState>()
+
   return (
     <Modal open={open} onClose={onCancel} className={classes.modal}>
       <Box className={classes.modalBox}>
@@ -80,6 +82,7 @@ export default function PriceDropModal(props: IPriceDropModalProps) {
               onSubmit(values.priceDrop)
             }}
             disabled={fetching}
+            startIcon={fetching ? <CircularProgressLoader size={24} color={'secondary'} /> : null}
           >
             Set new price
           </Button>

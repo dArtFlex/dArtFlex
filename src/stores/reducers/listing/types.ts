@@ -1,6 +1,7 @@
 import { ListingData, IError } from 'types'
 export interface ListingStateType {
   fetching: boolean
+  fetchingDropPrice: boolean
   error: IError
   data: ListingData
   orderId: null | number

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, useRouteMatch } from 'react-router-dom'
@@ -15,7 +15,7 @@ import clsx from 'clsx'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
 import { Modal, WalletConnect } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
-import { unlistingRequest, changePriceRequest } from 'stores/reducers/listing'
+import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { BurnIcon, MoreHorizontalIcon } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
 import CTAPopover from '../CTAPopover'
@@ -61,7 +61,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { role } = useSelector(selectUserRole())
   const { user } = useSelector(selectUser())
   const {
-    listing: { fetching },
+    listing: { fetchingDropPrice, priceChanged },
   } = useSelector(selectListing())
 
   const {
@@ -137,6 +137,13 @@ export default function FormDetails(props: IDetailsFormProps) {
 
   const currentUrl = APP_CONFIG.appUrl + url
   const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
+
+  useEffect(() => {
+    if (priceChanged) {
+      dispatch(resetChangePrice())
+      setOpenPriceDropModal(false)
+    }
+  }, [priceChanged])
 
   return (
     <>
@@ -365,10 +372,9 @@ export default function FormDetails(props: IDetailsFormProps) {
         onCancel={() => setOpenPriceDropModal(false)}
         onSubmit={(value: string) => {
           dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
-          setOpenPriceDropModal(false)
         }}
         tokenName={'WETH'}
-        fetching={fetching}
+        fetching={fetchingDropPrice}
       />
 
       <CTAPopover

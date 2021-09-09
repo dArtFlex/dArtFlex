@@ -4,6 +4,7 @@ import { IError } from 'types'
 
 const initialState: ListingStateType = {
   fetching: false,
+  fetchingDropPrice: false,
   error: '',
   data: {
     type: 'auction',
@@ -70,16 +71,19 @@ const listingSlice = createSlice({
     },
 
     changePriceRequest: (state, i) => {
-      state.fetching = true
+      state.fetchingDropPrice = true
     },
     changePriceSuccess: (state) => {
-      state.fetching = false
+      state.fetchingDropPrice = false
       state.priceChanged = true
     },
     changePriceFailure: (state, { payload }: PayloadAction<IError>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingDropPrice = false
       state.priceChanged = false
+    },
+    resetChangePrice: (state) => {
+      state.priceChanged = undefined
     },
   },
 })
@@ -99,6 +103,7 @@ export const {
   changePriceRequest,
   changePriceSuccess,
   changePriceFailure,
+  resetChangePrice,
 } = listingSlice.actions
 
 export const { reducer } = listingSlice
