@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import clsx from 'clsx'
 import { Box } from '@material-ui/core'
 import { useStyles } from './styles'
 
@@ -11,30 +12,16 @@ interface ICustomTooltipProps {
 
 export default function CustomTooltip(props: ICustomTooltipProps) {
   const classes = useStyles()
-  const { children, text, shiftY = -144, shiftX = 0 } = props
-  const [isShown, setIsShown] = useState(false)
-  const [offset, setOffset] = useState({
-    x: 0,
-    y: 0,
-  })
+  const { children, text, shiftY = -27, shiftX = -7 } = props
 
   return (
     <>
-      <Box
-        className={classes.root}
-        onMouseMove={(e) => {
-          setIsShown(true)
-          setOffset({ x: e.screenX, y: e.screenY })
-        }}
-        onMouseLeave={() => setIsShown(false)}
-      >
+      <Box className={classes.root}>
         {children}
-      </Box>
-      {isShown && (
-        <Box className={classes.tooltip} style={{ top: offset.y + shiftY, left: offset.x + shiftX }}>
+        <Box className={clsx(classes.customTooltip)} style={{ top: shiftY, left: shiftX }}>
           {text}
         </Box>
-      )}
+      </Box>
     </>
   )
 }
