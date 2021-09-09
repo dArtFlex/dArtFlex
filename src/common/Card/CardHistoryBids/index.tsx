@@ -122,7 +122,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                 <span className={classes.strike}>
                   Bid{' '}
                   <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                    <strong className={classes.strike}>{`${bidAmountToToken}.. WETH`}</strong>
+                    <strong className={classes.strike}>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
                   </CustomTooltip>{' '}
                   (${bidAmountUsd})
                 </span>{' '}
