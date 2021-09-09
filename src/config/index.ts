@@ -2,7 +2,7 @@ import { getProviderAddress } from 'utils'
 
 const STAGE_URL_APP = 'https://dartflex-stage.ml'
 const STAGE_URL_API = 'https://dartflex-dev.ml:8887/api'
-const STAGE_AI = 'https://api.nft.inga.technology'
+// const STAGE_AI = 'https://api.nft.inga.technology'
 const BASE_URL = STAGE_URL_API.replace('/api', '')
 const LOCAL_URL = 'http://localhost:3000'
 
@@ -57,7 +57,7 @@ const APP_CONFIG = {
   getActiveUserBidsById: (user_id: number) => `${STAGE_URL_API}/bid/get_active_by_user/${user_id}`,
 
   // GET Constructor AI
-  getTransferStatus: (task_id: string) => `${STAGE_AI}/style_transfer/result/${task_id}/status_only`,
+  getGenerateImage: (name: string) => `${STAGE_URL_API}/album/get_temp/${name}`,
 
   // POST
   uploadImage: `${STAGE_URL_API}/image/upload`,
@@ -85,9 +85,7 @@ const APP_CONFIG = {
   cancelOffer: `${STAGE_URL_API}/bid/withdraw_offer`,
   acceptOffer: `${STAGE_URL_API}/bid/accept_offer`,
   changePrice: `${STAGE_URL_API}/bid/change_price`,
-
-  constructorStyleTransfer: (priority: number, endScale: number) =>
-    `${STAGE_AI}/style_transfer?priority=${priority}&end_scale=${endScale}`,
+  constructorStyleTransferSafe: `${STAGE_URL_API}/album/create`,
 } as const
 
 export default APP_CONFIG
