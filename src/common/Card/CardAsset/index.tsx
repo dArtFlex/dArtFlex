@@ -93,7 +93,7 @@ export default function CardAsset(props: ICardAssetProps) {
           type={asset.type}
           startPrice={asset.start_price}
           endPrice={asset.end_price}
-          currentPrice={asset.current_price}
+          currentPrice={asset.current_price || (asset.marketplace && asset.marketplace[0].bid_amount)}
           sold={asset.sold}
           endTime={asset.end_time}
           burnTime={burnTime}
