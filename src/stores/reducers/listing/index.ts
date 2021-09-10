@@ -5,6 +5,7 @@ import { IError } from 'types'
 const initialState: ListingStateType = {
   fetching: false,
   fetchingDropPrice: false,
+  fetchingUnlist: false,
   error: '',
   data: {
     type: 'auction',
@@ -53,14 +54,17 @@ const listingSlice = createSlice({
     },
 
     unlistingRequest: (state, i) => {
-      state.fetching = true
+      state.fetchingUnlist = true
+      state.artworkUnlisted = false
     },
     unlistingSuccess: (state) => {
-      state.fetching = true
+      state.fetchingUnlist = false
+      state.artworkUnlisted = true
     },
     unlistingFailure: (state, { payload }: PayloadAction<IError>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingUnlist = false
+      state.artworkUnlisted = false
     },
 
     clearListingData: (state) => {
@@ -72,6 +76,7 @@ const listingSlice = createSlice({
 
     changePriceRequest: (state, i) => {
       state.fetchingDropPrice = true
+      state.priceChanged = false
     },
     changePriceSuccess: (state) => {
       state.fetchingDropPrice = false
