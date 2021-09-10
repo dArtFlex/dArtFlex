@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew } from 'common'
+import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew, ConfirmationModal } from 'common'
 import {
   CodeIcon,
   FacebookIcon,
@@ -17,7 +17,7 @@ import {
   WorldIcon,
   YouTubeIcon,
 } from 'common/icons'
-import { selectUser, selectSearch } from 'stores/selectors'
+import { selectUser, selectSearch, selectListing } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import { getUserAssetsRequest } from 'stores/reducers/user'
@@ -61,12 +61,18 @@ export default function Dashboard() {
   const { user, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetching } = useSelector(
     selectUser()
   )
+  const {
+    listing: { fetchingUnlist, artworkUnlisted },
+  } = useSelector(selectListing())
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
   const searchCollectedAssets = useSearchAssets({ assets: userCollectedAssets, search })
   const searchSoldAssets = useSearchAssets({ assets: userSoldAssets, search })
   const searchCreatedAssets = useSearchAssets({ assets: userCreatedAssets, search })
+
+  const [openUnlistModal, setOpenUnlistModal] = useState(false)
+  const [selectedAssetId, setSelectedAssetId] = useState('')
 
   const sortedAssets = useSortedAssets({
     userAssets:
@@ -173,81 +179,98 @@ export default function Dashboard() {
     .toFixed(4)
 
   return (
-    <PageWrapper className={classes.wrapper}>
-      <ProfileLayout
-        coverURL={user.cover_image !== 'blank' ? user.cover_image : image}
-        aside={
-          <Aside
-            avatar={user.profile_image}
-            name={user.fullname}
-            userName={shortCutName(user.userid)}
-            walletAddress={user.wallet}
-            content={user.overview}
-            links={links.filter((l) => l.link !== undefined)}
-            joinedToArtworks={`Joined ${moment(user.created_at).format('MMMM, YYYY')}`}
-          />
-        }
-      >
-        <Box className={classes.container}>
-          <ToggleButtonGroup
-            classes={{ root: classes.toggleGroup }}
-            exclusive
-            onChange={(_, value) => {
-              if (value) setFilter(value)
-            }}
-          >
-            {filterItems.map(({ label, value }) => {
-              return (
-                <ToggleButton key={value} value={value} selected={filter === value} className={classes.toggleButton}>
-                  {label}
-                </ToggleButton>
-              )
-            })}
-          </ToggleButtonGroup>
+    <>
+      <PageWrapper className={classes.wrapper}>
+        <ProfileLayout
+          coverURL={user.cover_image !== 'blank' ? user.cover_image : image}
+          aside={
+            <Aside
+              avatar={user.profile_image}
+              name={user.fullname}
+              userName={shortCutName(user.userid)}
+              walletAddress={user.wallet}
+              content={user.overview}
+              links={links.filter((l) => l.link !== undefined)}
+              joinedToArtworks={`Joined ${moment(user.created_at).format('MMMM, YYYY')}`}
+            />
+          }
+        >
+          <Box className={classes.container}>
+            <ToggleButtonGroup
+              classes={{ root: classes.toggleGroup }}
+              exclusive
+              onChange={(_, value) => {
+                if (value) setFilter(value)
+              }}
+            >
+              {filterItems.map(({ label, value }) => {
+                return (
+                  <ToggleButton key={value} value={value} selected={filter === value} className={classes.toggleButton}>
+                    {label}
+                  </ToggleButton>
+                )
+              })}
+            </ToggleButtonGroup>
 
-          {filter === FILTER_VALUES.SOLD && (
-            <Box className={classes.container}>
-              <Box className={classes.inlineFlex}>
-                <ValuesInfo totalSalesToEth={totalSalesToEth} />
+            {filter === FILTER_VALUES.SOLD && (
+              <Box className={classes.container}>
+                <Box className={classes.inlineFlex}>
+                  <ValuesInfo totalSalesToEth={totalSalesToEth} />
+                </Box>
               </Box>
-            </Box>
-          )}
-
-          {!userAssets?.length && <Empty />}
-
-          <Box className={classes.grid} mt={2}>
-            {fetching ? (
-              <CircularProgressLoader />
-            ) : (
-              <>
-                {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
-                {sortedAssets
-                  ? sortedAssets.map((userAsset, i) => (
-                      <CardAsset
-                        key={i}
-                        asset={userAsset}
-                        userWallet={user?.wallet}
-                        withLabel
-                        withAction={Boolean(
-                          userAsset.status === STATUSES.LISTED || userAsset?._status === STATUSES.LISTED
-                        )}
-                        button={{
-                          onListed: () => handleListed(userAsset),
-                          onSell: () => {
-                            if (Boolean(userAsset?._status !== STATUSES.LISTED)) handleListed(userAsset)
-                          },
-                        }}
-                        menu={{
-                          onUnlisted: () => handleUnlisted(String(userAsset.id)),
-                        }}
-                      />
-                    ))
-                  : null}
-              </>
             )}
+
+            {!userAssets?.length && <Empty />}
+
+            <Box className={classes.grid} mt={2}>
+              {fetching ? (
+                <CircularProgressLoader />
+              ) : (
+                <>
+                  {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
+                  {sortedAssets
+                    ? sortedAssets.map((userAsset, i) => (
+                        <CardAsset
+                          key={i}
+                          asset={userAsset}
+                          userWallet={user?.wallet}
+                          withLabel
+                          withAction={Boolean(
+                            userAsset.status === STATUSES.LISTED || userAsset?._status === STATUSES.LISTED
+                          )}
+                          button={{
+                            onListed: () => handleListed(userAsset),
+                            onSell: () => {
+                              if (Boolean(userAsset?._status !== STATUSES.LISTED)) handleListed(userAsset)
+                            },
+                          }}
+                          menu={{
+                            onUnlisted: () => {
+                              setSelectedAssetId(String(userAsset.id))
+                              setOpenUnlistModal(true)
+                            },
+                          }}
+                        />
+                      ))
+                    : null}
+                </>
+              )}
+            </Box>
           </Box>
-        </Box>
-      </ProfileLayout>
-    </PageWrapper>
+        </ProfileLayout>
+      </PageWrapper>
+
+      <ConfirmationModal
+        open={openUnlistModal && !artworkUnlisted}
+        onCancel={() => setOpenUnlistModal(false)}
+        onSubmit={() => {
+          handleUnlisted(selectedAssetId)
+        }}
+        title={'Do you want to cancel artwork?'}
+        fetching={fetchingUnlist}
+        btnCancelText={'Nevermind'}
+        btnSubmitText={'Yes, I cancel'}
+      />
+    </>
   )
 }

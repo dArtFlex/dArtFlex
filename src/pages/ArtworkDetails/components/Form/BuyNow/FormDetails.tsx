@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
-import { Modal, WalletConnect } from 'common'
+import { Modal, WalletConnect, ConfirmationModal } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
 import CTAPopover from '../CTAPopover'
 import PriceDropModal from '../PriceDropModal'
@@ -17,7 +17,7 @@ import {
   selectUserRole,
   selectListing,
 } from 'stores/selectors'
-import { unlistingRequest, changePriceRequest } from 'stores/reducers/listing'
+import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes, AssetTypes } from 'types'
@@ -60,7 +60,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
   const { role } = useSelector(selectUserRole())
   const {
-    listing: { fetching },
+    listing: { fetchingDropPrice, priceChanged, fetchingUnlist, artworkUnlisted },
   } = useSelector(selectListing())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
@@ -72,6 +72,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
   const [openPriceDropModal, setOpenPriceDropModal] = useState(false)
+  const [openUnlistModal, setOpenUnlistModal] = useState(false)
 
   const now_time = new Date().getTime()
   const isReserveNotMet =
@@ -97,6 +98,13 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       return 'Buy now Price'
     }
   }
+
+  useEffect(() => {
+    if (priceChanged) {
+      dispatch(resetChangePrice())
+      setOpenPriceDropModal(false)
+    }
+  }, [priceChanged])
 
   return (
     <>
@@ -245,15 +253,26 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         withAside
       />
 
+      <ConfirmationModal
+        open={openUnlistModal && !artworkUnlisted}
+        onCancel={() => setOpenUnlistModal(false)}
+        onSubmit={() => {
+          marketData && dispatch(unlistingRequest({ market_id: marketData.id }))
+        }}
+        title={'Do you want to cancel artwork?'}
+        fetching={fetchingUnlist}
+        btnCancelText={'Nevermind'}
+        btnSubmitText={'Yes, I cancel'}
+      />
+
       <PriceDropModal
         open={openPriceDropModal}
         onCancel={() => setOpenPriceDropModal(false)}
         onSubmit={(value: string) => {
           dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
-          setOpenPriceDropModal(false)
         }}
         tokenName={'ETH'}
-        fetching={fetching}
+        fetching={fetchingDropPrice}
       />
 
       <CTAPopover
@@ -265,10 +284,20 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         superAdmin={role === 'ROLE_SUPER_ADMIN'}
         onCancelListing={
           user?.id === ownerData?.id && marketData?.id !== undefined
-            ? () => dispatch(unlistingRequest({ market_id: marketData.id }))
+            ? () => {
+                setOpenUnlistModal(true)
+                setAnchorElExtLink(null)
+              }
             : undefined
         }
-        onPriceDrop={marketData ? () => setOpenPriceDropModal(true) : undefined}
+        onPriceDrop={
+          marketData
+            ? () => {
+                setOpenPriceDropModal(true)
+                setAnchorElExtLink(null)
+              }
+            : undefined
+        }
       />
     </>
   )

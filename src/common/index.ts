@@ -1,7 +1,7 @@
 import { Header } from './header'
 import PageWrapper from './PageWrapper'
 import Footer from './footer'
-import Modal from './Modal'
+import Modal, { ConfirmationModal } from './Modal'
 import { Popover, PopoverLinks } from './Popover'
 import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
 import CircularProgressLoader from './Loaders'
@@ -54,4 +54,5 @@ export {
   Timer,
   Slider,
   CardSkeleton,
+  ConfirmationModal,
 }

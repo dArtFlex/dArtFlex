@@ -111,7 +111,10 @@ export default function CardAsset(props: ICardAssetProps) {
         links={[
           {
             lable: 'Unlist Artwork',
-            onClick: () => menu?.onUnlisted && menu.onUnlisted(),
+            onClick: () => {
+              menu?.onUnlisted && menu.onUnlisted()
+              setAnchor(null)
+            },
           },
         ]}
       />

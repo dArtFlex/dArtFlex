@@ -163,11 +163,12 @@ export const selectManagement = () =>
 export const selectConstructor = () =>
   createSelector(
     (store: stateType) => store,
-    ({ constructorAI: { transfer, priority, endScale, error, fetching } }: stateType) => ({
+    ({ constructorAI: { transfer, priority, endScale, error, fetching, imageUrl } }: stateType) => ({
       transfer,
       priority,
       endScale,
       error,
       fetching,
+      imageUrl,
     })
   )
