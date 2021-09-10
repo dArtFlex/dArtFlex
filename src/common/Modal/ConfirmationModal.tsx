@@ -1,9 +1,6 @@
 import React from 'react'
-import { useFormikContext } from 'formik'
 import { Box, Typography, Button, makeStyles, Theme, createStyles, Modal } from '@material-ui/core'
-import { Field, InputAdornment, CircularProgressLoader } from 'common'
-import { ApprovedFormState } from '../../types'
-import { validatePrice } from 'utils'
+import { CircularProgressLoader } from 'common'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,58 +30,42 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       gap: 14,
     },
-    modalFields: {
-      width: '100%',
-      minHeight: 88,
-    },
   })
 )
 
 interface IPriceDropModalProps {
   open: boolean
   onCancel: () => void
-  onSubmit: (value: string) => void
-  tokenName: string
+  onSubmit: () => void
+  title?: string
+  desc?: string
   fetching: boolean
-  priceChanged?: boolean
+  btnCancelText?: string
+  btnSubmitText?: string
 }
 
-export default function PriceDropModal(props: IPriceDropModalProps) {
+export default function ConfirmationModal(props: IPriceDropModalProps) {
   const classes = useStyles()
-  const { open, onCancel, onSubmit, tokenName, fetching } = props
-  const { values, handleSubmit } = useFormikContext<ApprovedFormState>()
+  const { open, onCancel, onSubmit, fetching, title, desc, btnCancelText = 'No', btnSubmitText = 'Yes' } = props
 
   return (
     <Modal open={open} onClose={onCancel} className={classes.modal}>
       <Box className={classes.modalBox}>
-        <Typography>Drop Listing Price</Typography>
-        <Box className={classes.modalFields}>
-          <Field
-            name="priceDrop"
-            type="input"
-            variant="outlined"
-            validate={validatePrice}
-            InputProps={{
-              startAdornment: <InputAdornment position="start" placeholder={tokenName} />,
-            }}
-          />
-        </Box>
+        {title && <Typography variant={'h3'}>{title}</Typography>}
+        {desc && <Typography variant={'body1'}>{desc}</Typography>}
         <Box className={classes.modalButtons}>
           <Button variant={'outlined'} color={'secondary'} fullWidth onClick={onCancel}>
-            Nevermind
+            {btnCancelText}
           </Button>
           <Button
             variant={'contained'}
             color={'primary'}
             fullWidth
-            onClick={() => {
-              handleSubmit()
-              onSubmit(values.priceDrop)
-            }}
+            onClick={onSubmit}
             disabled={fetching}
             startIcon={fetching ? <CircularProgressLoader size={24} color={'secondary'} /> : null}
           >
-            Set new price
+            {btnSubmitText}
           </Button>
         </Box>
       </Box>
