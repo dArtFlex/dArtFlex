@@ -246,6 +246,15 @@ export const useStyles = makeStyles((theme: Theme) =>
         textAlign: 'center',
       },
     },
+    promotionInfoBoxPrice: {
+      display: 'flex',
+      minHeight: 47,
+      alignItems: 'center',
+      gap: 8,
+      [theme.breakpoints.down(481)]: {
+        textAlign: 'center',
+      },
+    },
     promotionSlide: {
       height: 380,
       maxWidth: 440,
