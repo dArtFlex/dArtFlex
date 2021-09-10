@@ -29,6 +29,7 @@ import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
 import { unlistingRequest } from 'stores/reducers/listing'
+import { IUserSoldAssets } from 'stores/reducers/user/types'
 import BigNumber from 'bignumber.js'
 import image from 'common/icons/cover_photo.png'
 
@@ -171,7 +172,9 @@ export default function Dashboard() {
   }
 
   const totalSales = userSoldAssets
-    .map((a: { current_price: string }) => a.current_price)
+    .map((a: IUserSoldAssets) => {
+      return a.marketplace ? a.marketplace[0].bid_amount : '0'
+    })
     .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
   const totalSalesToEth = new BigNumber(totalSales)
     .dividedBy(`10e${18 - 1}`)

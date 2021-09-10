@@ -283,7 +283,10 @@ export function* getUserAssets(api: IApi) {
       getUserAssetsSuccess({
         userAssets: getAssetsListAllWithStatuses,
         userCollectedAssets: getAssetsListCollectedWithStatuses,
-        userSoldAssets: getAssetsListSoldWithStatuses,
+        userSoldAssets: getAssetsListSoldWithStatuses.map((asset, i) => ({
+          ...asset,
+          marketplace: [userSolddAssets[i]],
+        })),
         userCreatedAssets: getAssetsListCreatorWithStatuses,
       })
     )

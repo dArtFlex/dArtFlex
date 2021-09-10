@@ -25,7 +25,7 @@ export interface UserStateType {
   role?: IUserRole
   userAssets: IUserAsset[] | []
   userCollectedAssets: IUserAsset[] | []
-  userSoldAssets: IUserAsset[] | []
+  userSoldAssets: Array<IUserSoldAssets> | []
   userCreatedAssets: IUserAsset[] | []
   userBids: IUserBid[] | []
   promotionAssets: IPromotionAsset[] | []
@@ -41,6 +41,8 @@ export interface UserStateType {
   success: string
   biddedOfferedAssets: IBiddedOfferedAsset[]
 }
+
+export type IUserSoldAssets = Omit<IUserAsset, 'maretplace'> & { marketplace: IMarketplaceSoldInfo[] }
 
 export interface IUserAsset extends AssetDataTypesWithStatus {
   tokenData: AssetTypes
@@ -117,4 +119,13 @@ export interface IMarketPlaceInfo {
   sold: boolean
   created_at: string
   updated_at: string
+  bid_amount?: string
+}
+
+export interface IMarketplaceSoldInfo extends IMarketPlaceInfo {
+  bid_amount: string
+  bid_id: string
+  from: string
+  to: string
+  tx_hash: string
 }
