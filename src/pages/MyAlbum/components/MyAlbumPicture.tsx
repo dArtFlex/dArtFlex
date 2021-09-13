@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStyles } from '../styles'
 import { Box, Button, IconButton, Modal, Typography } from '@material-ui/core'
 import { DownloadIcon, PlusHugeIcon, TrashIcon, ZoomIcon } from 'common/icons'
+import { handleDownload } from 'utils'
 import clsx from 'clsx'
 
 interface IMyAlbumPicture {
@@ -39,7 +40,13 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
             >
               <TrashIcon />
             </IconButton>
-            <IconButton className={classes.albumActionButton} onClick={(e) => e.stopPropagation()}>
+            <IconButton
+              className={classes.albumActionButton}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleDownload(src)
+              }}
+            >
               <DownloadIcon />
             </IconButton>
             <IconButton className={classes.albumActionButton} onClick={(e) => e.stopPropagation()}>
@@ -93,6 +100,7 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
                 className={classes.downloadButton}
                 onClick={(e) => {
                   e.stopPropagation()
+                  handleDownload(src)
                 }}
                 startIcon={<DownloadIcon />}
               >
