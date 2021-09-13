@@ -172,3 +172,15 @@ export const selectConstructor = () =>
       imageUrl,
     })
   )
+
+// Album
+export const selectAlbum = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ album: { album, fetching, error, success } }: stateType) => ({
+      album,
+      fetching,
+      error,
+      success,
+    })
+  )
