@@ -9,6 +9,7 @@ import { reducer as notificationsReducer } from './notifications'
 import { reducer as managementReducer } from './management'
 import { reducer as makeOfferReducer } from './makeOffer'
 import { reducer as constructorReducer } from './constructor'
+import { reducer as albumReducer } from './album'
 import { UserStateType } from './user/types'
 import { AssetsStateType } from './assets/types'
 import { WalletsStateType } from './wallet/types'
@@ -20,6 +21,7 @@ import { NotificationsStateType } from './notifications/types'
 import { ManagementStateType } from './management/types'
 import { MakeOfferStateType } from './makeOffer/types'
 import { ConstructorStateType } from './constructor/types'
+import { AlbumStateType } from './album/types'
 
 const rootReducer = {
   user: userReducer,
@@ -33,6 +35,7 @@ const rootReducer = {
   notifications: notificationsReducer,
   management: managementReducer,
   constructorAI: constructorReducer,
+  album: albumReducer,
 }
 
 export interface stateType {
@@ -47,6 +50,7 @@ export interface stateType {
   notifications: NotificationsStateType
   management: ManagementStateType
   constructorAI: ConstructorStateType
+  album: AlbumStateType
 }
 
 export default rootReducer

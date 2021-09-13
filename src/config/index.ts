@@ -58,6 +58,7 @@ const APP_CONFIG = {
 
   // GET Constructor AI
   getGenerateImage: (name: string) => `${STAGE_URL_API}/album/get_temp/${name}`,
+  getAlbumByUserId: (user_id: number) => `${STAGE_URL_API}/album/get_by_user/${user_id}`,
 
   // POST
   uploadImage: `${STAGE_URL_API}/image/upload`,
@@ -86,6 +87,7 @@ const APP_CONFIG = {
   acceptOffer: `${STAGE_URL_API}/bid/accept_offer`,
   changePrice: `${STAGE_URL_API}/bid/change_price`,
   constructorStyleTransferSafe: `${STAGE_URL_API}/album/create`,
+  addImageToAlbum: `${STAGE_URL_API}/album/save`,
 } as const
 
 export default APP_CONFIG
