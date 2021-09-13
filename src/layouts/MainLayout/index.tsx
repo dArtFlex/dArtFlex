@@ -10,6 +10,7 @@ import {
   selectMakeOffer,
   selectManagement,
   selectUserSuccessMessage,
+  selectAlbum,
 } from 'stores/selectors'
 import { Footer, Header, Modal, WalletError } from 'common'
 import { useStyles } from './styles'
@@ -22,6 +23,7 @@ import { clearBidError, clearBidSuccessMessage } from '../../stores/reducers/pla
 import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
 import { clearWalletsError } from '../../stores/reducers/wallet'
+import { clearAlbumSuccessMessage } from 'stores/reducers/album'
 import Snack from '../../common/Snack'
 
 interface IMainLayoutProps {
@@ -53,6 +55,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
   const {
     bid: { bidSuccess },
   } = useSelector(selectBid())
+  const { success: successAlbumMessage } = useSelector(selectAlbum())
 
   const dispatch = useDispatch()
 
@@ -74,7 +77,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
       setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
-  const successGlobalMessage = successMessage || successUserMessage || bidSuccess
+  const successGlobalMessage = successMessage || successUserMessage || bidSuccess || successAlbumMessage
 
   useEffect(() => {
     successGlobalMessage && setSnackBarOpen(Boolean(successGlobalMessage.length))
@@ -93,6 +96,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     dispatch(clearUserSuccessMessage())
     dispatch(clearWalletsError())
     dispatch(clearBidSuccessMessage())
+    dispatch(clearAlbumSuccessMessage())
   }
 
   return (

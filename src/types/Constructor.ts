@@ -1,3 +1,5 @@
+import { IDatedEntity, IEntity } from 'types'
+
 export type IConstructorStatus = 'pong' | 'SUCCESS' | 'SENT' | 'PENDING'
 
 export interface IConstructorDataTypes {
@@ -12,4 +14,9 @@ export interface ICreateStyleTransferEntities {
   result: null
   status: IConstructorStatus
   task_id: string
+}
+
+export interface IAlbumEntities extends IDatedEntity, IEntity {
+  user_id: number
+  image_url: string
 }

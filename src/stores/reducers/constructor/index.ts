@@ -9,6 +9,7 @@ const initialState: ConstructorStateType = {
   priority: 0,
   endScale: 1024,
   imageUrl: '',
+  album: [],
 }
 
 const constructorSlice = createSlice({
