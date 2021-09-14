@@ -138,7 +138,7 @@ export default function Promotions(props: IPromotion) {
 function TokenInfo({ tokenContractAddress }: { tokenContractAddress: string }) {
   const tokenInfo = useTokenInfo(tokenContractAddress)
   return (
-    <Typography component={'span'} variant={'h3'}>
+    <Typography component={'span'} variant={'h3'} style={{ fontSize: 24, lineHeight: 'initial' }}>
       {tokenInfo?.symbol}
     </Typography>
   )
