@@ -20,7 +20,7 @@ export default function MyAlbum() {
     }
   }, [user?.id])
 
-  const pictures = album.map((el: IAlbumEntities) => el.image_url)
+  const pictures = album.map((el: IAlbumEntities) => ({ src: el.image_url, id: el.id }))
 
   return (
     <PageWrapper className={classes.myAlbumWrapper}>
@@ -28,10 +28,10 @@ export default function MyAlbum() {
         <Typography variant={'h1'}>My album</Typography>
         <Typography>{`${album.length} of 20 artworks`}</Typography>
         <Box className={classes.myAlbumPicsContainer}>
-          {pictures.map((src, index) => {
+          {pictures.map((props, index) => {
             return (
               <Box key={index}>
-                <MyAlbumPicture src={src} />
+                <MyAlbumPicture {...props} />
               </Box>
             )
           })}
