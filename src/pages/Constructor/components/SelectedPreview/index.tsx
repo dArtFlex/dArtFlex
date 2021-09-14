@@ -14,14 +14,14 @@ export default function SelectedPreview(props: ISelectedPreview) {
       <Box className={classes.cardImages}>
         <Box className={classes.cardImage}>
           {file0 ? (
-            <Image src={file0} className={classes.image} />
+            <Image file={file0} className={classes.image} />
           ) : (
             <Typography className={classes.imageNumber}>1</Typography>
           )}
         </Box>
         <Box className={classes.cardImage}>
           {file0 ? (
-            <Image src={file1 as string} className={classes.image} />
+            <Image file={file1} className={classes.image} />
           ) : (
             <Typography className={classes.imageNumber}>2</Typography>
           )}

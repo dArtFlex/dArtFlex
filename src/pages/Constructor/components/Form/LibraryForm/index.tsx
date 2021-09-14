@@ -5,6 +5,7 @@ import { HashTagsFilter } from 'common'
 import { CardImage, SelectedPreview } from '../../../components'
 import { IConstructor } from '../../../types'
 import { useStyles } from './styles'
+import { imageUrlToFile } from 'utils'
 
 const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
@@ -14,10 +15,11 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
 
   const [switchFile, setSwitchFile] = useState<0 | 1>(0)
 
-  const onSelect = (tokenId: string, src: string, selected: boolean) => {
+  const onSelect = async (tokenId: string, src: string, selected: boolean) => {
     // Selected value is false as this event triggered before selection
     if (selected === false) {
-      setFieldValue(`file${switchFile}`, src)
+      const file = await imageUrlToFile(src)
+      setFieldValue(`file${switchFile}`, file)
       setFieldValue(`tokenId${switchFile}`, tokenId)
       setSwitchFile(switchFile ? 0 : 1)
     } else {
@@ -56,8 +58,8 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
       />
 
       <SelectedPreview
-        file0={values.file0 as string}
-        file1={values.file1 as string}
+        file0={values.file0 as File}
+        file1={values.file1 as File}
         onClick={() => {
           handleSubmit()
           setFilesSource()
