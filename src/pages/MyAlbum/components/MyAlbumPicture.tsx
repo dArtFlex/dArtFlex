@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { useStyles } from '../styles'
 import { Box, Button, IconButton, Modal, Typography } from '@material-ui/core'
 import { DownloadIcon, PlusHugeIcon, TrashIcon, ZoomIcon } from 'common/icons'
-import { handleDownload } from 'utils'
+import { setAlbumImage } from 'stores/reducers/minting'
+import { handleDownload, imageUrlToFile } from 'utils'
 import clsx from 'clsx'
+import routes from 'routes'
 
 interface IMyAlbumPicture {
   src: string
@@ -11,6 +15,8 @@ interface IMyAlbumPicture {
 
 export default function MyAlbumPicture(props: IMyAlbumPicture) {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const history = useHistory()
   const { src } = props
   const [isPicMenuActive, setIsPicMenuActive] = useState(false)
   const [dialogType, setDialogType] = useState('')
@@ -18,6 +24,12 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
   function openModal(type: string) {
     setIsPicMenuActive(false)
     setDialogType(type)
+  }
+
+  const handleMinting = async () => {
+    const file = await imageUrlToFile(src)
+    dispatch(setAlbumImage({ file, image: src }))
+    history.push(routes.createNFT)
   }
 
   return (
@@ -49,7 +61,13 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
             >
               <DownloadIcon />
             </IconButton>
-            <IconButton className={classes.albumActionButton} onClick={(e) => e.stopPropagation()}>
+            <IconButton
+              className={classes.albumActionButton}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleMinting()
+              }}
+            >
               <Typography component={'span'}>Upload</Typography>
             </IconButton>
           </Box>

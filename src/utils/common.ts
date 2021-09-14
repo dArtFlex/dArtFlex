@@ -61,3 +61,10 @@ export async function handleDownload(imageUrl: string) {
   document.body.appendChild(link)
   link.click()
 }
+
+export async function imageUrlToFile(imageUrl: string) {
+  const data = await fetch(imageUrl)
+  const blob = await data.blob()
+  const file = new File([blob], `image.${blob.type.split('/')[1]}`, { type: blob.type })
+  return file
+}

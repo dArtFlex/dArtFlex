@@ -17,6 +17,8 @@ export interface MintingStateType {
   lazyMintItemId: null | number
   hashtags?: Array<IHashtag | IHashtagNew>
   lazymint?: boolean
+  src: ISrc
 }
 
 export type IProcess = 'none' | 'in progress' | 'done' | 'failed'
+export type ISrc = 'local' | 'album'
