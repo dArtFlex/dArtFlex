@@ -14,13 +14,13 @@ interface IStepHolderProps {
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
   const {
-    minting: { uploading, data, minting },
+    minting: { uploading, data, file, minting, src },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
   } = useSelector(selectListing())
 
-  const { values } = useFormikContext<ICreateNFT>()
+  const { values, setFieldValue } = useFormikContext<ICreateNFT>()
   const [step, setStep] = useState<IStepNFT>(values.step)
 
   useEffect(() => {
@@ -41,6 +41,9 @@ export default function StepHolder(props: IStepHolderProps) {
         return setStep(STEPS_NFT.UPLOADING)
       }
       if (!uploading && Boolean(data.image.length)) {
+        if (src === 'album') {
+          setFieldValue('file', file)
+        }
         return setStep(STEPS_NFT.FILL_FORM)
       }
     }

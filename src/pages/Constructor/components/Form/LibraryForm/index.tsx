@@ -10,7 +10,7 @@ const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art'
 
 export default function LibraryConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
-  const { values, setFieldValue } = useFormikContext<IConstructor>()
+  const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
   const [switchFile, setSwitchFile] = useState<0 | 1>(0)
 
@@ -55,7 +55,14 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
         )}
       />
 
-      <SelectedPreview file0={values.file0} file1={values.file1} onClick={setFilesSource} />
+      <SelectedPreview
+        file0={values.file0 as string}
+        file1={values.file1 as string}
+        onClick={() => {
+          handleSubmit()
+          setFilesSource()
+        }}
+      />
     </Box>
   )
 }

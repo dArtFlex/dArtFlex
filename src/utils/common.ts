@@ -50,3 +50,21 @@ export function validatePrice(value: string | number) {
   }
   return error
 }
+
+export async function handleDownload(imageUrl: string) {
+  const data = await fetch(imageUrl)
+  const blob = await data.blob()
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', `image.${blob.type.split('/')[1]}`)
+  document.body.appendChild(link)
+  link.click()
+}
+
+export async function imageUrlToFile(imageUrl: string) {
+  const data = await fetch(imageUrl)
+  const blob = await data.blob()
+  const file = new File([blob], `image.${blob.type.split('/')[1]}`, { type: blob.type })
+  return file
+}

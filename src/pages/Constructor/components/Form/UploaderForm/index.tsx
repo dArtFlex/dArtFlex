@@ -8,9 +8,9 @@ import { useStyles } from './styles'
 
 export default function UploaderConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
-  const { values, handleSubmit } = useFormikContext<IConstructor>()
+  const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
-  const disabled = typeof values.file0 !== 'object' || typeof values.file1 !== 'object'
+  const disabled = !values.file0 || !values.file1
 
   return (
     <Box className={classes.uploaderContainer}>
@@ -18,7 +18,12 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
         {values.file0 ? (
           <Box className={classes.previewCard}>
             <ImagePreview file={(values.file0 as unknown) as File} />
-            <Button color={'secondary'} variant={'outlined'} className={classes.btnClose}>
+            <Button
+              color={'secondary'}
+              variant={'outlined'}
+              className={classes.btnClose}
+              onClick={() => setFieldValue('file0', null)}
+            >
               <CloseIcon />
             </Button>
           </Box>
@@ -28,7 +33,12 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
         {values.file1 ? (
           <Box className={classes.previewCard}>
             <ImagePreview file={(values.file1 as unknown) as File} />
-            <Button color={'secondary'} variant={'outlined'} className={classes.btnClose}>
+            <Button
+              color={'secondary'}
+              variant={'outlined'}
+              className={classes.btnClose}
+              onClick={() => setFieldValue('file1', null)}
+            >
               <CloseIcon />
             </Button>
           </Box>

@@ -21,7 +21,7 @@ export default function DropZone() {
   const { values, setFieldValue, setFieldError } = useFormikContext<ICreateNFT>()
 
   const {
-    minting: { minting },
+    minting: { minting, src },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -36,7 +36,7 @@ export default function DropZone() {
   }, [values.file])
 
   useEffect(() => {
-    if (minting !== 'done' || listing !== 'done') {
+    if ((minting !== 'done' || listing !== 'done') && src !== 'album') {
       dispatch(clearLazyMintingData())
     }
   }, [])
