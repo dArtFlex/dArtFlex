@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { call, put } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { AlbumStateType } from 'stores/reducers/album/types'
 import {
   getUserAlbumSuccess,
@@ -7,6 +7,8 @@ import {
   getUserAlbumRequest,
   addImageToAlbumSuccess,
   addImageToAlbumFailure,
+  deleteImageFromAlbumSuccess,
+  deleteImageFromAlbumFailure,
 } from 'stores/reducers/album'
 import APP_CONFIG from 'config'
 import { IApi } from '../../services/types'
@@ -39,5 +41,18 @@ export function* addImageToAlbum(
     yield put(addImageToAlbumSuccess({ added: response, success: 'Image was added to album' }))
   } catch (e) {
     yield put(addImageToAlbumFailure(e.message || e))
+  }
+}
+
+export function* deleteImageFromAlbum(api: IApi, { payload }: PayloadAction<{ imageId: number }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.deleteAlbumImageById(payload.imageId),
+    })
+    const { album }: { album: AlbumStateType['album'] } = yield select((state) => state.album)
+    const _album = album.filter((image) => Number(image.id) !== Number(payload.imageId))
+    yield put(deleteImageFromAlbumSuccess({ album: _album }))
+  } catch (e) {
+    yield put(deleteImageFromAlbumFailure(e.message || e))
   }
 }
