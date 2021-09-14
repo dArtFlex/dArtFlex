@@ -28,15 +28,6 @@ export function* createStyleTransfer(
       transform: false,
     })
 
-    // const response: string = yield call(api, {
-    //   url: APP_CONFIG.getGenerateImage(name),
-    // })
-    // Todo: Btoa should be done in a backend side as mobile doen't have window object
-    // const convertToUTF8 = unescape(encodeURIComponent(response))
-    // const b64Response = window.btoa(convertToUTF8)
-    // const image = new Image()
-    // image.src = `data:image/png;base64,${b64Response}`
-
     yield put(createStyleTransferSuccess({ imageUrl: APP_CONFIG.getGenerateImage(name) }))
   } catch (e) {
     yield put(createStyleTransferFailure(e))
