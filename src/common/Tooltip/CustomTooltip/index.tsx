@@ -4,15 +4,16 @@ import { Box } from '@material-ui/core'
 import { useStyles } from './styles'
 
 interface ICustomTooltipProps {
-  children: JSX.Element
+  children: JSX.Element | string
   text: string
   shiftX?: number
   shiftY?: number
+  background?: string
 }
 
 export default function CustomTooltip(props: ICustomTooltipProps) {
-  const classes = useStyles()
-  const { children, text, shiftY = -27, shiftX = -7 } = props
+  const { children, text, shiftY = -27, shiftX = -7, background } = props
+  const classes = useStyles({ background })
 
   return (
     <>

@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     customTooltip: {
       position: 'absolute',
-      background: theme.palette.primary.dark,
+      background: ({ background }: { background?: string }) => (background ? background : theme.palette.primary.dark),
       color: theme.palette.white,
       padding: theme.spacing(1, 2),
       borderRadius: theme.spacing(1),
