@@ -40,6 +40,18 @@ const albumSlice = createSlice({
       state.fetching = false
     },
 
+    deleteImageFromAlbumRequest: (state, i) => {
+      state.fetching = true
+    },
+    deleteImageFromAlbumSuccess: (state, { payload }: PayloadAction<{ album: AlbumStateType['album'] }>) => {
+      state.fetching = false
+      state.album = payload.album
+    },
+    deleteImageFromAlbumFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
     clearAlbumSuccessMessage: (state) => {
       state.success = ''
     },
@@ -54,6 +66,10 @@ export const {
   addImageToAlbumRequest,
   addImageToAlbumSuccess,
   addImageToAlbumFailure,
+
+  deleteImageFromAlbumRequest,
+  deleteImageFromAlbumSuccess,
+  deleteImageFromAlbumFailure,
 
   clearAlbumSuccessMessage,
 } = albumSlice.actions

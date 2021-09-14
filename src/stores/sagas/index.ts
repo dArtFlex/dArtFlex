@@ -57,7 +57,7 @@ import {
 } from '../reducers/management'
 import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
 import { createStyleTransferRequest } from '../reducers/constructor'
-import { getUserAlbumRequest, addImageToAlbumRequest } from '../reducers/album'
+import { getUserAlbumRequest, addImageToAlbumRequest, deleteImageFromAlbumRequest } from '../reducers/album'
 
 import {
   getUserData,
@@ -91,7 +91,7 @@ import { getNotifications, listenForSocketMessages, updateForSocketMessagesData 
 import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
 import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
 import { createStyleTransfer } from '../sagas/constructor'
-import { getUserAlbum, addImageToAlbum } from '../sagas/album'
+import { getUserAlbum, addImageToAlbum, deleteImageFromAlbum } from '../sagas/album'
 
 export default function* root() {
   yield all([
@@ -169,5 +169,6 @@ export default function* root() {
     /** Album **/
     takeLatest(getUserAlbumRequest.type, getUserAlbum, apiMiddleware),
     takeLatest(addImageToAlbumRequest.type, addImageToAlbum, apiMiddleware),
+    takeLatest(deleteImageFromAlbumRequest.type, deleteImageFromAlbum, apiMiddleware),
   ])
 }

@@ -59,6 +59,7 @@ const APP_CONFIG = {
   // GET Constructor AI
   getGenerateImage: (name: string) => `${STAGE_URL_API}/album/get_temp/${name}`,
   getAlbumByUserId: (user_id: number) => `${STAGE_URL_API}/album/get_by_user/${user_id}`,
+  deleteAlbumImageById: (image_id: number) => `${STAGE_URL_API}/album/delete/${image_id}`,
 
   // POST
   uploadImage: `${STAGE_URL_API}/image/upload`,
