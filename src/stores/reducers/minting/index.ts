@@ -15,6 +15,7 @@ const initialState: MintingStateType = {
     description: '',
   },
   lazyMintItemId: null,
+  src: 'local',
 }
 
 const mintingSlice = createSlice({
@@ -35,6 +36,7 @@ const mintingSlice = createSlice({
       state.data.image_data = image_data
       state.uploading = false
       state.error = ''
+      state.src = 'local'
     },
     uploadImageFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -72,6 +74,7 @@ const mintingSlice = createSlice({
       state.lazyMintData = payload.lazyMintData
       state.lazyMintItemId = payload.lazyMintItemId
       state.lazymint = payload.lazymint
+      state.src = 'local'
     },
     lazyMintingFailure: (state, { payload }: PayloadAction<Error>) => {
       state.error = payload
@@ -104,6 +107,7 @@ const mintingSlice = createSlice({
         signatures: payload.lazyMintData.signatures,
       }
       state.lazymint = payload.lazymint
+      state.src = 'local'
     },
 
     clearLazyMintingData: (state) => {
@@ -119,10 +123,17 @@ const mintingSlice = createSlice({
       state.lazyMintItemId = null
       state.lazyMintData = undefined
       state.file = null
+      state.src = 'local'
     },
 
     clearMintError: (state) => {
       state.error = ''
+    },
+
+    setAlbumImage: (state, { payload }: PayloadAction<{ file: File; image: string }>) => {
+      state.file = payload.file
+      state.data.image = payload.image
+      state.src = 'album'
     },
   },
 })
@@ -139,6 +150,8 @@ export const {
   setLazyMintingData,
   clearLazyMintingData,
   clearMintError,
+
+  setAlbumImage,
 } = mintingSlice.actions
 
 export const { reducer } = mintingSlice

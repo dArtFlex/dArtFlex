@@ -26,8 +26,8 @@ const GALLERY: IGalleryImage[] = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
 const initialData: IConstructor = {
   tokenId0: '',
   tokenId1: '',
-  file0: '',
-  file1: '',
+  file0: null,
+  file1: null,
   images: [],
 }
 
@@ -77,7 +77,7 @@ function Components({
     case 'uploader':
       return <UploaderConstructorForm setFilesSource={() => setFilesSource('generated')} />
     case 'generated':
-      return <GeneratedConstructorForm />
+      return <GeneratedConstructorForm setFilesSource={() => setFilesSource(null)} />
     default:
       return (
         <Box pb={18}>
