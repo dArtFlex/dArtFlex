@@ -78,5 +78,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(2),
       },
     },
+    preloaderText: {
+      fontSize: 18,
+      padding: theme.spacing(7),
+    },
   })
 )
