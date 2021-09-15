@@ -50,8 +50,11 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
     const lazymint = tokenData.lazymint
 
-    // Todo: Should only be once, so we need to check if it's approved
-    yield placeBidService.approveToken(accounts[0])
+    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+    if (!allowance) {
+      // Should only be once, so we need to check if it's approved
+      yield placeBidService.approveToken(accounts[0])
+    }
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
