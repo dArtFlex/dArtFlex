@@ -27,8 +27,11 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
     const accounts: string[] = walletService.getAccoutns()
     const endPrice: string = yield window.web3.utils.toWei(amount, 'ether') // offer amounnt
 
-    // Todo: Should only be once, so we need to check if it's approved
-    yield placeBidService.approveToken(accounts[0])
+    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+    if (!allowance) {
+      // Should only be once, so we need to check if it's approved
+      yield placeBidService.approveToken(accounts[0])
+    }
 
     const lazymint = tokenData.lazymint
 

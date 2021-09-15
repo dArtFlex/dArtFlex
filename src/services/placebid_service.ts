@@ -2,6 +2,7 @@
 import { CommonService } from 'services/common_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
+import { ERC20_TRANSFER_PROXY_ADDRESS } from 'core/contracts/lazy_mint_contract'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
 
@@ -124,15 +125,15 @@ export class PlaceBidService extends CommonService {
   async approveToken(wallet) {
     // Todo: Approve address contract shouldn't be WETH only
     return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, '0xc778417E063141139Fce010982780140Aa0cD5Ab').methods
-      .approve('0x4880cf9e3d9BC2ea0de2c861eb415b060A76dDc7', appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
+      .approve(ERC20_TRANSFER_PROXY_ADDRESS, appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
       .send({
         from: wallet,
       })
   }
 
-  async checkAllowance(wallet, token, contractAddress) {
-    const tokenContract = new this.web3.eth.Contract(human_standard_token_abi, token)
-    const tokenResp = await tokenContract.methods.allowance(wallet, contractAddress).call()
+  async checkAllowance(wallet, token) {
+    const tokenContract = new this.web3.eth.Contract(STANDART_TOKEN_ABI, token)
+    const tokenResp = await tokenContract.methods.allowance(wallet, ERC20_TRANSFER_PROXY_ADDRESS).call()
     return Number(tokenResp) > 0
   }
 }
