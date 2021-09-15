@@ -74,7 +74,11 @@ export const selectUserRole = () =>
 export const selectPromotion = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
+    ({ user: { promotionIds, promotionAssets, fetchingPromo } }: stateType) => ({
+      promotionIds,
+      promotionAssets,
+      fetchingPromo,
+    })
   )
 export const selectSearch = () =>
   createSelector(
