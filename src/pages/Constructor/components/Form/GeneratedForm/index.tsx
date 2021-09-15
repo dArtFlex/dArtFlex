@@ -7,6 +7,7 @@ import { ArrowLeftIcon, DownloadIcon, RefreshIcon } from 'common/icons'
 import { addImageToAlbumRequest } from 'stores/reducers/album'
 import { useStyles } from './styles'
 import { Loadable, handleDownload } from 'utils'
+import { useTextDotLoader } from 'hooks'
 
 export default function GeneratedConstructorFrom({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
@@ -17,16 +18,27 @@ export default function GeneratedConstructorFrom({ setFilesSource }: { setFilesS
 
   const [open, setOpen] = useState<boolean>(false)
 
+  const { textLoader } = useTextDotLoader({
+    text: `Right now this two-piece of shit will be transformed to amazing butterfly.`,
+  })
+
   return (
     <>
       <Box className={classes.generatedContainer}>
-        <Box className={classes.imageBox}>
-          {fetching ? (
-            <CircularProgressLoader />
-          ) : (
-            <Suspense fallback={<CircularProgressLoader />}>
-              <Loadable.Image src={imageUrl} className={classes.image} />
-            </Suspense>
+        <Box>
+          <Box className={classes.imageBox}>
+            {fetching ? (
+              <CircularProgressLoader />
+            ) : (
+              <Suspense fallback={<CircularProgressLoader />}>
+                <Loadable.Image src={imageUrl} className={classes.image} />
+              </Suspense>
+            )}
+          </Box>
+          {fetching && (
+            <Typography variant={'body1'} className={classes.preloaderText}>
+              {textLoader}
+            </Typography>
           )}
         </Box>
         <Box className={classes.genetatedForm}>
