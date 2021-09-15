@@ -34,10 +34,16 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btn: {
       width: 296,
+      backgroundColor: theme.palette.primary.main,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     btnDisabled: {
-      backgroundColor: `${theme.palette.grey.A200} !important`,
-      color: `${theme.palette.white} !important`,
+      '&$btn': {
+        backgroundColor: theme.palette.grey.A200,
+        color: theme.palette.white,
+      },
     },
   })
 )
