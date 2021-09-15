@@ -22,7 +22,7 @@ export default function FormContainer() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { assetDetails } = useSelector(selectAssetDetails())
-  const { promotionIds } = useSelector(selectPromotion())
+  const { promotionIds, fetchingPromo } = useSelector(selectPromotion())
   const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
@@ -86,11 +86,14 @@ export default function FormContainer() {
   }
 
   useEffect(() => {
+    if (fetchingPromo) {
+      return
+    }
     ckeckPromotion()
     return () => {
       ckeckPromotion()
     }
-  }, [promotionIds, assetDetails])
+  }, [promotionIds, assetDetails, fetchingPromo])
 
   return (
     <Box className={classes.root}>
