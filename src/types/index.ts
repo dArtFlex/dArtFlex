@@ -32,10 +32,10 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   name: string
 }
 
-export type IChainId = '0x1' | '0x4' | 1 | 4
-export type IChainIdFormat = '0x1' | '0x4'
+export type IChainId = '0x1' | '0x4' | '0x38' | 1 | 4 | 38
+export type IChainIdFormat = '0x1' | '0x4' | '0x38'
 
-export type IPaymentToken = 'ETH' | 'WETH'
+export type IPaymentToken = 'ETH' | 'WETH' | 'BNB'
 
 export type IError =
   | string

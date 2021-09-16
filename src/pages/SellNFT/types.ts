@@ -11,4 +11,5 @@ export interface ISellArtwork {
   endDate: IDatedTimeEntity['end_time']
   isEndingPrice: boolean
   isFutureTime: boolean
+  salesTokenContract: string
 }

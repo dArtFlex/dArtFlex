@@ -12,22 +12,23 @@ import {
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
-import { getIdFromString, networkConvertor } from 'utils'
-import tokensAll from 'core/tokens'
-import { UserDataTypes, IChainId, IBaseTokens, AssetTypes, IOrderData, IAcceptBidTransaction } from 'types'
+import { getIdFromString } from 'utils'
+import { UserDataTypes, AssetTypes, IOrderData, IAcceptBidTransaction } from 'types'
 import { acceptBidService } from 'services/accept_bid_service'
 
-export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
+export function* makeOffer(
+  api: IApi,
+  { payload: { amount, salesTokenContract } }: PayloadAction<{ amount: string; salesTokenContract: string }>
+) {
   try {
-    const getChainId: IChainId = walletService.getChainId()
-    const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
+    const tokenContract = salesTokenContract
+
     const { tokenData }: { tokenData: AssetTypes } = yield select((state) => state.assets.assetDetails)
     const { id: userId }: { id: number } = yield select((state) => state.user.user)
     const accounts: string[] = walletService.getAccoutns()
     const endPrice: string = yield window.web3.utils.toWei(amount, 'ether') // offer amounnt
 
-    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContract)
     if (!allowance) {
       // Should only be once, so we need to check if it's approved
       yield placeBidService.approveToken(accounts[0])
@@ -47,7 +48,7 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,
-        erc20: tokenContractWETH,
+        erc20: tokenContract,
         signature: tokenData.signature,
         lazymint,
       },
