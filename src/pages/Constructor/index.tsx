@@ -9,6 +9,7 @@ import { LibraryConstrIcon, UploadConstrIcon } from 'common/icons'
 import { CardForm, LibraryConstructorForm, UploaderConstructorForm, GeneratedConstructorForm } from './components'
 import { createStyleTransferRequest } from 'stores/reducers/constructor'
 import { IConstructor, ConstructorSource, IGalleryImage } from './types'
+import { getRandomLibraryImages } from 'utils'
 import { useStyles } from './styles'
 
 const CONSTRUCTOR_SOURCE = {
@@ -17,9 +18,9 @@ const CONSTRUCTOR_SOURCE = {
   GENERATED: 'generated',
 }
 
-const GALLERY: IGalleryImage[] = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
+const GALLERY: IGalleryImage[] = getRandomLibraryImages().map((src) => ({
   tokenId: uuidv4(),
-  src: `https://picsum.photos/500/50${i}`,
+  src,
   selected: false,
 }))
 
