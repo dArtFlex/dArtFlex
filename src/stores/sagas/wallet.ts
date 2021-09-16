@@ -22,7 +22,7 @@ import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { parseJS, notSupportedNetwork, networkConvertor } from 'utils'
+import { parseJS, notSupportedNetwork, networkConvertor, getTokenInfoByChainId } from 'utils'
 
 function checkBlackList(account: string) {
   return APP_CONSTS.USER.BLACK_LIST.some(
@@ -46,8 +46,8 @@ export function* connectMetaMask(api: IApi) {
     if (notSupportedNetwork(chainId)) {
       return yield put(connectMetaMaskFailure('Not supported network'))
     }
-
-    const walletInstance = createWalletInstance(accounts, balance, 'ETH')
+    const tokenName = getTokenInfoByChainId(chainId)?.symbol || 'none'
+    const walletInstance = createWalletInstance(accounts, balance, tokenName)
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
@@ -115,7 +115,8 @@ export function* connectWalletConnect(api: IApi) {
       return yield put(connectTrustFailure('Not supported network'))
     }
 
-    const walletInstance = createWalletInstance(accounts, Number(balance), 'ETH')
+    const tokenName = getTokenInfoByChainId(chainId)?.symbol || 'none'
+    const walletInstance = createWalletInstance(accounts, Number(balance), tokenName)
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT)
     yield put(connnectWalletConnectSuccess(walletInstance))
