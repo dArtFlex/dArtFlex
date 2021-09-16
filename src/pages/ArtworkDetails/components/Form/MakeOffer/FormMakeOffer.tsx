@@ -1,16 +1,19 @@
-import React from 'react'
-import { useStyles } from '../styles'
+import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { ApprovedFormState } from '../../../types'
 import { useSelector } from 'react-redux'
-import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } from '../../../../../stores/selectors'
+import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } from 'stores/selectors'
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
-import { Field, InputAdornment, Tooltip } from 'common'
+import { Field, InputAdornment, Tooltip, SelectPaymentToken } from 'common'
+import { IChainId } from 'types'
+import tokensAll from 'core/tokens'
+import { walletService } from 'services/wallet_service'
 import clsx from 'clsx'
 import BigNumber from 'bignumber.js'
-import appConst from '../../../../../config/consts'
-import { validatePrice } from '../../../../../utils'
+import appConst from 'config/consts'
+import { validatePrice, networkConvertor } from 'utils'
+import { useStyles } from '../styles'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
@@ -62,6 +65,13 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const disabledButton =
     values.bid > 0 && Boolean(values.acknowledge) && Boolean(values.agreeTerms) && Number(tokenData?.owner) !== user?.id
 
+  const getChainId: IChainId = networkConvertor(walletService.getChainId())
+  const tokens = tokensAll[getChainId]
+
+  useEffect(() => {
+    tokens && setFieldValue('salesTokenContract', tokens[1].id)
+  }, [])
+
   return (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
@@ -98,10 +108,16 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
             endAdornment: (
               <InputAdornment
                 position="start"
-                icon={
-                  <Typography className={classes.inputAdorment} color={'textSecondary'}>
-                    ETH
-                  </Typography>
+                placeholder={
+                  <SelectPaymentToken
+                    tokens={tokens}
+                    salesTokenContract={values.salesTokenContract}
+                    setSalesTokenContract={(contract) => {
+                      setFieldValue('salesTokenContract', contract)
+                    }}
+                    unavailableTokens={['0x']}
+                    classNames={classes.placeholderText}
+                  />
                 }
               />
             ),

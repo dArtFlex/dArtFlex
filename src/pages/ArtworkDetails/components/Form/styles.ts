@@ -250,7 +250,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     inputAdorment: {
       fontSize: '16px',
       fontWeight: 600,
-      color: theme.palette.greyMid,
+      // color: theme.palette.greyMid,
     },
     learnLink: {
       fontSize: 16,
@@ -358,6 +358,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontSize: 14,
         color: theme.palette.redMiddle,
       },
+    },
+    placeholderText: {
+      fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+      fontSize: 30,
     },
     tooltip: {
       '& > p': {

@@ -20,6 +20,7 @@ import Table from './Table'
 import AvatarUser from './AvatarUser'
 import Timer from './Timer'
 import Slider from './Slider'
+import SelectPaymentToken from './SelectPaymentToken'
 
 export {
   Header,
@@ -55,4 +56,5 @@ export {
   Slider,
   CardSkeleton,
   ConfirmationModal,
+  SelectPaymentToken,
 }

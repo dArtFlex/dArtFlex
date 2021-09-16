@@ -12,11 +12,19 @@ interface ISelectPaymentTokenProps {
   tokens: IBaseTokens[]
   availableTokens?: string[]
   unavailableTokens?: string[]
+  classNames?: string
 }
 
 export default function SelectPaymentToken(props: ISelectPaymentTokenProps) {
   const classes = useStyles()
-  const { salesTokenContract, setSalesTokenContract, tokens, availableTokens = [], unavailableTokens = [] } = props
+  const {
+    salesTokenContract,
+    setSalesTokenContract,
+    tokens,
+    availableTokens = [],
+    unavailableTokens = [],
+    classNames,
+  } = props
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
 
   if (!tokens) {
@@ -33,7 +41,7 @@ export default function SelectPaymentToken(props: ISelectPaymentTokenProps) {
         className={classes.flexBox}
       >
         <Box className={classes.flexBox}>
-          <Typography component={'span'} className={classes.textInput} color={'textSecondary'}>
+          <Typography component={'span'} className={clsx(classNames || classes.textInput)} color={'textSecondary'}>
             {tokens.find((token) => token.id === salesTokenContract)?.symbol}
           </Typography>
           <ArrowDropDownIcon className={classes.btn} />
@@ -55,7 +63,7 @@ export default function SelectPaymentToken(props: ISelectPaymentTokenProps) {
                 availableTokens.some((id) => id !== token.id) || unavailableTokens.some((id) => id === token.id)
               }
             >
-              <Typography component={'span'} className={classes.textInput}>
+              <Typography component={'span'} className={clsx(classNames || classes.textInput)}>
                 {token.symbol}
               </Typography>
             </Button>
