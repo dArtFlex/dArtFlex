@@ -2,12 +2,15 @@ import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Divider } from '@material-ui/core'
 import { Field, InputAdornment, Tooltip } from 'common'
-import { Instructions } from '../../components'
+import { Instructions, SelectPaymentToken } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
+import { IChainId } from 'types'
+import tokensAll from 'core/tokens'
+import { walletService } from 'services/wallet_service'
 import { useStyles } from './styles'
 import { validateExpirationDate, validateMinimumBid } from '../../lib'
-import { daysInMonth } from 'utils'
+import { daysInMonth, networkConvertor } from 'utils'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC },
@@ -41,6 +44,13 @@ export default function AuctionForm() {
 
   const { values, setFieldValue } = useFormikContext<ISellArtwork>()
   const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
+
+  const getChainId: IChainId = networkConvertor(walletService.getChainId())
+  const tokens = tokensAll[getChainId]
+
+  useEffect(() => {
+    tokens && setFieldValue('salesTokenContract', tokens[1].id)
+  }, [])
 
   useEffect(() => {
     switch (values.expirationTime) {
@@ -112,10 +122,15 @@ export default function AuctionForm() {
           endAdornment: (
             <InputAdornment
               position="start"
-              icon={
-                <Typography className={classes.mainText} color={'textSecondary'}>
-                  WETH
-                </Typography>
+              placeholder={
+                <SelectPaymentToken
+                  tokens={tokens}
+                  salesTokenContract={values.salesTokenContract}
+                  setSalesTokenContract={(contract) => {
+                    setFieldValue('salesTokenContract', contract)
+                  }}
+                  unavailableTokens={['0x']}
+                />
               }
             />
           ),

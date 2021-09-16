@@ -4,9 +4,12 @@ import { Box, Typography, Card, Button, Divider, Link } from '@material-ui/core'
 import { ArrowRightIcon } from 'common/icons'
 import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
+import { IChainId } from 'types'
+import { walletService } from 'services/wallet_service'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import { tabelTimeFormat } from 'utils'
+import { tabelTimeFormat, networkConvertor } from 'utils'
+import tokensAll from 'core/tokens'
 
 const {
   TYPES: { AUCTION },
@@ -16,6 +19,9 @@ export default function Aside(props: IAsideProps) {
   const { form } = props
   const classes = useStyles()
   const { values, handleSubmit } = useFormikContext<ISellArtwork>()
+
+  const getChainId: IChainId = networkConvertor(walletService.getChainId())
+  const tokenName = tokensAll[getChainId].find((token) => token.id === values.salesTokenContract)?.symbol
 
   return (
     <Box>
@@ -57,7 +63,9 @@ export default function Aside(props: IAsideProps) {
           <Box pb={5}>
             {values.futureTime ? (
               <Typography className={classes.textListing}>
-                {`Your item will be listed for ${values.price || 0} ETH and is scheduled to list on ${tabelTimeFormat(
+                {`Your item will be listed for ${
+                  values.price || 0
+                } ${tokenName} and is scheduled to list on ${tabelTimeFormat(
                   values.startDate || `${new Date()}`,
                   true
                 )}.`}
@@ -65,7 +73,7 @@ export default function Aside(props: IAsideProps) {
             ) : (
               <Typography className={classes.textListing}>{`Your item will be listed for ${
                 values.price || 0
-              } ETH`}</Typography>
+              } ${tokenName}`}</Typography>
             )}
           </Box>
         )}

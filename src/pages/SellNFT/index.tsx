@@ -44,6 +44,7 @@ const initialData = {
   endDate: '',
   isEndingPrice: false,
   isFutureTime: false,
+  salesTokenContract: '0x',
 }
 
 export default function SellNFT() {
@@ -68,6 +69,7 @@ export default function SellNFT() {
           start_time: values.startDate ? new Date(values.startDate) : new Date(),
           end_time: values.endDate,
           platfromFee: values.fee,
+          salesTokenContract: values.salesTokenContract,
         },
       })
     )
