@@ -19,6 +19,7 @@ const formData: ApprovedFormState = {
   agreeTerms: false,
   formProgress: 'details',
   promotion: false,
+  salesTokenContract: '0x',
 }
 
 export default function ArtworkDetails() {

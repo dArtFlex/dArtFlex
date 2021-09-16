@@ -14,12 +14,11 @@ import {
 import { getUserAssetsRequest } from 'stores/reducers/user'
 import { ListingStateType } from 'stores/reducers/listing/types'
 import { MintingStateType } from 'stores/reducers/minting/types'
-import { IChainId, IBaseTokens, IOrderData } from 'types'
+import { IOrderData } from 'types'
 import { walletService } from 'services/wallet_service'
 import { listingService } from 'services/listing_service'
 import APP_CONFIG from 'config'
-import tokensAll from 'core/tokens'
-import { normalizeDate, networkConvertor, getIdFromString } from 'utils'
+import { normalizeDate, getIdFromString } from 'utils'
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
@@ -36,11 +35,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
     const startPrice: string = yield window.web3.utils.toWei(String(data.startPrice), 'ether')
     const endPrice: string = yield window.web3.utils.toWei(data.endPrice ? String(data.endPrice) : '0', 'ether')
 
-    const getChainId: IChainId = walletService.getChainId()
-    const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContractETH: string = (tokensAll[chainId].find((t) => t.symbol === 'ETH') as IBaseTokens).id
-    const tokenContractWETH: string = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
-    const tokenContract = data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH
+    const tokenContract = data.salesTokenContract
 
     const dateStartTime = data.start_time ? normalizeDate(data.start_time).getTime() : new Date().getTime()
     const dateEndTime = data.type === 'instant_buy' ? dateStartTime : normalizeDate(data.end_time).getTime()
@@ -55,7 +50,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         price: startPrice,
         uri: lazyMintData?.uri,
         // erc20 - 0x only ETH
-        erc20: data.type === 'instant_buy' ? tokenContractETH : tokenContractWETH,
+        erc20: tokenContract,
         signature: lazyMintData?.signatures[0],
         lazymint,
       },
