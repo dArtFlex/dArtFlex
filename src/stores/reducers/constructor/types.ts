@@ -2,6 +2,7 @@ import { IError, IConstructorDataTypes, ICreateStyleTransferEntities, IAlbumEnti
 
 export interface ConstructorStateType extends IConstructorDataTypes {
   fetching: boolean
+  cancelled: boolean
   error: IError
   transfer?: ICreateStyleTransferEntities
   imageUrl: string

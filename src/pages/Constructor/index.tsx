@@ -6,7 +6,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, Form } from 'common'
 import { LibraryConstrIcon, UploadConstrIcon } from 'common/icons'
-import { CardForm, LibraryConstructorForm, UploaderConstructorForm, GeneratedConstructorForm } from './components'
+import {
+  CardForm,
+  LibraryConstructorForm,
+  UploaderConstructorForm,
+  GeneratedConstructorForm,
+  LoadingConstructorFrom,
+} from './components'
 import { createStyleTransferRequest } from 'stores/reducers/constructor'
 import { IConstructor, ConstructorSource, IGalleryImage } from './types'
 import { getRandomLibraryImages } from 'utils'
@@ -71,12 +77,24 @@ function Components({
   setFilesSource: (filesSource: ConstructorSource | null) => void
 }) {
   const classes = useStyles()
+  const { imageUrl, fetching } = useSelector(selectConstructor())
+
+  useEffect(() => {
+    if (imageUrl.length) {
+      setFilesSource('generated')
+    }
+    if (fetching) {
+      setFilesSource('loading')
+    }
+  }, [imageUrl, fetching])
 
   switch (filesSource) {
     case 'library':
-      return <LibraryConstructorForm setFilesSource={() => setFilesSource('generated')} />
+      return <LibraryConstructorForm setFilesSource={() => setFilesSource('loading')} />
     case 'uploader':
-      return <UploaderConstructorForm setFilesSource={() => setFilesSource('generated')} />
+      return <UploaderConstructorForm setFilesSource={() => setFilesSource('loading')} />
+    case 'loading':
+      return <LoadingConstructorFrom setFilesSource={() => setFilesSource(null)} />
     case 'generated':
       return <GeneratedConstructorForm setFilesSource={() => setFilesSource(null)} />
     default:
