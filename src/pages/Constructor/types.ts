@@ -12,4 +12,4 @@ export interface IConstructor {
   images: IGalleryImage[]
 }
 
-export type ConstructorSource = 'library' | 'uploader' | 'generated'
+export type ConstructorSource = 'library' | 'uploader' | 'loading' | 'generated'
