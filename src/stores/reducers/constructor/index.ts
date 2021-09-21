@@ -3,6 +3,7 @@ import { ConstructorStateType } from './types'
 
 const initialState: ConstructorStateType = {
   fetching: false,
+  cancelled: false,
   error: '',
   contentImage: null,
   styleImage: null,
@@ -18,6 +19,7 @@ const constructorSlice = createSlice({
   reducers: {
     createStyleTransferRequest: (state, i) => {
       state.fetching = true
+      state.cancelled = false
     },
     createStyleTransferSuccess: (state, { payload }: PayloadAction<{ imageUrl: ConstructorStateType['imageUrl'] }>) => {
       state.imageUrl = payload.imageUrl
@@ -27,6 +29,11 @@ const constructorSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+    cancelledStyleTransfer: (state) => {
+      state.cancelled = true
+      state.imageUrl = ''
+      state.cancelled = false
+    },
   },
 })
 
@@ -34,6 +41,8 @@ export const {
   createStyleTransferRequest,
   createStyleTransferSuccess,
   createStyleTransferFailure,
+
+  cancelledStyleTransfer,
 } = constructorSlice.actions
 
 export const { reducer } = constructorSlice

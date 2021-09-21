@@ -1,4 +1,5 @@
 import React, { Suspense, useState } from 'react'
+import { useFormikContext } from 'formik'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectConstructor, selectUser, selectWallet } from 'stores/selectors'
 import { Box, Button, Typography } from '@material-ui/core'
@@ -8,6 +9,7 @@ import { addImageToAlbumRequest } from 'stores/reducers/album'
 import { useStyles } from './styles'
 import { Loadable, handleDownload } from 'utils'
 import { useTextDotLoader } from 'hooks'
+import { IConstructor } from '../../../types'
 
 export default function GeneratedConstructorFrom({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
@@ -15,6 +17,8 @@ export default function GeneratedConstructorFrom({ setFilesSource }: { setFilesS
   const { fetching, imageUrl } = useSelector(selectConstructor())
   const { user } = useSelector(selectUser())
   const { wallet } = useSelector(selectWallet())
+
+  const { setFieldValue } = useFormikContext<IConstructor>()
 
   const [open, setOpen] = useState<boolean>(false)
 
@@ -42,7 +46,16 @@ export default function GeneratedConstructorFrom({ setFilesSource }: { setFilesS
           )}
         </Box>
         <Box className={classes.genetatedForm}>
-          <Button variant={'text'} startIcon={<ArrowLeftIcon />} className={classes.btnBack} onClick={setFilesSource}>
+          <Button
+            variant={'text'}
+            startIcon={<ArrowLeftIcon />}
+            className={classes.btnBack}
+            onClick={() => {
+              setFilesSource()
+              setFieldValue(`file0`, '')
+              setFieldValue(`file1`, '')
+            }}
+          >
             Back
           </Button>
           <Box mb={10}>
