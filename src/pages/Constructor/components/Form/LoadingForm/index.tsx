@@ -1,14 +1,18 @@
 import React from 'react'
+import { useFormikContext } from 'formik'
 import { useDispatch } from 'react-redux'
 import { cancelledStyleTransfer } from 'stores/reducers/constructor'
 import { Box, Button, Typography } from '@material-ui/core'
 import { ArrowLeftIcon, EmptyImageIcon } from 'common/icons'
 import { useStyles } from './styles'
 import { useTextDotLoader } from 'hooks'
+import { IConstructor } from '../../../types'
 
 export default function LoadingConstructorFrom({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const { setFieldValue } = useFormikContext<IConstructor>()
 
   const { textLoader } = useTextDotLoader({
     text: `Waiting.`,
@@ -31,6 +35,8 @@ export default function LoadingConstructorFrom({ setFilesSource }: { setFilesSou
           onClick={() => {
             dispatch(cancelledStyleTransfer())
             setFilesSource()
+            setFieldValue(`file0`, '')
+            setFieldValue(`file1`, '')
           }}
         >
           Back

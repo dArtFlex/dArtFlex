@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { Box, Typography } from '@material-ui/core'
-import { HashTagsFilter } from 'common'
 import { CardImage, SelectedPreview } from '../../../components'
 import { IConstructor } from '../../../types'
 import { useStyles } from './styles'
 import { imageUrlToFile } from 'utils'
 
-const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
+// import { HashTagsFilter } from 'common'
+// const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
 export default function LibraryConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
@@ -36,7 +36,8 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
         Constructor
       </Typography>
       <Box mt={6} mb={6}>
-        <HashTagsFilter tags={hashTags} withAction />
+        {/* ************** Todo: Next version ************** */}
+        {/* <HashTagsFilter tags={hashTags} withAction /> */}
       </Box>
       <FieldArray
         name="images"
