@@ -28,7 +28,7 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
     }
   }
 
-  const disabled = Boolean(values.tokenId0.length) && Boolean(values.tokenId1.length)
+  const disabled = Boolean(values.tokenId0) && Boolean(values.tokenId1)
 
   return (
     <Box className={classes.libraryContainer}>
