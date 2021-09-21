@@ -107,9 +107,9 @@ export default function TabBids(props: ITabHistoryProps) {
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
               onCancel={
                 user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
-                  ? status === SOLD
-                    ? handleCancelBid
-                    : handleCancelOffer
+                  ? marketData?.sold || marketData === null
+                    ? handleCancelOffer
+                    : handleCancelBid
                   : undefined
               }
               expireDate={expireDate}
@@ -141,10 +141,10 @@ export default function TabBids(props: ITabHistoryProps) {
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
             onCancel={
-              user?.id === +props.userData?.id && (expireTime || status === SOLD || status === MINTED)
-                ? status === SOLD
-                  ? handleCancelBid
-                  : handleCancelOffer
+              user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
+                ? marketData?.sold || marketData === null
+                  ? handleCancelOffer
+                  : handleCancelBid
                 : undefined
             }
             expireDate={expireDate}
