@@ -20,7 +20,7 @@ export default function SelectedPreview(props: ISelectedPreview) {
           )}
         </Box>
         <Box className={classes.cardImage}>
-          {file0 ? (
+          {file1 ? (
             <Image file={file1} className={classes.image} />
           ) : (
             <Typography className={classes.imageNumber}>2</Typography>

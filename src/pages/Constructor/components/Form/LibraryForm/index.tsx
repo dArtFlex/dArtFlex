@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { Box, Typography } from '@material-ui/core'
 import { CardImage, SelectedPreview } from '../../../components'
@@ -13,18 +13,26 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
   const classes = useStyles()
   const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
-  const [switchFile, setSwitchFile] = useState<0 | 1>(0)
-
   const onSelect = async (tokenId: string, src: string, selected: boolean) => {
     // Selected value is false as this event triggered before selection
+
     if (selected === false) {
       const file = await imageUrlToFile(src)
-      setFieldValue(`file${switchFile}`, file)
-      setFieldValue(`tokenId${switchFile}`, tokenId)
-      setSwitchFile(switchFile ? 0 : 1)
+      if (!values.file0) {
+        setFieldValue('file0', file)
+        setFieldValue(`tokenId0`, tokenId)
+      } else {
+        setFieldValue('file1', file)
+        setFieldValue(`tokenId1`, tokenId)
+      }
     } else {
-      setFieldValue(`file${switchFile}`, '')
-      setFieldValue(`tokenId${switchFile}`, '')
+      if (tokenId === values.tokenId0) {
+        setFieldValue(`file0`, '')
+        setFieldValue(`tokenId0`, '')
+      } else {
+        setFieldValue(`file1`, '')
+        setFieldValue(`tokenId1`, '')
+      }
     }
   }
 
