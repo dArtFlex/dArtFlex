@@ -7,7 +7,7 @@ import { useStyles } from './styles'
 export default function SelectedPreview(props: ISelectedPreview) {
   const { file0, file1, onClick } = props
   const classes = useStyles()
-  const selected = file0 && file1 ? '0/2' : '1/2'
+  const selected = !file0 && !file1 ? '0/2' : '1/2'
 
   return (
     <Card className={classes.popper}>

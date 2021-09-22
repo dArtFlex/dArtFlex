@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Button } from '@material-ui/core'
 import { DropZone, ImagePreview } from '../../../components'
@@ -11,6 +11,11 @@ export default function UploaderConstructorForm({ setFilesSource }: { setFilesSo
   const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
   const disabled = !values.file0 || !values.file1
+
+  useEffect(() => {
+    setFieldValue('file0', null)
+    setFieldValue('file1', null)
+  }, [])
 
   return (
     <Box className={classes.uploaderContainer}>
