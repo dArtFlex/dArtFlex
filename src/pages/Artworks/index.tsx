@@ -112,6 +112,12 @@ export default function Artworks() {
   const [priceTo, setPriceTo] = useState('')
   const [hotOnly, setHotOnly] = useState(false)
 
+  useEffect(() => {
+    if (search) {
+      setFilter(FEATURED_ARTWORKS)
+    }
+  }, [search])
+
   const searchAssets = useSearchAssets({ assets, search })
   const innerSearchAssets = useInnerAssetsFilter({
     assets: searchAssets,

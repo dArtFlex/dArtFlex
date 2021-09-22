@@ -22,7 +22,7 @@ import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { parseJS, notSupportedNetwork, networkConvertor, getTokenInfoByChainId } from 'utils'
+import { parseJS, notSupportedNetwork, networkConvertor, getTokenInfoByChainId, convertTokenSymbol } from 'utils'
 
 function checkBlackList(account: string) {
   return APP_CONSTS.USER.BLACK_LIST.some(
@@ -201,17 +201,15 @@ function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
           .toNumber()
           .toFixed(2)
 
-        const price: { [key: string]: number } = yield call(api, {
-          url: APP_CONFIG.exchangeRate(symbol, 'USD'),
-          method: 'GET',
+        const price: number = yield call(api, {
+          url: APP_CONFIG.exchangeRateSafe(convertTokenSymbol(symbol)),
         })
-        const _price = price?.USD
         return {
           id,
           symbol,
           balance: _balance,
-          priceUSD: _price,
-          balanceUSD: new BigNumber(_balance).times(_price).toNumber(),
+          priceUSD: price,
+          balanceUSD: new BigNumber(_balance).times(price).toNumber(),
         }
       }
     }
