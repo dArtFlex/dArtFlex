@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectAssets, selectWallet, selectPromotion, selectSearch, selectHashtags } from 'stores/selectors'
-import { getHashtagsAllRequest } from 'stores/reducers/assets'
+import { getHashtagsAllRequest, getAssetsAllRequest } from 'stores/reducers/assets'
+import { getPromotionRequest } from 'stores/reducers/user'
 import clsx from 'clsx'
 import {
   Box,
@@ -33,6 +34,8 @@ import appConst from 'config/consts'
 import { IHashtag, IArtworksFiltes } from 'types'
 import { useStyles } from './styles'
 import { creatArrayFromNumber } from 'utils'
+
+const { INTERVALS } = appConst
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -112,12 +115,6 @@ export default function Artworks() {
   const [priceTo, setPriceTo] = useState('')
   const [hotOnly, setHotOnly] = useState(false)
 
-  useEffect(() => {
-    if (search) {
-      setFilter(FEATURED_ARTWORKS)
-    }
-  }, [search])
-
   const searchAssets = useSearchAssets({ assets, search })
   const innerSearchAssets = useInnerAssetsFilter({
     assets: searchAssets,
@@ -151,9 +148,25 @@ export default function Artworks() {
     setHotOnly(false)
   }
 
+  const fetchAssets = () => {
+    dispatch(getAssetsAllRequest())
+    dispatch(getPromotionRequest())
+  }
+
   useEffect(() => {
+    fetchAssets()
     dispatch(getHashtagsAllRequest())
+    const iId = setInterval(() => fetchAssets(), INTERVALS.UPDATE_ASSETS)
+    return () => {
+      clearInterval(iId)
+    }
   }, [])
+
+  useEffect(() => {
+    if (search) {
+      setFilter(FEATURED_ARTWORKS)
+    }
+  }, [search])
 
   return (
     <PageWrapper className={classes.wrapper}>
