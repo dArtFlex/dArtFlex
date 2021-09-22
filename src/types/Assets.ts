@@ -26,6 +26,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   ban: boolean
   hashtag: IHashtag[]
   marketplace: IAssetMarketData[]
+  etherscan: string
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {

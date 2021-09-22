@@ -394,6 +394,8 @@ export default function FormDetails(props: IDetailsFormProps) {
         anchorEl={anchorElExtLink}
         onClose={() => setAnchorElExtLink(null)}
         twitterLink={shareTwitterLink}
+        etherscanLink={tokenData?.etherscan}
+        IPFSLink={imageData?.image}
         url={currentUrl}
         creator={user?.id === ownerData?.id}
         superAdmin={role === 'ROLE_SUPER_ADMIN'}
