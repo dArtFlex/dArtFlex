@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { selectConstructor } from 'stores/selectors'
 import clsx from 'clsx'
 import { v4 as uuidv4 } from 'uuid'
@@ -17,6 +18,7 @@ import { createStyleTransferRequest } from 'stores/reducers/constructor'
 import { IConstructor, ConstructorSource, IGalleryImage } from './types'
 import { getRandomLibraryImages } from 'utils'
 import { useStyles } from './styles'
+import routes from '../../routes'
 
 const CONSTRUCTOR_SOURCE = {
   LIBRARY: 'library',
@@ -41,6 +43,7 @@ const initialData: IConstructor = {
 export default function Constructor() {
   const classes = useStyles()
   const dispatch = useDispatch()
+
   const [data, setData] = useState<IConstructor>(initialData)
   const [filesSource, setFilesSource] = useState<ConstructorSource | null>(null)
   const { priority, endScale } = useSelector(selectConstructor())
@@ -78,25 +81,59 @@ function Components({
 }) {
   const classes = useStyles()
   const { imageUrl, fetching } = useSelector(selectConstructor())
+  const history = useHistory()
+  const {
+    location: { search },
+  } = history
 
   useEffect(() => {
     if (imageUrl.length) {
       setFilesSource('generated')
+      history.replace('?tab=generated')
     }
     if (fetching) {
       setFilesSource('loading')
+      history.replace('?tab=loading')
     }
   }, [imageUrl, fetching])
 
-  switch (filesSource) {
-    case 'library':
-      return <LibraryConstructorForm setFilesSource={() => setFilesSource('loading')} />
-    case 'uploader':
-      return <UploaderConstructorForm setFilesSource={() => setFilesSource('loading')} />
-    case 'loading':
-      return <LoadingConstructorFrom setFilesSource={() => setFilesSource(null)} />
-    case 'generated':
-      return <GeneratedConstructorForm setFilesSource={() => setFilesSource(null)} />
+  switch (search) {
+    case '?tab=library':
+      return (
+        <LibraryConstructorForm
+          setFilesSource={() => {
+            setFilesSource('loading')
+            history.replace('?tab=loading')
+          }}
+        />
+      )
+    case '?tab=uploader':
+      return (
+        <UploaderConstructorForm
+          setFilesSource={() => {
+            setFilesSource('loading')
+            history.replace('?tab=loading')
+          }}
+        />
+      )
+    case '?tab=loading':
+      return (
+        <LoadingConstructorFrom
+          setFilesSource={() => {
+            setFilesSource(null)
+            history.push(routes.constructor)
+          }}
+        />
+      )
+    case '?tab=generated':
+      return (
+        <GeneratedConstructorForm
+          setFilesSource={() => {
+            setFilesSource(null)
+            history.push(routes.constructor)
+          }}
+        />
+      )
     default:
       return (
         <Box pb={18}>
@@ -106,12 +143,18 @@ function Components({
           <Box className={classes.containerCardForm}>
             <CardForm
               title={'Choose from library'}
-              onClick={() => setFilesSource(CONSTRUCTOR_SOURCE.LIBRARY as ConstructorSource)}
+              onClick={() => {
+                setFilesSource(CONSTRUCTOR_SOURCE.LIBRARY as ConstructorSource)
+                history.replace('?tab=library')
+              }}
               icon={<LibraryConstrIcon />}
             />
             <CardForm
               title={'Upload your images'}
-              onClick={() => setFilesSource(CONSTRUCTOR_SOURCE.UPLOADER as ConstructorSource)}
+              onClick={() => {
+                setFilesSource(CONSTRUCTOR_SOURCE.UPLOADER as ConstructorSource)
+                history.replace('?tab=uploader')
+              }}
               icon={<UploadConstrIcon />}
             />
           </Box>

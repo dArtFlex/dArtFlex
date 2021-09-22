@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { Box, Typography } from '@material-ui/core'
 import { CardImage, SelectedPreview } from '../../../components'
@@ -35,6 +35,13 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
       }
     }
   }
+
+  useEffect(() => {
+    setFieldValue('file0', null)
+    setFieldValue('file1', null)
+    setFieldValue(`tokenId0`, '')
+    setFieldValue(`tokenId1`, '')
+  }, [])
 
   const disabled = Boolean(values.tokenId0) && Boolean(values.tokenId1)
 
