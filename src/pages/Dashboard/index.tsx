@@ -176,10 +176,7 @@ export default function Dashboard() {
       return a.marketplace ? a.marketplace[0].bid_amount : '0'
     })
     .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
-  const totalSalesToEth = new BigNumber(totalSales)
-    .dividedBy(`10e${18 - 1}`)
-    .toNumber()
-    .toFixed(4)
+  const totalSalesToEth = new BigNumber(totalSales).dividedBy(`10e${18 - 1}`).toString()
 
   return (
     <>
