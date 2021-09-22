@@ -177,6 +177,9 @@ export default function Dashboard() {
     })
     .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
   const totalSalesToEth = new BigNumber(totalSales).dividedBy(`10e${18 - 1}`).toString()
+  const totalRevenueToEth = new BigNumber(totalSalesToEth)
+    .minus(new BigNumber(totalSalesToEth).dividedBy(100).multipliedBy(2.5))
+    .toString()
 
   return (
     <>
@@ -215,7 +218,7 @@ export default function Dashboard() {
             {filter === FILTER_VALUES.SOLD && (
               <Box className={classes.container}>
                 <Box className={classes.inlineFlex}>
-                  <ValuesInfo totalSalesToEth={totalSalesToEth} />
+                  <ValuesInfo totalSalesToEth={totalSalesToEth} totalRevenueToEth={totalRevenueToEth} />
                 </Box>
               </Box>
             )}

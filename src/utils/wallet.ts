@@ -58,3 +58,14 @@ export function getTokenInfoByChainId(chainId: IChainId, erc20TokenId?: string) 
     erc20TokenId ? t.id === erc20TokenId : t.id === '0x'
   )
 }
+
+export function convertTokenSymbol(symbol: string) {
+  switch (symbol.toUpperCase()) {
+    case 'WETH':
+      return 'ETH'
+    case 'WBNB':
+      return 'BNB'
+    default:
+      return symbol
+  }
+}

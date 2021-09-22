@@ -5,11 +5,12 @@ import { useStyles } from './styles'
 
 interface IValuesInfoProps {
   totalSalesToEth: string
+  totalRevenueToEth: string
 }
 
 export default function ValuesInfo(props: IValuesInfoProps) {
   const classes = useStyles()
-  const { totalSalesToEth } = props
+  const { totalSalesToEth, totalRevenueToEth } = props
 
   return (
     <Card className={classes.card}>
@@ -25,7 +26,7 @@ export default function ValuesInfo(props: IValuesInfoProps) {
       </Box>
       <Divider orientation="vertical" flexItem />
       <Box className={classes.box}>
-        <Typography variant={'h3'}>0 ETH</Typography>
+        <Typography variant={'h3'}>{`${totalRevenueToEth} ETH`}</Typography>
         <Box className={classes.infoRowIcon}>
           <Tooltip
             text={'Net Sale Revenue'}
