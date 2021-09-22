@@ -15,6 +15,7 @@ const APP_CONFIG = {
   rinkebyProvider: RINKEBY_PROVIDER,
   rinkebyProviderAddress: getProviderAddress(RINKEBY_PROVIDER),
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
+  exchangeRateSafe: (symbol: string) => `${STAGE_URL_API}/token_price/get/${symbol.toUpperCase()}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
 

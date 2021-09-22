@@ -28,6 +28,7 @@ import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkCon
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
+import { convertTokenSymbol } from 'utils'
 
 const {
   STATUSES: { MINTED },
@@ -190,11 +191,10 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
 
 function* getPrice(api: IApi, symbol: string) {
   try {
-    const price: { [key: string]: number } = yield call(api, {
-      url: APP_CONFIG.exchangeRate(symbol, 'USD'),
-      method: 'GET',
+    const price: number = yield call(api, {
+      url: APP_CONFIG.exchangeRateSafe(convertTokenSymbol(symbol)),
     })
-    return { priceUSD: price?.USD || 0 }
+    return { priceUSD: price || 0 }
   } catch (e) {
     throw new Error(e)
   }
