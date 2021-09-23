@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, Typography, Button, makeStyles, Theme, createStyles } from '@material-ui/core'
 import { ReloadIcon } from 'common/icons'
-import { closeWarningModal } from 'stores/reducers/wallet'
+import { walletError } from 'stores/reducers/wallet'
 
 interface IWalletErrorProps {
   onClose?: () => void
@@ -26,7 +26,7 @@ export default function WalletError(props: IWalletErrorProps) {
       <Typography className={classes.title}>Welcome to dArtflex!</Typography>I accept Community Guidelines
       <Button
         onClick={() => {
-          dispatch(closeWarningModal())
+          dispatch(walletError({ error: '' }))
           onClose && onClose()
           window.location.reload()
         }}

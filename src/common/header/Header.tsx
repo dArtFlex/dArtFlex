@@ -22,7 +22,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
-import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
+import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
 import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
@@ -286,7 +286,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       <Modal
         open={open}
         onClose={() => {
-          dispatch(closeWarningModal())
+          dispatch(walletError({ error: '' }))
           setOpen(false)
         }}
         body={

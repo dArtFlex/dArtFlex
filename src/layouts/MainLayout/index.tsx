@@ -22,7 +22,7 @@ import { clearBuyNowError } from '../../stores/reducers/buyNow'
 import { clearBidError, clearBidSuccessMessage } from '../../stores/reducers/placeBid'
 import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
-import { clearWalletsError } from '../../stores/reducers/wallet'
+import { walletError } from '../../stores/reducers/wallet'
 import { clearAlbumSuccessMessage } from 'stores/reducers/album'
 import Snack from '../../common/Snack'
 
@@ -94,7 +94,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     dispatch(clearManagementError())
     dispatch(clearMakeOfferSuccessMessage())
     dispatch(clearUserSuccessMessage())
-    dispatch(clearWalletsError())
+    dispatch(walletError({ error: '' }))
     dispatch(clearBidSuccessMessage())
     dispatch(clearAlbumSuccessMessage())
   }
@@ -112,7 +112,15 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
         onClose={onCloseSnackbar}
         successMessage={successGlobalMessage}
       />
-      <Modal open={open} onClose={() => setOpen(false)} body={<WalletError />} withAside />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        disableBackdropClick
+        disableEscapeKeyDown
+        withoutCloseBtn
+        body={<WalletError />}
+        withAside
+      />
     </div>
   )
 }
