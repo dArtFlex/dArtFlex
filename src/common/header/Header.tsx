@@ -20,6 +20,7 @@ import {
   Fade,
   Icon,
   Typography,
+  FormHelperText,
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
 import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
@@ -30,6 +31,7 @@ import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
 import { HeaderType, IMenuItems } from './types'
+import { IChainName } from 'types'
 import {
   CurrentDownIcon,
   LogoIcon,
@@ -55,7 +57,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const dispatch = useDispatch()
   const { path } = useRouteMatch()
 
-  const { wallet } = useSelector(selectWallet())
+  const { wallet, chainName } = useSelector(selectWallet())
   const { user, activeBids } = useSelector(selectUser())
   const { notifications } = useSelector(selectNotifications())
 
@@ -271,6 +273,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
+                      <ChainNetwork chainName={chainName} />
                     </Button>
                   </>
                 )}
@@ -410,4 +413,14 @@ export default function Header({ toggleTheme }: HeaderType) {
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )
+}
+
+function ChainNetwork({ chainName }: { chainName?: IChainName }) {
+  const classes = useStyles()
+  return chainName ? (
+    <Box className={classes.chainNetwork}>
+      <Box className={classes.chainNetworkActiveIcon}></Box>
+      <FormHelperText className={classes.chainNetworkText}>{chainName}</FormHelperText>
+    </Box>
+  ) : null
 }

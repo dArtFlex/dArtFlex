@@ -74,10 +74,10 @@ export function getChainNameById(chainId: IChainId & IUnsupportedChainId): IChai
   switch (chainId) {
     case '0x1':
     case 1:
-      return 'Ethereum Mainnet'
+      return 'Ethereum'
     case '0x38':
     case 38:
-      return 'Binance Mainnet'
+      return 'Binance'
     case '0x2a':
       return 'Kovan'
     case '0x3':
