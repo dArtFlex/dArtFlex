@@ -11,6 +11,8 @@ interface IWalletConnectProps {
   onClose: () => void
 }
 
+const LINK_METAMASK = 'https://metamask.io/'
+
 export default function WalletConnect(props: IWalletConnectProps) {
   const { onClose } = props
   const classes = useStyles()
@@ -66,7 +68,7 @@ export default function WalletConnect(props: IWalletConnectProps) {
       </Box>
 
       <Typography className={classes.walletConnectDesc}>New to Ethereum?</Typography>
-      <Link href="#" underline="none" className={classes.walletLearnMoreLink}>
+      <Link href={LINK_METAMASK} underline="none" className={classes.walletLearnMoreLink} target="_blank">
         Learn more about wallets
       </Link>
     </Box>
