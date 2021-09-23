@@ -1,5 +1,5 @@
 import APP_CONSTS from 'config/consts'
-import { IWallet, IChainId, IChainIdFormat, IBaseTokens } from 'types'
+import { IWallet, IChainId, IChainIdFormat, IBaseTokens, IChainName, IUnsupportedChainId } from 'types'
 import tokensAll from 'core/tokens'
 
 export function storageActiveWallet(wallet: IWallet, walletStorageKey: string) {
@@ -30,9 +30,9 @@ export function getWalletsFromHistory() {
   return { activeWallet, connectedMetaMask, connectedWalletConnect }
 }
 
-export function notSupportedNetwork(chainId: string | number) {
+export function supportedNetwork(chainId: string | number) {
   const allowedNetworks = ['0x1', '0x4', '0x38', 1, 4, 38]
-  return !allowedNetworks.some((network) => network === chainId)
+  return allowedNetworks.some((network) => network === chainId)
 }
 
 export function networkConvertor(chainId: IChainId): IChainIdFormat {
@@ -67,5 +67,27 @@ export function convertTokenSymbol(symbol: string) {
       return 'BNB'
     default:
       return symbol
+  }
+}
+
+export function getChainNameById(chainId: IChainId & IUnsupportedChainId): IChainName | undefined {
+  switch (chainId) {
+    case '0x1':
+    case 1:
+      return 'Ethereum Mainnet'
+    case '0x38':
+    case 38:
+      return 'Binance Mainnet'
+    case '0x2a':
+      return 'Kovan'
+    case '0x3':
+      return 'Ropsten'
+    case '0x5':
+      return 'Goerli'
+    case '0x4':
+    case 4:
+      return 'Rinkeby'
+    default:
+      return undefined
   }
 }

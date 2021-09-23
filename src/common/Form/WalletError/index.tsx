@@ -1,18 +1,10 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Box, Typography, Button } from '@material-ui/core'
 import { ReloadIcon } from 'common/icons'
-import { closeWarningModal } from 'stores/reducers/wallet'
 import { useStyles } from './styles'
 
-interface IWalletErrorProps {
-  onClose?: () => void
-}
-
-export default function WalletError(props: IWalletErrorProps) {
-  const { onClose } = props
+export default function WalletError() {
   const classes = useStyles()
-  const dispatch = useDispatch()
 
   return (
     <Box className={classes.walletError}>
@@ -25,8 +17,6 @@ export default function WalletError(props: IWalletErrorProps) {
 
       <Button
         onClick={() => {
-          dispatch(closeWarningModal())
-          onClose && onClose()
           window.location.reload()
         }}
         variant={'contained'}

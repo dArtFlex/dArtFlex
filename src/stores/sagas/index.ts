@@ -123,7 +123,7 @@ export default function* root() {
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
     takeLatest(walletsDisconetRequest, walletsDisconet),
-    takeLatest(walletsHistoryRequest, walletsHistory),
+    takeLatest(walletsHistoryRequest.type, walletsHistory, apiMiddleware),
 
     /** Minting **/
     takeLatest(lazyMintingRequest.type, minting, apiMiddleware),
