@@ -33,6 +33,7 @@ export interface IImageEntity extends IDatedEntity, IEntity {
 }
 
 export type IChainId = '0x1' | '0x4' | '0x38' | 1 | 4 | 38
+export type IUnsupportedChainId = '0x2a' | '0x3' | '0x5'
 export type IChainIdFormat = '0x1' | '0x4' | '0x38'
 
 export type IPaymentToken = 'ETH' | 'WETH' | 'BNB'
@@ -52,3 +53,5 @@ export interface IBaseTokens {
   decimals: number
   logoURI: string
 }
+
+export type IChainName = 'Ethereum Mainnet' | 'Ropsten' | 'Kovan' | 'Rinkeby' | 'Goerli' | 'Binance Mainnet'
