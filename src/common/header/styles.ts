@@ -98,6 +98,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     buttonWallet: {
+      position: 'relative',
       borderColor: theme.palette.grey['200'],
       backgroundColor: theme.palette.background.default,
       color: theme.palette.primary.contrastText,
@@ -256,6 +257,27 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 14,
       fontWeight: 700,
       marginLeft: theme.spacing(4),
+    },
+
+    chainNetwork: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
+      left: 56,
+    },
+    chainNetworkActiveIcon: {
+      width: 3,
+      height: 3,
+      borderRadius: '50%',
+      background: theme.palette.green,
+    },
+    chainNetworkText: {
+      color: theme.palette.green,
+      paddingLeft: theme.spacing(1),
+      fontSize: '0.6rem',
+      letterSpacing: 2,
     },
   })
 )

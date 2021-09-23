@@ -218,9 +218,9 @@ function* handlerChanelEvent(chainChannel) {
       }
     } else if (data?.disconnect) {
       return yield put(walletsDisconetRequest())
-    } else {
-      window.location.reload()
     }
+
+    window.location.reload()
   }
 }
 

@@ -106,7 +106,7 @@ export const selectUserSuccessMessage = () =>
 export const selectWallet = () =>
   createSelector(
     (store: stateType) => store,
-    ({ wallet: { wallet, tokensBalances } }: stateType) => ({ wallet, tokensBalances })
+    ({ wallet: { wallet, tokensBalances, chainName } }: stateType) => ({ wallet, tokensBalances, chainName })
   )
 export const selectWalletError = () =>
   createSelector(
