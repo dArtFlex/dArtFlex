@@ -54,4 +54,4 @@ export interface IBaseTokens {
   logoURI: string
 }
 
-export type IChainName = 'Ethereum Mainnet' | 'Ropsten' | 'Kovan' | 'Rinkeby' | 'Goerli' | 'Binance Mainnet'
+export type IChainName = 'Ethereum' | 'Ropsten' | 'Kovan' | 'Rinkeby' | 'Goerli' | 'Binance'
