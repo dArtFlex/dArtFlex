@@ -68,6 +68,9 @@ export default function TradingHistory() {
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
                   setSortValue(target.value as string)
                 }}
+                MenuProps={{
+                  classes: { paper: classes.menuList },
+                }}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:

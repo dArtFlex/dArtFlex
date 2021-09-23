@@ -20,9 +20,10 @@ import {
   Fade,
   Icon,
   Typography,
+  FormHelperText,
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip } from 'common'
-import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
+import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
 import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
@@ -30,6 +31,7 @@ import CreateActionMenu from './CreateActionMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
 import { HeaderType, IMenuItems } from './types'
+import { IChainName } from 'types'
 import {
   CurrentDownIcon,
   LogoIcon,
@@ -55,7 +57,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const dispatch = useDispatch()
   const { path } = useRouteMatch()
 
-  const { wallet } = useSelector(selectWallet())
+  const { wallet, chainName } = useSelector(selectWallet())
   const { user, activeBids } = useSelector(selectUser())
   const { notifications } = useSelector(selectNotifications())
 
@@ -126,6 +128,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [open, setOpen] = useState<boolean>(false)
 
   const isMobile = useMediaQuery('(max-width: 680px)')
+  const showBidsMessage = useMediaQuery('(max-width: 850px)')
 
   const MenuItems: IMenuItems[] = [
     {
@@ -211,7 +214,7 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Box className={classes.buttonContainer}>
                 {Boolean(activeBids.length) && (
                   <Chip avatar={`${activeBids.length}`} endIcon>
-                    Bids
+                    {showBidsMessage ? '' : 'Bids'}
                   </Chip>
                 )}
                 <SearchField onSearch={handleSearch} />
@@ -225,7 +228,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   classes={{ root: classes.createButton }}
                   endIcon={<CurrentDownIcon />}
                 >
-                  Create
+                  {showBidsMessage ? '+' : 'Create'}
                 </Button>
                 {wallet === null ? (
                   <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
@@ -237,7 +240,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       aria-label="notification"
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
                         const target = event.currentTarget as HTMLElement
-                        notifications.length && setAnchorElNotification(target)
+                        setAnchorElNotification(target)
                       }}
                       className={classes.notificationButton}
                     >
@@ -270,6 +273,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
+                      <ChainNetwork chainName={chainName} />
                     </Button>
                   </>
                 )}
@@ -285,7 +289,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       <Modal
         open={open}
         onClose={() => {
-          dispatch(closeWarningModal())
+          dispatch(walletError({ error: '' }))
           setOpen(false)
         }}
         body={
@@ -409,4 +413,14 @@ export default function Header({ toggleTheme }: HeaderType) {
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )
+}
+
+function ChainNetwork({ chainName }: { chainName?: IChainName }) {
+  const classes = useStyles()
+  return chainName ? (
+    <Box className={classes.chainNetwork}>
+      <Box className={classes.chainNetworkActiveIcon}></Box>
+      <FormHelperText className={classes.chainNetworkText}>{chainName}</FormHelperText>
+    </Box>
+  ) : null
 }

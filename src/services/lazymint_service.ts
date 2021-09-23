@@ -24,7 +24,7 @@ class LazyMintService extends CommonService {
     return tokenId
   }
 
-  async generateLazyMint(request, response) {
+  async generateLazyMint(request, response?: Response) {
     const { contract, uri, creator } = request.body
 
     if (!contract || !uri || !creator) {

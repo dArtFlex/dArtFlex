@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectWallet, selectUser } from 'stores/selectors'
-import { getAssetsAllRequest, getExchangeRateTokensRequest } from 'stores/reducers/assets'
-import { getUserDataRequest, getPromotionRequest } from 'stores/reducers/user'
+import { getExchangeRateTokensRequest } from 'stores/reducers/assets'
+import { getUserDataRequest } from 'stores/reducers/user'
 import { getTokensBalancesRequest, walletsHistoryRequest } from 'stores/reducers/wallet'
 import { listenForSocketMessagesRequest } from 'stores/reducers/notifications'
 import { CircularProgressLoader } from 'common'
@@ -16,10 +16,8 @@ export const DataProvider: React.FC = ({ children }) => {
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
 
-  const fetchAssets = () => {
-    dispatch(getAssetsAllRequest())
+  const fetchRate = () => {
     dispatch(getExchangeRateTokensRequest())
-    dispatch(getPromotionRequest())
   }
 
   const fetchUser = useCallback(() => {
@@ -30,11 +28,11 @@ export const DataProvider: React.FC = ({ children }) => {
   }, [wallet?.accounts[0]])
 
   useEffect(() => {
-    fetchAssets()
+    fetchRate()
     dispatch(getExchangeRateTokensRequest())
     dispatch(walletsHistoryRequest())
 
-    const iId = setInterval(() => fetchAssets(), INTERVALS.UPDATE_ASSETS)
+    const iId = setInterval(() => fetchRate(), INTERVALS.UPDATE_ASSETS)
     setReady(true)
     return () => {
       clearInterval(iId)

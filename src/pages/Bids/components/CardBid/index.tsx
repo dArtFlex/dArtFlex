@@ -57,7 +57,7 @@ function Bids(props: IBidsProps) {
       <Typography variant={'body1'} color={'textSecondary'} noWrap>
         {title}
       </Typography>
-      <Typography className={classes.bidsAmount} noWrap>{`${bidAmount} ETH`}</Typography>
+      <Typography className={classes.bidsAmount} noWrap>{`${bidAmount} WETH`}</Typography>
       <Typography>{`$${bidAmountUsd}`}</Typography>
     </Box>
   )

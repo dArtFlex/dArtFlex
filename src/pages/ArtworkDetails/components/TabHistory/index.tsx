@@ -1,22 +1,13 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
-import { selectAssetTokenRates, selectUser } from 'stores/selectors'
-import { Box, Button, makeStyles, createStyles } from '@material-ui/core'
+import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
+import { Box, Button } from '@material-ui/core'
 import { CardHistory } from 'common'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { IBidsHistory, UserDataTypes } from 'types'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    showMoreBtn: {
-      fontSize: 16,
-      '&:hover': {
-        backgroundColor: 'transparent',
-      },
-    },
-  })
-)
+import { useStyles } from '../../styles'
+import { normalizeDate } from 'utils'
 
 interface ITabHistoryPropa {
   history: Array<IBidsHistory & { userData: UserDataTypes }>
@@ -30,25 +21,33 @@ export default function TabHistory(props: ITabHistoryPropa) {
   const historyReverse = history.slice().reverse()
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
+  const {
+    assetDetails: { marketData },
+  } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
 
   const getBidAmountToTokenAndUsd = (bid_amount: string) => {
-    const bidAmountToToken = new BigNumber(bid_amount)
-      .dividedBy(`10e${18 - 1}`)
-      .toNumber()
-      .toFixed(4)
+    const bidAmountToToken = new BigNumber(bid_amount).dividedBy(`10e${18 - 1}`).toNumber()
     const bidAmountUsd = new BigNumber(bidAmountToToken).multipliedBy(tokenRate).toNumber().toFixed(2)
     return { bidAmountToToken, bidAmountUsd }
   }
 
+  const expireDate = marketData ? normalizeDate(marketData.end_time) : normalizeDate(String(new Date().getTime()))
+
   if (history.length > 4 && !showMore) {
     return (
-      <Box mt={3} mb={3}>
+      <Box className={classes.tabContentScroll}>
         {historyReverse.slice(0, 4).map((props, i) => {
           return (
-            <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
+            <CardHistory
+              key={i}
+              {...props}
+              {...getBidAmountToTokenAndUsd(props.bid_amount)}
+              userWalletId={user?.id}
+              expireDate={expireDate}
+            />
           )
         })}
         <Button
@@ -65,10 +64,16 @@ export default function TabHistory(props: ITabHistoryPropa) {
   }
 
   return (
-    <Box mt={3} mb={3}>
+    <Box className={classes.tabContentScroll}>
       {historyReverse.map((props, i) => {
         return (
-          <CardHistory key={i} {...props} {...getBidAmountToTokenAndUsd(props.bid_amount)} userWalletId={user?.id} />
+          <CardHistory
+            key={i}
+            {...props}
+            {...getBidAmountToTokenAndUsd(props.bid_amount)}
+            userWalletId={user?.id}
+            expireDate={expireDate}
+          />
         )
       })}
     </Box>

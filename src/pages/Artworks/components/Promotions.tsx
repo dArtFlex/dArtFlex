@@ -13,7 +13,13 @@ import clsx from 'clsx'
 import routes from '../../../routes'
 import { ArrowLeftIcon, ArrowRightIcon } from 'common/icons'
 import { useHistory } from 'react-router-dom'
+import { useTokenInfo } from 'hooks'
 import image from 'common/icons/cover_photo.png'
+import appConst from 'config/consts'
+
+const {
+  TYPES: { AUCTION },
+} = appConst
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -65,9 +71,11 @@ export default function Promotions(props: IPromotion) {
                   <Box className={classes.promotionInfo} mt={6}>
                     <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
-                        Current Bid
+                        {item.type === AUCTION ? 'Current Bid' : 'Current price'}
                       </Typography>
-                      <div className={classes.promotionInfoText}>{item.bid} ETH</div>
+                      <div className={clsx(classes.promotionInfoText, classes.promotionInfoBoxPrice)}>
+                        {item.bid} <TokenInfo tokenContractAddress={item.tokenContractAddress} />
+                      </div>
                     </Box>
                     <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
@@ -88,7 +96,7 @@ export default function Promotions(props: IPromotion) {
                       classes={{ root: classes.promotionButtonContained }}
                       onClick={() => history.push(`${routes.artworks}/${item.id}`, 'auction')}
                     >
-                      Place a Bid
+                      {item.type === AUCTION ? 'Place a Bid' : 'Buy Now'}
                     </Button>
                     <Button
                       variant="outlined"
@@ -124,5 +132,14 @@ export default function Promotions(props: IPromotion) {
         </Box>
       )}
     </React.Fragment>
+  )
+}
+
+function TokenInfo({ tokenContractAddress }: { tokenContractAddress: string }) {
+  const tokenInfo = useTokenInfo(tokenContractAddress)
+  return (
+    <Typography component={'span'} variant={'h3'} style={{ fontSize: 24, lineHeight: 'initial' }}>
+      {tokenInfo?.symbol}
+    </Typography>
   )
 }

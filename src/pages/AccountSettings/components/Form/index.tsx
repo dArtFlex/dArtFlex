@@ -19,6 +19,7 @@ import {
   SuccessIcon,
 } from 'common/icons'
 import { UploadFileSection } from '../../components'
+// import Notification from './Notification'
 import { ICustomAccountSettings } from '../../types'
 import { useStyles } from './styles'
 import { UserDataTypes } from '../../../../types'
@@ -89,12 +90,12 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
             user?.userid !== values.userid && !fetching ? (
               userIdValid === false ? (
                 <Box className={classes.errorTextHelper}>
-                  <Typography>{`Username isn't unique`}</Typography>
+                  <Typography className={classes.helperText}>{`Username isn't unique`}</Typography>
                 </Box>
               ) : (
                 <Box className={classes.successTextHelper}>
                   <SuccessIcon className={classes.successIcon} />
-                  <Typography>{`Username is Valid`}</Typography>
+                  <Typography className={classes.helperText}>{`Username is Valid`}</Typography>
                 </Box>
               )
             ) : null
@@ -120,6 +121,9 @@ export default function FormAccountSettings(props: IFormAccountSettings) {
           maxLength={200}
         />
       </Box>
+      {/* Todo: Notification settings will be implemented in next version */}
+      {/* <Notification /> */}
+
       <Box className={classes.section}>
         <Typography component="h3">Socials</Typography>
         <Field

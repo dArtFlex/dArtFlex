@@ -14,10 +14,12 @@ const { INTERVALS } = appConst
 
 const formData: ApprovedFormState = {
   bid: 0,
+  priceDrop: '',
   acknowledge: false,
   agreeTerms: false,
   formProgress: 'details',
   promotion: false,
+  salesTokenContract: '0x',
 }
 
 export default function ArtworkDetails() {
@@ -62,11 +64,8 @@ export default function ArtworkDetails() {
       {assetDetails.tokenData === null ? (
         <CircularProgressLoader />
       ) : (
-        <Form
-          initialValues={formData}
-          onSubmit={(state: ApprovedFormState) => console.log('y', state)}
-          validationSchema={useValidationSchema()}
-        >
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        <Form initialValues={formData} onSubmit={() => {}} validationSchema={useValidationSchema()}>
           <FormContainer />
         </Form>
       )}

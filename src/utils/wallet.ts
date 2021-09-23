@@ -1,5 +1,6 @@
 import APP_CONSTS from 'config/consts'
-import { IWallet } from 'types'
+import { IWallet, IChainId, IChainIdFormat, IBaseTokens, IChainName, IUnsupportedChainId } from 'types'
+import tokensAll from 'core/tokens'
 
 export function storageActiveWallet(wallet: IWallet, walletStorageKey: string) {
   localStorage.setItem(walletStorageKey, JSON.stringify(wallet))
@@ -29,12 +30,64 @@ export function getWalletsFromHistory() {
   return { activeWallet, connectedMetaMask, connectedWalletConnect }
 }
 
-export function notSupportedNetwork(chainId: string | number) {
-  const allowedNetworks = ['0x1', '0x4', 1, 4]
-  return !allowedNetworks.some((network) => network === chainId)
+export function supportedNetwork(chainId: string | number) {
+  const allowedNetworks = ['0x1', '0x4', '0x38', 1, 4, 38]
+  return allowedNetworks.some((network) => network === chainId)
+}
+
+export function networkConvertor(chainId: IChainId): IChainIdFormat {
+  switch (chainId) {
+    case 1:
+      return '0x1'
+    case 4:
+      return '0x4'
+    case 38:
+      return '0x38'
+    default:
+      return chainId
+  }
 }
 
 export function getProviderAddress(url: string) {
   const regExp: string | RegExp = new RegExp('(http://mainnet.infura.io/v3/)|(http://rinkeby.infura.io/v3/)', 'i')
   return url.replace(regExp, '')
+}
+
+export function getTokenInfoByChainId(chainId: IChainId, erc20TokenId?: string) {
+  return tokensAll[networkConvertor(chainId)].find((t: IBaseTokens) =>
+    erc20TokenId ? t.id === erc20TokenId : t.id === '0x'
+  )
+}
+
+export function convertTokenSymbol(symbol: string) {
+  switch (symbol.toUpperCase()) {
+    case 'WETH':
+      return 'ETH'
+    case 'WBNB':
+      return 'BNB'
+    default:
+      return symbol
+  }
+}
+
+export function getChainNameById(chainId: IChainId & IUnsupportedChainId): IChainName | undefined {
+  switch (chainId) {
+    case '0x1':
+    case 1:
+      return 'Ethereum'
+    case '0x38':
+    case 38:
+      return 'Binance'
+    case '0x2a':
+      return 'Kovan'
+    case '0x3':
+      return 'Ropsten'
+    case '0x5':
+      return 'Goerli'
+    case '0x4':
+    case 4:
+      return 'Rinkeby'
+    default:
+      return undefined
+  }
 }

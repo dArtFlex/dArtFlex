@@ -12,6 +12,7 @@ import { ICardAssetProps } from './types'
 import { normalizeDate, shortCutName } from 'utils'
 import { useSelector } from 'react-redux'
 import { selectWallet } from '../../../stores/selectors'
+import BigNumber from 'bignumber.js'
 
 export default function CardAsset(props: ICardAssetProps) {
   const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
@@ -38,9 +39,15 @@ export default function CardAsset(props: ICardAssetProps) {
     }
   }
 
+  const convertPrice = (price: string) =>
+    new BigNumber(price)
+      .dividedBy(`10e${18 - 1}`)
+      .toNumber()
+      .toFixed(4)
+
   return (
     <>
-      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
+      <Card key={asset.item_id} elevation={1} className={classes.root} onClick={cardActionEvent}>
         <Box className={classes.artContainer}>
           <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
@@ -69,6 +76,16 @@ export default function CardAsset(props: ICardAssetProps) {
             )}
           </Box>
           <Typography variant={'h4'}>{asset.imageData.name}</Typography>
+          {asset.highest_bid?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest bid {convertPrice(asset.highest_bid[0].bid_amount)} WETH
+            </Typography>
+          ) : null}
+          {asset.highest_offer?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest offer {convertPrice(asset.highest_offer[0].bid_amount)} ETH
+            </Typography>
+          ) : null}
         </Box>
         <CardActions
           status={asset.status}
@@ -76,7 +93,9 @@ export default function CardAsset(props: ICardAssetProps) {
           type={asset.type}
           startPrice={asset.start_price}
           endPrice={asset.end_price}
-          currentPrice={asset.current_price}
+          currentPrice={
+            asset.current_price || (asset.marketplace?.length ? asset.marketplace[0].bid_amount : undefined)
+          }
           sold={asset.sold}
           endTime={asset.end_time}
           burnTime={burnTime}
@@ -94,7 +113,10 @@ export default function CardAsset(props: ICardAssetProps) {
         links={[
           {
             lable: 'Unlist Artwork',
-            onClick: () => menu?.onUnlisted && menu.onUnlisted(),
+            onClick: () => {
+              menu?.onUnlisted && menu.onUnlisted()
+              setAnchor(null)
+            },
           },
         ]}
       />

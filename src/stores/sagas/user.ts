@@ -30,9 +30,11 @@ import {
   validateUserIdFailure,
   getActiveBidsByUserSuccess,
   getActiveBidsByUserFailure,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } from 'stores/reducers/user'
 import { getMainAssetStatus } from 'stores/sagas/assets'
-import { IActiveUserBids, UserStateType } from 'stores/reducers/user/types'
+import { IActiveUserBids, IBiddedOfferedAsset, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -213,6 +215,22 @@ export function* getUserAssets(api: IApi) {
       }
     > = yield all(getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset)))
 
+    // Created Assets
+    const getAllItemByCreatorId: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemsByCreatorId(user.id),
+    })
+    const getAssetsListCreatorData: Array<
+      AssetDataTypes & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllItemByCreatorId.map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListCreatorWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListCreatorData.map((asset) => call(getMainAssetStatus, api, asset)))
+
     // Purchased Assets
     const userCollectedAssets: IBidsHistory[] = yield call(api, {
       url: APP_CONFIG.getPurchasedHistoryByUser(user.id),
@@ -265,7 +283,11 @@ export function* getUserAssets(api: IApi) {
       getUserAssetsSuccess({
         userAssets: getAssetsListAllWithStatuses,
         userCollectedAssets: getAssetsListCollectedWithStatuses,
-        userSolddAssets: getAssetsListSoldWithStatuses,
+        userSoldAssets: getAssetsListSoldWithStatuses.map((asset, i) => ({
+          ...asset,
+          marketplace: [userSolddAssets[i]],
+        })),
+        userCreatedAssets: getAssetsListCreatorWithStatuses,
       })
     )
   } catch (e) {
@@ -497,5 +519,17 @@ export function* validateUserId(api: IApi, { payload }: PayloadAction<{ userId: 
     yield put(validateUserIdSuccess({ userIdValid: true }))
   } catch (e) {
     yield put(validateUserIdFailure())
+  }
+}
+
+export function* getSalesDataByOwner(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const userSalesData: IBiddedOfferedAsset[] = yield call(api, {
+      url: APP_CONFIG.getUserSalesData(user.id),
+    })
+    yield put(getSalesDataByOwnerSuccess(userSalesData))
+  } catch (e) {
+    yield put(getSalesDataByOwnerFailure(e))
   }
 }

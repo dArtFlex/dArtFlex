@@ -7,7 +7,6 @@ const useStyles = makeStyles(() =>
     container: {
       display: 'grid',
       placeContent: 'center',
-      width: '100%',
       height: ({ height }: StylesConfig) => (height === 'fullScreen' ? '100vh' : 'auto'),
     },
     circle: {
@@ -17,11 +16,11 @@ const useStyles = makeStyles(() =>
 )
 
 export default function CircularProgressLoader(props: CircularProgressLoaderProps) {
-  const { height, size = 48, color = 'primary' } = props
+  const { height, size = 48, color = 'primary', customWidth } = props
   const classes = useStyles({ height })
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} style={{ width: customWidth ? `${customWidth}px` : '100%' }}>
       <CircularProgress
         thickness={7}
         classes={{

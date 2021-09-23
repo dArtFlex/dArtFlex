@@ -1,32 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { Box, Typography } from '@material-ui/core'
-import { HashTagsFilter } from 'common'
 import { CardImage, SelectedPreview } from '../../../components'
 import { IConstructor } from '../../../types'
 import { useStyles } from './styles'
+import { imageUrlToFile } from 'utils'
 
-const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
+// import { HashTagsFilter } from 'common'
+// const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
 export default function LibraryConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
   const classes = useStyles()
-  const { values, setFieldValue } = useFormikContext<IConstructor>()
+  const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
-  const [switchFile, setSwitchFile] = useState<0 | 1>(0)
-
-  const onSelect = (tokenId: string, src: string, selected: boolean) => {
+  const onSelect = async (tokenId: string, src: string, selected: boolean) => {
     // Selected value is false as this event triggered before selection
+
     if (selected === false) {
-      setFieldValue(`file${switchFile}`, src)
-      setFieldValue(`tokenId${switchFile}`, tokenId)
-      setSwitchFile(switchFile ? 0 : 1)
+      const file = await imageUrlToFile(src)
+      if (!values.file0) {
+        setFieldValue('file0', file)
+        setFieldValue(`tokenId0`, tokenId)
+      } else {
+        setFieldValue('file1', file)
+        setFieldValue(`tokenId1`, tokenId)
+      }
     } else {
-      setFieldValue(`file${switchFile}`, '')
-      setFieldValue(`tokenId${switchFile}`, '')
+      if (tokenId === values.tokenId0) {
+        setFieldValue(`file0`, '')
+        setFieldValue(`tokenId0`, '')
+      } else {
+        setFieldValue(`file1`, '')
+        setFieldValue(`tokenId1`, '')
+      }
     }
   }
 
-  const disabled = Boolean(values.tokenId0.length) && Boolean(values.tokenId1.length)
+  useEffect(() => {
+    setFieldValue('file0', null)
+    setFieldValue('file1', null)
+    setFieldValue(`tokenId0`, '')
+    setFieldValue(`tokenId1`, '')
+  }, [])
+
+  const disabled = Boolean(values.tokenId0) && Boolean(values.tokenId1)
 
   return (
     <Box className={classes.libraryContainer}>
@@ -34,7 +51,8 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
         Constructor
       </Typography>
       <Box mt={6} mb={6}>
-        <HashTagsFilter tags={hashTags} withAction />
+        {/* ************** Todo: Next version ************** */}
+        {/* <HashTagsFilter tags={hashTags} withAction /> */}
       </Box>
       <FieldArray
         name="images"
@@ -55,7 +73,14 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
         )}
       />
 
-      <SelectedPreview file0={values.file0} file1={values.file1} onClick={setFilesSource} />
+      <SelectedPreview
+        file0={values.file0 as File}
+        file1={values.file1 as File}
+        onClick={() => {
+          handleSubmit()
+          setFilesSource()
+        }}
+      />
     </Box>
   )
 }

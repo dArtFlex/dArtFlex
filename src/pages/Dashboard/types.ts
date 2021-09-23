@@ -1,4 +1,4 @@
-import { AssetDataTypesWithStatus, AssetTypes } from 'types'
+import { AssetDataTypesWithStatus, AssetTypes, IAssetStatus } from 'types'
 import appConst from 'config/consts'
 const { FILTER_VALUES } = appConst
 
@@ -16,4 +16,5 @@ export type IDashboardArtworksFiltes =
 
 export type IUserAssets = AssetDataTypesWithStatus & {
   tokenData: AssetTypes
+  _status?: IAssetStatus
 }

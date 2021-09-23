@@ -15,14 +15,18 @@ import { ISocketDataNotification } from 'types'
 export function* getNotifications(api: IApi, { payload }: PayloadAction<{ socketData: ISocketDataNotification[] }>) {
   try {
     const notificationsImages: string[] = yield all(payload.socketData.map((n) => call(getImage, api, n.item_id)))
-    const notifications: INotifications[] = payload.socketData.flatMap((n, i) => {
-      const message = 'Please be informed about significant updates to your item'
-      const updated_at = n.updated_at
-      const item_id = n.item_id
-      const read = n.read
-      const id = n.id
-      return { id, message, updated_at, item_id, read, image: notificationsImages[i] }
-    })
+    const notifications: INotifications[] = payload.socketData
+      .flatMap((n, i) => {
+        const message = n.message
+        const updated_at = n.updated_at
+
+        const item_id = n.item_id
+        const read = n.read
+        const id = n.id
+        return { id, message, updated_at, item_id, read, image: notificationsImages[i] }
+      })
+      .filter((n) => !n.read)
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
 
     yield put(getNotificationsSuccess({ notifications }))
   } catch (e) {
@@ -47,9 +51,7 @@ function createSocketChannel(userId: string) {
     socket = io(APP_CONFIG.WSUrl, { query: { userId } })
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    socket.on('connection', () => {
-      console.log(socket.connected)
-    })
+    socket.on('connection', () => {})
 
     socket.on('notification', (data) => {
       emit({ data })

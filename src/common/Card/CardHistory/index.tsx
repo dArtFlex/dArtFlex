@@ -2,16 +2,18 @@ import React from 'react'
 import moment from 'moment'
 import { Card, CardHeader, CardContent, Avatar, IconButton, Typography, Box, Link, Divider } from '@material-ui/core'
 import { ExternalLinkIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 import APP_CONFIG from 'config'
 import { shortCutName } from '../../../utils'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData } = props
+  const { tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData, expireDate } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
 
   switch (status) {
@@ -62,7 +64,11 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                Bid{' '}
+                <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
@@ -74,7 +80,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
             </Box>
           </CardContent>
         </CardContainer>
@@ -97,7 +103,11 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
+                  Bid{' '}
+                  <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken}.. WETH`}</strong>
+                  </CustomTooltip>{' '}
+                  (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>

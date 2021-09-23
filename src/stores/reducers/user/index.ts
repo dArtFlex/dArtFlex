@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UserStateType } from './types'
+import { IBiddedOfferedAsset, UserStateType } from './types'
 import { setRandomAvatar, setRandomCover } from '../../../utils'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
   userAssets: [],
   userCollectedAssets: [],
-  userSolddAssets: [],
+  userSoldAssets: [],
+  userCreatedAssets: [],
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
@@ -20,6 +21,7 @@ const initialState: UserStateType = {
   fetchingId: false,
   activeBids: [],
   success: '',
+  biddedOfferedAssets: [],
 }
 
 const userSlice = createSlice({
@@ -70,13 +72,15 @@ const userSlice = createSlice({
       }: PayloadAction<{
         userAssets: UserStateType['userAssets']
         userCollectedAssets: UserStateType['userCollectedAssets']
-        userSolddAssets: UserStateType['userSolddAssets']
+        userSoldAssets: UserStateType['userSoldAssets']
+        userCreatedAssets: UserStateType['userCreatedAssets']
       }>
     ) => {
       state.fetching = false
       state.userAssets = payload.userAssets
       state.userCollectedAssets = payload.userCollectedAssets
-      state.userSolddAssets = payload.userSolddAssets
+      state.userSoldAssets = payload.userSoldAssets
+      state.userCreatedAssets = payload.userCreatedAssets
     },
     getUserAssetsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -254,6 +258,20 @@ const userSlice = createSlice({
           : (state.user.cover_image = setRandomCover())
       }
     },
+
+    getSalesDataByOwnerRequest: (state) => {
+      state.fetching = true
+    },
+
+    getSalesDataByOwnerSuccess: (state, { payload }: PayloadAction<IBiddedOfferedAsset[]>) => {
+      state.fetching = false
+      state.biddedOfferedAssets = payload
+    },
+
+    getSalesDataByOwnerFailure: (state, { payload }: PayloadAction<string>) => {
+      state.fetching = false
+      state.error = payload
+    },
   },
 })
 
@@ -318,6 +336,10 @@ export const {
   clearUserSuccessMessage,
 
   deleteUserPhoto,
+
+  getSalesDataByOwnerRequest,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

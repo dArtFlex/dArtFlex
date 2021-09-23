@@ -10,6 +10,7 @@ import {
   selectMakeOffer,
   selectManagement,
   selectUserSuccessMessage,
+  selectAlbum,
 } from 'stores/selectors'
 import { Footer, Header, Modal, WalletError } from 'common'
 import { useStyles } from './styles'
@@ -18,10 +19,11 @@ import { clearMintError } from '../../stores/reducers/minting'
 import { clearUserError, clearUserSuccessMessage } from '../../stores/reducers/user'
 import { clearListingError } from '../../stores/reducers/listing'
 import { clearBuyNowError } from '../../stores/reducers/buyNow'
-import { clearBidError } from '../../stores/reducers/placeBid'
+import { clearBidError, clearBidSuccessMessage } from '../../stores/reducers/placeBid'
 import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
-import { clearWalletsError } from '../../stores/reducers/wallet'
+import { walletError } from '../../stores/reducers/wallet'
+import { clearAlbumSuccessMessage } from 'stores/reducers/album'
 import Snack from '../../common/Snack'
 
 interface IMainLayoutProps {
@@ -50,6 +52,10 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
   } = useSelector(selectMakeOffer())
   const { error: errorManagement } = useSelector(selectManagement())
   const { success: successUserMessage } = useSelector(selectUserSuccessMessage())
+  const {
+    bid: { bidSuccess },
+  } = useSelector(selectBid())
+  const { success: successAlbumMessage } = useSelector(selectAlbum())
 
   const dispatch = useDispatch()
 
@@ -71,7 +77,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
       setSnackBarOpen(Boolean(errorMessage.message.length))
   }, [errorMessage])
 
-  const successGlobalMessage = successMessage || successUserMessage
+  const successGlobalMessage = successMessage || successUserMessage || bidSuccess || successAlbumMessage
 
   useEffect(() => {
     successGlobalMessage && setSnackBarOpen(Boolean(successGlobalMessage.length))
@@ -88,7 +94,9 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     dispatch(clearManagementError())
     dispatch(clearMakeOfferSuccessMessage())
     dispatch(clearUserSuccessMessage())
-    dispatch(clearWalletsError())
+    dispatch(walletError({ error: '' }))
+    dispatch(clearBidSuccessMessage())
+    dispatch(clearAlbumSuccessMessage())
   }
 
   return (
@@ -104,7 +112,15 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
         onClose={onCloseSnackbar}
         successMessage={successGlobalMessage}
       />
-      <Modal open={open} onClose={() => setOpen(false)} body={<WalletError />} withAside />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        disableBackdropClick
+        disableEscapeKeyDown
+        withoutCloseBtn
+        body={<WalletError />}
+        withAside
+      />
     </div>
   )
 }

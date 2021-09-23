@@ -7,6 +7,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: '#333',
     },
     wellcome: {
+      width: '100%',
+      borderRadius: 12,
+      backgroundSize: 'cover',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -29,6 +32,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       top: 30,
       left: 0,
     },
-    btn: {},
+    btn: {
+      width: 296,
+      backgroundColor: theme.palette.primary.main,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    btnDisabled: {
+      '&$btn': {
+        backgroundColor: theme.palette.grey.A200,
+        color: theme.palette.white,
+      },
+    },
   })
 )

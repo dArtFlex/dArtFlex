@@ -62,19 +62,28 @@ export function useInnerAssetsFilter({
     // Checking
     let isTrue = true
     if (isHotOnly !== undefined) {
+      if (!isHotOnly) {
+        return false
+      }
       isTrue = isHotOnly
     }
     if (isPrice !== undefined) {
+      if (!isPrice) {
+        return false
+      }
       isTrue = isPrice
     }
     if (isHashtags !== undefined) {
+      if (!isHashtags) {
+        return false
+      }
       isTrue = isHashtags
     }
 
     return isTrue
   })
 
-  let compare =
+  const compare =
     sortBy === ENDING_SOON
       ? compareSortByEndingSoon
       : sortBy === RECENT
@@ -84,10 +93,6 @@ export function useInnerAssetsFilter({
       : sortBy === PRICE_HIGH_LOW
       ? compareSortByHighToLow
       : null
-
-  if (!!price.from || !!price.to) {
-    compare = compareSortByLowToHigh
-  }
 
   return compare ? _assets.sort(compare) : _assets
 }
@@ -105,20 +110,23 @@ function compareSortByEndingSoon(a: AssetDataTypesWithStatus, b: AssetDataTypesW
 }
 
 function compareSortByRecentlyListed(a: AssetDataTypesWithStatus, b: AssetDataTypesWithStatus) {
-  const startTimeA = normalizeDate(a.start_time).getTime()
-  const startTimeB = normalizeDate(b.start_time).getTime()
-  if (startTimeA < startTimeB) {
+  const startTimeA = normalizeDate(a.start_time)
+  const startTimeB = normalizeDate(b.start_time)
+  // To be clean in sorting we need to put assets with future start times to the end of the sort
+  const isCurrentListedTimeA = normalizeDate(a.start_time) <= new Date()
+  const isCurrentListedTimeB = normalizeDate(b.start_time) <= new Date()
+  if (startTimeA < startTimeB && isCurrentListedTimeA && isCurrentListedTimeB) {
     return 1
   }
-  if (startTimeA > startTimeB) {
+  if (startTimeA > startTimeB && !isCurrentListedTimeA && !isCurrentListedTimeB) {
     return -1
   }
   return 0
 }
 
 function compareSortByLowToHigh(a: AssetDataTypesWithStatus, b: AssetDataTypesWithStatus) {
-  const priceLowToHighA = a.start_price
-  const priceLowToHighB = b.start_price
+  const priceLowToHighA = +a.current_price > 0 ? a.current_price : a.start_price
+  const priceLowToHighB = +b.current_price > 0 ? b.current_price : b.start_price
   if (priceLowToHighA > priceLowToHighB) {
     return 1
   }
@@ -129,12 +137,12 @@ function compareSortByLowToHigh(a: AssetDataTypesWithStatus, b: AssetDataTypesWi
 }
 
 function compareSortByHighToLow(a: AssetDataTypesWithStatus, b: AssetDataTypesWithStatus) {
-  const priceLowToHighA = a.start_price
-  const priceLowToHighB = b.start_price
-  if (priceLowToHighA < priceLowToHighB) {
+  const priceHighToLowA = +a.current_price > 0 ? a.current_price : a.start_price
+  const priceHighToLowB = +b.current_price > 0 ? b.current_price : b.start_price
+  if (priceHighToLowA < priceHighToLowB) {
     return 1
   }
-  if (priceLowToHighA > priceLowToHighB) {
+  if (priceHighToLowA > priceHighToLowB) {
     return -1
   }
   return 0
@@ -157,16 +165,16 @@ export function useSortedAssets({
   switch (filter) {
     case LIVE_AUCTION:
       return assets.filter(
-        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && !Boolean(a.sold)
+        (a) => a.type === AUCTION && normalizeDate(a.end_time).getTime() >= now_time && !Boolean(a.sold) && a.isBidded
       )
     case BUY_NOW:
       return assets.filter((a) => a.type === INSTANT_BY && !Boolean(a.sold) && a.status !== 'minted')
     case RESERVE_NOT_MET:
       return assets.filter((a) => {
-        if (a.type === AUCTION && !Boolean(a.sold)) {
-          return normalizeDate(a.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
+        if (a.type === AUCTION && !Boolean(a.sold) && !a.isBidded) {
+          return true
         }
-        return a.type === BUY_NOW && normalizeDate(a.end_time).getTime() > now_time - 1000 * 60 * 60 * 24
+        return false
       })
     case SOLD:
       return assets.filter((a) => Boolean(a.sold))
@@ -241,6 +249,7 @@ export function usePromotionMultiplyData({
   if (promotionIds.length === 0) {
     return []
   }
+
   return promotionAssets.map((p: IPromotionAsset) => {
     return {
       id: p.marketData ? Number(p.marketData.item_id) : 0,
@@ -250,9 +259,13 @@ export function usePromotionMultiplyData({
         profilePhoto: p.ownerData?.profile_image || '',
       },
       name: p?.imageData.name || '',
-      bid: p.marketData ? new BigNumber(p.marketData.end_price).dividedBy(`10e${18 - 1}`).toNumber() : 0,
+      bid: p.marketData
+        ? new BigNumber(+p.marketData.current_price || +p.marketData.start_price).dividedBy(`10e${18 - 1}`).toNumber()
+        : 0,
       endDate: p.marketData ? Number(p.marketData.end_time) : 0,
       url: p.imageData.image,
+      tokenContractAddress: p.marketData ? p.marketData.sales_token_contract : '',
+      type: p.marketData ? p.marketData.type : MINTED,
     }
   })
 }

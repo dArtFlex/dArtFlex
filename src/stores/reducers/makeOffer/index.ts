@@ -54,6 +54,7 @@ const makeOfferSlice = createSlice({
     ) => {
       state.fetching = false
       state.acceptOfferTransaction = payload.acceptOfferTransaction
+      state.success = 'Successfully accepted offer'
     },
     acceptOfferFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload

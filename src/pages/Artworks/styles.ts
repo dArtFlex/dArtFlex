@@ -22,7 +22,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     filtersBtnActive: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: '#8566FF1A !important',
+      color: theme.palette.primary.main,
     },
     customFiltersContainer: {
       // whiteSpace: 'nowrap',
@@ -245,6 +246,15 @@ export const useStyles = makeStyles((theme: Theme) =>
         textAlign: 'center',
       },
     },
+    promotionInfoBoxPrice: {
+      display: 'flex',
+      minHeight: 47,
+      alignItems: 'center',
+      gap: 8,
+      [theme.breakpoints.down(481)]: {
+        textAlign: 'center',
+      },
+    },
     promotionSlide: {
       height: 380,
       maxWidth: 440,
@@ -266,6 +276,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       [theme.breakpoints.down(560)]: {
         overflow: 'scroll',
+      },
+    },
+    menuList: {
+      top: '234px !important',
+      [theme.breakpoints.down(681)]: {
+        top: '214px !important',
       },
     },
     sortButtons: {

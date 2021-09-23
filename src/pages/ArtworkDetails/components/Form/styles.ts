@@ -93,7 +93,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     bitBtn: {
       padding: theme.spacing(3.5, 5),
-      marginBottom: theme.spacing(6),
+      margin: theme.spacing(6, 0),
     },
     bitBtnDisabled: {
       background: theme.palette.greyMid,
@@ -111,10 +111,23 @@ export const useStyles = makeStyles((theme: Theme) =>
       lineHeight: 1.75,
     },
     tabContent: {
-      maxHeight: 270,
-      overflow: 'scroll',
+      margin: theme.spacing(3, 0),
+      height: 248,
+      overflowY: 'auto',
       '&>p': {
         whiteSpace: 'pre',
+      },
+      '&::-webkit-scrollbar': {
+        width: '0.4em',
+      },
+      '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        margin: theme.spacing(1, 0),
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.grey['400'],
+        borderRadius: 30,
       },
     },
     indicator: {
@@ -196,6 +209,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 'bold',
       color: theme.palette.text.primary,
+      height: 30,
+      margin: 0,
     },
     tokenAmount: {
       fontSize: 30,
@@ -235,7 +250,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     inputAdorment: {
       fontSize: '16px',
       fontWeight: 600,
-      color: theme.palette.greyMid,
+      // color: theme.palette.greyMid,
     },
     learnLink: {
       fontSize: 16,
@@ -344,6 +359,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.redMiddle,
       },
     },
+    placeholderText: {
+      fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+      fontSize: 30,
+    },
     tooltip: {
       '& > p': {
         fontSize: 16,
@@ -385,6 +404,12 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     mb: {
       marginBottom: theme.spacing(5.5),
+    },
+    shareLink: {
+      color: theme.palette.text.primary,
+    },
+    shareLinkDisable: {
+      color: 'rgba(0, 0, 0, 0.26)',
     },
   })
 )

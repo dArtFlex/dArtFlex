@@ -35,11 +35,7 @@ export default function FormAuction(props: IFormAuctionProps) {
           .plus(new BigNumber(price).multipliedBy(0.1).toNumber())
           .dividedBy(`10e${18 - 1}`)
           .toNumber()
-          .toFixed(5)
-      : new BigNumber(marketData?.start_price)
-          .dividedBy(`10e${18 - 1}`)
-          .toNumber()
-          .toFixed(5)
+      : new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
 
   const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
 

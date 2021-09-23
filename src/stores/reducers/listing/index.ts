@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ListingStateType } from './types'
+import { IError } from 'types'
 
 const initialState: ListingStateType = {
   fetching: false,
+  fetchingDropPrice: false,
+  fetchingUnlist: false,
   error: '',
   data: {
     type: 'auction',
@@ -51,14 +54,17 @@ const listingSlice = createSlice({
     },
 
     unlistingRequest: (state, i) => {
-      state.fetching = true
+      state.fetchingUnlist = true
+      state.artworkUnlisted = false
     },
-    unlistingSuccess: (state, i) => {
-      state.fetching = true
+    unlistingSuccess: (state) => {
+      state.fetchingUnlist = false
+      state.artworkUnlisted = true
     },
-    unlistingFailure: (state, { payload }: PayloadAction<string>) => {
+    unlistingFailure: (state, { payload }: PayloadAction<IError>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingUnlist = false
+      state.artworkUnlisted = false
     },
 
     clearListingData: (state) => {
@@ -66,6 +72,23 @@ const listingSlice = createSlice({
     },
     clearListingError: (state) => {
       state.error = ''
+    },
+
+    changePriceRequest: (state, i) => {
+      state.fetchingDropPrice = true
+      state.priceChanged = false
+    },
+    changePriceSuccess: (state) => {
+      state.fetchingDropPrice = false
+      state.priceChanged = true
+    },
+    changePriceFailure: (state, { payload }: PayloadAction<IError>) => {
+      state.error = payload
+      state.fetchingDropPrice = false
+      state.priceChanged = false
+    },
+    resetChangePrice: (state) => {
+      state.priceChanged = undefined
     },
   },
 })
@@ -81,6 +104,11 @@ export const {
 
   clearListingData,
   clearListingError,
+
+  changePriceRequest,
+  changePriceSuccess,
+  changePriceFailure,
+  resetChangePrice,
 } = listingSlice.actions
 
 export const { reducer } = listingSlice

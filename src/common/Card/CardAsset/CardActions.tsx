@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import { Box, Button, Typography, ButtonBase } from '@material-ui/core'
 import { TimeIcon, BurnIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import appConst from 'config/consts'
 import { useDefaultCardStatus } from './lib'
 import { ICardActionsProps } from './types'
@@ -10,6 +11,7 @@ import { useStyles } from './styles'
 import { normalizeDate } from 'utils'
 import routes from '../../../routes'
 import { useHistory } from 'react-router-dom'
+import CardActionButton from './CardActionButton'
 
 const {
   FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD, LISTED },
@@ -37,21 +39,15 @@ export default function CardActions(props: ICardActionsProps) {
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
   const history = useHistory()
 
-  const startPriceToCoin = startPrice
-    ? new BigNumber(startPrice)
-        .dividedBy(`10e${18 - 1}`)
-        .toNumber()
-        .toFixed(4)
-    : startPrice
+  const startPriceToCoin = startPrice ? new BigNumber(startPrice).dividedBy(`10e${18 - 1}`).toNumber() : startPrice
   const currentBitToCoin = currentPrice
-    ? new BigNumber(currentPrice)
-        .dividedBy(`10e${18 - 1}`)
-        .toNumber()
-        .toFixed(4)
+    ? new BigNumber(currentPrice).dividedBy(`10e${18 - 1}`).toNumber()
     : currentPrice
 
   const now_time = new Date().getTime()
   const expire_time = normalizeDate(endTime).getTime() < burnTime
+
+  const tooltipProps = { background: '#141717', shiftY: -60 }
 
   switch (cardStatus) {
     case MINTED:
@@ -68,9 +64,13 @@ export default function CardActions(props: ICardActionsProps) {
               ) : (
                 <Box className={classes.actionBtnBox}>
                   {userWallet === ownerWallet ? (
-                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
-                      List
-                    </Button>
+                    history.location.pathname === routes.sales ? (
+                      <CardActionButton acceptOffer={button?.acceptOffer} />
+                    ) : (
+                      <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                        List
+                      </Button>
+                    )
                   ) : (
                     <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
                       Make offer
@@ -83,45 +83,94 @@ export default function CardActions(props: ICardActionsProps) {
         </>
       )
     case LIVE_AUCTION:
+      const bidPrice = parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin
       return (
-        <Box className={classes.cardAction}>
-          <Section
-            text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
-            value={
-              now_time < normalizeDate(endTime).getTime()
-                ? `${parseFloat(currentPrice as string) ? currentBitToCoin : startPriceToCoin} ETH`
-                : '-'
-            }
-          />
-          {now_time < normalizeDate(endTime).getTime() ? (
-            <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
-              {expire_time ? (
-                <BurnIcon className={classes.actionBtnIcon} />
-              ) : (
-                <TimeIcon className={classes.actionBtnIcon} />
-              )}
-              {timer}
-            </ButtonBase>
-          ) : null}
-        </Box>
+        <>
+          {history.location.pathname === routes.sales ? (
+            <Box className={classes.actionBtnBox}>
+              <CardActionButton acceptBid={button?.acceptBid} />
+            </Box>
+          ) : (
+            <Box className={classes.cardAction}>
+              <Section
+                text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
+                value={
+                  now_time < normalizeDate(endTime).getTime() ? (
+                    <CustomTooltip text={`${bidPrice} WETH`} {...tooltipProps}>{`${
+                      bidPrice && Number(bidPrice).toFixed(4)
+                    } WETH`}</CustomTooltip>
+                  ) : (
+                    '-'
+                  )
+                }
+              />
+              {now_time < normalizeDate(endTime).getTime() ? (
+                <Box className={classes.timerWrapper}>
+                  <ButtonBase className={clsx(classes.actionBtn, expire_time && classes.actionBtnBurn)}>
+                    {expire_time ? (
+                      <BurnIcon className={classes.actionBtnIcon} />
+                    ) : (
+                      <TimeIcon className={classes.actionBtnIcon} />
+                    )}
+                    {timer}
+                  </ButtonBase>
+                </Box>
+              ) : null}
+            </Box>
+          )}
+        </>
       )
     case BUY_NOW:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Buy Now'} value={`${startPriceToCoin} ETH`} />
+          <Section
+            text={'Buy Now'}
+            value={
+              <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
+                4
+              )} ETH`}</CustomTooltip>
+            }
+          />
         </Box>
       )
     case RESERVE_NOT_MET:
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
+          <Section
+            text={'Reserve Price'}
+            value={
+              startPriceToCoin ? (
+                <CustomTooltip text={`${startPriceToCoin} WETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
+                  4
+                )} WETH`}</CustomTooltip>
+              ) : (
+                '-'
+              )
+            }
+          />
         </Box>
       )
     case SOLD:
+      const soldPrice = currentBitToCoin || startPriceToCoin
       return (
-        <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
-          <Section text={'Sold for'} value={`${currentBitToCoin || startPriceToCoin} ETH`} />
-        </Box>
+        <>
+          {history.location.pathname === routes.sales ? (
+            <Box className={classes.actionBtnBox}>
+              <CardActionButton acceptOffer={button?.acceptOffer} />
+            </Box>
+          ) : (
+            <Box className={clsx(classes.cardAction, classes.cardActionSold)}>
+              <Section
+                text={'Sold for'}
+                value={
+                  <CustomTooltip text={`${soldPrice} ETH`} {...tooltipProps}>{`${Number(soldPrice).toFixed(
+                    4
+                  )} ETH`}</CustomTooltip>
+                }
+              />
+            </Box>
+          )}
+        </>
       )
     case COLLECTED:
       return (
@@ -137,13 +186,31 @@ export default function CardActions(props: ICardActionsProps) {
     case CREATED:
       return (
         <Box className={clsx(classes.cardAction, classes.cardActionNotMet)}>
-          <Section text={'Reserve Not Met'} value={`${startPriceToCoin} ETH`} />
+          <Section
+            text={'Reserve Not Met'}
+            value={
+              <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
+                4
+              )} ETH`}</CustomTooltip>
+            }
+          />
         </Box>
       )
     case LISTED: {
       return (
         <Box className={classes.cardAction}>
-          <Section text={'Reserve Price'} value={startPriceToCoin ? `${startPriceToCoin} ETH` : '-'} />
+          <Section
+            text={'Reserve Price'}
+            value={
+              startPriceToCoin ? (
+                <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
+                  4
+                )} ETH`}</CustomTooltip>
+              ) : (
+                '-'
+              )
+            }
+          />
         </Box>
       )
     }
@@ -152,7 +219,7 @@ export default function CardActions(props: ICardActionsProps) {
   }
 }
 
-const Section = ({ text, value }: { text: string; value: string }) => (
+const Section = ({ text, value }: { text: string; value: JSX.Element | string }) => (
   <Box>
     <Typography component={'span'}>{text}</Typography>
     <Typography color={'inherit'} variant={'h3'}>

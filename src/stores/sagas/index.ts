@@ -15,6 +15,7 @@ import {
   updatePromotionRequest,
   validateUserIdRequest,
   getActiveBidsByUserRequest,
+  getSalesDataByOwnerRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -31,7 +32,7 @@ import {
   walletsHistoryRequest,
 } from '../reducers/wallet'
 import { lazyMintingRequest, uploadImageRequest } from '../reducers/minting'
-import { listingRequest, unlistingRequest } from '../reducers/listing'
+import { listingRequest, unlistingRequest, changePriceRequest } from '../reducers/listing'
 import {
   placeBidRequest,
   getBidsHistoryRequest,
@@ -55,6 +56,8 @@ import {
   unbanWorkRequest,
 } from '../reducers/management'
 import { cancelOfferRequest, makeOfferRequest, acceptOfferRequest } from '../reducers/makeOffer'
+import { createStyleTransferRequest } from '../reducers/constructor'
+import { getUserAlbumRequest, addImageToAlbumRequest, deleteImageFromAlbumRequest } from '../reducers/album'
 
 import {
   getUserData,
@@ -70,6 +73,7 @@ import {
   updatePromotion,
   validateUserId,
   getActiveBidsByUser,
+  getSalesDataByOwner,
 } from '../sagas/user'
 import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
 import {
@@ -80,12 +84,14 @@ import {
   walletsHistory,
 } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
-import { listing, unlisting } from '../sagas/listing'
+import { listing, unlisting, changePrice } from '../sagas/listing'
 import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
 import { cancelOffer, makeOffer, acceptOffer } from '../sagas/makeOffer'
+import { createStyleTransfer } from '../sagas/constructor'
+import { getUserAlbum, addImageToAlbum, deleteImageFromAlbum } from '../sagas/album'
 
 export default function* root() {
   yield all([
@@ -110,13 +116,14 @@ export default function* root() {
     takeLatest(updatePromotionRequest.type, updatePromotion, apiMiddleware),
     takeLatest(validateUserIdRequest.type, validateUserId, apiMiddleware),
     takeLatest(getActiveBidsByUserRequest.type, getActiveBidsByUser, apiMiddleware),
+    takeLatest(getSalesDataByOwnerRequest.type, getSalesDataByOwner, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),
     takeLatest(connnectWalletConnectRequest.type, connectWalletConnect, apiMiddleware),
     takeLatest(getTokensBalancesRequest.type, getTokensBalances, apiMiddleware),
     takeLatest(walletsDisconetRequest, walletsDisconet),
-    takeLatest(walletsHistoryRequest, walletsHistory),
+    takeLatest(walletsHistoryRequest.type, walletsHistory, apiMiddleware),
 
     /** Minting **/
     takeLatest(lazyMintingRequest.type, minting, apiMiddleware),
@@ -125,6 +132,7 @@ export default function* root() {
     /** Listing **/
     takeLatest(listingRequest.type, listing, apiMiddleware),
     takeLatest(unlistingRequest.type, unlisting, apiMiddleware),
+    takeLatest(changePriceRequest.type, changePrice, apiMiddleware),
 
     /** Place Bid **/
     takeLatest(placeBidRequest.type, placeBid, apiMiddleware),
@@ -154,5 +162,13 @@ export default function* root() {
     takeLatest(makeOfferRequest.type, makeOffer, apiMiddleware),
     takeLatest(cancelOfferRequest.type, cancelOffer, apiMiddleware),
     takeLatest(acceptOfferRequest.type, acceptOffer, apiMiddleware),
+
+    /** Constructor **/
+    takeLatest(createStyleTransferRequest.type, createStyleTransfer, apiMiddleware),
+
+    /** Album **/
+    takeLatest(getUserAlbumRequest.type, getUserAlbum, apiMiddleware),
+    takeLatest(addImageToAlbumRequest.type, addImageToAlbum, apiMiddleware),
+    takeLatest(deleteImageFromAlbumRequest.type, deleteImageFromAlbum, apiMiddleware),
   ])
 }

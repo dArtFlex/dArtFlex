@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 325,
-      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.60)',
+      boxShadow: '0px 7px 20px rgba(19, 27, 56, 0.15)',
       cursor: 'pointer',
       display: 'flex',
       flexDirection: 'column',
@@ -73,7 +73,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       lineHeight: 1.3,
       fontWeight: 600,
+    },
+    timerWrapper: {
       width: 159,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     actionBtnBurn: {
       color: theme.palette.warning.main,
@@ -90,6 +95,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         background: theme.palette.text.primary,
       },
+    },
+    acceptBtn: {
+      border: `2px solid ${theme.palette.green}`,
+      color: theme.palette.green,
+    },
+    loaderWrapper: {
+      height: 50,
+      display: 'flex',
+      alignItems: 'ccenter',
     },
     mintedBottom: {
       height: 72,
@@ -155,8 +169,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.text.primary,
     },
+    highestBidInfo: {
+      marginTop: theme.spacing(2),
+      fontSize: 16,
+    },
     cardImage: {
-      borderRadius: 10,
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 10,
     },
   })
 )

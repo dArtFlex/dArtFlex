@@ -35,7 +35,7 @@ const formVariant = [
 const initialData = {
   price: '',
   minimumBid: '',
-  reservePrice: '',
+  reservePrice: '100000000000000000000000000000000000000000', // Todo: This price shouldn't be mandatory, it is restrict user in max bids
   startingPrice: '',
   fee: '2.5',
   futureTime: '',
@@ -44,6 +44,7 @@ const initialData = {
   endDate: '',
   isEndingPrice: false,
   isFutureTime: false,
+  salesTokenContract: '0x',
 }
 
 export default function SellNFT() {
@@ -68,6 +69,7 @@ export default function SellNFT() {
           start_time: values.startDate ? new Date(values.startDate) : new Date(),
           end_time: values.endDate,
           platfromFee: values.fee,
+          salesTokenContract: values.salesTokenContract,
         },
       })
     )

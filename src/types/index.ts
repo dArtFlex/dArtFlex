@@ -6,6 +6,7 @@ export * from './Wallet'
 export * from './PlaceBid'
 export * from './Notifications'
 export * from './Management'
+export * from './Constructor'
 
 export interface IEntity {
   id: number
@@ -31,8 +32,11 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   name: string
 }
 
-export type IChainId = '0x1' | '0x4'
-export type IPaymentToken = 'ETH' | 'WETH'
+export type IChainId = '0x1' | '0x4' | '0x38' | 1 | 4 | 38
+export type IUnsupportedChainId = '0x2a' | '0x3' | '0x5'
+export type IChainIdFormat = '0x1' | '0x4' | '0x38'
+
+export type IPaymentToken = 'ETH' | 'WETH' | 'BNB'
 
 export type IError =
   | string
@@ -40,3 +44,14 @@ export type IError =
       message: string
       code?: number
     }
+
+export interface IBaseTokens {
+  name: string
+  id: string
+  erc20id?: string
+  symbol: string
+  decimals: number
+  logoURI: string
+}
+
+export type IChainName = 'Ethereum' | 'Ropsten' | 'Kovan' | 'Rinkeby' | 'Goerli' | 'Binance'

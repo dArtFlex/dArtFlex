@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select, all } from 'redux-saga/effects'
@@ -21,29 +20,47 @@ import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import { acceptBidService } from 'services/accept_bid_service'
 import APP_CONFIG from 'config'
-import { getIdFromString } from 'utils'
+import { getIdFromString, networkConvertor } from 'utils'
 import tokensAll from 'core/tokens'
-import { UserDataTypes, IAcceptBidTransaction, IBids } from 'types'
+import {
+  UserDataTypes,
+  IAcceptBidTransaction,
+  IBids,
+  IChainId,
+  IBaseTokens,
+  AssetTypes,
+  AssetMarketplaceTypes,
+  IOrderData,
+  ITradingHistory,
+  IBidsHistory,
+  IBidsMarketHistory,
+} from 'types'
 
 export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
-    const chainId: IChainId = walletService.getChainId()
-    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
-    const { tokenData, marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
-    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
-    const accounts = walletService.getAccoutns()
-    const endPrice = yield web3.utils.toWei(bidAmount, 'ether')
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
+    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
+    const { tokenData, marketData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
+      (state) => state.assets.assetDetails
+    )
+    const { id: userId }: { id: number } = yield select((state) => state.user.user)
+    const accounts: string[] = walletService.getAccoutns()
+    const endPrice: string = yield window.web3.utils.toWei(bidAmount, 'ether')
 
     const lazymint = tokenData.lazymint
 
-    // Todo: Should only be once, so we need to check if it's approved
-    yield placeBidService.approveToken(accounts[0])
+    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+    if (!allowance) {
+      // Should only be once, so we need to check if it's approved
+      yield placeBidService.approveToken(accounts[0])
+    }
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
+      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
     })
 
-    const order = yield placeBidService.generateOrder({
+    const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
         tokenId: tokenData.token_id,
@@ -57,7 +74,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
       },
     })
 
-    const orderId = yield call(api, {
+    const orderId: string = yield call(api, {
       url: APP_CONFIG.createOrder,
       method: 'POST',
       data: {
@@ -78,7 +95,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
       },
     })
 
-    const placeBidId = yield call(api, {
+    const placeBidId: string = yield call(api, {
       url: APP_CONFIG.placeBid,
       method: 'POST',
       data: {
@@ -98,9 +115,14 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
 
 export function* getBidsHistory(api: IApi) {
   try {
-    const { marketData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
-    const getHistory = yield call(api, {
-      url: APP_CONFIG.getHistoryNFT(+marketData.item_id),
+    const { marketData, tokenData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
+      (state) => state.assets.assetDetails
+    )
+
+    const item_id = marketData ? +marketData.item_id : tokenData.id
+
+    const getHistory: Array<IBidsHistory & ITradingHistory> = yield call(api, {
+      url: APP_CONFIG.getHistoryNFT(item_id),
     })
 
     const userData: UserDataTypes[] = yield all(
@@ -109,7 +131,10 @@ export function* getBidsHistory(api: IApi) {
         return call(getUserDataById, api, userDataId)
       })
     )
-    const composeData = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
+    const composeData: Array<IBidsHistory & { userData: UserDataTypes }> = getHistory.flatMap((h, i) => ({
+      ...h,
+      userData: userData[i],
+    }))
 
     yield put(getBidsHistorySuccess(composeData))
   } catch (e) {
@@ -122,11 +147,11 @@ export function* acceptBid(
   { payload }: PayloadAction<{ market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
-    const marketData = yield call(api, {
-      url: APP_CONFIG.getHistory(payload.market_id),
+    const marketData: IBidsMarketHistory[] = yield call(api, {
+      url: APP_CONFIG.getHistory(Number(payload.market_id)),
     })
-    const buyerOrder = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(marketData[marketData.length - 1].order_id),
+    const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(String(marketData[marketData.length - 1].order_id)),
     })
 
     const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
@@ -150,7 +175,7 @@ export function* acceptBid(
 export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: string }>) {
   try {
     const getHistory: IBids[] = yield call(api, {
-      url: APP_CONFIG.getHistory(payload.market_id),
+      url: APP_CONFIG.getHistory(Number(payload.market_id)),
     })
     const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
     const bids = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))
@@ -163,7 +188,7 @@ export function* getBids(api: IApi, { payload }: PayloadAction<{ market_id: stri
 export function* getOffers(api: IApi, { payload }: PayloadAction<{ item_id: string }>) {
   try {
     const getHistory: IBids[] = yield call(api, {
-      url: APP_CONFIG.getHistoryOffers(payload.item_id),
+      url: APP_CONFIG.getHistoryOffers(Number(payload.item_id)),
     })
     const userData: UserDataTypes[] = yield all(getHistory.map((h) => call(getUserDataById, api, h.user_id)))
     const offers = getHistory.flatMap((h, i) => ({ ...h, userData: userData[i] }))

@@ -7,13 +7,21 @@ import { useStyles } from './styles'
 import routes from 'routes'
 import APP_CONSTS from 'config/consts'
 import { parseJS } from 'utils'
+import gifImage from 'common/icons/eddie.gif'
 
 export default function Wellcome() {
   const classes = useStyles()
   const [open, setOpen] = useState<boolean>(true)
   return (
     <Container className={classes.container}>
-      <Modal open={open} onClose={() => setOpen(false)} body={<WellcomeForm />} withoutCloseBtn />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        body={<WellcomeForm />}
+        withoutCloseBtn
+        disableEscapeKeyDown
+        disableBackdropClick
+      />
     </Container>
   )
 }
@@ -23,6 +31,7 @@ function WellcomeForm() {
   const history = useHistory()
   const [accept, setAccept] = React.useState(false)
   const redirect = () => history.push(routes.artworks)
+  const [showGIF, setShowGIF] = useState(false)
 
   useEffect(() => {
     const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
@@ -32,10 +41,10 @@ function WellcomeForm() {
   }, [])
 
   return (
-    <Box className={classes.wellcome}>
+    <Box className={classes.wellcome} style={{ backgroundImage: showGIF ? `url(${gifImage})` : 'unset' }}>
       <Typography variant={'h2'}>
         Welcome to{' '}
-        <Box className={classes.inlineBox}>
+        <Box className={classes.inlineBox} onMouseEnter={() => setShowGIF(true)} onMouseLeave={() => setShowGIF(false)}>
           <Typography component={'span'} variant={'h2'} className={classes.title}>
             dArtflex!
           </Typography>
@@ -71,6 +80,7 @@ function WellcomeForm() {
         variant={'contained'}
         fullWidth
         disableElevation
+        classes={{ disabled: classes.btnDisabled }}
         className={classes.btn}
         disabled={!accept}
       >

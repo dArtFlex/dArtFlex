@@ -79,6 +79,9 @@ export default function ContentManagementTab() {
             }}
             classes={{ select: classes.sortStatusMenu }}
             className={classes.sortStatusMenu}
+            MenuProps={{
+              classes: { paper: classes.menuList },
+            }}
           >
             <Typography variant={'body1'} color={'textSecondary'} className={classes.dropDownLabel}>
               Sort by:

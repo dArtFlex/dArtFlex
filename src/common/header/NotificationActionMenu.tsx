@@ -27,9 +27,9 @@ export default function NotificationActionMenu(props: INotificationActionMenu) {
             Notifications
           </Typography>
         </Box>
-        {notifications.map((n) => (
-          <NotificationCard key={n.item_id} {...n} />
-        ))}
+        {notifications.length
+          ? notifications.map((n) => <NotificationCard key={n.item_id} {...n} />)
+          : 'No notifications yet'}
       </Box>
     </Popover>
   )

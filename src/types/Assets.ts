@@ -1,6 +1,7 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
 import { IHashtag } from 'types'
+import { IHighestBid, IMarketPlaceInfo } from '../stores/reducers/user/types'
 
 const { TYPES, STATUSES, FILTER_VALUES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
@@ -25,12 +26,17 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   ban: boolean
   hashtag: IHashtag[]
   marketplace: IAssetMarketData[]
+  etherscan: string
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
   tokenData?: AssetTypes
+  highest_bid?: IHighestBid[]
+  highest_offer?: IHighestBid[]
+  marketplace?: IMarketPlaceInfo[]
+  isBidded?: boolean
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {
@@ -65,15 +71,6 @@ export interface ITokenBalances {
   id: string
   priceUSD: number
   symbol: string
-}
-
-export interface IBaseTokens {
-  name: string
-  id: string
-  erc20id?: string
-  symbol: string
-  decimals: number
-  logoURI: string
 }
 
 export interface IAssetMarketData {

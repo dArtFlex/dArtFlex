@@ -38,7 +38,8 @@ export const selectUser = () =>
         userAssets,
         userCollectedAssets,
         userBids,
-        userSolddAssets,
+        userSoldAssets,
+        userCreatedAssets,
         fetching,
         fetchingBids,
         isId,
@@ -46,12 +47,14 @@ export const selectUser = () =>
         userIdValid,
         error,
         activeBids,
+        biddedOfferedAssets,
       },
     }: stateType) => ({
       user,
       userAssets,
       userCollectedAssets,
-      userSolddAssets,
+      userSoldAssets,
+      userCreatedAssets,
       userBids,
       fetching,
       fetchingBids,
@@ -60,6 +63,7 @@ export const selectUser = () =>
       userIdValid,
       error,
       activeBids,
+      biddedOfferedAssets,
     })
   )
 export const selectUserRole = () =>
@@ -70,7 +74,11 @@ export const selectUserRole = () =>
 export const selectPromotion = () =>
   createSelector(
     (store: stateType) => store,
-    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
+    ({ user: { promotionIds, promotionAssets, fetchingPromo } }: stateType) => ({
+      promotionIds,
+      promotionAssets,
+      fetchingPromo,
+    })
   )
 export const selectSearch = () =>
   createSelector(
@@ -98,7 +106,7 @@ export const selectUserSuccessMessage = () =>
 export const selectWallet = () =>
   createSelector(
     (store: stateType) => store,
-    ({ wallet: { wallet, tokensBalances } }: stateType) => ({ wallet, tokensBalances })
+    ({ wallet: { wallet, tokensBalances, chainName } }: stateType) => ({ wallet, tokensBalances, chainName })
   )
 export const selectWalletError = () =>
   createSelector(
@@ -153,4 +161,30 @@ export const selectManagement = () =>
   createSelector(
     (store: stateType) => store,
     ({ management: { works, users, error, fetching } }: stateType) => ({ works, users, error, fetching })
+  )
+
+// Constructor
+export const selectConstructor = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ constructorAI: { transfer, priority, endScale, error, fetching, imageUrl } }: stateType) => ({
+      transfer,
+      priority,
+      endScale,
+      error,
+      fetching,
+      imageUrl,
+    })
+  )
+
+// Album
+export const selectAlbum = () =>
+  createSelector(
+    (store: stateType) => store,
+    ({ album: { album, fetching, error, success } }: stateType) => ({
+      album,
+      fetching,
+      error,
+      success,
+    })
   )

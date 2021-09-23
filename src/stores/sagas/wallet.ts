@@ -13,16 +13,27 @@ import {
   walletsDisconeSuccess,
   walletsDisconeFailure,
   walletsDisconetRequest,
+  setNetworkChain,
+  walletError,
 } from '../reducers/wallet'
 import { initialConnection } from 'stores/sagas/user'
 import { IChainId, ITokenBalances, IBaseTokens } from 'types'
-import { storageActiveWallet, createWalletInstance, getWalletsFromHistory } from 'utils'
 import tokensAll from 'core/tokens'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
 import { history } from '../../navigation'
 import routes from '../../routes'
-import { parseJS, notSupportedNetwork } from 'utils'
+import {
+  storageActiveWallet,
+  createWalletInstance,
+  getWalletsFromHistory,
+  parseJS,
+  supportedNetwork,
+  networkConvertor,
+  getTokenInfoByChainId,
+  convertTokenSymbol,
+  getChainNameById,
+} from 'utils'
 
 function checkBlackList(account: string) {
   return APP_CONSTS.USER.BLACK_LIST.some(
@@ -43,58 +54,28 @@ export function* connectMetaMask(api: IApi) {
       return yield put(connectMetaMaskFailure(error))
     }
 
-    if (notSupportedNetwork(chainId)) {
+    if (!supportedNetwork(chainId)) {
       return yield put(connectMetaMaskFailure('Not supported network'))
     }
-
-    const walletInstance = createWalletInstance(accounts, balance, 'ETH')
+    const tokenName = getTokenInfoByChainId(chainId)?.symbol || 'none'
+    const walletInstance = createWalletInstance(accounts, balance, tokenName)
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK)
     yield put(connectMetaMaskSuccess(walletInstance))
     yield call(initialConnection, api, { payload: { accounts: accounts[0] } })
+    yield put(setNetworkChain({ chainName: getChainNameById(chainId) }))
 
     const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
     if (!isAccepted) {
       history.push(routes.wellcome)
     }
 
-    const chainChannel = yield call(chainChangedChannel)
-    while (true) {
-      const data = yield take(chainChannel)
-      if (data.chainId) {
-        yield put(connectMetaMaskFailure(data ? '' : 'Not supported network'))
-      }
-      if (data.accounts) {
-        window.location.reload()
-      }
-    }
+    const chainChannel = yield call(allChainChannelListener)
+    yield handlerChanelEvent(chainChannel)
   } catch (e) {
     const error = e?.message || e
     yield put(connectMetaMaskFailure(error))
   }
-}
-
-function chainChangedChannel() {
-  return eventChannel((emit) => {
-    ethereum.on('chainChanged', (chainId) => {
-      if (notSupportedNetwork(chainId)) {
-        emit(false)
-      } else {
-        emit(true)
-      }
-    })
-
-    ethereum.on('accountsChanged', function (accounts) {
-      emit({ accounts })
-    })
-
-    // We don't need do anything in unsubscribe as we always wanna know if user change network
-    const unsubscribe = () => {
-      ethereum.on('chainChanged', null)
-    }
-
-    return unsubscribe
-  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -111,68 +92,35 @@ export function* connectWalletConnect(api: IApi) {
       return yield put(connnectWalletConnectFailure(error))
     }
 
-    if (notSupportedNetwork(chainId)) {
-      return yield put(connectTrustFailure('Not supported network'))
+    if (!supportedNetwork(chainId)) {
+      return yield put(connnectWalletConnectFailure('Not supported network'))
     }
 
-    const walletInstance = createWalletInstance(accounts, Number(balance), 'ETH')
+    const tokenName = getTokenInfoByChainId(chainId)?.symbol || 'none'
+    const walletInstance = createWalletInstance(accounts, Number(balance), tokenName)
 
     storageActiveWallet(walletInstance, APP_CONSTS.WALLET_CONNECT)
     yield put(connnectWalletConnectSuccess(walletInstance))
     yield call(initialConnection, api, { payload: { accounts: accounts[0] } })
+    yield put(setNetworkChain({ chainName: getChainNameById(chainId) }))
 
     const isAccepted = parseJS(localStorage.getItem(APP_CONSTS.ACCEPT_COMMUNITY_GUIDELINES))
     if (!isAccepted) {
       history.push(routes.wellcome)
     }
 
-    const chainChannel = yield call(chainListenerWalletConnect)
-    while (true) {
-      const data = yield take(chainChannel)
-      if (data.disconnect) {
-        return yield put(walletsDisconetRequest())
-      }
-      yield put(connnectWalletConnectFailure(data ? '' : 'Not supported network'))
-    }
+    const chainChannel = yield call(allChainChannelListener)
+    yield handlerChanelEvent(chainChannel)
   } catch (e) {
     const error = e?.message || e
     yield put(connnectWalletConnectFailure(error))
   }
 }
 
-function chainListenerWalletConnect() {
-  return eventChannel((emit) => {
-    connector.on('disconnect', () => {
-      emit({ disconnect: true })
-    })
-
-    connector.on('session_update', (_, payload) => {
-      const { chainId } = payload.params[0]
-
-      if (notSupportedNetwork(chainId)) {
-        emit(false)
-      } else {
-        emit(true)
-      }
-    })
-
-    connector.on('session_update', function (_, payload) {
-      const { accounts } = payload.params[0]
-      emit({ accounts })
-    })
-
-    // We don't need do anything in unsubscribe as we always wanna know if user change network
-    const unsubscribe = () => {
-      connector.on('chainChanged', null)
-    }
-
-    return unsubscribe
-  })
-}
-
 export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
-    const chainId: IChainId = walletService.getChainId()
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
     const tokens: Array<IBaseTokens> = tokensAll[chainId].filter((t) => t.id.length > 2 && t.id.startsWith('0x'))
 
     const balances: Array<ITokenBalances | undefined> = yield all(
@@ -199,17 +147,15 @@ function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
           .toNumber()
           .toFixed(2)
 
-        const price: { [key: string]: number } = yield call(api, {
-          url: APP_CONFIG.exchangeRate(symbol, 'USD'),
-          method: 'GET',
+        const price: number = yield call(api, {
+          url: APP_CONFIG.exchangeRateSafe(convertTokenSymbol(symbol)),
         })
-        const _price = price?.USD
         return {
           id,
           symbol,
           balance: _balance,
-          priceUSD: _price,
-          balanceUSD: new BigNumber(_balance).times(_price).toNumber(),
+          priceUSD: price,
+          balanceUSD: new BigNumber(_balance).times(price).toNumber(),
         }
       }
     }
@@ -239,19 +185,81 @@ export function* walletsDisconet() {
   }
 }
 
-export function* walletsHistory() {
+export function* walletsHistory(api: IApi) {
   try {
     const history = getWalletsFromHistory()
 
     if (history.activeWallet === APP_CONSTS.WALLET_CONNECT_STORAGE.METAMASK) {
       const accounts: string[] | undefined = yield web3.eth.getAccounts()
       if (accounts?.length && accounts[0].toLowerCase() === history.connectedMetaMask.accounts[0].toLowerCase()) {
-        yield call(connectMetaMask)
+        yield call(connectMetaMask, api)
       }
     } else if (history.activeWallet === APP_CONSTS.WALLET_CONNECT) {
-      yield call(connectWalletConnect)
+      yield call(connectWalletConnect, api)
     }
+
+    const chainChannel = yield call(allChainChannelListener)
+    yield handlerChanelEvent(chainChannel)
   } catch (e) {
     throw new Error(e)
   }
+}
+
+function* handlerChanelEvent(chainChannel) {
+  while (true) {
+    const data = yield take(chainChannel)
+
+    if (data?.chainId) {
+      if (supportedNetwork(data.chainId)) {
+        yield put(setNetworkChain({ chainName: getChainNameById(data.chainId) }))
+        yield put(walletError({ error: '' }))
+      } else {
+        yield put(walletError({ error: 'Not supported network' }))
+      }
+    } else if (data?.disconnect) {
+      return yield put(walletsDisconetRequest())
+    }
+
+    window.location.reload()
+  }
+}
+
+function* allChainChannelListener() {
+  return eventChannel((emit) => {
+    // If Chain is changed
+    if (ethereum) {
+      ethereum.on('chainChanged', (chainId) => {
+        emit({ chainId })
+      })
+    }
+    if (typeof connector !== 'undefined') {
+      connector.on('session_update', (_, payload) => {
+        const { chainId } = payload.params[0]
+        emit({ chainId })
+      })
+    }
+
+    // If Account is changed
+    if (ethereum) {
+      ethereum.on('accountsChanged', function (accounts) {
+        emit({ accounts })
+      })
+    }
+    if (typeof connector !== 'undefined') {
+      connector.on('session_update', function (_, payload) {
+        const { accounts } = payload.params[0]
+        emit({ accounts })
+      })
+    }
+
+    // Unsubscribe
+    return () => {
+      if (ethereum) {
+        ethereum.on('chainChanged', null)
+      }
+      if (typeof connector !== 'undefined') {
+        connector.on('chainChanged', null)
+      }
+    }
+  })
 }

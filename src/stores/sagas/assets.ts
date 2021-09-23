@@ -21,12 +21,14 @@ import {
   AssetDataTypesWithStatus,
   IChainId,
   IHashtagNew,
+  IBids,
 } from 'types'
 import tokensAll from 'core/tokens'
-import { getAssetStatus, createDummyMarketplaceData, getIdFromString } from 'utils'
+import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
+import { convertTokenSymbol } from 'utils'
 
 const {
   STATUSES: { MINTED },
@@ -64,13 +66,30 @@ export function* getAssetsAllData(api: IApi) {
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
     )
+
+    const bidsHistory: boolean[] = yield all(getMarketplactAssetsAll.map((asset) => call(checkIsBidded, api, asset.id)))
     const assets = getAssetsListAllWithStatuses
-      .map((a, i) => ({ ...a, hashtag: getItemAssetsAll[i].hashtag, ban: getItemAssetsAll[i].ban }))
+      .map((a, i) => ({
+        ...a,
+        hashtag: getItemAssetsAll[i].hashtag,
+        ban: getItemAssetsAll[i].ban,
+        isBidded: bidsHistory[i],
+      }))
       .map((item, index) => ({ ...item, item_id: `${getItemAssetsAll[index].id}` }))
     yield put(getAssetsAllSuccess(assets))
   } catch (e) {
     yield put(getAssetsAllFailure(e))
   }
+}
+
+function* checkIsBidded(api: IApi, market_id: number) {
+  if (market_id) {
+    const getHistory: IBids[] = yield call(api, {
+      url: APP_CONFIG.getHistory(market_id),
+    })
+    return getHistory.length > 1
+  }
+  return false
 }
 
 export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
@@ -172,11 +191,10 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
 
 function* getPrice(api: IApi, symbol: string) {
   try {
-    const price: { [key: string]: number } = yield call(api, {
-      url: APP_CONFIG.exchangeRate(symbol, 'USD'),
-      method: 'GET',
+    const price: number = yield call(api, {
+      url: APP_CONFIG.exchangeRateSafe(convertTokenSymbol(symbol)),
     })
-    return { priceUSD: price?.USD || 0 }
+    return { priceUSD: price || 0 }
   } catch (e) {
     throw new Error(e)
   }
@@ -184,8 +202,10 @@ function* getPrice(api: IApi, symbol: string) {
 
 export function* getExchangeRateTokens(api: IApi) {
   try {
-    const chainId: IChainId = walletService.getChainId()
-    const tAll = tokensAll[chainId || '0x1']
+    const getChainId: IChainId = walletService.getChainId()
+    const chainId: IChainId = networkConvertor(getChainId)
+
+    const tAll = tokensAll[chainId]
     const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
     const exchangeRates = tAll.map((t, i) => ({
       id: t.id,
