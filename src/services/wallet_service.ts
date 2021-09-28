@@ -11,7 +11,10 @@ const signTypes = {
 }
 class WalletService extends Web3Service {
   async getMetaMaskAccount() {
-    this.accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    if (window.ethereum === undefined) {
+      return
+    }
+    this.accounts = await ethereum.request({ method: 'eth_requestAccounts' })
     this.balance = await new Promise((resolve) => {
       this.web3.eth.getBalance(this.accounts[0], (err, balance) => {
         resolve(BigNumber(balance).dividedBy(10e17).toNumber())

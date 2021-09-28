@@ -34,7 +34,7 @@ export class Web3Service {
         this.message.create('error', 'Please install Metamask to proceed')
         throw Error('Metamask not found')
       }
-      window.ethereum
+      window?.ethereum
         .send('eth_requestAccounts')
         .then((res) => {
           const account = res.result[0]
