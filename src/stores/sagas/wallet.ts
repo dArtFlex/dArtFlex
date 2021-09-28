@@ -227,7 +227,8 @@ function* handlerChanelEvent(chainChannel) {
 function* allChainChannelListener() {
   return eventChannel((emit) => {
     // If Chain is changed
-    if (ethereum) {
+
+    if (window.ethereum !== undefined) {
       ethereum.on('chainChanged', (chainId) => {
         emit({ chainId })
       })
@@ -240,7 +241,7 @@ function* allChainChannelListener() {
     }
 
     // If Account is changed
-    if (ethereum) {
+    if (window.ethereum !== undefined) {
       ethereum.on('accountsChanged', function (accounts) {
         emit({ accounts })
       })
@@ -254,7 +255,7 @@ function* allChainChannelListener() {
 
     // Unsubscribe
     return () => {
-      if (ethereum) {
+      if (window.ethereum !== undefined) {
         ethereum.on('chainChanged', null)
       }
       if (typeof connector !== 'undefined') {
