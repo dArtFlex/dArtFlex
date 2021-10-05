@@ -32,6 +32,7 @@ const appConst = {
     ON_SALE: 'on_sale',
     PURCHASED: 'purchased',
     SOLD: 'sold',
+    CLAIMING: 'claiming',
   },
   SCHEDULE: {
     DAYS3: '3days',

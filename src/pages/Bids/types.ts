@@ -22,4 +22,7 @@ export interface IBids {
   currentBidUsd: string
   yourBid: string
   yourBidUsd: string
+  market_id: string
+  assetOwnerId?: string
+  user_id?: string
 }

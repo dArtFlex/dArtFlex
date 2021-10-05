@@ -3,6 +3,7 @@ import { IEntity, IDatedEntity } from 'types'
 export interface UserDataTypes extends IEntity, IDatedEntity, ISocial {
   fullname: string
   userid: string
+  user_id?: string
   email: string
   wallet: string
   overview: string

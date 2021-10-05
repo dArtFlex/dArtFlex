@@ -99,6 +99,17 @@ const placeBidSlice = createSlice({
     clearBidSuccessMessage: (state) => {
       state.bidSuccess = ''
     },
+
+    claimBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    claimBidSuccess: (state) => {
+      state.fetching = false
+    },
+    claimBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
   },
 })
 
@@ -129,6 +140,10 @@ export const {
   getOffersRequest,
   getOffersSuccess,
   getOffersFailure,
+
+  claimBidRequest,
+  claimBidSuccess,
+  claimBidFailure,
 } = placeBidSlice.actions
 
 export const { reducer } = placeBidSlice
