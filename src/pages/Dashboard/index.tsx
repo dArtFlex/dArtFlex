@@ -223,14 +223,13 @@ export default function Dashboard() {
               </Box>
             )}
 
-            {!userAssets?.length && <Empty />}
-
             <Box className={classes.grid} mt={2}>
               {fetching ? (
                 <CircularProgressLoader />
               ) : (
                 <>
                   {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
+                  {!userAssets?.length && <Empty />}
                   {sortedAssets
                     ? sortedAssets.map((userAsset, i) => (
                         <CardAsset
