@@ -9,7 +9,13 @@ import { imageUrlToFile } from 'utils'
 // import { HashTagsFilter } from 'common'
 // const hashTags = ['all', '#General', '#Portraits', '#Landscapes', '#Sci Bio Art', '#Characters']
 
-export default function LibraryConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
+export default function LibraryConstructorForm({
+  setFilesSource,
+  onSyncBack,
+}: {
+  setFilesSource: () => void
+  onSyncBack: () => void
+}) {
   const classes = useStyles()
   const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
@@ -36,11 +42,25 @@ export default function LibraryConstructorForm({ setFilesSource }: { setFilesSou
     }
   }
 
+  const handleRouteChange = () => {
+    if (typeof window !== 'undefined') {
+      if (!window.location.search) {
+        onSyncBack()
+      }
+    }
+  }
+
   useEffect(() => {
     setFieldValue('file0', null)
     setFieldValue('file1', null)
     setFieldValue(`tokenId0`, '')
     setFieldValue(`tokenId1`, '')
+    const iId = setInterval(() => {
+      handleRouteChange()
+    }, 250)
+    return () => {
+      clearInterval(iId)
+    }
   }, [])
 
   const disabled = Boolean(values.tokenId0) && Boolean(values.tokenId1)

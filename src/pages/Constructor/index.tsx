@@ -105,6 +105,7 @@ function Components({
             setFilesSource('loading')
             history.replace('?tab=loading')
           }}
+          onSyncBack={() => setFilesSource(null)}
         />
       )
     case '?tab=uploader':
@@ -114,6 +115,7 @@ function Components({
             setFilesSource('loading')
             history.replace('?tab=loading')
           }}
+          onSyncBack={() => setFilesSource(null)}
         />
       )
     case '?tab=loading':
