@@ -54,6 +54,9 @@ export function useComposeBidsData({
         currentBidUsd: currentBidAmountUsd,
         yourBid: yourBidAmount,
         yourBidUsd: yourBidAmountUsd,
+        market_id: bid.market_id,
+        assetOwnerId: bid.ownerData.user_id,
+        user_id: bid.user_id,
       }
     })
 }
@@ -77,12 +80,14 @@ function useStatus({ status }: IUseStatus): IBidStatus {
       return 'bid'
     case 'offered':
       return 'offered'
+    case 'claiming':
+      return 'claiming'
     default:
       return 'none'
   }
 }
 
-type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered' | 'pending'
+type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered' | 'pending' | 'claiming'
 
 export function useSearchBids({ userBids, search }: { userBids: UserStateType['userBids']; search: string }) {
   if (!userBids) {

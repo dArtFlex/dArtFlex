@@ -80,6 +80,7 @@ const APP_CONFIG = {
   deletePromotion: `${STAGE_URL_API}/super_admin/delete_promotion`,
   createHashtag: `${STAGE_URL_API}/hashtag/create`,
   cancelBid: `${STAGE_URL_API}/bid/withdraw_bid`,
+  claimBid: `${STAGE_URL_API}/bid/claim_nft`,
   banUser: `${STAGE_URL_API}/super_admin/ban_user`,
   unbanUser: `${STAGE_URL_API}/super_admin/unban_user`,
   banItem: `${STAGE_URL_API}/super_admin/ban_item`,

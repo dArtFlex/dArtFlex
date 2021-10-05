@@ -160,6 +160,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `2px solid ${theme.palette.redMiddle}`,
       color: theme.palette.redMiddle,
     },
+    btnAccept: {
+      border: `2px solid ${theme.palette.green}`,
+      color: theme.palette.green,
+    },
     btnPlaceBid: {
       color: theme.palette.white,
       background: theme.palette.primary.main,
