@@ -6,15 +6,35 @@ import { CloseIcon } from 'common/icons'
 import { IConstructor } from '../../../types'
 import { useStyles } from './styles'
 
-export default function UploaderConstructorForm({ setFilesSource }: { setFilesSource: () => void }) {
+export default function UploaderConstructorForm({
+  setFilesSource,
+  onSyncBack,
+}: {
+  setFilesSource: () => void
+  onSyncBack: () => void
+}) {
   const classes = useStyles()
   const { values, handleSubmit, setFieldValue } = useFormikContext<IConstructor>()
 
   const disabled = !values.file0 || !values.file1
 
+  const handleRouteChange = () => {
+    if (typeof window !== 'undefined') {
+      if (!window.location.search) {
+        onSyncBack()
+      }
+    }
+  }
+
   useEffect(() => {
     setFieldValue('file0', null)
     setFieldValue('file1', null)
+    const iId = setInterval(() => {
+      handleRouteChange()
+    }, 250)
+    return () => {
+      clearInterval(iId)
+    }
   }, [])
 
   return (
