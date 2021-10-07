@@ -63,7 +63,7 @@ export default function Dashboard() {
     selectUser()
   )
   const {
-    listing: { fetchingUnlist, artworkUnlisted },
+    listing: { fetchingUnlist },
   } = useSelector(selectListing())
 
   const { search } = useSelector(selectSearch())
@@ -263,10 +263,11 @@ export default function Dashboard() {
       </PageWrapper>
 
       <ConfirmationModal
-        open={openUnlistModal && !artworkUnlisted}
+        open={openUnlistModal}
         onCancel={() => setOpenUnlistModal(false)}
         onSubmit={() => {
           handleUnlisted(selectedAssetId)
+          setOpenUnlistModal(false)
         }}
         title={'Do you want to cancel artwork?'}
         fetching={fetchingUnlist}

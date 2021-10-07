@@ -61,7 +61,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { role } = useSelector(selectUserRole())
   const { user } = useSelector(selectUser())
   const {
-    listing: { fetchingDropPrice, priceChanged, fetchingUnlist, artworkUnlisted },
+    listing: { fetchingDropPrice, priceChanged, fetchingUnlist },
   } = useSelector(selectListing())
 
   const {
@@ -369,10 +369,11 @@ export default function FormDetails(props: IDetailsFormProps) {
       />
 
       <ConfirmationModal
-        open={openUnlistModal && !artworkUnlisted}
+        open={openUnlistModal}
         onCancel={() => setOpenUnlistModal(false)}
         onSubmit={() => {
           marketData && dispatch(unlistingRequest({ market_id: marketData.id }))
+          setOpenUnlistModal(false)
         }}
         title={'Do you want to cancel artwork?'}
         fetching={fetchingUnlist}
