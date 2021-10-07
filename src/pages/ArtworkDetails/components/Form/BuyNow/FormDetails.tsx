@@ -60,7 +60,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const { user } = useSelector(selectUser())
   const { role } = useSelector(selectUserRole())
   const {
-    listing: { fetchingDropPrice, priceChanged, fetchingUnlist, artworkUnlisted },
+    listing: { fetchingDropPrice, priceChanged, fetchingUnlist },
   } = useSelector(selectListing())
   const {
     assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
@@ -254,10 +254,11 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       />
 
       <ConfirmationModal
-        open={openUnlistModal && !artworkUnlisted}
+        open={openUnlistModal}
         onCancel={() => setOpenUnlistModal(false)}
         onSubmit={() => {
           marketData && dispatch(unlistingRequest({ market_id: marketData.id }))
+          setOpenUnlistModal(false)
         }}
         title={'Do you want to cancel artwork?'}
         fetching={fetchingUnlist}
