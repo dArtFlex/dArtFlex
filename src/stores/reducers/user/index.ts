@@ -17,6 +17,7 @@ const initialState: UserStateType = {
   fetching: false,
   fetchingBids: false,
   fetchingPromo: false,
+  fetchingTrading: false,
   isId: false,
   fetchingId: false,
   activeBids: [],
@@ -196,18 +197,18 @@ const userSlice = createSlice({
     },
 
     getTradingHistoryRequest: (state, i) => {
-      state.fetching = true
+      state.fetchingTrading = true
     },
     getTradingHistorySuccess: (
       state,
       { payload }: PayloadAction<{ tradingHistoryAll: UserStateType['tradingHistoryAll'] }>
     ) => {
-      state.fetching = false
+      state.fetchingTrading = false
       state.tradingHistoryAll = payload.tradingHistoryAll
     },
     getTradingHistoryFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingTrading = false
     },
 
     checkAssetIdRequest: (state, i) => {

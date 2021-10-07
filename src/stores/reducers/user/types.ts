@@ -17,6 +17,7 @@ export interface UserStateType {
   fetching: boolean
   fetchingBids: boolean
   fetchingPromo: boolean
+  fetchingTrading: boolean
   isId: boolean
   fetchingId: boolean
   error: IError
