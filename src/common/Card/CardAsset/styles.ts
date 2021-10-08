@@ -51,6 +51,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
       rowGap: 16,
       gap: 12,
+      minWidth: 350,
       padding: theme.spacing(4, 5),
       background: theme.palette.accentGradient,
       color: theme.palette.white,
