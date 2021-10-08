@@ -10,7 +10,7 @@ import routes from '../../../../routes'
 import { normalizeDate, shortCutName } from 'utils'
 import { useDispatch } from 'react-redux'
 import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
-import { cancelBidRequest } from '../../../../stores/reducers/placeBid'
+import { cancelBidRequest, claimBidRequest } from '../../../../stores/reducers/placeBid'
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
@@ -36,7 +36,9 @@ export default function CardBid(props: ICardBidProps) {
         {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
-        {bid.status !== 'offered' && <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />}
+        {bid.status !== 'offered' && bid.status !== 'claiming' && (
+          <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
+        )}
 
         <Bids
           title={bid.status === 'offered' ? 'Your Offer' : 'Your Bid'}
@@ -44,7 +46,15 @@ export default function CardBid(props: ICardBidProps) {
           bidAmountUsd={yourBidUsd}
         />
       </Box>
-      <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} id={bid.id} />
+      <CardInfoBox
+        status={status}
+        timeExpired={timeExpired}
+        itemId={itemId}
+        id={bid.id}
+        buyerId={bid.user_id}
+        market_id={bid.market_id}
+        assetOwnerId={bid.assetOwnerId}
+      />
     </Card>
   )
 }
@@ -65,7 +75,7 @@ function Bids(props: IBidsProps) {
 
 function CardInfoBox(props: ICardInfoBox) {
   const classes = useStyles()
-  const { status, timeExpired, itemId, id } = props
+  const { status, timeExpired, itemId, id, market_id, assetOwnerId, buyerId } = props
   const history = useHistory()
   const dispatch = useDispatch()
   const [isButtonShown, setButtonShown] = useState(true)
@@ -78,6 +88,19 @@ function CardInfoBox(props: ICardInfoBox) {
   const handleCancelBid = ({ id }: { id: number }) => {
     setButtonShown(false)
     dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
+  const handleClaimBid = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(
+      claimBidRequest({
+        item_id: itemId,
+        market_id,
+        bid_id: String(id),
+        assetOwnerId,
+        buyerId,
+      })
+    )
   }
 
   switch (status) {
@@ -130,6 +153,21 @@ function CardInfoBox(props: ICardInfoBox) {
           </Button>
         </Box>
       )
+    case 'claiming':
+      return (
+        <Box className={classes.cardBidAction}>
+          {isButtonShown && (
+            <Button
+              className={clsx(classes.btnAction, classes.btnAccept)}
+              variant={'outlined'}
+              fullWidth
+              onClick={() => handleClaimBid({ id: id })}
+            >
+              Claim NFT
+            </Button>
+          )}
+        </Box>
+      )
     default:
       return null
   }
@@ -140,4 +178,7 @@ export interface ICardInfoBox {
   status: ICardBidProps['bid']['status']
   timeExpired: boolean
   itemId: ICardBidProps['bid']['itemId']
+  market_id: string
+  assetOwnerId?: string
+  buyerId?: string
 }

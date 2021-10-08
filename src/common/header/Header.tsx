@@ -22,7 +22,7 @@ import {
   Typography,
   FormHelperText,
 } from '@material-ui/core'
-import { Modal, WalletConnect, Chip } from 'common'
+import { Modal, WalletConnect, Chip, CustomTooltip } from 'common'
 import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
 import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
@@ -128,6 +128,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [open, setOpen] = useState<boolean>(false)
 
   const isMobile = useMediaQuery('(max-width: 680px)')
+  const isLaptop = useMediaQuery('(max-width: 1024px)')
   const showBidsMessage = useMediaQuery('(max-width: 850px)')
 
   const MenuItems: IMenuItems[] = [
@@ -143,6 +144,17 @@ export default function Header({ toggleTheme }: HeaderType) {
     //   id: 1,
     // },
   ]
+
+  const ComminSoonItems = () => (
+    <>
+      <CustomTooltip text={'Coming soon'}>
+        <Typography className={classes.commingMenu}>Rarible</Typography>
+      </CustomTooltip>
+      <CustomTooltip text={'Coming soon'}>
+        <Typography className={classes.commingMenu}>OpenSea</Typography>
+      </CustomTooltip>
+    </>
+  )
 
   const defaultTabValue =
     MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id || 0 : 0
@@ -211,6 +223,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
                 ))}
               </Tabs>
+              {!isLaptop && <ComminSoonItems />}
               <Box className={classes.buttonContainer}>
                 {Boolean(activeBids.length) && (
                   <Chip avatar={`${activeBids.length}`} endIcon>

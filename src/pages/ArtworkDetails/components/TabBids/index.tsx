@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import BigNumber from 'bignumber.js'
 import { useSelector } from 'react-redux'
 import { selectAssetTokenRates, selectUser, selectAssetDetails } from 'stores/selectors'
-import { acceptBidRequest, cancelBidRequest } from 'stores/reducers/placeBid'
+import { acceptBidRequest, cancelBidRequest, claimBidRequest } from 'stores/reducers/placeBid'
 import { acceptOfferRequest, cancelOfferRequest } from 'stores/reducers/makeOffer'
 import { Box, Button } from '@material-ui/core'
 import { CardHistoryBids } from 'common'
@@ -14,7 +14,7 @@ import APP_CONSTS from 'config/consts'
 import { useStyles } from '../../styles'
 
 const {
-  STATUSES: { SOLD, MINTED },
+  STATUSES: { SOLD, MINTED, CLAIMING },
 } = APP_CONSTS
 
 interface ITabHistoryProps {
@@ -35,7 +35,7 @@ export default function TabBids(props: ITabHistoryProps) {
   } = useSelector(selectAssetDetails())
 
   const history = marketData?.sold || marketData === null ? offers : bids
-  const historyReverse = history ? history.slice().reverse() : []
+  const historyReverse = history ? history : []
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
@@ -74,6 +74,19 @@ export default function TabBids(props: ITabHistoryProps) {
     dispatch(cancelOfferRequest({ id }))
   }
 
+  const handleClaimBid = ({ id, buyerId }: { id: number; buyerId: string }) => {
+    console.log('claim')
+    dispatch(
+      claimBidRequest({
+        item_id: marketData?.item_id,
+        market_id: marketData?.id,
+        bid_id: String(id),
+        assetOwnerId: tokenData?.owner,
+        buyerId,
+      })
+    )
+  }
+
   const expireTime = marketData && normalizeDate(marketData?.end_time).getTime() > new Date().getTime()
   const expireDate = marketData ? normalizeDate(marketData.end_time) : normalizeDate(String(new Date().getTime()))
 
@@ -105,6 +118,7 @@ export default function TabBids(props: ITabHistoryProps) {
               userWalletId={user?.id}
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
+              onClaimBid={user?.id === +props.user_id && status === CLAIMING ? handleClaimBid : undefined}
               onCancel={
                 user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                   ? marketData?.sold || marketData === null
@@ -140,6 +154,7 @@ export default function TabBids(props: ITabHistoryProps) {
             userWalletId={user?.id}
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
+            onClaimBid={user?.id === +props.user_id && status === CLAIMING ? handleClaimBid : undefined}
             onCancel={
               user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                 ? marketData?.sold || marketData === null

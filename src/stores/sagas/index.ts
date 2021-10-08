@@ -40,6 +40,7 @@ import {
   getBidsRequest,
   cancelBidRequest,
   getOffersRequest,
+  claimBidRequest,
 } from '../reducers/placeBid'
 import { buyNowRequest } from '../reducers/buyNow'
 import {
@@ -85,7 +86,7 @@ import {
 } from '../sagas/wallet'
 import { minting, uploadImage } from '../sagas/minting'
 import { listing, unlisting, changePrice } from '../sagas/listing'
-import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers } from '../sagas/placeBid'
+import { placeBid, getBidsHistory, acceptBid, getBids, cancelBid, getOffers, claimBid } from '../sagas/placeBid'
 import { buyNow } from '../sagas/buyNow'
 import { getNotifications, listenForSocketMessages, updateForSocketMessagesData } from '../sagas/notifications'
 import { getAllWorks, getAllUsersList, banUser, unbanUser, banWork, unbanWork } from '../sagas/management'
@@ -141,6 +142,7 @@ export default function* root() {
     takeLatest(getBidsRequest.type, getBids, apiMiddleware),
     takeLatest(cancelBidRequest.type, cancelBid, apiMiddleware),
     takeLatest(getOffersRequest.type, getOffers, apiMiddleware),
+    takeLatest(claimBidRequest.type, claimBid, apiMiddleware),
 
     /** Buy Now **/
     takeLatest(buyNowRequest.type, buyNow, apiMiddleware),

@@ -63,7 +63,7 @@ export default function Dashboard() {
     selectUser()
   )
   const {
-    listing: { fetchingUnlist, artworkUnlisted },
+    listing: { fetchingUnlist },
   } = useSelector(selectListing())
 
   const { search } = useSelector(selectSearch())
@@ -223,14 +223,13 @@ export default function Dashboard() {
               </Box>
             )}
 
-            {!userAssets?.length && <Empty />}
-
             <Box className={classes.grid} mt={2}>
               {fetching ? (
                 <CircularProgressLoader />
               ) : (
                 <>
                   {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
+                  {!userAssets?.length && <Empty />}
                   {sortedAssets
                     ? sortedAssets.map((userAsset, i) => (
                         <CardAsset
@@ -264,10 +263,11 @@ export default function Dashboard() {
       </PageWrapper>
 
       <ConfirmationModal
-        open={openUnlistModal && !artworkUnlisted}
+        open={openUnlistModal}
         onCancel={() => setOpenUnlistModal(false)}
         onSubmit={() => {
           handleUnlisted(selectedAssetId)
+          setOpenUnlistModal(false)
         }}
         title={'Do you want to cancel artwork?'}
         fetching={fetchingUnlist}

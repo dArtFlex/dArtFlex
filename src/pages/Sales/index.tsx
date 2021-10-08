@@ -21,7 +21,7 @@ export default function Sales() {
   const dispatch = useDispatch()
   const { user, userAssets, fetching, biddedOfferedAssets } = useSelector(selectUser())
   const {
-    listing: { fetchingUnlist, artworkUnlisted },
+    listing: { fetchingUnlist },
   } = useSelector(selectListing())
 
   const [openUnlistModal, setOpenUnlistModal] = useState(false)
@@ -116,10 +116,11 @@ export default function Sales() {
       </PageWrapper>
 
       <ConfirmationModal
-        open={openUnlistModal && !artworkUnlisted}
+        open={openUnlistModal}
         onCancel={() => setOpenUnlistModal(false)}
         onSubmit={() => {
           handleUnlisted(selectedAssetId)
+          setOpenUnlistModal(false)
         }}
         title={'Do you want to cancel artwork?'}
         fetching={fetchingUnlist}

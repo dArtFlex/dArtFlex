@@ -279,5 +279,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: '0.6rem',
       letterSpacing: 2,
     },
+    commingMenu: {
+      color: theme.palette.text.primary,
+      padding: theme.spacing(5, 0, 5, 5),
+      fontSize: 16,
+    },
   })
 )

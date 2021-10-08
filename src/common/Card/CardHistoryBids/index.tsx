@@ -25,6 +25,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     onCancel,
     onAcceptBid,
     onAcceptOffer,
+    onClaimBid,
     expireDate,
   } = props
   const classes = useStyles()
@@ -39,6 +40,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     case 'offered':
     case 'accepted':
     case 'pending':
+    case 'claiming':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
@@ -101,6 +103,52 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                       startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
                     >
                       Accept offer
+                    </Button>
+                  )}
+                </>
+              )}
+            </Box>
+          </CardContent>
+        </CardContainer>
+      )
+    case 'claiming':
+      return (
+        <CardContainer
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
+          action={null}
+          title={updatedDate}
+          subheader={
+            <Box>
+              <Typography className={classes.subheader}>
+                Bid
+                <CustomTooltip text={`${bidAmountToToken} WETH`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
+              </Typography>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
+              </Link>
+            </Box>
+          }
+        >
+          <CardContent classes={{ root: classes.footer }}>
+            <Divider />
+            <Box className={classes.footerBox}>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
+              {onClaimBid && (
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Claim Bid
                     </Button>
                   )}
                 </>

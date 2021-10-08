@@ -14,6 +14,8 @@ import {
   cancelBidFailure,
   getOffersSuccess,
   getOffersFailure,
+  claimBidSuccess,
+  claimBidFailure,
 } from 'stores/reducers/placeBid'
 import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
@@ -210,5 +212,48 @@ export function* cancelBid(api: IApi, { payload }: PayloadAction<{ bid_id: strin
     yield put(cancelBidSuccess())
   } catch (e) {
     yield put(cancelBidFailure(e))
+  }
+}
+
+export function* claimBid(
+  api: IApi,
+  {
+    payload,
+  }: PayloadAction<{
+    item_id: string
+    market_id: string
+    bid_id: string
+    assetOwnerId: string
+    buyerId: string
+  }>
+) {
+  try {
+    const getHistory: Array<IBidsHistory & ITradingHistory> = yield call(api, {
+      url: APP_CONFIG.getHistoryNFT(+payload.item_id),
+    })
+    const getCurrentOrderId = getHistory
+      .slice()
+      .reverse()
+      .find((h) => h.status === 'listed')?.order_id
+
+    const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(getCurrentOrderId || '0'),
+    })
+
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
+
+    yield call(api, {
+      url: APP_CONFIG.claimBid,
+      method: 'POST',
+      data: {
+        itemId: payload.item_id,
+        buyerId: payload.buyerId,
+        sellerId: Number(payload.assetOwnerId),
+        txHash: acceptBidTransaction.transactionHash,
+      },
+    })
+    yield put(claimBidSuccess())
+  } catch (e) {
+    yield put(claimBidFailure(e))
   }
 }
