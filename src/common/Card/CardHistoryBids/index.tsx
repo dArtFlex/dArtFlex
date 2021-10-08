@@ -23,7 +23,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     bidAmountUsd,
     userData,
     onCancel,
-    // onAcceptBid,
+    onAcceptBid,
     onAcceptOffer,
     onClaimBid,
     expireDate,
@@ -75,7 +75,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                   Cancel {status === 'offered' ? 'offer' : 'bid'}
                 </Button>
               )}
-              {/* {onAcceptBid && (
+              {onAcceptBid && (
                 <>
                   {bid.transacting ? (
                     <CircularProgressLoader height={'20'} size={20} customWidth={120} />
@@ -90,7 +90,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                     </Button>
                   )}
                 </>
-              )} */}
+              )}
               {onAcceptOffer && (
                 <>
                   {offer.fetching ? (
