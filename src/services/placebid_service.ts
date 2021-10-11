@@ -103,7 +103,6 @@ export class PlaceBidService extends CommonService {
   // Taker is ZERO
   async generateOrder(request) {
     const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
-    debugger
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
     const data = this.createTypeData(

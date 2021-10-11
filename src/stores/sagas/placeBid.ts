@@ -21,6 +21,7 @@ import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import { acceptBidService } from 'services/accept_bid_service'
+import { claimBidService } from 'services/claim_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString, networkConvertor } from 'utils'
 import tokensAll from 'core/tokens'
@@ -40,7 +41,6 @@ import {
 
 export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
-    debugger
     const getChainId: IChainId = walletService.getChainId()
     const chainId: IChainId = networkConvertor(getChainId)
     const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
@@ -62,7 +62,6 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
     })
-    debugger
     const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
@@ -159,7 +158,6 @@ export function* acceptBid(
     const sellerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(String(marketData[marketData.length - 1].order_id)),
     })
-    debugger
     const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(sellerOrder, buyerOrder)
 
     yield call(api, {
@@ -243,13 +241,11 @@ export function* claimBid(
     const sellerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(sellerOrderId || '0'),
     })
-    debugger
     const buyerOrderId = getHistory.slice().reverse()[0]?.order_id
     const buyerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(buyerOrderId || '0'),
     })
-
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(sellerOrder, buyerOrder)
+    const acceptBidTransaction: IAcceptBidTransaction = yield claimBidService.performMint(sellerOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.claimBid,
