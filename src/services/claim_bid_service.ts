@@ -3,7 +3,7 @@ import { walletService } from 'services/wallet_service'
 import { ABI, AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { IOrderData, IChainIdFormat } from 'types'
 
-class AcceptBidService {
+class ClaimBidService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public contract: any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +36,7 @@ class AcceptBidService {
         seller.dataType,
         seller.data,
       ],
-      '0x', // 0x
+      seller.signature, // 0x
 
       // for creator & for buyer
       [
@@ -44,13 +44,13 @@ class AcceptBidService {
         [[buyer.makeAsset.assetType.assetClass, buyer.makeAsset.assetType.data], buyer.makeAsset.value],
         buyer.taker, // buyer taker
         [[buyer.takeAsset.assetType.assetClass, buyer.takeAsset.assetType.data], buyer.takeAsset.value],
-        buyer.salt,
+        seller.salt,
         0,
         0,
         buyer.dataType,
         buyer.data,
       ],
-      buyer.signature // buyer signature
+      '0x' // buyer signature
     )
 
     const chainId: IChainIdFormat = walletService.getChainId()
@@ -68,4 +68,4 @@ class AcceptBidService {
   }
 }
 
-export const acceptBidService = new AcceptBidService()
+export const claimBidService = new ClaimBidService()

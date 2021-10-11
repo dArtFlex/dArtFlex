@@ -120,7 +120,7 @@ export function* acceptOffer(
       url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
     })
 
-    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
+    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptOffer,

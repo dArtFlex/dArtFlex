@@ -21,6 +21,7 @@ import { getUserDataById } from 'stores/sagas/user'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import { acceptBidService } from 'services/accept_bid_service'
+import { claimBidService } from 'services/claim_bid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString, networkConvertor } from 'utils'
 import tokensAll from 'core/tokens'
@@ -59,9 +60,8 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     }
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
+      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
     })
-
     const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
@@ -146,17 +146,19 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  { payload }: PayloadAction<{ market_id: string; bid_id: string; assetOwnerId: string }>
+  { payload }: PayloadAction<{ item_id: string; market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
     const marketData: IBidsMarketHistory[] = yield call(api, {
       url: APP_CONFIG.getHistory(Number(payload.market_id)),
     })
     const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(String(marketData[0].order_id)),
+    })
+    const sellerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(String(marketData[marketData.length - 1].order_id)),
     })
-
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(sellerOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptBid,
@@ -231,16 +233,19 @@ export function* claimBid(
     const getHistory: Array<IBidsHistory & ITradingHistory> = yield call(api, {
       url: APP_CONFIG.getHistoryNFT(+payload.item_id),
     })
-    const getCurrentOrderId = getHistory
+    const sellerOrderId = getHistory
       .slice()
       .reverse()
       .find((h) => h.status === 'listed')?.order_id
 
-    const buyerOrder: IOrderData = yield call(api, {
-      url: APP_CONFIG.getOrderByOrderId(getCurrentOrderId || '0'),
+    const sellerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(sellerOrderId || '0'),
     })
-
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder)
+    const buyerOrderId = getHistory.slice().reverse()[0]?.order_id
+    const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(buyerOrderId || '0'),
+    })
+    const acceptBidTransaction: IAcceptBidTransaction = yield claimBidService.performMint(sellerOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.claimBid,
