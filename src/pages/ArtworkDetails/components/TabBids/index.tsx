@@ -49,6 +49,7 @@ export default function TabBids(props: ITabHistoryProps) {
   const handleAcceptBid = () => {
     dispatch(
       acceptBidRequest({
+        item_id: marketData?.item_id,
         market_id: historyReverse[0].market_id,
         bid_id: historyReverse[0]?.id,
         assetOwnerId: tokenData?.owner,

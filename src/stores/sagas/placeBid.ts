@@ -40,6 +40,7 @@ import {
 
 export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
   try {
+    debugger
     const getChainId: IChainId = walletService.getChainId()
     const chainId: IChainId = networkConvertor(getChainId)
     const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
@@ -59,7 +60,7 @@ export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{
     }
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
+      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
     })
     debugger
     const order: IOrderData[] = yield placeBidService.generateOrder({
@@ -146,17 +147,20 @@ export function* getBidsHistory(api: IApi) {
 
 export function* acceptBid(
   api: IApi,
-  { payload }: PayloadAction<{ market_id: string; bid_id: string; assetOwnerId: string }>
+  { payload }: PayloadAction<{ item_id: string; market_id: string; bid_id: string; assetOwnerId: string }>
 ) {
   try {
     const marketData: IBidsMarketHistory[] = yield call(api, {
       url: APP_CONFIG.getHistory(Number(payload.market_id)),
     })
     const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(String(marketData[0].order_id)),
+    })
+    const sellerOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(String(marketData[marketData.length - 1].order_id)),
     })
-
-    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder, buyerOrder)
+    debugger
+    const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(sellerOrder, buyerOrder)
 
     yield call(api, {
       url: APP_CONFIG.acceptBid,
