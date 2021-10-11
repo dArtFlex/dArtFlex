@@ -14,7 +14,7 @@ import APP_CONSTS from 'config/consts'
 import { useStyles } from '../../styles'
 
 const {
-  STATUSES: { SOLD, MINTED, CLAIMING },
+  STATUSES: { SOLD, MINTED },
 } = APP_CONSTS
 
 interface ITabHistoryProps {
@@ -107,6 +107,18 @@ export default function TabBids(props: ITabHistoryProps) {
     return i === 0 && tokenData && user?.id === +tokenData.owner && checkMarketData
   }
 
+  const availableToClaim = (i: number) => {
+    return (
+      i === 0 &&
+      tokenData &&
+      !expireTime &&
+      user?.id !== +tokenData.owner &&
+      marketData &&
+      marketData?.type === 'auction' &&
+      !marketData?.sold
+    )
+  }
+
   if (history?.length > 4 && !showMore) {
     return (
       <Box className={classes.tabContentScroll}>
@@ -119,7 +131,7 @@ export default function TabBids(props: ITabHistoryProps) {
               userWalletId={user?.id}
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-              onClaimBid={handleClaimBid}
+              onClaimBid={availableToClaim(i) ? handleClaimBid : undefined}
               onCancel={
                 user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                   ? marketData?.sold || marketData === null
@@ -155,7 +167,7 @@ export default function TabBids(props: ITabHistoryProps) {
             userWalletId={user?.id}
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-            onClaimBid={handleClaimBid}
+            onClaimBid={availableToClaim(i) ? handleClaimBid : undefined}
             onCancel={
               user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                 ? marketData?.sold || marketData === null
