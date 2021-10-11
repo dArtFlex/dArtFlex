@@ -76,7 +76,6 @@ export default function TabBids(props: ITabHistoryProps) {
   }
 
   const handleClaimBid = ({ id, buyerId }: { id: number; buyerId: string }) => {
-    console.log('claim')
     dispatch(
       claimBidRequest({
         item_id: marketData?.item_id,
@@ -107,11 +106,12 @@ export default function TabBids(props: ITabHistoryProps) {
     return i === 0 && tokenData && user?.id === +tokenData.owner && checkMarketData
   }
 
-  const availableToClaim = (i: number) => {
+  const availableToClaim = (i: number, id: string) => {
     return (
       i === 0 &&
       tokenData &&
       !expireTime &&
+      user?.id === +id &&
       user?.id !== +tokenData.owner &&
       marketData &&
       marketData?.type === 'auction' &&
@@ -131,7 +131,7 @@ export default function TabBids(props: ITabHistoryProps) {
               userWalletId={user?.id}
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-              onClaimBid={availableToClaim(i) ? handleClaimBid : undefined}
+              onClaimBid={availableToClaim(i, props.user_id) ? handleClaimBid : undefined}
               onCancel={
                 user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                   ? marketData?.sold || marketData === null
@@ -167,7 +167,7 @@ export default function TabBids(props: ITabHistoryProps) {
             userWalletId={user?.id}
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-            onClaimBid={availableToClaim(i) ? handleClaimBid : undefined}
+            onClaimBid={availableToClaim(i, props.user_id) ? handleClaimBid : undefined}
             onCancel={
               user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                 ? marketData?.sold || marketData === null
