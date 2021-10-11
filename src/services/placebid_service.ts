@@ -3,7 +3,7 @@ import { CommonService } from 'services/common_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { ERC20_TRANSFER_PROXY_ADDRESS } from 'core/contracts/lazy_mint_contract'
-import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
+import { ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
 
 export class PlaceBidService extends CommonService {
@@ -71,7 +71,7 @@ export class PlaceBidService extends CommonService {
         },
         value: form.take.value,
       },
-      taker: ZERO,
+      taker: makeAsset.creator,
       takeAsset: {
         assetType: {
           assetClass: this.web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
@@ -103,7 +103,6 @@ export class PlaceBidService extends CommonService {
   // Taker is ZERO
   async generateOrder(request) {
     const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
-
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
     const data = this.createTypeData(

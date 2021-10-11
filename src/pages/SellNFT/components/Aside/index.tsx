@@ -21,7 +21,10 @@ export default function Aside(props: IAsideProps) {
   const { values, handleSubmit } = useFormikContext<ISellArtwork>()
 
   const getChainId: IChainId = networkConvertor(walletService.getChainId())
-  const tokenName = tokensAll[getChainId].find((token) => token.id === values.salesTokenContract)?.symbol
+  const tokenName =
+    tokensAll[getChainId] !== undefined
+      ? tokensAll[getChainId].find((token) => token.id === values.salesTokenContract)?.symbol
+      : ''
 
   return (
     <Box>
