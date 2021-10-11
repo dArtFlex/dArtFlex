@@ -9,6 +9,7 @@ class ListingService extends CommonService {
   }
 
   createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint) {
+    debugger
     return {
       type: 'RARIBLE_V2',
       maker: maker,

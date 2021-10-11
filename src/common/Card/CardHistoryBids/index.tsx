@@ -107,6 +107,22 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                   )}
                 </>
               )}
+              {onClaimBid && (
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Claim Bid
+                    </Button>
+                  )}
+                </>
+              )}
             </Box>
           </CardContent>
         </CardContainer>

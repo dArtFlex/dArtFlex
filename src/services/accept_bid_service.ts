@@ -19,39 +19,38 @@ class AcceptBidService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async performMint(buyer: IOrderData): Promise<any> {
+  public async performMint(seller: IOrderData, buyer: IOrderData): Promise<any> {
     // Creator is owner of Nft
     const creator = walletService.getAccoutns()[0]
-
+    debugger
     const invocation = this.contract.methods.matchOrders(
       // for buyer
       [
-        buyer.maker,
-        [[buyer.makeAsset.assetType.assetClass, buyer.makeAsset.assetType.data], buyer.makeAsset.value],
-        buyer.taker,
-        [[buyer.takeAsset.assetType.assetClass, buyer.takeAsset.assetType.data], buyer.takeAsset.value],
-        buyer.salt,
+        seller.maker, // seller maker
+        [[seller.makeAsset.assetType.assetClass, seller.makeAsset.assetType.data], seller.makeAsset.value],
+        seller.taker, // 0x
+        [[seller.takeAsset.assetType.assetClass, seller.takeAsset.assetType.data], seller.takeAsset.value],
+        seller.salt,
         0, // always 0
         0, // always 0
-        buyer.dataType,
-        buyer.data,
+        seller.dataType,
+        seller.data,
       ],
-      buyer.signature,
+      seller.signature, // 0x
 
       // for creator & for buyer
       [
-        creator,
-        [[buyer.takeAsset.assetType.assetClass, buyer.takeAsset.assetType.data], buyer.takeAsset.value],
-
-        buyer.maker,
+        buyer.maker, // buyer maker
         [[buyer.makeAsset.assetType.assetClass, buyer.makeAsset.assetType.data], buyer.makeAsset.value],
-        buyer.salt,
+        buyer.taker, // buyer taker
+        [[buyer.takeAsset.assetType.assetClass, buyer.takeAsset.assetType.data], buyer.takeAsset.value],
+        seller.salt,
         0,
         0,
         buyer.dataType,
         buyer.data,
       ],
-      '0x'
+      '0x' // buyer signature
     )
 
     const chainId: IChainIdFormat = walletService.getChainId()

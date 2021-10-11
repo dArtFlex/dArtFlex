@@ -118,7 +118,7 @@ export default function TabBids(props: ITabHistoryProps) {
               userWalletId={user?.id}
               onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
               onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-              onClaimBid={user?.id === +props.user_id && status === CLAIMING ? handleClaimBid : undefined}
+              onClaimBid={handleClaimBid}
               onCancel={
                 user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                   ? marketData?.sold || marketData === null
@@ -154,7 +154,7 @@ export default function TabBids(props: ITabHistoryProps) {
             userWalletId={user?.id}
             onAcceptBid={availableToAcceptBid(i) ? handleAcceptBid : undefined}
             onAcceptOffer={availableToAcceptOffer(i) ? handleAcceptOffer : undefined}
-            onClaimBid={user?.id === +props.user_id && status === CLAIMING ? handleClaimBid : undefined}
+            onClaimBid={handleClaimBid}
             onCancel={
               user?.id === +props.user_id && (expireTime || status === SOLD || status === MINTED)
                 ? marketData?.sold || marketData === null

@@ -71,7 +71,7 @@ export class PlaceBidService extends CommonService {
         },
         value: form.take.value,
       },
-      taker: ZERO,
+      taker: makeAsset.creator,
       takeAsset: {
         assetType: {
           assetClass: this.web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
@@ -103,7 +103,7 @@ export class PlaceBidService extends CommonService {
   // Taker is ZERO
   async generateOrder(request) {
     const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
-
+    debugger
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
     const data = this.createTypeData(
