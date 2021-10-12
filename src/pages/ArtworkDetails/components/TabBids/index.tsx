@@ -14,7 +14,7 @@ import APP_CONSTS from 'config/consts'
 import { useStyles } from '../../styles'
 
 const {
-  STATUSES: { SOLD, MINTED },
+  STATUSES: { SOLD, MINTED, CLAIMING },
 } = APP_CONSTS
 
 interface ITabHistoryProps {
@@ -113,6 +113,7 @@ export default function TabBids(props: ITabHistoryProps) {
       !expireTime &&
       user?.id === +id &&
       user?.id !== +tokenData.owner &&
+      status === CLAIMING &&
       marketData &&
       marketData?.type === 'auction' &&
       !marketData?.sold
