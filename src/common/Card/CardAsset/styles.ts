@@ -50,8 +50,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       flexWrap: 'wrap',
       rowGap: 16,
-      gap: 12,
-      minWidth: 350,
+      gap: 4,
+      minWidth: 325,
       padding: theme.spacing(4, 5),
       background: theme.palette.accentGradient,
       color: theme.palette.white,
@@ -78,7 +78,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     timerWrapper: {
       width: 159,
       display: 'flex',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
       alignItems: 'center',
     },
     actionBtnBurn: {
