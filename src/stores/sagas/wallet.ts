@@ -137,7 +137,6 @@ export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ walle
 function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
   try {
     const { id, decimals, symbol } = token
-
     if (acc && id) {
       const tokenContract = walletService.getTokenContract(id)
       const balance: string = yield tokenContract.methods.balanceOf(acc).call()

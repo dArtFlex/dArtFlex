@@ -31,7 +31,7 @@ export function getWalletsFromHistory() {
 }
 
 export function supportedNetwork(chainId: string | number) {
-  const allowedNetworks = ['0x1', '0x4', '0x38', 1, 4, 38]
+  const allowedNetworks = ['0x1', '0x4', '0x38', '0x61', 1, 4, 38, 97]
   return allowedNetworks.some((network) => network === chainId)
 }
 
@@ -43,6 +43,8 @@ export function networkConvertor(chainId: IChainId): IChainIdFormat {
       return '0x4'
     case 38:
       return '0x38'
+    case 97:
+      return '0x61'
     default:
       return chainId
   }

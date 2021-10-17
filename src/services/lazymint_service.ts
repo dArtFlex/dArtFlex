@@ -1,7 +1,9 @@
 //@ts-nocheck
 import HttpStatusCodes from 'http-status-codes'
+import { walletService } from 'services/wallet_service'
 import { CommonService } from 'services/common_service'
 import { DOMAIN_TYPE, ERC721Types } from 'constant'
+import { IChainIdFormat } from 'types'
 
 class LazyMintService extends CommonService {
   createTypeData(domainData, primaryType, message, types) {
@@ -43,11 +45,12 @@ class LazyMintService extends CommonService {
       royalties: [],
     }
 
+    const chainId: IChainIdFormat = walletService.getChainId()
     const data = this.createTypeData(
       {
         name: 'Mint721',
         version: '1',
-        chainId: 4,
+        chainId,
         verifyingContract: contract,
       },
       'Mint721',

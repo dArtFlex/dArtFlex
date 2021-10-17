@@ -8,8 +8,12 @@ const STAGE_URL_API = 'https://dartflex-stage.ml:8887/api'
 const DEV_APP_URL = 'https://dartflex-dev.ml'
 const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
 
+// TEMPORATY Instants
+const TEMPORATY_URL_API = 'http://18.193.161.0:8888/api'
+
 // ************** SETUP API ENVIRIMENT **************
-const API = process.env.NODE_ENV === 'production' ? STAGE_URL_API : DEV_URL_API
+const API = TEMPORATY_URL_API
+// const API = process.env.NODE_ENV === 'production' ? STAGE_URL_API : DEV_URL_API
 const APP_URL = process.env.NODE_ENV === 'production' ? STAGE_APP_URL : DEV_APP_URL
 // ************** ******************** **************
 
@@ -18,12 +22,15 @@ const LOCAL_URL = 'http://localhost:3000'
 
 const ETHEREUM_PROVIDER = 'http://mainnet.infura.io/v3/6c7fceaca1a3433dad73cb537f87644b'
 const RINKEBY_PROVIDER = 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899'
+const BSC_TESTNET_PROVIDER = 'https://data-seed-prebsc-1-s1.binance.org:8545'
 
 const APP_CONFIG = {
   ethereumProvider: ETHEREUM_PROVIDER,
   ethereumProviderAddress: getProviderAddress(ETHEREUM_PROVIDER),
   rinkebyProvider: RINKEBY_PROVIDER,
   rinkebyProviderAddress: getProviderAddress(RINKEBY_PROVIDER),
+  bscTestnetProvider: BSC_TESTNET_PROVIDER,
+  bscTestnetProviderAddress: getProviderAddress(BSC_TESTNET_PROVIDER),
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
   exchangeRateSafe: (symbol: string) => `${STAGE_URL_API}/token_price/get/${symbol.toUpperCase()}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
