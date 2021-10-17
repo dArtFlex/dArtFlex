@@ -23,6 +23,7 @@ import { useStyles } from '../styles'
 import { IBids, UserDataTypes, AssetTypes } from 'types'
 import appConst from '../../../../../config/consts'
 import APP_CONFIG from 'config'
+import { useTokenInfo } from 'hooks'
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -89,6 +90,9 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const currentUrl = APP_CONFIG.appUrl + url
   const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
 
+  const token = useTokenInfo(marketData?.sales_token_contract)
+  const tokenName = token?.symbol || ''
+
   function getPriceStatusHeader() {
     if (status === MINTED) {
       return 'Reserve price'
@@ -150,7 +154,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Typography variant={'body1'} className={classes.infoTitle}>
               <span>{getPriceStatusHeader()}</span>
             </Typography>
-            <Typography variant={'h2'}>{status === MINTED ? '-' : `${startPriceToToken} ETH`}</Typography>
+            <Typography variant={'h2'}>{status === MINTED ? '-' : `${startPriceToToken} ${tokenName}`}</Typography>
             <span>
               {!isReserveNotMet && marketData?.end_price
                 ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber()}`
@@ -186,7 +190,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
                 className={classes.bitBtn}
                 classes={{ disabled: classes.bitBtnDisabled }}
               >
-                {`Buy Now for ${startPriceToToken} ETH`}
+                {`Buy Now for ${startPriceToToken} ${tokenName}`}
               </Button>
             </Box>
           </MUITooltip>
@@ -272,7 +276,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         onSubmit={(value: string) => {
           dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
         }}
-        tokenName={'ETH'}
+        tokenName={tokenName}
         fetching={fetchingDropPrice}
       />
 
