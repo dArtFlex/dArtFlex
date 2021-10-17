@@ -9,6 +9,7 @@ import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectUser } f
 import { Field, Tooltip } from 'common'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
+import { useTokenInfo } from 'hooks'
 
 interface IFormBuyApproveProps {
   onSubmit: () => void
@@ -37,6 +38,9 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
       : 0
   const priceToUsd =
     startPriceToToken && tokenInfo ? new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(2) : 0
+
+  const token = useTokenInfo(marketData?.sales_token_contract)
+  const tokenName = token?.symbol || ''
 
   const isValidValueAmount = Number(tokenBalanceETH) >= Number(startPriceToToken)
   const disabledBuy =
@@ -79,7 +83,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             <Box mt={2}>
               <Typography
                 className={clsx(classes.tokenAmount, classes.fontFamilyRoboto)}
-              >{`${startPriceToToken} ETH`}</Typography>
+              >{`${startPriceToToken} ${tokenName}`}</Typography>
               <Typography
                 className={clsx(classes.tokenAmountUsd, classes.fontFamilyRoboto)}
               >{`$${priceToUsd}`}</Typography>
@@ -118,9 +122,9 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             disabled={!disabledBuy}
           >
             {!isValidValueAmount ? (
-              <Typography className={classes.bitBtnDisabledText}>You don’t have enough ETH</Typography>
+              <Typography className={classes.bitBtnDisabledText}>{`You don’t have enough ${tokenName}`}</Typography>
             ) : (
-              <Typography>{`Buy Now for ${startPriceToToken} ETH`}</Typography>
+              <Typography>{`Buy Now for ${startPriceToToken} ${tokenName}`}</Typography>
             )}
           </Button>
         </Box>
