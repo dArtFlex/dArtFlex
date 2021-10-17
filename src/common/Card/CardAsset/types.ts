@@ -19,6 +19,7 @@ export interface ICardActionsProps extends Pick<ICardAssetProps, 'useCardStatus'
   timer?: string
   onAction?: () => void
   emptyBottom?: boolean
+  sales_token_contract: string
 }
 
 export type ICardBadgeProps = Pick<ICardActionsProps, 'status' | 'sold'>

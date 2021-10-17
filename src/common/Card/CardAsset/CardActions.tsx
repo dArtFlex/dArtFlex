@@ -12,6 +12,7 @@ import { normalizeDate } from 'utils'
 import routes from '../../../routes'
 import { useHistory } from 'react-router-dom'
 import CardActionButton from './CardActionButton'
+import { useTokenInfo } from 'hooks'
 
 const {
   FILTER_VALUES: { MINTED, LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, COLLECTED, CREATED, SOLD, LISTED },
@@ -34,6 +35,7 @@ export default function CardActions(props: ICardActionsProps) {
     useCardStatus = useDefaultCardStatus,
     button,
     emptyBottom,
+    sales_token_contract,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
@@ -46,6 +48,9 @@ export default function CardActions(props: ICardActionsProps) {
 
   const now_time = new Date().getTime()
   const expire_time = normalizeDate(endTime).getTime() < burnTime
+
+  const token = useTokenInfo(sales_token_contract)
+  const tokenName = token?.symbol || ''
 
   const tooltipProps = { background: '#141717', shiftY: -60 }
 
@@ -96,9 +101,9 @@ export default function CardActions(props: ICardActionsProps) {
                 text={currentBitToCoin ? 'Current Bid' : 'Reserve Price'}
                 value={
                   now_time < normalizeDate(endTime).getTime() ? (
-                    <CustomTooltip text={`${bidPrice} WETH`} {...tooltipProps}>{`${
+                    <CustomTooltip text={`${bidPrice} ${tokenName}`} {...tooltipProps}>{`${
                       bidPrice && Number(bidPrice).toFixed(4)
-                    } WETH`}</CustomTooltip>
+                    } ${tokenName}`}</CustomTooltip>
                   ) : (
                     '-'
                   )
@@ -126,9 +131,9 @@ export default function CardActions(props: ICardActionsProps) {
           <Section
             text={'Buy Now'}
             value={
-              <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
-                4
-              )} ETH`}</CustomTooltip>
+              <CustomTooltip text={`${startPriceToCoin} ${tokenName}`} {...tooltipProps}>{`${Number(
+                startPriceToCoin
+              ).toFixed(4)} ${tokenName}`}</CustomTooltip>
             }
           />
         </Box>
@@ -140,9 +145,9 @@ export default function CardActions(props: ICardActionsProps) {
             text={'Reserve Price'}
             value={
               startPriceToCoin ? (
-                <CustomTooltip text={`${startPriceToCoin} WETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
-                  4
-                )} WETH`}</CustomTooltip>
+                <CustomTooltip text={`${startPriceToCoin} ${tokenName}`} {...tooltipProps}>{`${Number(
+                  startPriceToCoin
+                ).toFixed(4)} ${tokenName}`}</CustomTooltip>
               ) : (
                 '-'
               )
@@ -163,9 +168,9 @@ export default function CardActions(props: ICardActionsProps) {
               <Section
                 text={'Sold for'}
                 value={
-                  <CustomTooltip text={`${soldPrice} ETH`} {...tooltipProps}>{`${Number(soldPrice).toFixed(
+                  <CustomTooltip text={`${soldPrice} ${tokenName}`} {...tooltipProps}>{`${Number(soldPrice).toFixed(
                     4
-                  )} ETH`}</CustomTooltip>
+                  )} ${tokenName}`}</CustomTooltip>
                 }
               />
             </Box>
@@ -189,9 +194,9 @@ export default function CardActions(props: ICardActionsProps) {
           <Section
             text={'Reserve Not Met'}
             value={
-              <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
-                4
-              )} ETH`}</CustomTooltip>
+              <CustomTooltip text={`${startPriceToCoin} ${tokenName}`} {...tooltipProps}>{`${Number(
+                startPriceToCoin
+              ).toFixed(4)} ${tokenName}`}</CustomTooltip>
             }
           />
         </Box>
@@ -203,9 +208,9 @@ export default function CardActions(props: ICardActionsProps) {
             text={'Reserve Price'}
             value={
               startPriceToCoin ? (
-                <CustomTooltip text={`${startPriceToCoin} ETH`} {...tooltipProps}>{`${Number(startPriceToCoin).toFixed(
-                  4
-                )} ETH`}</CustomTooltip>
+                <CustomTooltip text={`${startPriceToCoin} ${tokenName}`} {...tooltipProps}>{`${Number(
+                  startPriceToCoin
+                ).toFixed(4)} ${tokenName}`}</CustomTooltip>
               ) : (
                 '-'
               )

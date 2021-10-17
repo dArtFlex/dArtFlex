@@ -63,14 +63,14 @@ const tokensAll = {
   '0x61': [
     {
       id: '0x',
-      erc20id: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+      erc20id: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       symbol: 'BNB',
       name: 'Binance Coin',
       decimals: 18,
       logoURI: '',
     },
     {
-      id: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+      id: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       name: 'Wrapped BNB',
       symbol: 'WBNB',
       decimals: 18,
