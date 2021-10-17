@@ -1,10 +1,12 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
 import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
+import { walletService } from 'services/wallet_service'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { ERC20_TRANSFER_PROXY_ADDRESS } from 'core/contracts/lazy_mint_contract'
 import { ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
+import { IChainIdFormat } from 'types'
 
 export class PlaceBidService extends CommonService {
   random(min, max) {
@@ -105,11 +107,13 @@ export class PlaceBidService extends CommonService {
     const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
+
+    const chainId: IChainIdFormat = walletService.getChainId()
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
-        chainId: 4,
+        chainId,
         verifyingContract: AUCTION_CONTRACT_ADDRESS,
       },
       'Order',
