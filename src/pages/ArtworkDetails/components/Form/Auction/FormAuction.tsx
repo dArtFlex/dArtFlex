@@ -54,6 +54,9 @@ export default function FormAuction(props: IFormAuctionProps) {
     Boolean(values.agreeTerms) &&
     Number(tokenData?.owner) !== user?.id
 
+  const token = useTokenInfo(marketData?.sales_token_contract)
+  const tokenName = token?.symbol || ''
+
   return (
     <>
       <Box className={classes.formContainer}>
@@ -85,7 +88,7 @@ export default function FormAuction(props: IFormAuctionProps) {
             </Typography>
             <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${Number(
               tokenBalanceWETH
-            ).toFixed(4)} WETH`}</Typography>
+            ).toFixed(4)} ${tokenName}`}</Typography>
           </Box>
           <Field
             type="input"
@@ -99,7 +102,7 @@ export default function FormAuction(props: IFormAuctionProps) {
                   position="start"
                   icon={
                     <Typography className={classes.inputAdorment} color={'textSecondary'}>
-                      WETH
+                      {tokenName}
                     </Typography>
                   }
                 />
@@ -141,7 +144,7 @@ export default function FormAuction(props: IFormAuctionProps) {
             disabled={!disabledBid}
           >
             {!isValidBidValueAmount ? (
-              <Typography className={classes.bitBtnDisabledText}>You don’t have enough WETH</Typography>
+              <Typography className={classes.bitBtnDisabledText}>{`You don’t have enough ${tokenName}`}</Typography>
             ) : (
               'Place a Bid'
             )}

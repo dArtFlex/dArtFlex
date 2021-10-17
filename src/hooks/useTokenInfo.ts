@@ -16,13 +16,15 @@ const useTokenInfo = (tokenContractAddress: ITokenInfoProps['tokenContractAddres
     if (tokenContractAddress === '0x') {
       const getChainId: IChainId = walletService.getChainId()
       const chainId: IChainId = networkConvertor(getChainId)
-      const tokenContractETH: IBaseTokens = tokensAll[chainId].find((t) => t.id === '0x') as IBaseTokens
-      setToken({
-        id: tokenContractETH.id,
-        decimals: tokenContractETH.decimals,
-        name: tokenContractETH.name,
-        symbol: tokenContractETH.symbol,
-      })
+      if (chainId) {
+        const tokenContractETH: IBaseTokens = tokensAll[chainId].find((t) => t.id === '0x') as IBaseTokens
+        setToken({
+          id: tokenContractETH.id,
+          decimals: tokenContractETH.decimals,
+          name: tokenContractETH.name,
+          symbol: tokenContractETH.symbol,
+        })
+      }
     } else if (tokenContractAddress) {
       const tokenContract = walletService.getTokenContract(tokenContractAddress)
       const decimals = await tokenContract.methods.decimals().call()

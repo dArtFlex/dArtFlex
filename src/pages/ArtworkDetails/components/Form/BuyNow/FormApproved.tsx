@@ -27,6 +27,7 @@ export default function FormApproved(props: IFormApproved) {
   } = useSelector(selectMakeOffer())
 
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
+  const bscscanTestnetViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${transactionHash}`
 
   return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>
@@ -60,14 +61,14 @@ export default function FormApproved(props: IFormApproved) {
     <SubFormTransaction
       title={`Your transaction wasn't successful`}
       icon={null}
-      linkEthescan={etherscanViewTx}
+      linkEthescan={bscscanTestnetViewTx}
       onSubmit={onSubmit}
     />
   ) : (
     <SubFormTransaction
       title={`Your transaction succeeded`}
       icon={null}
-      linkEthescan={etherscanViewTx}
+      linkEthescan={bscscanTestnetViewTx}
       onSubmit={onSubmit}
     />
   )

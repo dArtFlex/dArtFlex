@@ -139,6 +139,9 @@ export default function FormDetails(props: IDetailsFormProps) {
   const currentUrl = APP_CONFIG.appUrl + url
   const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
 
+  const token = useTokenInfo(marketData?.sales_token_contract)
+  const tokenName = token?.symbol || ''
+
   useEffect(() => {
     if (priceChanged) {
       dispatch(resetChangePrice())
@@ -191,18 +194,17 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${priceToToken} WETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} WETH` : '-') : ''}
+              {!isAuctionExpired ? `${priceToToken} ${tokenName}` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ${tokenName}` : '-') : ''}
             </Typography>
             <span>
               {!isAuctionExpired
-                ? marketData?.end_price &&
-                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                ? marketData?.end_price && `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber()}`
                 : null}
 
               {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber()}`
                   : ''
                 : ''}
             </span>
@@ -212,7 +214,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               <Typography variant={'body1'} className={classes.infoTitle}>
                 <span>Sold For</span>
               </Typography>
-              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} WETH`}</Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ${tokenName}`}</Typography>
               <span>
                 {marketData?.sold &&
                   marketData?.end_price &&
@@ -387,7 +389,7 @@ export default function FormDetails(props: IDetailsFormProps) {
         onSubmit={(value: string) => {
           dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
         }}
-        tokenName={'WETH'}
+        tokenName={tokenName}
         fetching={fetchingDropPrice}
       />
 

@@ -9,6 +9,7 @@ import { shortCutName } from '../../../utils'
 import CircularProgressLoader from '../../Loaders'
 import { useSelector } from 'react-redux'
 import { selectBid, selectMakeOffer } from '../../../stores/selectors'
+import { useTokenInfo } from 'hooks'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -27,6 +28,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     onAcceptOffer,
     onClaimBid,
     expireDate,
+    salesTokenContract,
   } = props
   const classes = useStyles()
 
@@ -35,6 +37,9 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
 
   const { offer } = useSelector(selectMakeOffer())
   const { bid } = useSelector(selectBid())
+
+  const token = useTokenInfo(salesTokenContract)
+  const tokenName = token?.symbol || ''
 
   switch (status) {
     case 'offered':
@@ -50,8 +55,8 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
             <Box>
               <Typography className={classes.subheader}>
                 {status === 'offered' ? 'Offer ' : 'Bid '}
-                <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
                 </CustomTooltip>{' '}
                 (${bidAmountUsd}) placed
               </Typography>
@@ -137,8 +142,8 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
             <Box>
               <Typography className={classes.subheader}>
                 Bid
-                <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
                 </CustomTooltip>{' '}
                 (${bidAmountUsd}) placed
               </Typography>
@@ -185,8 +190,8 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
                   Bid{' '}
-                  <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                    <strong className={classes.strike}>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                  <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
                   </CustomTooltip>{' '}
                   (${bidAmountUsd})
                 </span>{' '}

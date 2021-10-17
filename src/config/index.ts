@@ -32,9 +32,10 @@ const APP_CONFIG = {
   bscTestnetProvider: BSC_TESTNET_PROVIDER,
   bscTestnetProviderAddress: getProviderAddress(BSC_TESTNET_PROVIDER),
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
-  exchangeRateSafe: (symbol: string) => `${STAGE_URL_API}/token_price/get/${symbol.toUpperCase()}`,
+  exchangeRateSafe: (symbol: string) => `${API}/token_price/get/${symbol.toUpperCase()}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
+  bscscanTestnet: 'https://testnet.bscscan.com/',
 
   WSUrl: 'wss://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,
