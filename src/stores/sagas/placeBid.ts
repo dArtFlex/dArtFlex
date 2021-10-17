@@ -39,11 +39,16 @@ import {
   IBidsMarketHistory,
 } from 'types'
 
-export function* placeBid(api: IApi, { payload: { bidAmount } }: PayloadAction<{ bidAmount: string }>) {
+export function* placeBid(
+  api: IApi,
+  { payload: { bidAmount, sales_token_contract } }: PayloadAction<{ bidAmount: string; sales_token_contract: string }>
+) {
   try {
     const getChainId: IChainId = walletService.getChainId()
     const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === 'WETH') as IBaseTokens).id
+    const tokenContract = walletService.getTokenContract(sales_token_contract)
+    const symbol: string = yield tokenContract.methods.symbol().call()
+    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === symbol) as IBaseTokens).id
     const { tokenData, marketData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
       (state) => state.assets.assetDetails
     )

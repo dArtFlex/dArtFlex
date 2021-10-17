@@ -10,6 +10,7 @@ export interface IBidsHistory {
   updated_at: Date | string
   user_id: string
   tx_hash: string
+  sales_token_contract: string
 }
 
 export interface IBidsMarketHistory extends Pick<IBidsHistory, 'item_id' | 'user_id' | 'market_id' | 'bid_amount'> {

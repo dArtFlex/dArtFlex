@@ -15,6 +15,7 @@ interface ITabHistoryPropa {
 
 export default function TabHistory(props: ITabHistoryPropa) {
   const { history } = props
+  
   const [showMore, setShowMore] = useState<boolean>(false)
   const classes = useStyles()
 

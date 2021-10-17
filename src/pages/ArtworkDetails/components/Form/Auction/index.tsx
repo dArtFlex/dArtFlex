@@ -1,5 +1,6 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectAssetDetails } from 'stores/selectors'
 import { useFormikContext } from 'formik'
 import { placeBidRequest } from 'stores/reducers/placeBid'
 import FormDetails from './FormDetails'
@@ -12,6 +13,9 @@ import { FormMakeOffer, FormApprovedOffer } from '../MakeOffer'
 export default function FormAuctionContainer() {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
   const dispatch = useDispatch()
+  const {
+    assetDetails: { marketData },
+  } = useSelector(selectAssetDetails())
 
   switch (values.formProgress) {
     case 'details':
@@ -21,7 +25,7 @@ export default function FormAuctionContainer() {
         <FormAuction
           onSubmit={() => {
             setFieldValue('formProgress', 'approved')
-            dispatch(placeBidRequest({ bidAmount: values.bid }))
+            dispatch(placeBidRequest({ bidAmount: values.bid, sales_token_contract: marketData?.sales_token_contract }))
           }}
         />
       )

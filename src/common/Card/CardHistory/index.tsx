@@ -7,14 +7,27 @@ import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
 import APP_CONFIG from 'config'
 import { shortCutName } from '../../../utils'
+import { useTokenInfo } from 'hooks'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData, expireDate } = props
+  const {
+    tx_hash,
+    status,
+    updated_at,
+    userWalletId,
+    bidAmountToToken,
+    bidAmountUsd,
+    userData,
+    expireDate,
+    sales_token_contract,
+  } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
   const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
+  const token = useTokenInfo(sales_token_contract)
+  const tokenName = token?.symbol || ''
 
   switch (status) {
     case 'owend':
@@ -65,8 +78,8 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 Bid{' '}
-                <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                  <strong>{`${bidAmountToToken.toFixed(4)}.. WETH`}</strong>
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
                 </CustomTooltip>{' '}
                 (${bidAmountUsd}) placed
               </Typography>
@@ -104,8 +117,8 @@ export default function CardHistory(props: ICardHistoryProps) {
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
                   Bid{' '}
-                  <CustomTooltip text={`${bidAmountToToken} WETH`}>
-                    <strong className={classes.strike}>{`${bidAmountToToken}.. WETH`}</strong>
+                  <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken}.. ${tokenName}`}</strong>
                   </CustomTooltip>{' '}
                   (${bidAmountUsd})
                 </span>{' '}

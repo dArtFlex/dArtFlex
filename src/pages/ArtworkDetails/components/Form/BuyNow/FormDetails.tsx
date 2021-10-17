@@ -153,11 +153,11 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Typography variant={'h2'}>{status === MINTED ? '-' : `${startPriceToToken} ETH`}</Typography>
             <span>
               {!isReserveNotMet && marketData?.end_price
-                ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber()}`
                 : null}
               {isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber()}`
                   : ''
                 : ''}
             </span>
