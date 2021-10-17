@@ -13,7 +13,7 @@ export class Web3Service {
   public web3!: Web3
 
   constructor() {
-    const web3Provider = window?.ethereum || Web3.givenProvider || APP_CONFIG.rinkebyProvider
+    const web3Provider = window?.ethereum || Web3.givenProvider || APP_CONFIG.bscTestnetProvider
     this.web3 = new Web3(web3Provider)
     window.web3 = this.web3
   }
@@ -51,7 +51,7 @@ export class Web3Service {
 
   async setWeb3WalletConnectProvider() {
     const provider = new WalletConnectProvider({
-      infuraId: APP_CONFIG.rinkebyProviderAddress,
+      infuraId: APP_CONFIG.bscTestnetProvider,
     })
     await provider.enable()
     const web3 = new Web3(provider)

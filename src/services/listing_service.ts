@@ -1,7 +1,9 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
+import { walletService } from 'services/wallet_service'
 import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
+import { IChainIdFormat } from 'types'
 
 class ListingService extends CommonService {
   random(min, max) {
@@ -100,13 +102,14 @@ class ListingService extends CommonService {
   async generateOrder(request) {
     const { contract, tokenId, uri, maker, erc20, price, signature, lazymint } = request.body
 
+    const chainId: IChainIdFormat = walletService.getChainId()
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm)
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
-        chainId: 4,
+        chainId,
         verifyingContract: AUCTION_CONTRACT_ADDRESS,
       },
       'Order',

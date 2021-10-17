@@ -37,10 +37,13 @@ const {
 function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: { owner: string; uri: string }) {
   try {
     const userData: UserDataTypes = yield call(getUserDataById, api, owner)
+    if (uri.includes('null')) {
+      return { ...asset, imageData: null, userData }
+    }
+
     const imageData: AssetDataTypes['imageData'][] = yield call(api, {
       url: uri,
     })
-
     return { ...asset, imageData: imageData[0], userData }
   } catch (e) {
     yield put(getAssetsAllFailure(e))
