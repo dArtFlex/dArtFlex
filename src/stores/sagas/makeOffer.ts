@@ -31,7 +31,7 @@ export function* makeOffer(
     const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContract)
     if (!allowance) {
       // Should only be once, so we need to check if it's approved
-      yield placeBidService.approveToken(accounts[0])
+      yield placeBidService.approveToken(accounts[0], tokenContract)
     }
 
     const lazymint = tokenData.lazymint
