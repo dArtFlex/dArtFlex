@@ -2,6 +2,7 @@ import { web3Service } from 'services/web3_service'
 import { walletService } from 'services/wallet_service'
 import { ABI, AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { IOrderData, IChainIdFormat } from 'types'
+import { setGasPrice } from 'utils'
 
 class AcceptBidService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,7 +61,7 @@ class AcceptBidService {
       to: AUCTION_CONTRACT_ADDRESS,
       from: creator,
       chainId: chaingIdNumber ? +chaingIdNumber[1] : 4, // Default network Rinkeby
-      gasPrice: '6000000000',
+      gasPrice: setGasPrice(chainId),
       gas: '10000000',
       // only for WETH
       // value: "20000000000000000"
