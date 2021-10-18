@@ -125,16 +125,16 @@ export class PlaceBidService extends CommonService {
     return [{ ...order, signatureOrder }]
   }
 
-  async approveToken(wallet) {
+  async approveToken(wallet: string, tokenAddress: string) {
     // Todo: Approve address contract shouldn't be WETH only
-    return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd').methods // Should be Token Address
+    return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, tokenAddress).methods // Should be Token Address
       .approve(ERC20_TRANSFER_PROXY_ADDRESS, appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
       .send({
         from: wallet,
       })
   }
 
-  async checkAllowance(wallet, token) {
+  async checkAllowance(wallet: string, token: string): boolean {
     const tokenContract = new this.web3.eth.Contract(STANDART_TOKEN_ABI, token)
     const tokenResp = await tokenContract.methods.allowance(wallet, ERC20_TRANSFER_PROXY_ADDRESS).call()
     return Number(tokenResp) > 0
