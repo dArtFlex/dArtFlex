@@ -61,7 +61,7 @@ export function* placeBid(
     const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
     if (!allowance) {
       // Should only be once, so we need to check if it's approved
-      yield placeBidService.approveToken(accounts[0])
+      yield placeBidService.approveToken(accounts[0], sales_token_contract)
     }
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
