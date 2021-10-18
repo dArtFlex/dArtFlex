@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-export const AUCTION_CONTRACT_ADDRESS = '0x1DbAa879da05723C6DA3C929435Ab427092B13BF' // Exchange V2
+export const AUCTION_CONTRACT_ADDRESS = '0x0EADf5405005B3ed2E917EA4d4532DFed1716f6d' // Exchange V2 [setDefaultApproval ]
 export const AUCTION_CONTRACT_ADDRESS_RINKEBY = '0xd45E0eF493276d17ED3625C8e48346A21C8299a8' // Exchange V2
 
 export const ABI: AbiItem[] = [
