@@ -93,3 +93,13 @@ export function getChainNameById(chainId: IChainId & IUnsupportedChainId): IChai
       return undefined
   }
 }
+
+export function setGasPrice(chainId: IChainId) {
+  switch (chainId) {
+    case '0x61':
+    case '0x38':
+      return '20000000000'
+    default:
+      return '6000000000'
+  }
+}
