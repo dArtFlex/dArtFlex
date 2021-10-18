@@ -9,7 +9,7 @@ const DEV_APP_URL = 'https://dartflex-dev.ml'
 const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
 
 // TEMPORATY Instants
-const TEMPORATY_URL_API = 'http://18.193.161.0:8888/api'
+const TEMPORATY_URL_API = 'https://btest.dartflex-stage.ml:8887/api'
 
 // ************** SETUP API ENVIRIMENT **************
 const API = TEMPORATY_URL_API
