@@ -60,7 +60,7 @@ export default function Footer() {
         <LogoIcon className={classes.logo} />
         <Box className={classes.socialWrapper}>
           {social.map((s) => (
-            <Link key={s.title} color={'inherit'} underline={'hover'} href={s.href}>
+            <Link key={s.title} color={'inherit'} underline={'hover'} href={s.href} target="_blank" rel="noopener">
               {s.title}
             </Link>
           ))}
