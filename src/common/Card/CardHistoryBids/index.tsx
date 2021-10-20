@@ -123,7 +123,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                       onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
                       startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
                     >
-                      Claim Bid
+                      Claim NFT
                     </Button>
                   )}
                 </>
@@ -169,7 +169,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
                       onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
                       startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
                     >
-                      Claim Bid
+                      Claim NFT
                     </Button>
                   )}
                 </>
