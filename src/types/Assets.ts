@@ -19,7 +19,7 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   uri: string
   creator: string
   owner: string
-  royalty: number
+  royalty: string
   royalty_fee: number
   signature: string
   lazymint: boolean

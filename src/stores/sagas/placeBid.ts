@@ -67,6 +67,8 @@ export function* placeBid(
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
       url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
     })
+    const royalty = JSON.parse(tokenData.royalty)
+
     const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
@@ -78,6 +80,7 @@ export function* placeBid(
         erc20: tokenContractWETH,
         signature: tokenData.signature,
         lazymint,
+        royalty,
       },
     })
 

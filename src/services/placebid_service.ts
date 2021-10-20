@@ -48,7 +48,13 @@ export class PlaceBidService extends CommonService {
     if (form.assetClass == 'ERC721_LAZY')
       return this.web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
         form.contract,
-        [form.tokenId, form.uri, [[form.creator, '10000']], [], [form.signature]],
+        [
+          form.tokenId,
+          form.uri,
+          [[form.creator, '10000']],
+          [[this.royalty[0].account, this.royalty[0].value]], // Royalty Data
+          [form.signature],
+        ],
       ])
     if (form.assetClass == 'ERC721')
       return this.web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
@@ -104,7 +110,9 @@ export class PlaceBidService extends CommonService {
   // Maket is creater Nft
   // Taker is ZERO
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
+    const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint, royalty } = request.body
+    this.royalty = royalty
+
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
 

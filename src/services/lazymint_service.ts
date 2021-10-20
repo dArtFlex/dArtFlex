@@ -27,7 +27,7 @@ class LazyMintService extends CommonService {
   }
 
   async generateLazyMint(request, response?: Response) {
-    const { contract, uri, creator } = request.body
+    const { contract, uri, creator, royalty } = request.body
 
     if (!contract || !uri || !creator) {
       return response.status(HttpStatusCodes.BAD_REQUEST).send('Missing Data')
@@ -41,8 +41,7 @@ class LazyMintService extends CommonService {
       tokenId: tokenId,
       uri: uri,
       creators: [{ account: creator, value: '10000' }],
-      // Todo: Should be checked royalty
-      royalties: [],
+      royalties: royalty,
     }
 
     const chainId: IChainIdFormat = walletService.getChainId()

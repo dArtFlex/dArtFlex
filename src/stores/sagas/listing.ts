@@ -23,10 +23,13 @@ import { normalizeDate, getIdFromString } from 'utils'
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
   try {
     const {
+      data: { royalties },
       lazyMintData,
       lazyMintItemId,
       lazymint,
-    }: Pick<MintingStateType, 'lazyMintData' | 'lazyMintItemId' | 'lazymint'> = yield select((state) => state.minting)
+    }: Pick<MintingStateType, 'data' | 'lazyMintData' | 'lazyMintItemId' | 'lazymint'> = yield select(
+      (state) => state.minting
+    )
 
     const { id: userId }: { id: number } = yield select((state) => state.user.user)
     const accounts = walletService.getAccoutns()
@@ -39,6 +42,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
 
     const dateStartTime = data.start_time ? normalizeDate(data.start_time).getTime() : new Date().getTime()
     const dateEndTime = data.type === 'instant_buy' ? dateStartTime : normalizeDate(data.end_time).getTime()
+    const royalty = lazyMintData?.royalties !== undefined ? lazyMintData.royalties : JSON.parse(royalties)
 
     const order: IOrderData[] = yield listingService.generateOrder({
       body: {
@@ -53,6 +57,7 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         erc20: tokenContract,
         signature: lazyMintData?.signatures[0],
         lazymint,
+        royalty,
       },
     })
 
