@@ -76,13 +76,16 @@ export function* minting(
 
     const tokenId = getIdFromString(createMetadataId)
     const tokenUri: string = APP_CONFIG.getMetadata(tokenId as number)
+    const royalty: Array<{ account: string; value: string }> = [
+      { account: walletService.getAccoutns()[0], value: royalties },
+    ]
 
     const lm: ILazyMintData = yield lazyMintService.generateLazyMint({
       body: {
         contract: LAZY_MINT_ADDRESS,
         uri: tokenUri,
         creator: walletService.getAccoutns()[0],
-        royalty: royalties,
+        royalty,
       },
     })
 
@@ -97,7 +100,7 @@ export function* minting(
         // creator and owner are same only in first sell
         creator: user.id,
         owner: user.id,
-        royalty: '',
+        royalty: JSON.stringify(royalty),
         royaltyFee: '',
         lazymint: lazymint,
         signature: lm.signatures[0],

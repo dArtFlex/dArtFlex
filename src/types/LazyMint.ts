@@ -4,7 +4,7 @@ export interface ILazyMintData {
     account: string
     value: string
   }>
-  royalties?: []
+  royalties?: Array<{ account: string; value: string }>
   signatures: Array<string>
   tokenId: string
   uri: string
