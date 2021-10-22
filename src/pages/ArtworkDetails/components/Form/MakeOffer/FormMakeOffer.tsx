@@ -49,7 +49,7 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
-  const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
+  const tokenBalance = tokenInfo ? wallet?.balance || 0 : 0
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
   const bidValueAmountUsd =
     values.bid && parseFloat(`${values.bid}`)
@@ -94,7 +94,7 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           <Typography variant="body1" color="textSecondary">
             Your Balance
           </Typography>
-          <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalanceETH.toFixed(
+          <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalance.toFixed(
             4
           )} ETH`}</Typography>
         </Box>

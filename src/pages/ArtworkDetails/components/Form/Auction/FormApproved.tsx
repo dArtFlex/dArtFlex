@@ -24,7 +24,7 @@ export default function FormApproved(props: IFormApproved) {
     return (
       <SubFormTransaction
         title={'Your bid was unplaced!'}
-        desc={`Your bid was unconfirmed on the Ethereum blockchain.`}
+        desc={`Your bid was unconfirmed on network blockchain.`}
         icon={null}
         linkEthescan=""
         onSubmit={onSubmit}
@@ -47,7 +47,7 @@ export default function FormApproved(props: IFormApproved) {
           <Box className={classes.infoRowIcon}>
             <Typography
               className={classes.warningText}
-            >{`Your bid is being confirmed on the Ethereum blockchain. You are free to leave this page if you like`}</Typography>
+            >{`Your bid is being confirmed on network blockchain. You are free to leave this page if you like`}</Typography>
           </Box>
         </Box>
       </Box>
@@ -55,7 +55,7 @@ export default function FormApproved(props: IFormApproved) {
   ) : (
     <SubFormTransaction
       title={'Your bid was placed successfully!'}
-      desc={`Your bid was confirmed on the Ethereum blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
+      desc={`Your bid was confirmed on network blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
       linkEthescan=""
       onSubmit={onSubmit}
     />

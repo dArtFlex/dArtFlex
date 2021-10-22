@@ -29,7 +29,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
 
-  const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
+  const tokenBalance = tokenInfo ? wallet?.balance || 0 : 0
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
 
   const startPriceToToken =
@@ -42,7 +42,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const token = useTokenInfo(marketData?.sales_token_contract)
   const tokenName = token?.symbol || ''
 
-  const isValidValueAmount = Number(tokenBalanceETH) >= Number(startPriceToToken)
+  const isValidValueAmount = Number(tokenBalance) >= Number(startPriceToToken)
   const disabledBuy =
     isValidValueAmount &&
     Boolean(values.acknowledge) &&
@@ -72,9 +72,9 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
             <Typography variant="body1" color="textSecondary">
               Your Balance
             </Typography>
-            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalanceETH.toFixed(
+            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalance.toFixed(
               4
-            )} ETH`}</Typography>
+            )} ${tokenName}`}</Typography>
           </Box>
           <Box mb={8.5} className={classes.priceRow}>
             <Typography variant="body1" color="textSecondary">

@@ -35,7 +35,8 @@ const APP_CONFIG = {
   exchangeRateSafe: (symbol: string) => `${API}/token_price/get/${symbol.toUpperCase()}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
-  bscscanTestnet: 'https://testnet.bscscan.com/',
+  bscscanTestnet: 'https://testnet.bscscan.com',
+  bscscanMainnet: 'https://bscscan.com',
 
   WSUrl: 'wss://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,

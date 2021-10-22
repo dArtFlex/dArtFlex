@@ -25,7 +25,8 @@ export default function CardHistory(props: ICardHistoryProps) {
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
-  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
+  const etherscanViewTx = `${APP_CONFIG.etherscanMainnet}/tx/${tx_hash}`
+  const bscscanViewTx = `${APP_CONFIG.bscscanMainnet}/tx/${tx_hash}`
   const token = useTokenInfo(sales_token_contract)
   const tokenName = token?.symbol || ''
 
@@ -40,7 +41,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={bscscanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -66,7 +67,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={bscscanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -104,7 +105,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={bscscanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -138,7 +139,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={bscscanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
