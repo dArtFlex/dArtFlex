@@ -23,6 +23,7 @@ const LOCAL_URL = 'http://localhost:3000'
 const ETHEREUM_PROVIDER = 'http://mainnet.infura.io/v3/6c7fceaca1a3433dad73cb537f87644b'
 const RINKEBY_PROVIDER = 'http://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899'
 const BSC_TESTNET_PROVIDER = 'https://data-seed-prebsc-1-s1.binance.org:8545'
+const POLYGON_PROVIDER = 'https://rpc-mainnet.maticvigil.com'
 
 const APP_CONFIG = {
   ethereumProvider: ETHEREUM_PROVIDER,
@@ -31,12 +32,14 @@ const APP_CONFIG = {
   rinkebyProviderAddress: getProviderAddress(RINKEBY_PROVIDER),
   bscTestnetProvider: BSC_TESTNET_PROVIDER,
   bscTestnetProviderAddress: getProviderAddress(BSC_TESTNET_PROVIDER),
+  polygonProvider: POLYGON_PROVIDER,
   exchangeRate: (from: string, to: string) => `https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`,
   exchangeRateSafe: (symbol: string) => `${API}/token_price/get/${symbol.toUpperCase()}`,
   etherscanRinkeby: 'https://rinkeby.etherscan.io',
   etherscanMainnet: 'https://etherscan.io',
   bscscanTestnet: 'https://testnet.bscscan.com',
   bscscanMainnet: 'https://bscscan.com',
+  polygonMainnet: 'https://polygonscan.com/',
 
   WSUrl: 'wss://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,
