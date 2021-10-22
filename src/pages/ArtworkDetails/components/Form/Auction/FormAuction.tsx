@@ -80,7 +80,9 @@ export default function FormAuction(props: IFormAuctionProps) {
             <Typography variant="body1" color="textSecondary">
               You must bid at least
             </Typography>
-            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${minBid} WETH`}</Typography>
+            <Typography
+              className={clsx(classes.boldText, classes.fontFamilyRoboto)}
+            >{`${minBid} ${tokenName}`}</Typography>
           </Box>
           <Box mb={8.5} className={classes.priceRow}>
             <Typography variant="body1" color="textSecondary">
