@@ -26,8 +26,8 @@ export default function FormApproved(props: IFormApproved) {
     offer: { fetching },
   } = useSelector(selectMakeOffer())
 
-  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${transactionHash}`
   const bscscanTestnetViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${transactionHash}`
+  //const bscscanTestnetViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${transactionHash}`
 
   return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>

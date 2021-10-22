@@ -28,6 +28,7 @@ import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reduc
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
+import ChainMenu from './ChainMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
 import { HeaderType, IMenuItems } from './types'
@@ -40,6 +41,7 @@ import {
   SearchIcon,
   BurgerMenuIcon,
   CloseIcon,
+  TimeLineIcon,
   ManIcon,
   ListIcon,
   BidsIcon,
@@ -65,6 +67,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
+  const [anchorElChainLink, setAnchorElChainLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
   const [anchorElNotification, setAnchorElNotification] = useState<null | HTMLElement>(null)
   const [isSearchFieldOpen, setSearchFieldOpen] = useState(false)
@@ -293,6 +296,15 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <IconButton onClick={toggleTheme} className={classes.themeIcon}>
                   <CoolIcon />
                 </IconButton>
+                <IconButton
+                  className={classes.borderedIcon}
+                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    const target = event.currentTarget as HTMLElement
+                    setAnchorElChainLink(target)
+                  }}
+                >
+                  <TimeLineIcon />
+                </IconButton>
               </Box>
             </>
           )}
@@ -364,7 +376,6 @@ export default function Header({ toggleTheme }: HeaderType) {
           )}
         </Popper>
       )}
-
       {isMobileUserStatsOpen && (
         <Popper open={isMobileUserStatsOpen} transition className={classes.mobileMenuWrapper}>
           {({ TransitionProps }) => (
@@ -417,6 +428,7 @@ export default function Header({ toggleTheme }: HeaderType) {
         </Popper>
       )}
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
+      <ChainMenu anchor={anchorElChainLink} setAnchor={setAnchorElChainLink} />
       <ProfileActionMenu
         anchor={anchorElProfileLink}
         setAnchor={setAnchorElProfileLink}

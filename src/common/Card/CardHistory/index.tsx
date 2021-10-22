@@ -25,7 +25,7 @@ export default function CardHistory(props: ICardHistoryProps) {
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
-  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
+  const etherscanViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${tx_hash}`
   const token = useTokenInfo(sales_token_contract)
   const tokenName = token?.symbol || ''
 
