@@ -78,6 +78,25 @@ const tokensAll = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c/logo.png',
     },
   ],
+
+  // Polygon
+  '0x137': [
+    {
+      id: '0x',
+      erc20id: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+      symbol: 'MATIC',
+      name: 'MATIC',
+      decimals: 18,
+      logoURI: '',
+    },
+    {
+      id: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+      name: 'Wrapped MATIC',
+      symbol: 'WMATIC',
+      decimals: 18,
+      logoURI: 'https://cryptologos.cc/logos/polygon-matic-logo.svg?v=014',
+    },
+  ],
 }
 
 export default tokensAll
