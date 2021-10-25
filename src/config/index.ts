@@ -1,20 +1,31 @@
 import { getProviderAddress } from 'utils'
 
+// PROD Instants
+const PROD_APP_URL = 'https://dartflex.art'
+const PROD_URL_API = 'https://dartflex.art:8887/api'
+
 // STAGE instants
 const STAGE_APP_URL = 'https://dartflex-stage.ml'
 const STAGE_URL_API = 'https://dartflex-stage.ml:8887/api'
 
 // DEV Instants
 const DEV_APP_URL = 'https://dartflex-dev.ml'
-const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
-
-// TEMPORATY Instants
-const TEMPORATY_URL_API = 'https://btest.dartflex-stage.ml:8887/api'
+const DEV_URL_API = 'https://btest.dartflex-stage.ml:8887/api'
 
 // ************** SETUP API ENVIRIMENT **************
-const API = TEMPORATY_URL_API
-// const API = process.env.NODE_ENV === 'production' ? STAGE_URL_API : DEV_URL_API
-const APP_URL = process.env.NODE_ENV === 'production' ? STAGE_APP_URL : DEV_APP_URL
+const API =
+  process.env.REACT_APP_STAGE === 'production'
+    ? PROD_URL_API
+    : process.env.REACT_APP_STAGE === 'stage'
+    ? STAGE_URL_API
+    : DEV_URL_API
+
+const APP_URL =
+  process.env.REACT_APP_STAGE === 'production'
+    ? PROD_APP_URL
+    : process.env.REACT_APP_STAGE === 'stage'
+    ? STAGE_APP_URL
+    : DEV_APP_URL
 // ************** ******************** **************
 
 const BASE_URL = API.replace('/api', '')
