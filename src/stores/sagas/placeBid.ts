@@ -23,13 +23,12 @@ import { placeBidService } from 'services/placebid_service'
 import { acceptBidService } from 'services/accept_bid_service'
 import { claimBidService } from 'services/claim_bid_service'
 import APP_CONFIG from 'config'
-import { getIdFromString, networkConvertor } from 'utils'
+import { getIdFromString, networkConvertor, supportedNetwork } from 'utils'
 import tokensAll from 'core/tokens'
 import {
   UserDataTypes,
   IAcceptBidTransaction,
   IBids,
-  IChainId,
   IBaseTokens,
   AssetTypes,
   AssetMarketplaceTypes,
@@ -37,6 +36,7 @@ import {
   ITradingHistory,
   IBidsHistory,
   IBidsMarketHistory,
+  IChaintIdHexFormat,
 } from 'types'
 
 export function* placeBid(
@@ -44,80 +44,83 @@ export function* placeBid(
   { payload: { bidAmount, sales_token_contract } }: PayloadAction<{ bidAmount: string; sales_token_contract: string }>
 ) {
   try {
-    const getChainId: IChainId = walletService.getChainId()
-    const chainId: IChainId = networkConvertor(getChainId)
-    const tokenContract = walletService.getTokenContract(sales_token_contract)
-    const symbol: string = yield tokenContract.methods.symbol().call()
-    const tokenContractWETH = (tokensAll[chainId].find((t) => t.symbol === symbol) as IBaseTokens).id
-    const { tokenData, marketData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
-      (state) => state.assets.assetDetails
-    )
-    const { id: userId }: { id: number } = yield select((state) => state.user.user)
-    const accounts: string[] = walletService.getAccoutns()
-    const endPrice: string = yield window.web3.utils.toWei(bidAmount, 'ether')
+    const chainId: number = walletService.getChainId()
+    const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
 
-    const lazymint = tokenData.lazymint
+    if (supportedNetwork(convertChainId) && typeof convertChainId !== 'number') {
+      const tokenContract = walletService.getTokenContract(sales_token_contract)
+      const symbol: string = yield tokenContract.methods.symbol().call()
+      const tokenContractWETH = (tokensAll[convertChainId].find((t) => t.symbol === symbol) as IBaseTokens).id
+      const { tokenData, marketData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
+        (state) => state.assets.assetDetails
+      )
+      const { id: userId }: { id: number } = yield select((state) => state.user.user)
+      const accounts: string[] = walletService.getAccoutns()
+      const endPrice: string = yield window.web3.utils.toWei(bidAmount, 'ether')
 
-    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
-    if (!allowance) {
-      // Should only be once, so we need to check if it's approved
-      yield placeBidService.approveToken(accounts[0], sales_token_contract)
+      const lazymint = tokenData.lazymint
+
+      const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+      if (!allowance) {
+        // Should only be once, so we need to check if it's approved
+        yield placeBidService.approveToken(accounts[0], sales_token_contract)
+      }
+
+      const tokenCreatorData: UserDataTypes[] = yield call(api, {
+        url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
+      })
+      const royalty = JSON.parse(tokenData.royalty)
+
+      const order: IOrderData[] = yield placeBidService.generateOrder({
+        body: {
+          contract: tokenData.contract,
+          tokenId: tokenData.token_id,
+          maker: tokenCreatorData[0].wallet,
+          taker: accounts[0],
+          price: endPrice,
+          uri: tokenData.uri,
+          erc20: tokenContractWETH,
+          signature: tokenData.signature,
+          lazymint,
+          royalty,
+        },
+      })
+
+      const orderId: string = yield call(api, {
+        url: APP_CONFIG.createOrder,
+        method: 'POST',
+        data: {
+          maker: order[0].maker,
+          makeAssetTypeClass: order[0].makeAsset.assetType.assetClass,
+          makeAssetTypeData: order[0].makeAsset.assetType.data,
+          makeAssetValue: order[0].makeAsset.value,
+          taker: order[0].taker,
+          takeAssetTypeClass: order[0].takeAsset.assetType.assetClass,
+          takeAssetTypeData: order[0].takeAsset.assetType.data,
+          takeAssetValue: order[0].takeAsset.value,
+          start: order[0].start,
+          end: order[0].end,
+          salt: order[0].salt,
+          dataType: order[0].dataType,
+          data: order[0].data,
+          signature: order[0].signatureOrder,
+        },
+      })
+
+      const placeBidId: string = yield call(api, {
+        url: APP_CONFIG.placeBid,
+        method: 'POST',
+        data: {
+          orderId: getIdFromString(orderId),
+          itemId: tokenData.id,
+          userId,
+          marketId: Number(marketData.id),
+          bidAmount: endPrice,
+        },
+      })
+
+      yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
     }
-
-    const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.owner)),
-    })
-    const royalty = JSON.parse(tokenData.royalty)
-
-    const order: IOrderData[] = yield placeBidService.generateOrder({
-      body: {
-        contract: tokenData.contract,
-        tokenId: tokenData.token_id,
-        maker: tokenCreatorData[0].wallet,
-        taker: accounts[0],
-        price: endPrice,
-        uri: tokenData.uri,
-        erc20: tokenContractWETH,
-        signature: tokenData.signature,
-        lazymint,
-        royalty,
-      },
-    })
-
-    const orderId: string = yield call(api, {
-      url: APP_CONFIG.createOrder,
-      method: 'POST',
-      data: {
-        maker: order[0].maker,
-        makeAssetTypeClass: order[0].makeAsset.assetType.assetClass,
-        makeAssetTypeData: order[0].makeAsset.assetType.data,
-        makeAssetValue: order[0].makeAsset.value,
-        taker: order[0].taker,
-        takeAssetTypeClass: order[0].takeAsset.assetType.assetClass,
-        takeAssetTypeData: order[0].takeAsset.assetType.data,
-        takeAssetValue: order[0].takeAsset.value,
-        start: order[0].start,
-        end: order[0].end,
-        salt: order[0].salt,
-        dataType: order[0].dataType,
-        data: order[0].data,
-        signature: order[0].signatureOrder,
-      },
-    })
-
-    const placeBidId: string = yield call(api, {
-      url: APP_CONFIG.placeBid,
-      method: 'POST',
-      data: {
-        orderId: getIdFromString(orderId),
-        itemId: tokenData.id,
-        userId,
-        marketId: Number(marketData.id),
-        bidAmount: endPrice,
-      },
-    })
-
-    yield put(placeBidSuccess({ data: { placeBidId: getIdFromString(placeBidId) } }))
   } catch (e) {
     yield put(placeBidFailure(e))
   }

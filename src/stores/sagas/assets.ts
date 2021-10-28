@@ -19,16 +19,17 @@ import {
   UserDataTypes,
   AssetMarketplaceTypes,
   AssetDataTypesWithStatus,
-  IChainId,
+  IChaintIdHexFormat,
   IHashtagNew,
   IBids,
+  IBaseTokens,
 } from 'types'
 import tokensAll from 'core/tokens'
 import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
-import { convertTokenSymbol } from 'utils'
+import { convertTokenSymbol, supportedNetwork } from 'utils'
 
 const {
   STATUSES: { MINTED },
@@ -205,17 +206,21 @@ function* getPrice(api: IApi, symbol: string) {
 
 export function* getExchangeRateTokens(api: IApi) {
   try {
-    const getChainId: IChainId = walletService.getChainId()
-    const chainId: IChainId = networkConvertor(getChainId)
-
-    const tAll = tokensAll[chainId]
-    const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
-    const exchangeRates = tAll.map((t, i) => ({
-      id: t.id,
-      rateUsd: rateUsd[i].priceUSD,
-      symbol: t.symbol,
-    }))
-    yield put(getExchangeRateTokensSuccess(exchangeRates))
+    const chainId: number = walletService.getChainId()
+    const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+    if (!supportedNetwork(convertChainId)) {
+      return
+    }
+    if (typeof convertChainId !== 'number') {
+      const tAll: IBaseTokens[] = tokensAll[convertChainId]
+      const rateUsd: Array<{ priceUSD: number }> = yield all(tAll.map((t) => call(getPrice, api, t.symbol)))
+      const exchangeRates = tAll.map((t, i) => ({
+        id: t.id,
+        rateUsd: rateUsd[i].priceUSD,
+        symbol: t.symbol,
+      }))
+      yield put(getExchangeRateTokensSuccess(exchangeRates))
+    }
   } catch (e) {
     yield put(getExchangeRateTokensFailure(e))
   }

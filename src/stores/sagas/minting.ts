@@ -6,8 +6,8 @@ import { uploadImageSuccess, uploadImageFailure, lazyMintingSuccess, lazyMinting
 import { MintingStateType } from 'stores/reducers/minting/types'
 import { lazyMintService } from 'services/lazymint_service'
 import { walletService } from 'services/wallet_service'
-import { LAZY_MINT_ADDRESS } from 'core/contracts/lazy_mint_contract'
-import { ILazyMintData, IHashtag, IHashtagNew, UserDataTypes } from 'types'
+import { contractAddress } from 'core/contracts/addresses'
+import { ILazyMintData, IHashtag, IHashtagNew, UserDataTypes, IChainName } from 'types'
 import { getIdFromString } from 'utils'
 import APP_CONFIG from 'config'
 
@@ -80,9 +80,10 @@ export function* minting(
       { account: walletService.getAccoutns()[0], value: royalties },
     ]
 
+    const chain: IChainName = walletService.getChainKeyName()
     const lm: ILazyMintData = yield lazyMintService.generateLazyMint({
       body: {
-        contract: LAZY_MINT_ADDRESS,
+        contract: chain && contractAddress[chain].erc721Rarible,
         uri: tokenUri,
         creator: walletService.getAccoutns()[0],
         royalty,

@@ -17,7 +17,7 @@ import {
   walletError,
 } from '../reducers/wallet'
 import { initialConnection } from 'stores/sagas/user'
-import { IChainId, ITokenBalances, IBaseTokens } from 'types'
+import { ITokenBalances, IBaseTokens } from 'types'
 import tokensAll from 'core/tokens'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
@@ -119,9 +119,12 @@ export function* connectWalletConnect(api: IApi) {
 
 export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
   try {
-    const getChainId: IChainId = walletService.getChainId()
-    const chainId: IChainId = networkConvertor(getChainId)
-    const tokens: Array<IBaseTokens> = tokensAll[chainId].filter((t) => t.id.length > 2 && t.id.startsWith('0x'))
+    const chainId: number = walletService.getChainId()
+    const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+    const tokens: IBaseTokens[] =
+      supportedNetwork(convertChainId) && typeof convertChainId !== 'number'
+        ? tokensAll[convertChainId].filter((t) => t.id.length > 2 && t.id.startsWith('0x'))
+        : []
 
     const balances: Array<ITokenBalances | undefined> = yield all(
       tokens.map((t) => call(getBalance, api, t, payload.wallet))
@@ -137,6 +140,7 @@ export function* getTokensBalances(api: IApi, { payload }: PayloadAction<{ walle
 function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
   try {
     const { id, decimals, symbol } = token
+
     if (acc && id) {
       const tokenContract = walletService.getTokenContract(id)
       const balance: string = yield tokenContract.methods.balanceOf(acc).call()

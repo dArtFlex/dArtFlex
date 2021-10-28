@@ -1,8 +1,9 @@
 import { web3Service } from 'services/web3_service'
 import { walletService } from 'services/wallet_service'
-import { ABI, AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
-import { IOrderData, IChainIdFormat } from 'types'
-import { setGasPrice } from 'utils'
+import { contractAddress } from 'core/contracts/addresses'
+import { abiExchangeV2 } from 'core/contracts/abi'
+import { IOrderData, IChainName } from 'types'
+import { getChainKeyByChainId } from 'utils'
 class BuyNowService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public contract: any
@@ -15,54 +16,60 @@ class BuyNowService {
       return
     }
     this.web3 = web3
-    this.contract = new web3.eth.Contract(ABI, AUCTION_CONTRACT_ADDRESS)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async performMint(creator: IOrderData, accounts: string, amount: string): Promise<any> {
-    const invocation = this.contract.methods.matchOrders(
-      // for buyer
-      [
-        creator.maker,
-        [[creator.makeAsset.assetType.assetClass, creator.makeAsset.assetType.data], creator.makeAsset.value],
-        creator.taker,
-        [[creator.takeAsset.assetType.assetClass, creator.takeAsset.assetType.data], creator.takeAsset.value],
-        creator.salt,
-        0, // always 0
-        0, // always 0
-        creator.dataType,
-        creator.data,
-      ],
-      creator.signature,
+    const chainId: number = walletService.getChainId()
+    const chainName: IChainName | undefined = getChainKeyByChainId(chainId)
 
-      // for creator & for buyer
-      [
-        accounts,
-        [[creator.takeAsset.assetType.assetClass, creator.takeAsset.assetType.data], creator.takeAsset.value],
+    if (chainName) {
+      this.contract = new this.web3.eth.Contract(abiExchangeV2, contractAddress[chainName].exchangeV2)
 
-        creator.maker,
-        [[creator.makeAsset.assetType.assetClass, creator.makeAsset.assetType.data], creator.makeAsset.value],
-        creator.salt,
-        0,
-        0,
-        creator.dataType,
-        creator.data,
-      ],
-      '0x'
-    )
+      const invocation = this.contract.methods.matchOrders(
+        // for buyer
+        [
+          creator.maker,
+          [[creator.makeAsset.assetType.assetClass, creator.makeAsset.assetType.data], creator.makeAsset.value],
+          creator.taker,
+          [[creator.takeAsset.assetType.assetClass, creator.takeAsset.assetType.data], creator.takeAsset.value],
+          creator.salt,
+          0, // always 0
+          0, // always 0
+          creator.dataType,
+          creator.data,
+        ],
+        creator.signature,
 
-    const chainId: IChainIdFormat = walletService.getChainId()
-    const chaingIdNumber = chainId.match(/^0x(.+)/)
-    return await this.web3.eth.sendTransaction({
-      data: invocation.encodeABI(),
-      to: AUCTION_CONTRACT_ADDRESS,
-      from: accounts,
-      chainId: chaingIdNumber ? +chaingIdNumber[1] : 4, // Default network Rinkeby
-      gasPrice: setGasPrice(chainId),
-      gas: '10000000',
-      // only for WETH
-      value: amount, // bid amount
-    })
+        // for creator & for buyer
+        [
+          accounts,
+          [[creator.takeAsset.assetType.assetClass, creator.takeAsset.assetType.data], creator.takeAsset.value],
+
+          creator.maker,
+          [[creator.makeAsset.assetType.assetClass, creator.makeAsset.assetType.data], creator.makeAsset.value],
+          creator.salt,
+          0,
+          0,
+          creator.dataType,
+          creator.data,
+        ],
+        '0x'
+      )
+
+      const gasPrice = await this.web3.eth.getGasPrice()
+      // Cause this gas price from last block that why it doesn't guarantee that it would be same, then up to 10%
+      const gasPriceExtra = Math.round(+gasPrice + (gasPrice / 100) * 10)
+      return await this.web3.eth.sendTransaction({
+        data: invocation.encodeABI(),
+        to: contractAddress[chainName].exchangeV2,
+        from: accounts,
+        chainId,
+        gasPrice: gasPriceExtra,
+        gas: '10000000',
+        value: amount,
+      })
+    }
   }
 }
 

@@ -5,12 +5,12 @@ import { Field, InputAdornment, Tooltip, SelectPaymentToken } from 'common'
 import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
-import { IChainId } from 'types'
+import { IChaintIdHexFormat, IBaseTokens } from 'types'
 import tokensAll from 'core/tokens'
 import { walletService } from 'services/wallet_service'
 import { useStyles } from './styles'
 import { validateExpirationDate, validateMinimumBid } from '../../lib'
-import { daysInMonth, networkConvertor } from 'utils'
+import { daysInMonth, networkConvertor, supportedNetwork } from 'utils'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, WEEK, MONTH, SPECIFIC },
@@ -45,8 +45,11 @@ export default function AuctionForm() {
   const { values, setFieldValue } = useFormikContext<ISellArtwork>()
   const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
 
-  const getChainId: IChainId = networkConvertor(walletService.getChainId())
-  const tokens = tokensAll[getChainId]
+  const chainId: number = walletService.getChainId()
+  const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+  const tokens: IBaseTokens[] =
+    supportedNetwork(convertChainId) && typeof convertChainId !== 'number' ? tokensAll[convertChainId] : []
 
   useEffect(() => {
     tokens && setFieldValue('salesTokenContract', tokens[1].id)
