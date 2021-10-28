@@ -1,7 +1,7 @@
 export * from './blockchain'
 
 export const FORMATS: { [index: string]: string[] } = {
-  image: ['.jpg', '.gif', '.png'],
+  image: ['.jpg', '.gif', '.png', '.jpeg'],
   // image: ['.jpg', '.jpeg', '.gif', '.png', '.tiff', '.heic', '.hevc', '.heif', '.tif'],
   // video: ['.mp4', '.mov', '.flv', '.avi', '.webm', '.mkv', '.wmv', '.mts'],
   // audio: ['.mp3', '.wav'],

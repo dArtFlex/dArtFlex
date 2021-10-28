@@ -109,6 +109,7 @@ export function* initialConnection(api: IApi, { payload }: PayloadAction<{ accou
   const userData: UserDataTypes[] = yield call(api, {
     url: APP_CONFIG.getUserByWallet(payload.accounts),
   })
+
   if (!userData.length) {
     yield call(createNewUser, api, {
       payload: {

@@ -6,13 +6,13 @@ import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } f
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
 import { Field, InputAdornment, Tooltip, SelectPaymentToken } from 'common'
-import { IChainId } from 'types'
+import { IChaintIdHexFormat, IBaseTokens } from 'types'
 import tokensAll from 'core/tokens'
 import { walletService } from 'services/wallet_service'
 import clsx from 'clsx'
 import BigNumber from 'bignumber.js'
 import appConst from 'config/consts'
-import { validatePrice, networkConvertor } from 'utils'
+import { validatePrice, networkConvertor, supportedNetwork } from 'utils'
 import { useStyles } from '../styles'
 
 const {
@@ -65,8 +65,11 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const disabledButton =
     values.bid > 0 && Boolean(values.acknowledge) && Boolean(values.agreeTerms) && Number(tokenData?.owner) !== user?.id
 
-  const getChainId: IChainId = networkConvertor(walletService.getChainId())
-  const tokens = tokensAll[getChainId]
+  const chainId: number = walletService.getChainId()
+  const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+  const tokens: IBaseTokens[] =
+    supportedNetwork(convertChainId) && typeof convertChainId !== 'number' ? tokensAll[convertChainId] : []
 
   useEffect(() => {
     tokens && setFieldValue('salesTokenContract', tokens[1].id)
