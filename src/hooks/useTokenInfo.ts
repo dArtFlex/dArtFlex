@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { walletService } from 'services/wallet_service'
-import { IBaseTokens, IChainId } from 'types'
+import { IBaseTokens, IChaintIdHexFormat } from 'types'
 import tokensAll from 'core/tokens'
-import { networkConvertor } from 'utils'
+import { networkConvertor, supportedNetwork } from 'utils'
 
 interface ITokenInfoProps {
   tokenContractAddress?: string
@@ -14,10 +14,11 @@ const useTokenInfo = (tokenContractAddress: ITokenInfoProps['tokenContractAddres
 
   const getTokenInfo = useCallback(async () => {
     if (tokenContractAddress === '0x') {
-      const getChainId: IChainId = walletService.getChainId()
-      const chainId: IChainId = networkConvertor(getChainId)
-      if (chainId) {
-        const tokenContractETH: IBaseTokens = tokensAll[chainId].find((t) => t.id === '0x') as IBaseTokens
+      const chainId: number = walletService.getChainId()
+      const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+      if (supportedNetwork(convertChainId) && typeof convertChainId !== 'number') {
+        const tokenContractETH: IBaseTokens = tokensAll[convertChainId].find((t) => t.id === '0x') as IBaseTokens
         setToken({
           id: tokenContractETH.id,
           decimals: tokenContractETH.decimals,

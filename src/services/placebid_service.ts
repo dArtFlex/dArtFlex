@@ -1,14 +1,16 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
-import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
 import { walletService } from 'services/wallet_service'
-import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
-import { ERC20_TRANSFER_PROXY_ADDRESS } from 'core/contracts/lazy_mint_contract'
+import { contractAddress } from 'core/contracts/addresses'
+import { abiStandardToken } from 'core/contracts/abi'
 import { ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
 import appConst from 'config/consts'
-import { IChainIdFormat } from 'types'
+import { IChainName } from 'types'
+import { getChainKeyByChainId } from 'utils'
 
 export class PlaceBidService extends CommonService {
+  keyChain!: IChainName
+
   random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
   }
@@ -116,13 +118,15 @@ export class PlaceBidService extends CommonService {
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
 
-    const chainId: IChainIdFormat = walletService.getChainId()
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
+    const contractAuction = chainName && contractAddress[chainName].exchangeV2
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
         chainId,
-        verifyingContract: AUCTION_CONTRACT_ADDRESS,
+        verifyingContract: contractAuction,
       },
       'Order',
       order,
@@ -134,17 +138,23 @@ export class PlaceBidService extends CommonService {
   }
 
   async approveToken(wallet: string, tokenAddress: string) {
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
     // Todo: Approve address contract shouldn't be WETH only
-    return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, tokenAddress).methods // Should be Token Address
-      .approve(ERC20_TRANSFER_PROXY_ADDRESS, appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
+    return await new this.web3.eth.Contract(abiStandardToken, tokenAddress).methods // Should be Token Address
+      .approve(contractAddress[chainName].erc20TransferProxy, appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
       .send({
         from: wallet,
       })
   }
 
   async checkAllowance(wallet: string, token: string): boolean {
-    const tokenContract = new this.web3.eth.Contract(STANDART_TOKEN_ABI, token)
-    const tokenResp = await tokenContract.methods.allowance(wallet, ERC20_TRANSFER_PROXY_ADDRESS).call()
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
+    const tokenContract = new this.web3.eth.Contract(abiStandardToken, token)
+    const tokenResp = await tokenContract.methods
+      .allowance(wallet, contractAddress[chainName].erc20TransferProxy)
+      .call()
     return Number(tokenResp) > 0
   }
 }
