@@ -17,7 +17,7 @@ export function* buyNow(
       (state) => state.assets.assetDetails
     )
     const { id: userId }: { id: number } = yield select((state) => state.user.user)
-    const accounts: string = walletService.getAccoutns()
+    const accounts: string[] = walletService.getAccoutns()
 
     const creatorOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(order_id),

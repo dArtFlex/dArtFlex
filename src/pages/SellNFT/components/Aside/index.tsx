@@ -4,11 +4,11 @@ import { Box, Typography, Card, Button, Divider, Link } from '@material-ui/core'
 import { ArrowRightIcon } from 'common/icons'
 import { ISellArtwork } from '../../types'
 import { IAsideProps } from './types'
-import { IChainId } from 'types'
+import { IChaintIdHexFormat, IBaseTokens } from 'types'
 import { walletService } from 'services/wallet_service'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import { tabelTimeFormat, networkConvertor } from 'utils'
+import { tabelTimeFormat, networkConvertor, supportedNetwork } from 'utils'
 import tokensAll from 'core/tokens'
 
 const {
@@ -20,11 +20,13 @@ export default function Aside(props: IAsideProps) {
   const classes = useStyles()
   const { values, handleSubmit } = useFormikContext<ISellArtwork>()
 
-  const getChainId: IChainId = networkConvertor(walletService.getChainId())
-  const tokenName =
-    tokensAll[getChainId] !== undefined
-      ? tokensAll[getChainId].find((token) => token.id === values.salesTokenContract)?.symbol
-      : ''
+  const chainId: number = walletService.getChainId()
+  const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+  const tokens: IBaseTokens[] =
+    supportedNetwork(convertChainId) && typeof convertChainId !== 'number' ? tokensAll[convertChainId] : []
+
+  const tokenName = tokens.find((token) => token.id === values.salesTokenContract)?.symbol
 
   return (
     <Box>
