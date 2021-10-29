@@ -19,13 +19,14 @@ export default function CardHistory(props: ICardHistoryProps) {
     userData,
     expireDate,
     sales_token_contract,
+    contract,
   } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
   const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
 
-  const rootScanUrl = getExplorerScanRootUrl(sales_token_contract)
+  const rootScanUrl = getExplorerScanRootUrl(contract)
   const scanViewTx = `${rootScanUrl}/tx/${tx_hash}`
 
   const token = useTokenInfo(sales_token_contract)

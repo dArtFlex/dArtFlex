@@ -22,7 +22,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const { user } = useSelector(selectUser())
   const {
-    assetDetails: { marketData },
+    assetDetails: { marketData, tokenData },
   } = useSelector(selectAssetDetails())
 
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
@@ -47,6 +47,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
               {...getBidAmountToTokenAndUsd(props.bid_amount)}
               userWalletId={user?.id}
               expireDate={expireDate}
+              contract={tokenData?.contract || ''}
             />
           )
         })}
@@ -73,6 +74,7 @@ export default function TabHistory(props: ITabHistoryPropa) {
             {...getBidAmountToTokenAndUsd(props.bid_amount)}
             userWalletId={user?.id}
             expireDate={expireDate}
+            contract={tokenData?.contract || ''}
           />
         )
       })}

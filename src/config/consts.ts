@@ -43,7 +43,7 @@ const appConst = {
     NEVER: 'never',
   },
   INTERVALS: {
-    UPDATE_ASSETS: 10000, // every 10 second
+    UPDATE_ASSETS: 20000, // every 20 second
     UPDATE_BIDS_HISTORY: 5000, // every 5 seconds
   },
 

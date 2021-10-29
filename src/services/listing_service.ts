@@ -114,6 +114,7 @@ class ListingService extends CommonService {
     const contractAuction = chainName && contractAddress[chainName].exchangeV2
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm)
+
     const data = this.createTypeData(
       {
         name: 'Exchange',
