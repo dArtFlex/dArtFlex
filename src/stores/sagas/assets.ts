@@ -58,7 +58,7 @@ export function* getAssetsAllData(api: IApi) {
     })
 
     const getMarketplactAssetsAll: AssetMarketplaceTypes[] = getItemAssetsAll.map((asset) =>
-      asset.marketplace.length ? asset.marketplace[0] : createDummyMarketplaceData()
+      asset.marketplace.length ? { ...asset.marketplace[0], contract: asset.contract } : createDummyMarketplaceData()
     )
 
     const getAssetsListAllData: AssetDataTypes[] = yield all(
@@ -113,7 +113,9 @@ export function* getAssetById(api: IApi, { payload }: PayloadAction<number>) {
       url: assetById[0].uri,
     })
 
-    const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
+    const marketplaceData = assetById[0].marketplace.length
+      ? { ...assetById[0].marketplace[0], contract: assetById[0].contract }
+      : null
 
     let status
     if (marketplaceData) {

@@ -66,6 +66,7 @@ export function createDummyMarketplaceData() {
     end_time: '',
     platform_fee: '',
     sales_token_contract: '',
+    contract: '',
     sold: false,
     created_at: '',
     updated_at: '',

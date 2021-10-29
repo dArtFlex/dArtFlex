@@ -105,6 +105,7 @@ export default function CardAsset(props: ICardAssetProps) {
           ownerWallet={asset.userData.wallet}
           emptyBottom={emptyBottom}
           sales_token_contract={asset.sales_token_contract}
+          tokenSymbol={asset.tokenSymbol}
         />
       </Card>
 

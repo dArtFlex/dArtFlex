@@ -13,6 +13,7 @@ import { addPromotionRequest, deletePromotionRequest } from 'stores/reducers/use
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 import ImageViewer from 'common/ImageViewer'
+import { getTokenSymbolByContracts } from 'utils'
 
 const {
   TYPES: { AUCTION, INSTANT_BY },
@@ -27,12 +28,18 @@ export default function FormContainer() {
 
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
 
+  const tokenSymbol = getTokenSymbolByContracts(
+    assetDetails.tokenData?.contract || '',
+    assetDetails.marketData?.sales_token_contract || ''
+  )
+
   const composeData: AssetDataTypesWithStatus = assetDetails.marketData
     ? {
         ...assetDetails.marketData,
         status: assetDetails.status as string,
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+        tokenSymbol,
       }
     : {
         current_price: '',
@@ -46,11 +53,13 @@ export default function FormContainer() {
         type: 'instant_buy',
         platform_fee: '2.5',
         sales_token_contract: `${assetDetails.ownerData?.wallet}`,
+        contract: `${assetDetails.tokenData?.contract}`,
         sold: false,
         start_time: '',
         start_price: '',
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+        tokenSymbol,
       }
 
   const { role } = useSelector(selectUserRole())

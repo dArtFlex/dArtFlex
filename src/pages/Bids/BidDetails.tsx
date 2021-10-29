@@ -8,6 +8,7 @@ import { InfoBid } from './components'
 import { AssetDataTypesWithStatus } from 'types'
 import { useStyles } from './styles'
 import routes from '../../routes'
+import { getTokenSymbolByContracts } from 'utils'
 
 export default function BidDetails() {
   const classes = useStyles()
@@ -19,12 +20,18 @@ export default function BidDetails() {
     return null
   }
 
+  const tokenSymbol = getTokenSymbolByContracts(
+    assetDetails.tokenData?.contract || '',
+    assetDetails.marketData?.sales_token_contract || ''
+  )
+
   const composeData: AssetDataTypesWithStatus | null = assetDetails.marketData
     ? {
         ...assetDetails.marketData,
         status: assetDetails.status as string,
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
+        tokenSymbol,
       }
     : null
 

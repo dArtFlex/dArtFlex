@@ -9,6 +9,7 @@ export interface ICardHistoryProps extends IBidsHistory {
   onCancel?: ({ id }: { id: number }) => void
   expireDate: Date
   sales_token_contract: string
+  contract: string
 }
 
 export interface ICardContainerProps {
