@@ -33,7 +33,7 @@ import { useSearchAssets } from 'hooks'
 import appConst from 'config/consts'
 import { IHashtag, IArtworksFiltes } from 'types'
 import { useStyles } from './styles'
-import { creatArrayFromNumber } from 'utils'
+import { creatArrayFromNumber, getTokenSymbolByContracts } from 'utils'
 
 const { INTERVALS } = appConst
 
@@ -324,7 +324,10 @@ export default function Artworks() {
             : sortedAssets?.map((asset, i) => (
                 <CardAsset
                   key={i}
-                  asset={asset}
+                  asset={{
+                    ...asset,
+                    tokenSymbol: getTokenSymbolByContracts(asset.contract || '', asset.sales_token_contract || ''),
+                  }}
                   userWallet={wallet?.accounts[0]}
                   useCardStatus={
                     filter === LIVE_AUCTION

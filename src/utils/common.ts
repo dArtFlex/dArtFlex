@@ -1,6 +1,5 @@
 import moment from 'moment'
 import { FORMATS } from 'constant'
-import APP_CONFIG from 'config'
 
 export const acceptFileTypes = (fileExt: string) =>
   FORMATS[Object.keys(FORMATS).find((type) => FORMATS[type].includes(fileExt)) || '']
@@ -68,21 +67,4 @@ export async function imageUrlToFile(imageUrl: string) {
   const blob = await data.blob()
   const file = new File([blob], `image.${blob.type.split('/')[1]}`, { type: blob.type })
   return file
-}
-
-export function getExplorerScanRootUrl(salesTokenContract: string): string | undefined {
-  switch (salesTokenContract) {
-    case '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2':
-      return APP_CONFIG.etherscanMainnet
-    case '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd':
-      return APP_CONFIG.bscscanTestnet
-    case '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270':
-      return APP_CONFIG.polygonMainnet
-    case '0xc778417e063141139fce010982780140aa0cd5ab':
-      return APP_CONFIG.etherscanRinkeby
-    case '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd':
-      return APP_CONFIG.bscscanTestnet
-    default:
-      break
-  }
 }

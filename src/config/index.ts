@@ -53,7 +53,7 @@ const APP_CONFIG = {
   etherscanMainnet: 'https://etherscan.io',
   bscscanTestnet: 'https://testnet.bscscan.com',
   bscscanMainnet: 'https://bscscan.com',
-  polygonMainnet: 'https://polygonscan.com/',
+  polygonMainnet: 'https://polygonscan.com',
 
   WSUrl: 'wss://dartflex-dev.ml:8887',
   baseURL: `${BASE_URL}`,

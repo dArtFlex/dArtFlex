@@ -9,6 +9,7 @@ export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTime
   type: IAssetType
   platform_fee: string
   sales_token_contract: string
+  contract: string
   sold: boolean
   ban?: boolean
 }
@@ -41,6 +42,7 @@ export interface AssetDataTypes extends AssetMarketplaceTypes {
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {
   status: IAssetStatus
+  tokenSymbol: string
 }
 
 export interface IImageData extends IImageEntity {
