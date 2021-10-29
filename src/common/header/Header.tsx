@@ -53,6 +53,7 @@ import {
 import { useStyles } from './styles'
 import appConst from 'config/consts'
 import image from '../icons/cover_photo.png'
+import { convertChainName } from 'utils'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -445,7 +446,7 @@ function ChainNetwork({ chainName }: { chainName?: IChainName }) {
   return chainName ? (
     <Box className={classes.chainNetwork}>
       <Box className={classes.chainNetworkActiveIcon}></Box>
-      <FormHelperText className={classes.chainNetworkText}>{chainName}</FormHelperText>
+      <FormHelperText className={classes.chainNetworkText}>{convertChainName(chainName)}</FormHelperText>
     </Box>
   ) : null
 }
