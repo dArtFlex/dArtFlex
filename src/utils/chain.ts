@@ -1,6 +1,22 @@
 import APP_CONFIG from 'config'
 import { contractAddress } from 'core/contracts/addresses'
 import tokensAll from 'core/tokens'
+import { IChainName } from 'types'
+
+export function convertChainName(chainName: IChainName) {
+  switch (chainName) {
+    case '__eth':
+      return 'ETH'
+    case '__bsc':
+      return 'BSC'
+    case '__polygon':
+      return 'Polygon'
+    case '__ethRinkeby':
+      return 'ETH Rinkeby'
+    case '__bscTestnet':
+      return 'BSC Testnet'
+  }
+}
 
 export function getExplorerScanRootUrl(contract: string): string | undefined {
   switch (contract) {
