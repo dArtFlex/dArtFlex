@@ -24,7 +24,7 @@ import { getUserAssetsRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutName } from 'utils'
+import { shortCutName, getTokenSymbolByContracts } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
@@ -234,7 +234,13 @@ export default function Dashboard() {
                     ? sortedAssets.map((userAsset, i) => (
                         <CardAsset
                           key={i}
-                          asset={userAsset}
+                          asset={{
+                            ...userAsset,
+                            tokenSymbol: getTokenSymbolByContracts(
+                              userAsset.contract || '',
+                              userAsset.sales_token_contract || ''
+                            ),
+                          }}
                           userWallet={user?.wallet}
                           withLabel
                           withAction={Boolean(
