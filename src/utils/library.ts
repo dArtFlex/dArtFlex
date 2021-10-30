@@ -17,6 +17,11 @@ import i_16 from 'common/icons/library/leaves2.jpg'
 import i_17 from 'common/icons/library/pumpkin1.jpg'
 import i_18 from 'common/icons/library/pumpkin2.jpg'
 import i_19 from 'common/icons/library/pumpkin3.jpg'
+import i_20 from 'common/icons/library/1.png'
+import i_21 from 'common/icons/library/2.jpeg'
+import i_22 from 'common/icons/library/3.jpeg'
+import i_23 from 'common/icons/library/4.jpeg'
+import i_24 from 'common/icons/library/5.png'
 
 const LIBRARY = [
   {
@@ -93,6 +98,26 @@ const LIBRARY = [
   },
   {
     src: i_19,
+    order: Math.random(),
+  },
+  {
+    src: i_20,
+    order: Math.random(),
+  },
+  {
+    src: i_21,
+    order: Math.random(),
+  },
+  {
+    src: i_22,
+    order: Math.random(),
+  },
+  {
+    src: i_23,
+    order: Math.random(),
+  },
+  {
+    src: i_24,
     order: Math.random(),
   },
 ]
