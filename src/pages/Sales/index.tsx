@@ -12,6 +12,7 @@ import appConst from 'config/consts'
 import { useComposeAssetsData } from './lib'
 import { acceptBidRequest } from '../../stores/reducers/placeBid'
 import { acceptOfferRequest } from '../../stores/reducers/makeOffer'
+import { getTokenSymbolByContracts } from 'utils'
 
 const { STATUSES, INTERVALS } = appConst
 
@@ -88,7 +89,13 @@ export default function Sales() {
                     return (
                       <CardAsset
                         key={i}
-                        asset={userAsset}
+                        asset={{
+                          ...userAsset,
+                          tokenSymbol: getTokenSymbolByContracts(
+                            userAsset.contract || '',
+                            userAsset.sales_token_contract || ''
+                          ),
+                        }}
                         withLabel
                         button={{
                           acceptOffer: () => {
