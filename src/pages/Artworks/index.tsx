@@ -326,7 +326,10 @@ export default function Artworks() {
                   key={i}
                   asset={{
                     ...asset,
-                    tokenSymbol: getTokenSymbolByContracts(asset.contract || '', asset.sales_token_contract || ''),
+                    tokenSymbol: getTokenSymbolByContracts(
+                      asset.tokenData?.contract || asset.contract || '',
+                      asset.sales_token_contract || ''
+                    ),
                   }}
                   userWallet={wallet?.accounts[0]}
                   useCardStatus={

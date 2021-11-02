@@ -92,7 +92,7 @@ export default function Sales() {
                         asset={{
                           ...userAsset,
                           tokenSymbol: getTokenSymbolByContracts(
-                            userAsset.contract || '',
+                            userAsset.tokenData?.contract || userAsset.contract || '',
                             userAsset.sales_token_contract || ''
                           ),
                         }}

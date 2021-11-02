@@ -29,6 +29,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     onClaimBid,
     expireDate,
     salesTokenContract,
+    contract,
   } = props
   const classes = useStyles()
 
@@ -38,7 +39,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const { offer } = useSelector(selectMakeOffer())
   const { bid } = useSelector(selectBid())
 
-  const token = useTokenInfo(salesTokenContract)
+  const token = useTokenInfo(salesTokenContract, contract)
   const tokenName = token?.symbol || ''
 
   switch (status) {
