@@ -10,7 +10,7 @@ const STAGE_URL_API = 'https://dartflex-stage.ml:8887/api'
 
 // DEV Instants
 const DEV_APP_URL = 'https://dartflex-dev.ml'
-const DEV_URL_API = 'https://btest.dartflex-stage.ml:8887/api'
+const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
 
 // ************** SETUP API ENVIRIMENT **************
 const API =

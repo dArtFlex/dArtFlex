@@ -266,6 +266,7 @@ export function usePromotionMultiplyData({
       url: p.imageData.image,
       tokenContractAddress: p.marketData ? p.marketData.sales_token_contract : '',
       type: p.marketData ? p.marketData.type : MINTED,
+      contract: p.marketData?.contract || '',
     }
   })
 }

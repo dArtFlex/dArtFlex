@@ -92,7 +92,7 @@ export default function FormDetails(props: IDetailsFormProps) {
   const ifAuctionEnds = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60
   const is24HourAction = isReserveNotMet
 
-  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
+  const tokenInfo = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
   const tokenRate = exchangeRates
     ? exchangeRates.find((tR) => tokenInfo?.id && tR.id === tokenInfo.id)?.rateUsd || 0
     : 0

@@ -24,7 +24,7 @@ export function* uploadImage(api: IApi, { payload: { file } }: PayloadAction<{ f
 
     yield put(uploadImageSuccess({ image, image_data: file?.name || '' }))
   } catch (e) {
-    yield put(uploadImageFailure(e))
+    yield put(uploadImageFailure({ code: 4001, message: 'Image is too large!' }))
   }
 }
 
@@ -99,6 +99,7 @@ export function* minting(
         tokenId: lm.tokenId,
         uri: lm.uri,
         // creator and owner are same only in first sell
+        chainId: walletService.getChainId(),
         creator: user.id,
         owner: user.id,
         royalty: JSON.stringify(royalty),

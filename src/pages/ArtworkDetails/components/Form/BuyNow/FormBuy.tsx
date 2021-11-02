@@ -39,7 +39,7 @@ export default function FormBuyApprove(props: IFormBuyApproveProps) {
   const priceToUsd =
     startPriceToToken && tokenInfo ? new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(2) : 0
 
-  const token = useTokenInfo(marketData?.sales_token_contract)
+  const token = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
   const tokenName = token?.symbol || ''
 
   const isValidValueAmount = Number(tokenBalance) >= Number(startPriceToToken)

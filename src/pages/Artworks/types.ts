@@ -7,6 +7,7 @@ export interface IPromotedArtwork {
   endDate: number
   url: string
   tokenContractAddress: string
+  contract: string
   type: IAssetStatus
 }
 

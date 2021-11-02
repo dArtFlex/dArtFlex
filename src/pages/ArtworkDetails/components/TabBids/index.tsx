@@ -142,6 +142,7 @@ export default function TabBids(props: ITabHistoryProps) {
               }
               expireDate={expireDate}
               salesTokenContract={marketData?.sales_token_contract}
+              contract={tokenData?.contract || ''}
             />
           )
         })}
@@ -179,6 +180,7 @@ export default function TabBids(props: ITabHistoryProps) {
             }
             expireDate={expireDate}
             salesTokenContract={marketData?.sales_token_contract}
+            contract={tokenData?.contract || ''}
           />
         )
       })}
