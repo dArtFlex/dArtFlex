@@ -25,8 +25,8 @@ function useSearchAssets<T extends IAssets>({
     return assets
   }
   return assets.filter((asset) => {
-    const match = (value: string) => value.match(new RegExp(search, 'gi')) !== null
-    return match(asset.imageData.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
+    const match = (value: string) => value !== undefined && value.match(new RegExp(search, 'gi')) !== null
+    return match(asset.imageData?.name) || match(asset.userData?.userid) || match(asset.userData?.wallet)
   })
 }
 
