@@ -30,6 +30,8 @@ export function* createStyleTransfer(
 
     yield put(createStyleTransferSuccess({ imageUrl: APP_CONFIG.getGenerateImage(name) }))
   } catch (e) {
-    yield put(createStyleTransferFailure(e))
+    yield put(
+      createStyleTransferFailure({ code: 4001, message: 'Something went wrong. Try to generate images later…' })
+    )
   }
 }
