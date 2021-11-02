@@ -49,7 +49,7 @@ export default function CardAsset(props: ICardAssetProps) {
     <>
       <Card key={asset.item_id} elevation={1} className={classes.root} onClick={cardActionEvent}>
         <Box className={classes.artContainer}>
-          <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />
+          {asset.imageData?.image && <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />}
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
         <Box className={classes.artInfoContainer}>
@@ -75,7 +75,7 @@ export default function CardAsset(props: ICardAssetProps) {
               </IconButton>
             )}
           </Box>
-          <Typography variant={'h4'}>{asset.imageData.name}</Typography>
+          <Typography variant={'h4'}>{asset.imageData?.name}</Typography>
           {asset.highest_bid?.length ? (
             <Typography className={classes.highestBidInfo}>
               Highest bid {convertPrice(asset.highest_bid[0].bid_amount)} WETH

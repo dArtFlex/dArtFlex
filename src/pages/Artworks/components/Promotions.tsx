@@ -74,7 +74,8 @@ export default function Promotions(props: IPromotion) {
                         {item.type === AUCTION ? 'Current Bid' : 'Current price'}
                       </Typography>
                       <div className={clsx(classes.promotionInfoText, classes.promotionInfoBoxPrice)}>
-                        {item.bid} <TokenInfo tokenContractAddress={item.tokenContractAddress} />
+                        {`${item.bid} `}
+                        <TokenInfo tokenContractAddress={item.tokenContractAddress} contract={item.contract} />
                       </div>
                     </Box>
                     <Box flexDirection="row" className={classes.promotionInfoBox}>
@@ -135,8 +136,8 @@ export default function Promotions(props: IPromotion) {
   )
 }
 
-function TokenInfo({ tokenContractAddress }: { tokenContractAddress: string }) {
-  const tokenInfo = useTokenInfo(tokenContractAddress)
+function TokenInfo({ tokenContractAddress, contract }: { tokenContractAddress: string; contract: string }) {
+  const tokenInfo = useTokenInfo(tokenContractAddress, contract)
   return (
     <Typography component={'span'} variant={'h3'} style={{ fontSize: 24, lineHeight: 'initial' }}>
       {tokenInfo?.symbol}

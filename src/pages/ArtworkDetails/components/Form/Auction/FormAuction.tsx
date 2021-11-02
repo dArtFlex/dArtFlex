@@ -37,7 +37,8 @@ export default function FormAuction(props: IFormAuctionProps) {
           .toNumber()
       : new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
 
-  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
+  const tokenInfo = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
+  const tokenName = tokenInfo?.symbol || ''
 
   const tokenBalanceWETH = tokenInfo ? tokensBalances?.find((t) => t.id === tokenInfo.id)?.balance || 0 : 0
   const tokenRate = exchangeRates
@@ -53,9 +54,6 @@ export default function FormAuction(props: IFormAuctionProps) {
     Boolean(values.acknowledge) &&
     Boolean(values.agreeTerms) &&
     Number(tokenData?.owner) !== user?.id
-
-  const token = useTokenInfo(marketData?.sales_token_contract)
-  const tokenName = token?.symbol || ''
 
   return (
     <>

@@ -14,7 +14,7 @@ interface IStepHolderProps {
 export default function StepHolder(props: IStepHolderProps) {
   const { children, className } = props
   const {
-    minting: { uploading, data, file, minting, src },
+    minting: { uploading, data, file, minting, src, error },
   } = useSelector(selectMinting())
   const {
     listing: { listing },
@@ -45,6 +45,9 @@ export default function StepHolder(props: IStepHolderProps) {
           setFieldValue('file', file)
         }
         return setStep(STEPS_NFT.FILL_FORM)
+      }
+      if (error) {
+        setStep(STEPS_NFT.UPLOAD_FILE)
       }
     }
   }, [uploading])
