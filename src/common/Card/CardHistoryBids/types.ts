@@ -21,6 +21,7 @@ export interface ICardHistoryBidsProps extends IBids {
   }) => void
   expireDate: Date
   salesTokenContract?: string
+  contract: string
 }
 
 export interface ICardContainerProps {

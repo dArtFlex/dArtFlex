@@ -90,7 +90,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
   const currentUrl = APP_CONFIG.appUrl + url
   const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
 
-  const token = useTokenInfo(marketData?.sales_token_contract)
+  const token = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
   const tokenName = token?.symbol || ''
 
   function getPriceStatusHeader() {

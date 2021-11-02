@@ -237,7 +237,7 @@ export default function Dashboard() {
                           asset={{
                             ...userAsset,
                             tokenSymbol: getTokenSymbolByContracts(
-                              userAsset.contract || '',
+                              userAsset.tokenData.contract || '',
                               userAsset.sales_token_contract || ''
                             ),
                           }}

@@ -38,7 +38,7 @@ const mintingSlice = createSlice({
       state.error = ''
       state.src = 'local'
     },
-    uploadImageFailure: (state, { payload }: PayloadAction<string>) => {
+    uploadImageFailure: (state, { payload }: PayloadAction<MintingStateType['error']>) => {
       state.error = payload
       state.uploading = false
     },

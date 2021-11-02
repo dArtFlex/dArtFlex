@@ -29,7 +29,7 @@ export default function CardHistory(props: ICardHistoryProps) {
   const rootScanUrl = getExplorerScanRootUrl(contract)
   const scanViewTx = `${rootScanUrl}/tx/${tx_hash}`
 
-  const token = useTokenInfo(sales_token_contract)
+  const token = useTokenInfo(sales_token_contract, contract)
   const tokenName = token?.symbol || ''
 
   switch (status) {
