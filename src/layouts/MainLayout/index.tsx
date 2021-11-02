@@ -11,6 +11,7 @@ import {
   selectManagement,
   selectUserSuccessMessage,
   selectAlbum,
+  selectConstructor,
 } from 'stores/selectors'
 import { Footer, Header, Modal, WalletError } from 'common'
 import { useStyles } from './styles'
@@ -24,6 +25,7 @@ import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/
 import { clearManagementError } from '../../stores/reducers/management'
 import { walletError } from '../../stores/reducers/wallet'
 import { clearAlbumSuccessMessage } from 'stores/reducers/album'
+import { cancelledStyleTransfer } from 'stores/reducers/constructor'
 import Snack from '../../common/Snack'
 
 interface IMainLayoutProps {
@@ -56,6 +58,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     bid: { bidSuccess },
   } = useSelector(selectBid())
   const { success: successAlbumMessage } = useSelector(selectAlbum())
+  const { error: errorConstructor } = useSelector(selectConstructor())
 
   const dispatch = useDispatch()
 
@@ -67,7 +70,16 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
   }, [errorWallet])
 
   const errorMessage =
-    errorMinting || errorUser || errorListing || errorBuy || errorBid || errorOffer || errorManagement || errorWallet
+    errorMinting ||
+    errorUser ||
+    errorListing ||
+    errorBuy ||
+    errorBid ||
+    errorOffer ||
+    errorManagement ||
+    errorWallet ||
+    errorConstructor
+
   useEffect(() => {
     typeof errorMessage === 'object' &&
       // We need to show notificaton only when
@@ -97,6 +109,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
     dispatch(walletError({ error: '' }))
     dispatch(clearBidSuccessMessage())
     dispatch(clearAlbumSuccessMessage())
+    dispatch(cancelledStyleTransfer())
   }
 
   return (

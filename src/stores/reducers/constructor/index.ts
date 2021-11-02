@@ -25,7 +25,7 @@ const constructorSlice = createSlice({
       state.imageUrl = payload.imageUrl
       state.fetching = false
     },
-    createStyleTransferFailure: (state, { payload }: PayloadAction<string>) => {
+    createStyleTransferFailure: (state, { payload }: PayloadAction<{ code: number; message: string }>) => {
       state.error = payload
       state.fetching = false
     },
@@ -33,6 +33,7 @@ const constructorSlice = createSlice({
       state.cancelled = true
       state.imageUrl = ''
       state.cancelled = false
+      state.error = ''
     },
   },
 })
