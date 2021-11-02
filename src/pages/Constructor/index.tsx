@@ -80,7 +80,7 @@ function Components({
   setFilesSource: (filesSource: ConstructorSource | null) => void
 }) {
   const classes = useStyles()
-  const { imageUrl, fetching } = useSelector(selectConstructor())
+  const { imageUrl, fetching, error } = useSelector(selectConstructor())
   const history = useHistory()
   const {
     location: { search },
@@ -96,6 +96,13 @@ function Components({
       history.replace('?tab=loading')
     }
   }, [imageUrl, fetching])
+
+  useEffect(() => {
+    if (error) {
+      setFilesSource(null)
+      history.push(routes.constructor)
+    }
+  }, [error])
 
   switch (search) {
     case '?tab=library':

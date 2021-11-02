@@ -2,6 +2,7 @@
   "name": "num",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dartflex-stage.ml/",
   "dependencies": {
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.3",
