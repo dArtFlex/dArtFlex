@@ -12,12 +12,18 @@ const STAGE_URL_API = 'https://dartflex-stage.ml:8887/api'
 const DEV_APP_URL = 'https://dartflex-dev.ml'
 const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
 
+// LOCAL Instants
+const LOCAL_APP_URL = 'http://localhost:3000/'
+const LOCAL_URL_API = 'http://localhost:8888/api'
+
 // ************** SETUP API ENVIRIMENT **************
 const API =
   process.env.REACT_APP_STAGE === 'production'
     ? PROD_URL_API
     : process.env.REACT_APP_STAGE === 'stage'
     ? STAGE_URL_API
+    : process.env.REACT_APP_STAGE === 'local'
+    ? LOCAL_URL_API
     : DEV_URL_API
 
 const APP_URL =
@@ -25,6 +31,8 @@ const APP_URL =
     ? PROD_APP_URL
     : process.env.REACT_APP_STAGE === 'stage'
     ? STAGE_APP_URL
+    : process.env.REACT_APP_STAGE === 'local'
+    ? LOCAL_APP_URL
     : DEV_APP_URL
 // ************** ******************** **************
 
