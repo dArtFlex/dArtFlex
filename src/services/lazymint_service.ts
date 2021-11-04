@@ -2,7 +2,7 @@
 import HttpStatusCodes from 'http-status-codes'
 import { walletService } from 'services/wallet_service'
 import { CommonService } from 'services/common_service'
-import { DOMAIN_TYPE, ERC721Types } from 'constant'
+import { DOMAIN_TYPE, ERC721Types } from 'config/blockchain'
 import { IChainIdFormat } from 'types'
 
 class LazyMintService extends CommonService {
