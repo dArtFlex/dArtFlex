@@ -12,7 +12,7 @@ import { acceptFileTypes } from 'utils'
 import { useStyles } from './styles'
 import { selectListing, selectMinting } from '../../../../stores/selectors'
 
-const MAZ_SIZE_40 = 40000000
+const MAZ_SIZE_5 = 5000000
 const FILE_EXT = '.jpg'
 
 export default function DropZone() {
@@ -44,7 +44,7 @@ export default function DropZone() {
   return (
     <DropZoneContainer
       accept={asseptType}
-      maxSize={MAZ_SIZE_40}
+      maxSize={MAZ_SIZE_5}
       multiple={false}
       name="file"
       customClass={classes.flexBox}
@@ -60,7 +60,7 @@ export default function DropZone() {
           </Box>
           <Typography className={classes.titleText}>Upload</Typography>
           <Box pt={2} pb={2}>
-            <Typography className={classes.mainText}>Max size 40Mb, format jpg, png, gif</Typography>
+            <Typography className={classes.mainText}>Max size 5Mb, format jpg, png, gif, jpeg</Typography>
           </Box>
           <Typography className={clsx(classes.mainText, classes.footer)}>Or Drag And Drop</Typography>
         </Box>

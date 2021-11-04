@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { FORMATS } from 'constant'
+import { FORMATS } from 'config/consts'
 
 export const acceptFileTypes = (fileExt: string) =>
   FORMATS[Object.keys(FORMATS).find((type) => FORMATS[type].includes(fileExt)) || '']
