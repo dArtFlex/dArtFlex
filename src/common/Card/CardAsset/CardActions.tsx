@@ -68,12 +68,28 @@ export default function CardActions(props: ICardActionsProps) {
                     history.location.pathname === routes.sales ? (
                       <CardActionButton acceptOffer={button?.acceptOffer} />
                     ) : (
-                      <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          button?.onListed && button.onListed()
+                        }}
+                        variant={'contained'}
+                        fullWidth
+                        className={classes.listBtn}
+                      >
                         List
                       </Button>
                     )
                   ) : (
-                    <Button onClick={button?.onListed} variant={'contained'} fullWidth className={classes.listBtn}>
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        button?.onListed && button.onListed()
+                      }}
+                      variant={'contained'}
+                      fullWidth
+                      className={classes.listBtn}
+                    >
                       Make offer
                     </Button>
                   )}
@@ -176,7 +192,14 @@ export default function CardActions(props: ICardActionsProps) {
     case COLLECTED:
       return (
         <Box className={clsx(classes.actionBtnBox, classes.collectedBoxBtn)}>
-          <Button variant={'outlined'} className={classes.collectedBtn} onClick={button?.onSell}>
+          <Button
+            variant={'outlined'}
+            className={classes.collectedBtn}
+            onClick={(e) => {
+              e.stopPropagation()
+              button?.onSell && button.onSell()
+            }}
+          >
             Sell
           </Button>
           <Button variant={'outlined'} className={classes.collectedBtn}>

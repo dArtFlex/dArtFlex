@@ -15,18 +15,28 @@ import clsx from 'clsx'
 import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
 import { Modal, WalletConnect, ConfirmationModal } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
+import { chainErrorRequest } from 'stores/reducers/wallet'
 import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { BurnIcon, MoreHorizontalIcon } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
 import CTAPopover from '../CTAPopover'
 import PriceDropModal from '../PriceDropModal'
 import { useTimer, useTokenInfo } from 'hooks'
-import { normalizeDate, shortCutName, shareWithTwitter, getTokenSymbolByContracts } from 'utils'
+import {
+  normalizeDate,
+  shortCutName,
+  shareWithTwitter,
+  getTokenSymbolByContracts,
+  guardChain,
+  getChainKeyByContract,
+  getChainNameById,
+} from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
-import { AssetTypes, IBids, UserDataTypes } from 'types'
+import { AssetTypes, IBids, UserDataTypes, IChainId } from 'types'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'
+import { walletService } from 'services/wallet_service'
 
 const {
   STATUSES: { MINTED, SOLD },
@@ -147,6 +157,16 @@ export default function FormDetails(props: IDetailsFormProps) {
       setOpenPriceDropModal(false)
     }
   }, [priceChanged])
+
+  const chainId = walletService.getChainId()
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
+    if (guardChain(contract, chainId)) {
+      return true
+    }
+    const contractToChainId = getChainKeyByContract(contract)
+    contractToChainId !== undefined && dispatch(chainErrorRequest(getChainNameById(contractToChainId as IChainId)))
+    return false
+  }
 
   return (
     <>
@@ -286,14 +306,16 @@ export default function FormDetails(props: IDetailsFormProps) {
             <Box>
               <Button
                 onClick={() => {
-                  if (isSamePerson) {
-                    // Secondary sell
-                    return handleListed()
-                  }
-                  if (wallet) {
-                    onSubmit('formProgress', 'auction')
-                  } else {
-                    setOpen(true)
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (isSamePerson) {
+                      // Secondary sell
+                      return handleListed()
+                    }
+                    if (wallet) {
+                      onSubmit('formProgress', 'auction')
+                    } else {
+                      setOpen(true)
+                    }
                   }
                 }}
                 variant={ifAuctionEnds ? 'outlined' : 'contained'}
@@ -317,8 +339,10 @@ export default function FormDetails(props: IDetailsFormProps) {
             <Box>
               <Button
                 onClick={() => {
-                  if (wallet) {
-                    onSubmit('formProgress', 'make offer')
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'make offer')
+                    }
                   }
                 }}
                 variant={'contained'}

@@ -80,6 +80,9 @@ const walletSlice = createSlice({
     walletError: (state, { payload }: PayloadAction<{ error: string }>) => {
       state.error = payload.error
     },
+    chainErrorRequest: (state, { payload }: PayloadAction<WalletsStateType['chainError']>) => {
+      state.chainError = payload
+    },
   },
 })
 
@@ -106,6 +109,8 @@ export const {
 
   setNetworkChain,
   walletError,
+
+  chainErrorRequest,
 } = walletSlice.actions
 
 export const { reducer } = walletSlice
