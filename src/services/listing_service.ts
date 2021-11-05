@@ -1,7 +1,13 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
 import { walletService } from 'services/wallet_service'
-import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
+import {
+  ZERO,
+  ORDER_TYPES,
+  LAZY_MINT_NFT_ENCODE_PARAMETERS,
+  NFT_ENCODE_PARAMETERS,
+  DOMAIN_TYPE,
+} from 'config/blockchain'
 import { contractAddress } from 'core/contracts/addresses'
 import { getChainKeyByChainId } from 'utils'
 

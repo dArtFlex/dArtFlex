@@ -139,7 +139,7 @@ export default function DropZoneContainer({
   const [active, setActive] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    if (error) {
+    if (error || fileError) {
       setFileError(helperText ? helperText : fileError)
     } else {
       setFileError('')
@@ -168,7 +168,7 @@ export default function DropZoneContainer({
     if (!touched && props?.customeraction?.setFieldTouched) props?.customeraction?.setFieldTouched(name, true)
     let errorText: string
     if (e[0].errors[0].code === 'file-too-large') {
-      errorText = `Upload failed Maximum file size 10 MB`
+      errorText = `Upload failed! Maximum file size ${maxSize * 10 ** -6} MB.`
     } else {
       errorText = 'Invalid format'
     }
@@ -218,8 +218,14 @@ export default function DropZoneContainer({
         )}
         {!withoutInput && <input {...getInputProps({ name: name })} />}
         {children}
+        {!!fileError && (
+          <Typography variant="subtitle2" className={classes.errorText}>
+            {fileError}
+          </Typography>
+        )}
       </div>
     )
+
   return (
     <div className={classes.root} {...props}>
       {desc && (
@@ -237,6 +243,7 @@ export default function DropZoneContainer({
       <Typography variant="subtitle2" color="secondary">
         {title}
       </Typography>
+
       {!!fileError && (
         <Typography variant="subtitle2" className={classes.errorText}>
           {fileError}

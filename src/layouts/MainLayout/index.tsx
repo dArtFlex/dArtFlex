@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   selectMinting,
   selectWalletError,
+  selectWalletChainError,
   selectUser,
   selectListing,
   selectBuy,
@@ -13,7 +14,7 @@ import {
   selectAlbum,
   selectConstructor,
 } from 'stores/selectors'
-import { Footer, Header, Modal, WalletError } from 'common'
+import { Footer, Header, Modal, WalletError, ChainError } from 'common'
 import { useStyles } from './styles'
 import { Box } from '@material-ui/core'
 import { clearMintError } from '../../stores/reducers/minting'
@@ -23,7 +24,7 @@ import { clearBuyNowError } from '../../stores/reducers/buyNow'
 import { clearBidError, clearBidSuccessMessage } from '../../stores/reducers/placeBid'
 import { clearMakeOfferError, clearMakeOfferSuccessMessage } from '../../stores/reducers/makeOffer'
 import { clearManagementError } from '../../stores/reducers/management'
-import { walletError } from '../../stores/reducers/wallet'
+import { walletError, chainErrorRequest } from '../../stores/reducers/wallet'
 import { clearAlbumSuccessMessage } from 'stores/reducers/album'
 import { cancelledStyleTransfer } from 'stores/reducers/constructor'
 import Snack from '../../common/Snack'
@@ -59,6 +60,7 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
   } = useSelector(selectBid())
   const { success: successAlbumMessage } = useSelector(selectAlbum())
   const { error: errorConstructor } = useSelector(selectConstructor())
+  const { chainError } = useSelector(selectWalletChainError())
 
   const dispatch = useDispatch()
 
@@ -119,11 +121,21 @@ export default function MainLayout({ toggleTheme, children }: IMainLayoutProps):
         {children}
         <Footer />
       </Box>
+
       <Snack
         errorMessage={typeof errorMessage === 'object' && errorMessage?.message ? errorMessage.message : ''}
         open={snackbarOpen}
         onClose={onCloseSnackbar}
         successMessage={successGlobalMessage}
+      />
+
+      <Modal
+        open={Boolean(chainError?.length)}
+        onClose={() => dispatch(chainErrorRequest())}
+        disableBackdropClick
+        disableEscapeKeyDown
+        body={<ChainError />}
+        withAside
       />
       <Modal
         open={open}
