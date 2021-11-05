@@ -3,7 +3,7 @@ import PageWrapper from './PageWrapper'
 import Footer from './footer'
 import Modal, { ConfirmationModal } from './Modal'
 import { Popover, PopoverLinks } from './Popover'
-import { WalletConnect, WalletError, Form, Field, InputAdornment } from './Form'
+import { WalletConnect, WalletError, Form, Field, InputAdornment, ChainError } from './Form'
 import CircularProgressLoader from './Loaders'
 import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids, CardSkeleton } from './Card'
 import { Chip } from './Chip'
@@ -31,6 +31,7 @@ export {
   PopoverLinks,
   WalletConnect,
   WalletError,
+  ChainError,
   Form,
   Field,
   InputAdornment,

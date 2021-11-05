@@ -2,6 +2,7 @@ import APP_CONFIG from 'config'
 import { contractAddress } from 'core/contracts/addresses'
 import tokensAll from 'core/tokens'
 import { IChainName } from 'types'
+import { networkConvertor } from 'utils'
 
 export function convertChainName(chainName: IChainName) {
   switch (chainName) {
@@ -87,4 +88,8 @@ export function getChainKeyByContract(contract: string) {
     default:
       break
   }
+}
+
+export function guardChain(contract: string, currentChain: number) {
+  return getChainKeyByContract(contract) === networkConvertor(currentChain)
 }
