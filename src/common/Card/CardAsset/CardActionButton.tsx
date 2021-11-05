@@ -37,7 +37,15 @@ export default function CardActionButton(props: ICardActionButton) {
           <CircularProgressLoader />
         </Box>
       ) : (
-        <Button onClick={onAccept} variant={'outlined'} fullWidth className={classes.acceptBtn}>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation()
+            onAccept()
+          }}
+          variant={'outlined'}
+          fullWidth
+          className={classes.acceptBtn}
+        >
           Accept {acceptOffer ? 'Offer' : 'Bid'}
         </Button>
       )}

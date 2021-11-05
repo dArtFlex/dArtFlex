@@ -22,16 +22,19 @@ import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
 import { getUserAssetsRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
+import { chainErrorRequest } from 'stores/reducers/wallet'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutName, getTokenSymbolByContracts } from 'utils'
+import { shortCutName, getTokenSymbolByContracts, guardChain, getChainKeyByContract, getChainNameById } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
+import { IChainId } from 'types'
 import { unlistingRequest } from 'stores/reducers/listing'
 import { IUserSoldAssets } from 'stores/reducers/user/types'
 import BigNumber from 'bignumber.js'
 import image from 'common/icons/cover_photo.png'
+import { walletService } from 'services/wallet_service'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -65,6 +68,7 @@ export default function Dashboard() {
   const {
     listing: { fetchingUnlist },
   } = useSelector(selectListing())
+  const chainId = walletService.getChainId()
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
@@ -181,6 +185,15 @@ export default function Dashboard() {
     .minus(new BigNumber(totalSalesToEth).dividedBy(100).multipliedBy(2.5))
     .toString()
 
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
+    if (guardChain(contract, chainId)) {
+      return true
+    }
+    const contractToChainId = getChainKeyByContract(contract)
+    contractToChainId !== undefined && dispatch(chainErrorRequest(getChainNameById(contractToChainId as IChainId)))
+    return false
+  }
+
   return (
     <>
       <PageWrapper className={classes.wrapper}>
@@ -247,9 +260,13 @@ export default function Dashboard() {
                             userAsset.status === STATUSES.LISTED || userAsset?._status === STATUSES.LISTED
                           )}
                           button={{
-                            onListed: () => handleListed(userAsset),
+                            onListed: () =>
+                              onGuardChain({ chainId, contract: userAsset.tokenData.contract }) &&
+                              handleListed(userAsset),
                             onSell: () => {
-                              if (Boolean(userAsset?._status !== STATUSES.LISTED)) handleListed(userAsset)
+                              if (Boolean(userAsset?._status !== STATUSES.LISTED))
+                                onGuardChain({ chainId, contract: userAsset.tokenData.contract }) &&
+                                  handleListed(userAsset)
                             },
                           }}
                           menu={{

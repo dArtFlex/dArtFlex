@@ -18,12 +18,21 @@ import {
   selectListing,
 } from 'stores/selectors'
 import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
-import { normalizeDate, shortCutName, shareWithTwitter } from 'utils'
+import { chainErrorRequest } from 'stores/reducers/wallet'
+import {
+  normalizeDate,
+  shortCutName,
+  shareWithTwitter,
+  guardChain,
+  getChainKeyByContract,
+  getChainNameById,
+} from 'utils'
 import { useStyles } from '../styles'
-import { IBids, UserDataTypes, AssetTypes } from 'types'
+import { IBids, UserDataTypes, AssetTypes, IChainId } from 'types'
 import appConst from '../../../../../config/consts'
 import APP_CONFIG from 'config'
 import { useTokenInfo } from 'hooks'
+import { walletService } from 'services/wallet_service'
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -110,6 +119,16 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
     }
   }, [priceChanged])
 
+  const chainId = walletService.getChainId()
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
+    if (guardChain(contract, chainId)) {
+      return true
+    }
+    const contractToChainId = getChainKeyByContract(contract)
+    contractToChainId !== undefined && dispatch(chainErrorRequest(getChainNameById(contractToChainId as IChainId)))
+    return false
+  }
+
   return (
     <>
       <Box pt={14}>
@@ -176,10 +195,12 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Box>
               <Button
                 onClick={() => {
-                  if (wallet) {
-                    onSubmit('formProgress', 'buy')
-                  } else {
-                    setOpen(true)
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'buy')
+                    } else {
+                      setOpen(true)
+                    }
                   }
                 }}
                 variant={'contained'}
@@ -203,10 +224,12 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Box>
               <Button
                 onClick={() => {
-                  if (wallet) {
-                    onSubmit('formProgress', 'make offer')
-                  } else {
-                    setOpen(true)
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'make offer')
+                    } else {
+                      setOpen(true)
+                    }
                   }
                 }}
                 variant={'contained'}

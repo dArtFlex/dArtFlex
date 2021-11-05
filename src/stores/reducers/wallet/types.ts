@@ -5,4 +5,5 @@ export interface WalletsStateType {
   fetching: boolean
   error: IError
   chainName?: IChainName
+  chainError?: IChainName
 }

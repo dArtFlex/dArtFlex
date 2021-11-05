@@ -113,6 +113,11 @@ export const selectWalletError = () =>
     (store: stateType) => store.wallet.error,
     (error) => ({ error })
   )
+export const selectWalletChainError = () =>
+  createSelector(
+    (store: stateType) => store.wallet.chainError,
+    (chainError) => ({ chainError })
+  )
 
 // Minting
 export const selectMinting = () =>
