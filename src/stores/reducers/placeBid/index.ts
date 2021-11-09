@@ -8,6 +8,7 @@ const initialState: PlaceBidStateType = {
   data: null,
   bidHistory: [],
   bidAmount: null,
+  bidSuccess: '',
 }
 
 const placeBidSlice = createSlice({
@@ -24,6 +25,7 @@ const placeBidSlice = createSlice({
     placeBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.transacting = false
+      state.data = null
     },
 
     getBidsHistoryRequest: (state) => {
@@ -40,18 +42,19 @@ const placeBidSlice = createSlice({
     },
 
     acceptBidRequest: (state, i) => {
-      state.fetching = true
+      state.transacting = true
     },
     acceptBidSuccess: (
       state,
       { payload }: PayloadAction<{ acceptBidTransaction: PlaceBidStateType['acceptBidTransaction'] }>
     ) => {
-      state.fetching = false
+      state.transacting = false
       state.acceptBidTransaction = payload.acceptBidTransaction
+      state.bidSuccess = 'Successfully accepted bid'
     },
     acceptBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
-      state.fetching = false
+      state.transacting = false
     },
 
     getBidsRequest: (state, i) => {
@@ -66,6 +69,18 @@ const placeBidSlice = createSlice({
       state.fetching = false
     },
 
+    getOffersRequest: (state, i) => {
+      state.fetching = true
+    },
+    getOffersSuccess: (state, { payload }: PayloadAction<{ offers: PlaceBidStateType['offers'] }>) => {
+      state.fetching = false
+      state.offers = payload.offers
+    },
+    getOffersFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
     cancelBidRequest: (state, i) => {
       state.fetching = true
     },
@@ -73,6 +88,25 @@ const placeBidSlice = createSlice({
       state.fetching = false
     },
     cancelBidFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
+    },
+
+    clearBidError: (state) => {
+      state.error = ''
+    },
+
+    clearBidSuccessMessage: (state) => {
+      state.bidSuccess = ''
+    },
+
+    claimBidRequest: (state, i) => {
+      state.fetching = true
+    },
+    claimBidSuccess: (state) => {
+      state.fetching = false
+    },
+    claimBidFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
     },
@@ -99,6 +133,17 @@ export const {
   cancelBidRequest,
   cancelBidSuccess,
   cancelBidFailure,
+
+  clearBidError,
+  clearBidSuccessMessage,
+
+  getOffersRequest,
+  getOffersSuccess,
+  getOffersFailure,
+
+  claimBidRequest,
+  claimBidSuccess,
+  claimBidFailure,
 } = placeBidSlice.actions
 
 export const { reducer } = placeBidSlice

@@ -2,14 +2,27 @@ import React, { useState } from 'react'
 import { Box, Typography, Card, Avatar, Badge, Button, Link } from '@material-ui/core'
 import { PopoverLinks } from 'common'
 import { VerificationIcon, TwitterIcon, LinkIcon } from 'common/icons'
-import { IAsideProps, ILink } from './types'
+import { CopyType, IAsideProps, ILink } from './types'
 import { useStyles } from './styles'
+import image from 'common/icons/cover_photo.png'
+import { shortCutWallet } from '../../../../utils'
 
 export default function Aside(props: IAsideProps) {
   const { avatar, name, userName, walletAddress, content, links, joinedToArtworks } = props
   const classes = useStyles()
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+  const [copyButton, setCopyButton] = useState<CopyType>('Copy')
+
+  function copyLink() {
+    navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+      if (result.state === 'granted' || result.state === 'prompt') {
+        navigator.clipboard.writeText(walletAddress).then(() => {
+          setCopyButton('Copied')
+        })
+      }
+    })
+  }
 
   return (
     <>
@@ -22,24 +35,26 @@ export default function Aside(props: IAsideProps) {
           }}
           badgeContent={<VerificationIcon />}
         >
-          <Avatar src={avatar} className={classes.avatar} />
+          <Avatar src={avatar === 'blank' ? image : avatar} className={classes.avatar} />
         </Badge>
         <Typography className={classes.name}>{name}</Typography>
         <Typography className={classes.userName}>@{userName}</Typography>
         <Box className={classes.wallet}>
-          <Typography className={classes.text}>{walletAddress}</Typography>
-          <Button className={classes.actionText}>Copy</Button>
+          <Typography className={classes.text}>{shortCutWallet(walletAddress)}</Typography>
+          <Button className={classes.actionText} onClick={copyLink}>
+            {copyButton}
+          </Button>
         </Box>
-        <Box pb={11}>
-          <Typography variant={'body1'} color={'textSecondary'}>
+        <Box pb={11} textAlign="center">
+          <Typography variant={'body1'} color={'textSecondary'} className={classes.biography}>
             {content}
           </Typography>
         </Box>
         {links
           ? links.map(({ link, icon, href }: ILink) => (
               <Box key={link} className={classes.linkBox}>
-                {icon}
-                <Link className={classes.link} href={href} underline="none">
+                <Box>{icon}</Box>
+                <Link className={classes.link} href={href} underline="none" target="_blank">
                   {link}
                 </Link>
               </Box>

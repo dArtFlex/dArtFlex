@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) =>
       minWidth: 188,
     },
     select: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : 'unset',
       '&:focus': {
         backgroundColor: theme.palette.background.paper,
       },

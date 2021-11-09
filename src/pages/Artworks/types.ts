@@ -1,3 +1,4 @@
+import { IAssetStatus } from 'types'
 export interface IPromotedArtwork {
   id: number
   author: IPromotedArtworkAuthor
@@ -5,6 +6,9 @@ export interface IPromotedArtwork {
   bid: number
   endDate: number
   url: string
+  tokenContractAddress: string
+  contract: string
+  type: IAssetStatus
 }
 
 export interface IPromotedArtworkAuthor {

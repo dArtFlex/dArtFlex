@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-export const STANDART_TOKEN_ABI: AbiItem[] = [
+export const abiStandardToken: AbiItem[] = [
   {
     constant: true,
     inputs: [],

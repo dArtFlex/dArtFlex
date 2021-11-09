@@ -6,13 +6,21 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 700,
       color: theme.palette.text.primary,
-      padding: theme.spacing(2.5, 5),
-      margin: theme.spacing(0, 1.5),
+      padding: theme.spacing(2.5, 4),
       '&:hover': {
         backgroundColor: 'transparent',
       },
       '& .MuiButton-iconSizeMedium > *:first-child': {
         fontSize: 14,
+      },
+      [theme.breakpoints.down(1024)]: {
+        padding: theme.spacing(2.5, 2),
+      },
+      [theme.breakpoints.down(840)]: {
+        padding: theme.spacing(2.5, 0),
+      },
+      [theme.breakpoints.down(740)]: {
+        minWidth: 36,
       },
     },
     avatar: {

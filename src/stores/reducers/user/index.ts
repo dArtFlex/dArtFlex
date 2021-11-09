@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UserStateType } from './types'
+import { IBiddedOfferedAsset, UserStateType } from './types'
+import { setRandomAvatar, setRandomCover } from '../../../utils'
 
 const initialState: UserStateType = {
   isOpenSideBar: true,
   userAssets: [],
   userCollectedAssets: [],
-  userSolddAssets: [],
+  userSoldAssets: [],
+  userCreatedAssets: [],
   userBids: [],
   promotionAssets: [],
   promotionIds: [],
@@ -15,8 +17,12 @@ const initialState: UserStateType = {
   fetching: false,
   fetchingBids: false,
   fetchingPromo: false,
+  fetchingTrading: false,
   isId: false,
   fetchingId: false,
+  activeBids: [],
+  success: '',
+  biddedOfferedAssets: [],
 }
 
 const userSlice = createSlice({
@@ -49,6 +55,7 @@ const userSlice = createSlice({
     },
     createNewUserSuccess: (state, { payload }: PayloadAction<{ userData: UserStateType['user'] }>) => {
       state.fetching = false
+      state.success = 'Changes saved'
       state.user = payload.userData
     },
     createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
@@ -66,13 +73,15 @@ const userSlice = createSlice({
       }: PayloadAction<{
         userAssets: UserStateType['userAssets']
         userCollectedAssets: UserStateType['userCollectedAssets']
-        userSolddAssets: UserStateType['userSolddAssets']
+        userSoldAssets: UserStateType['userSoldAssets']
+        userCreatedAssets: UserStateType['userCreatedAssets']
       }>
     ) => {
       state.fetching = false
       state.userAssets = payload.userAssets
       state.userCollectedAssets = payload.userCollectedAssets
-      state.userSolddAssets = payload.userSolddAssets
+      state.userSoldAssets = payload.userSoldAssets
+      state.userCreatedAssets = payload.userCreatedAssets
     },
     getUserAssetsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -89,6 +98,24 @@ const userSlice = createSlice({
     getUserBidsFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingBids = false
+    },
+
+    getBidsByUser: (state) => {
+      state.fetching = true
+    },
+
+    getActiveBidsByUserRequest: (state) => {
+      state.fetching = true
+    },
+
+    getActiveBidsByUserSuccess: (state, { payload }: PayloadAction<{ activeBids: UserStateType['activeBids'] }>) => {
+      state.fetching = false
+      state.activeBids = payload.activeBids
+    },
+
+    getActiveBidsByUserFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetching = false
     },
 
     addPromotionRequest: (state, i) => {
@@ -170,18 +197,18 @@ const userSlice = createSlice({
     },
 
     getTradingHistoryRequest: (state, i) => {
-      state.fetching = true
+      state.fetchingTrading = true
     },
     getTradingHistorySuccess: (
       state,
       { payload }: PayloadAction<{ tradingHistoryAll: UserStateType['tradingHistoryAll'] }>
     ) => {
-      state.fetching = false
+      state.fetchingTrading = false
       state.tradingHistoryAll = payload.tradingHistoryAll
     },
     getTradingHistoryFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
-      state.fetching = false
+      state.fetchingTrading = false
     },
 
     checkAssetIdRequest: (state, i) => {
@@ -206,6 +233,46 @@ const userSlice = createSlice({
       state.error = payload
       state.fetchingPromo = false
     },
+
+    validateUserIdRequest: (state, i) => {
+      state.userIdValid = false
+    },
+    validateUserIdSuccess: (state, { payload }: PayloadAction<{ userIdValid: boolean }>) => {
+      state.userIdValid = payload.userIdValid
+    },
+    validateUserIdFailure: (state) => {
+      state.userIdValid = false
+    },
+
+    clearUserError: (state) => {
+      state.error = ''
+    },
+
+    clearUserSuccessMessage: (state) => {
+      state.success = ''
+    },
+
+    deleteUserPhoto: (state, { payload }: PayloadAction<string>) => {
+      if (state.user) {
+        payload === 'profile_image'
+          ? (state.user.profile_image = setRandomAvatar())
+          : (state.user.cover_image = setRandomCover())
+      }
+    },
+
+    getSalesDataByOwnerRequest: (state) => {
+      state.fetching = true
+    },
+
+    getSalesDataByOwnerSuccess: (state, { payload }: PayloadAction<IBiddedOfferedAsset[]>) => {
+      state.fetching = false
+      state.biddedOfferedAssets = payload
+    },
+
+    getSalesDataByOwnerFailure: (state, { payload }: PayloadAction<string>) => {
+      state.fetching = false
+      state.error = payload
+    },
   },
 })
 
@@ -226,6 +293,10 @@ export const {
   getUserBidsRequest,
   getUserBidsSuccess,
   getUserBidsFailure,
+
+  getActiveBidsByUserRequest,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
 
   addPromotionRequest,
   addPromotionSuccess,
@@ -257,6 +328,19 @@ export const {
   updatePromotionRequest,
   updatePromotionSuccess,
   updatePromotionFailure,
+
+  validateUserIdRequest,
+  validateUserIdSuccess,
+  validateUserIdFailure,
+
+  clearUserError,
+  clearUserSuccessMessage,
+
+  deleteUserPhoto,
+
+  getSalesDataByOwnerRequest,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } = userSlice.actions
 
 export const { reducer } = userSlice

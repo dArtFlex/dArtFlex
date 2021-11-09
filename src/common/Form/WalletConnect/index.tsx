@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Box, Typography, Link } from '@material-ui/core'
+import { Box, Typography, Link, useMediaQuery } from '@material-ui/core'
 import { ButtonStartIcon } from 'common'
 import { MetaMaskIcon, WalletConnectIcon } from 'common/icons'
 import { connectMetaMaskRequest, connnectWalletConnectRequest } from 'stores/reducers/wallet'
@@ -11,10 +11,13 @@ interface IWalletConnectProps {
   onClose: () => void
 }
 
+const LINK_METAMASK = 'https://metamask.io/'
+
 export default function WalletConnect(props: IWalletConnectProps) {
   const { onClose } = props
   const classes = useStyles()
   const dispatch = useDispatch()
+  const isDesktop = useMediaQuery('(min-width: 1440px)')
 
   return (
     <Box className={classes.walletConnect}>
@@ -33,19 +36,22 @@ export default function WalletConnect(props: IWalletConnectProps) {
       </Typography>
 
       <Box className={classes.connectBtnContainer}>
-        <ButtonStartIcon
-          onClick={() => {
-            dispatch(connectMetaMaskRequest())
-            onClose()
-          }}
-          variant={'contained'}
-          className={classes.walletConnectBtn}
-          fullWidth
-          disableElevation
-          icon={<MetaMaskIcon />}
-        >
-          MetaMask
-        </ButtonStartIcon>
+        {isDesktop && (
+          <ButtonStartIcon
+            onClick={() => {
+              dispatch(connectMetaMaskRequest())
+              onClose()
+            }}
+            variant={'contained'}
+            className={classes.walletConnectBtn}
+            fullWidth
+            disableElevation
+            icon={<MetaMaskIcon />}
+          >
+            MetaMask
+          </ButtonStartIcon>
+        )}
+
         <ButtonStartIcon
           onClick={() => {
             dispatch(connnectWalletConnectRequest())
@@ -62,7 +68,7 @@ export default function WalletConnect(props: IWalletConnectProps) {
       </Box>
 
       <Typography className={classes.walletConnectDesc}>New to Ethereum?</Typography>
-      <Link href="#" underline="none" className={classes.walletLearnMoreLink}>
+      <Link href={LINK_METAMASK} underline="none" className={classes.walletLearnMoreLink} target="_blank">
         Learn more about wallets
       </Link>
     </Box>

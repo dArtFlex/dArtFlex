@@ -1,7 +1,9 @@
 //@ts-nocheck
 import HttpStatusCodes from 'http-status-codes'
+import { walletService } from 'services/wallet_service'
 import { CommonService } from 'services/common_service'
-import { DOMAIN_TYPE, ERC721Types } from 'constant'
+import { DOMAIN_TYPE, ERC721Types } from 'config/blockchain'
+import { IChainIdFormat } from 'types'
 
 class LazyMintService extends CommonService {
   createTypeData(domainData, primaryType, message, types) {
@@ -24,8 +26,8 @@ class LazyMintService extends CommonService {
     return tokenId
   }
 
-  async generateLazyMint(request, response) {
-    const { contract, uri, creator } = request.body
+  async generateLazyMint(request, response?: Response) {
+    const { contract, uri, creator, royalty } = request.body
 
     if (!contract || !uri || !creator) {
       return response.status(HttpStatusCodes.BAD_REQUEST).send('Missing Data')
@@ -39,15 +41,15 @@ class LazyMintService extends CommonService {
       tokenId: tokenId,
       uri: uri,
       creators: [{ account: creator, value: '10000' }],
-      // Todo: Should be checked royalty
-      royalties: [],
+      royalties: royalty,
     }
 
+    const chainId: IChainIdFormat = walletService.getChainId()
     const data = this.createTypeData(
       {
         name: 'Mint721',
         version: '1',
-        chainId: 4,
+        chainId,
         verifyingContract: contract,
       },
       'Mint721',

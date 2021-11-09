@@ -46,7 +46,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     socialsIcon: {
-      fill: theme.palette.greyDark,
+      color: theme.palette.greyDark,
     },
     btnSubmit: {
       background: theme.palette.primary.main,
@@ -66,11 +66,41 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.green,
       gap: theme.spacing(1.5),
     },
+    helperText: {
+      fontSize: 12,
+    },
+    errorTextHelper: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      color: theme.palette.redMiddle,
+      gap: theme.spacing(1.5),
+    },
     formField: {
       backgroundColor: theme.palette.background.default,
     },
     successIcon: {
       fill: theme.palette.green,
+    },
+    checkbox: {
+      background: 'transparent',
+      margin: 0,
+      '& .MuiFormControlLabel-label': {
+        fontSize: 16,
+        fontWeight: 400,
+      },
+    },
+    collapseHead: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '& > h3': {
+        marginBottom: theme.spacing(0),
+      },
+    },
+    collapseContainer: {
+      marginTop: theme.spacing(8),
     },
   })
 )

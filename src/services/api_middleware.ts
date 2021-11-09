@@ -10,6 +10,7 @@ export default function apiMiddleware({
   data = {},
   headers = {},
   transform = true,
+  auth,
 }: IApiMiddleware): Promise<string> {
   defaults(headers, {
     'Content-Language': 'en',
@@ -24,6 +25,7 @@ export default function apiMiddleware({
     headers,
     params: method === 'GET' && isObject(data) && !isEmpty(data) ? data : {},
     data: transform ? JSON.stringify(data) : data,
+    auth,
   })
     .then((resp: AxiosResponse) => {
       if (!!resp?.data?.error) {
@@ -40,7 +42,7 @@ export default function apiMiddleware({
       return resp.data
     })
     .catch((er: AxiosError) => {
-      const _error = er?.response?.data?.error || er?.message
+      const _error = er?.response?.data?.message || er?.response?.data?.error || er?.message
       // const isToken = localStorage.getItem('token')
 
       if (!!er.message) {

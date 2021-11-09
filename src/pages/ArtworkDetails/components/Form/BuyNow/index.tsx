@@ -8,6 +8,7 @@ import FormDetails from './FormDetails'
 import FormBuy from './FormBuy'
 import FormApproved from './FormApproved'
 import { ApprovedFormState } from '../../../types'
+import { FormMakeOffer, FormApprovedOffer } from '../MakeOffer'
 
 export default function FormAuction() {
   const { values, setFieldValue } = useFormikContext<ApprovedFormState>()
@@ -16,27 +17,41 @@ export default function FormAuction() {
     assetDetails: { marketData },
   } = useSelector(selectAssetDetails())
   const {
-    bid: { bidHistory },
+    bid: { bids },
   } = useSelector(selectBid())
 
   switch (values.formProgress) {
     case 'details':
-      return <FormDetails onSubmit={() => setFieldValue('formProgress', 'buy')} />
+      return <FormDetails onSubmit={setFieldValue} />
     case 'buy':
       return (
         <FormBuy
           onSubmit={() => {
             setFieldValue('formProgress', 'approved')
-            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bidHistory[1].order_id }))
+            dispatch(buyNowRequest({ amount: marketData?.start_price, order_id: bids && bids[0].order_id })) // Should first element
           }}
-          onMakeOffer={() => {
-            setFieldValue('formProgress', 'approved')
-            dispatch(makeOfferRequest({ amount: values.bid }))
+        />
+      )
+    case 'make offer':
+      return (
+        <FormMakeOffer
+          onSubmit={() => {
+            setFieldValue('formProgress', 'confirm offer')
+            dispatch(makeOfferRequest({ amount: values.bid, salesTokenContract: values.salesTokenContract }))
           }}
         />
       )
     case 'approved':
-      return <FormApproved />
+      return <FormApproved onSubmit={() => setFieldValue('formProgress', 'details')} />
+    case 'confirm offer':
+      return (
+        <FormApprovedOffer
+          onSubmit={() => {
+            setFieldValue('bid', '0')
+            setFieldValue('formProgress', 'details')
+          }}
+        />
+      )
     default:
       return null
   }

@@ -1,48 +1,88 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
-import { useSelector } from 'react-redux'
-import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid } from '@material-ui/core'
-import { Popover, Modal, WalletConnect } from 'common'
-import { TabHistory, About } from '../../../components'
-import { EtherscanIcon, OpenseaIcon, IpfsIcon } from 'common/icons'
-import { selectAssetDetails, selectWallet, selectAssetTokenRates, selectBid, selectUser } from 'stores/selectors'
-import { normalizeDate } from 'utils'
+import { useSelector, useDispatch } from 'react-redux'
+import { useRouteMatch } from 'react-router-dom'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Modal, WalletConnect, ConfirmationModal } from 'common'
+import { TabHistory, About, TabBids } from '../../../components'
+import CTAPopover from '../CTAPopover'
+import PriceDropModal from '../PriceDropModal'
+import { MoreHorizontalIcon } from 'common/icons'
+import {
+  selectAssetDetails,
+  selectWallet,
+  selectAssetTokenRates,
+  selectBid,
+  selectUser,
+  selectUserRole,
+  selectListing,
+} from 'stores/selectors'
+import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
+import { chainErrorRequest } from 'stores/reducers/wallet'
+import {
+  normalizeDate,
+  shortCutName,
+  shareWithTwitter,
+  guardChain,
+  getChainKeyByContract,
+  getChainNameById,
+} from 'utils'
 import { useStyles } from '../styles'
+import { IBids, UserDataTypes, AssetTypes, IChainId } from 'types'
+import appConst from '../../../../../config/consts'
+import APP_CONFIG from 'config'
+import { useTokenInfo } from 'hooks'
+import { walletService } from 'services/wallet_service'
 
 interface IDetailsFormProps {
-  onSubmit: () => void
+  onSubmit: (field: string, value: string) => void
 }
 
 const tabsItems = [
   {
-    title: 'Description',
+    title: 'History',
   },
   {
-    title: 'History',
+    title: 'Bids and Offers',
   },
   {
     title: 'About Creator',
   },
+  {
+    title: 'Description',
+  },
 ]
+
+const {
+  STATUSES: { MINTED, SOLD },
+} = appConst
 
 export default function FormBuyDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const { url } = useRouteMatch()
 
   const {
-    bid: { bidHistory },
+    bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const { wallet } = useSelector(selectWallet())
   const { user } = useSelector(selectUser())
+  const { role } = useSelector(selectUserRole())
   const {
-    assetDetails: { creatorData, marketData, imageData, tokenData, ownerData },
+    listing: { fetchingDropPrice, priceChanged, fetchingUnlist },
+  } = useSelector(selectListing())
+  const {
+    assetDetails: { creatorData, marketData, imageData, tokenData, ownerData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const makeOfferStatus = status === SOLD || status === MINTED
 
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+  const [openPriceDropModal, setOpenPriceDropModal] = useState(false)
+  const [openUnlistModal, setOpenUnlistModal] = useState(false)
 
   const now_time = new Date().getTime()
   const isReserveNotMet =
@@ -56,33 +96,54 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
       ? new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
       : 0
 
+  const currentUrl = APP_CONFIG.appUrl + url
+  const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
+
+  const token = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
+  const tokenName = token?.symbol || ''
+
+  function getPriceStatusHeader() {
+    if (status === MINTED) {
+      return 'Reserve price'
+    } else if (status === SOLD) {
+      return 'Sold for'
+    } else {
+      return 'Buy now Price'
+    }
+  }
+
+  useEffect(() => {
+    if (priceChanged) {
+      dispatch(resetChangePrice())
+      setOpenPriceDropModal(false)
+    }
+  }, [priceChanged])
+
+  const chainId = walletService.getChainId()
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
+    if (guardChain(contract, chainId)) {
+      return true
+    }
+    const contractToChainId = getChainKeyByContract(contract)
+    contractToChainId !== undefined && dispatch(chainErrorRequest(getChainNameById(contractToChainId as IChainId)))
+    return false
+  }
+
   return (
     <>
       <Box pt={14}>
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {/*Todo will be implemented in next version*/}
-            {/*{marketData ? (*/}
-            {/*  <>*/}
-            {/*    <IconButton className={classes.borderdIconButton}>*/}
-            {/*      <ShareIcon />*/}
-            {/*    </IconButton>*/}
-            {/*    <IconButton*/}
-            {/*      onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
-            {/*        const target = event.currentTarget as HTMLElement*/}
-            {/*        setAnchorElExtLink(target)*/}
-            {/*      }}*/}
-            {/*      className={classes.borderdIconButton}*/}
-            {/*    >*/}
-            {/*      <ExternalLinkIcon />*/}
-            {/*    </IconButton>*/}
-            {/*  </>*/}
-            {/*) : (*/}
-            {/*  <IconButton className={classes.borderdIconButton}>*/}
-            {/*    <MoreHorizontalIcon />*/}
-            {/*  </IconButton>*/}
-            {/*)}*/}
+            <IconButton
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElExtLink(target)
+              }}
+              className={classes.borderdIconButton}
+            >
+              <MoreHorizontalIcon />
+            </IconButton>
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -92,7 +153,7 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             </Typography>
             <Box className={classes.avatarBox}>
               <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>@{creatorData?.userid}</span>
+              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
             </Box>
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
@@ -102,67 +163,87 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
               </Typography>
               <Box className={classes.avatarBox}>
                 <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.userid !== creatorData?.userid ? `@${ownerData?.userid}` : '@you'}</span>
+                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
               </Box>
             </Box>
           )}
         </Box>
-        <Box className={classes.infoRow} mb={6}>
+        <Box className={classes.infoRow}>
           <Box>
             <Typography variant={'body1'} className={classes.infoTitle}>
-              <span>{marketData ? 'Buy Now Price ' : 'Sold for'}</span>
-              {marketData?.sold && <span>Sold for</span>}
+              <span>{getPriceStatusHeader()}</span>
             </Typography>
-            <Typography variant={'h2'}>{`${startPriceToToken} ETH`}</Typography>
-            {!marketData && <Typography>{`$${(startPriceToToken / tokenRate).toFixed(2)}`}</Typography>}
+            <Typography variant={'h2'}>{status === MINTED ? '-' : `${startPriceToToken} ${tokenName}`}</Typography>
             <span>
               {!isReserveNotMet && marketData?.end_price
-                ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber()}`
                 : null}
               {isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(startPriceToToken).multipliedBy(tokenRate).toNumber()}`
                   : ''
                 : ''}
             </span>
           </Box>
         </Box>
-        {marketData ? (
-          <Button
-            onClick={() => {
-              if (wallet) {
-                onSubmit()
-              } else {
-                setOpen(true)
-              }
-            }}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            className={classes.bitBtn}
+        {!makeOfferStatus ? (
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={user?.id !== ownerData?.id}
           >
-            {`Buy Now for ${startPriceToToken} ETH`}
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'buy')
+                    } else {
+                      setOpen(true)
+                    }
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                disabled={user?.id === ownerData?.id}
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+              >
+                {`Buy Now for ${startPriceToToken} ${tokenName}`}
+              </Button>
+            </Box>
+          </MUITooltip>
         ) : (
-          <Button
-            onClick={() => {
-              if (wallet) {
-                onSubmit()
-              } else {
-                setOpen(true)
-              }
-            }}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            disabled={user?.id === creatorData?.id}
-            className={classes.bitBtn}
-            classes={{ disabled: classes.bitBtnDisabled }}
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={user?.id !== ownerData?.id}
           >
-            Make offer
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'make offer')
+                    } else {
+                      setOpen(true)
+                    }
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                disabled={user?.id === ownerData?.id}
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+              >
+                Make offer
+              </Button>
+            </Box>
+          </MUITooltip>
         )}
 
         <Tabs
@@ -177,13 +258,19 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Tab key={title} label={title} classes={{ selected: classes.activeTabColor }} />
           ))}
         </Tabs>
-        {tab === 0 && (
-          <div className={classes.tabContant}>
+        {tab === 0 && <TabHistory history={bidHistory} />}
+        {tab === 1 && (
+          <TabBids
+            bids={bids as Array<IBids & { userData: UserDataTypes }>}
+            offers={offers as Array<IBids & { userData: UserDataTypes }>}
+          />
+        )}
+        {tab === 2 && <About creator={creatorData} />}
+        {tab === 3 && (
+          <div className={classes.tabContent}>
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <About creator={creatorData} />}
       </Box>
 
       <Modal
@@ -193,49 +280,55 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
         withAside
       />
 
-      <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box className={classes.externalLinkMenu}>
-          <Typography
-            variant="body1"
-            className={clsx(classes.externalLinkMenuItem, classes.linkTitle)}
-            color="textPrimary"
-          >
-            View on
-          </Typography>
-          <Grid container direction="column">
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<EtherscanIcon />}
-            >
-              Ethescan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              Opensea
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<IpfsIcon />}
-            >
-              IPFS
-            </Button>
-          </Grid>
-        </Box>
-      </Popover>
+      <ConfirmationModal
+        open={openUnlistModal}
+        onCancel={() => setOpenUnlistModal(false)}
+        onSubmit={() => {
+          marketData && dispatch(unlistingRequest({ market_id: marketData.id }))
+          setOpenUnlistModal(false)
+        }}
+        title={'Do you want to cancel artwork?'}
+        fetching={fetchingUnlist}
+        btnCancelText={'Nevermind'}
+        btnSubmitText={'Yes, I cancel'}
+      />
+
+      <PriceDropModal
+        open={openPriceDropModal}
+        onCancel={() => setOpenPriceDropModal(false)}
+        onSubmit={(value: string) => {
+          dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
+        }}
+        tokenName={tokenName}
+        fetching={fetchingDropPrice}
+      />
+
+      <CTAPopover
+        anchorEl={anchorElExtLink}
+        onClose={() => setAnchorElExtLink(null)}
+        twitterLink={shareTwitterLink}
+        etherscanLink={tokenData?.etherscan}
+        IPFSLink={imageData?.image}
+        url={currentUrl}
+        creator={user?.id === ownerData?.id}
+        superAdmin={role === 'ROLE_SUPER_ADMIN'}
+        onCancelListing={
+          user?.id === ownerData?.id && marketData?.id !== undefined
+            ? () => {
+                setOpenUnlistModal(true)
+                setAnchorElExtLink(null)
+              }
+            : undefined
+        }
+        onPriceDrop={
+          marketData
+            ? () => {
+                setOpenPriceDropModal(true)
+                setAnchorElExtLink(null)
+              }
+            : undefined
+        }
+      />
     </>
   )
 }

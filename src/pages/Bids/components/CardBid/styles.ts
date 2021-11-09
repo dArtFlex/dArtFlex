@@ -28,6 +28,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      cursor: 'pointer',
+      overflowX: 'hidden',
       [theme.breakpoints.down(380)]: {
         minWidth: 280,
       },
@@ -61,18 +63,26 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     cardBidBids: {
-      flex: '1',
       order: 2,
-      justifyContent: 'center',
       marginLeft: 'auto',
       gap: 16,
       rowGap: 16,
-      display: 'flex',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      '&>div:first-child': {
+        gridColumn: 1,
+      },
+      '&>div:last-child': {
+        gridColumn: 2,
+      },
       [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
       },
       [theme.breakpoints.down(1025)]: {
         marginLeft: 0,
+      },
+      [theme.breakpoints.down(680)]: {
+        minWidth: 'unset',
       },
       [theme.breakpoints.down(550)]: {
         order: 1,
@@ -100,7 +110,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       backgroundColor: theme.palette.grey['50'],
       '&.burn': {
-        backgroundColor: theme.palette.lightPink,
+        backgroundColor: theme.palette.info.light,
       },
     },
     bids: {
@@ -145,6 +155,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     btnView: {
       border: `2px solid ${theme.palette.text.primary}`,
+    },
+    btnCancel: {
+      border: `2px solid ${theme.palette.redMiddle}`,
+      color: theme.palette.redMiddle,
+    },
+    btnAccept: {
+      border: `2px solid ${theme.palette.green}`,
+      color: theme.palette.green,
     },
     btnPlaceBid: {
       color: theme.palette.white,

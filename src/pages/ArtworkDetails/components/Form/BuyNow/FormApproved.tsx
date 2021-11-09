@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { selectBuy, selectMakeOffer } from 'stores/selectors'
 import { useHistory } from 'react-router-dom'
 import clsx from 'clsx'
 import { Box, Typography, Link, Button } from '@material-ui/core'
@@ -6,19 +8,28 @@ import { CircularProgressLoader } from 'common'
 import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
 import { useStyles } from '../styles'
 import routes from 'routes'
+import APP_CONFIG from 'config'
 
-export default function FormApproved() {
+interface IFormApproved {
+  onSubmit: () => void
+}
+
+export default function FormApproved(props: IFormApproved) {
   const classes = useStyles()
-  const [fetch, setFetch] = useState<boolean>(true)
-  const history = useHistory()
+  const { onSubmit } = props
 
-  useEffect(() => {
-    setTimeout(() => {
-      setFetch(false)
-    }, 2000)
-  }, [])
+  const {
+    buy: { transactionHash, fetchingTransacting, error },
+  } = useSelector(selectBuy())
 
-  return fetch ? (
+  const {
+    offer: { fetching },
+  } = useSelector(selectMakeOffer())
+
+  const bscscanTestnetViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${transactionHash}`
+  //const bscscanTestnetViewTx = `${APP_CONFIG.bscscanTestnet}/tx/${transactionHash}`
+
+  return fetchingTransacting || fetching ? (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
@@ -44,27 +55,62 @@ export default function FormApproved() {
             </Box>
           </Box>
         </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
-        </Box>
       </Box>
     </Box>
+  ) : error ? (
+    <SubFormTransaction
+      title={`Your transaction wasn't successful`}
+      icon={null}
+      linkEthescan={bscscanTestnetViewTx}
+      onSubmit={onSubmit}
+    />
   ) : (
+    <SubFormTransaction
+      title={`Your transaction succeeded`}
+      icon={null}
+      linkEthescan={bscscanTestnetViewTx}
+      onSubmit={onSubmit}
+    />
+  )
+}
+
+interface ISubFormTransaction {
+  title: string
+  icon?: React.ReactElement | null
+  linkEthescan: string
+  onSubmit: () => void
+}
+
+function SubFormTransaction(props: ISubFormTransaction) {
+  const classes = useStyles()
+  const { title, icon = <SuccessfullyIcon />, linkEthescan, onSubmit } = props
+
+  const history = useHistory()
+
+  useEffect(() => {
+    setTimeout(() => onSubmit(), 5000)
+  }, [])
+
+  return (
     <Box className={classes.formContainer}>
       <Box className={classes.formContant}>
         <Box mb={4}>
           <Typography variant="h1" component="p">
-            Your transaction succeeded
+            {title}
           </Typography>
         </Box>
-        <Box mb={5.5}>
-          <SuccessfullyIcon />
-        </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
-        </Box>
+        <Box mb={5.5}>{icon}</Box>
+        {linkEthescan.length ? (
+          <Link
+            href={linkEthescan}
+            underline={'none'}
+            target="_blank"
+            className={clsx(classes.externalLink, classes.mb)}
+          >
+            <ExternalLinkIcon />
+            <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
+          </Link>
+        ) : null}
         <Button
           onClick={() => history.push(routes.dashboard)}
           variant={'outlined'}

@@ -9,22 +9,25 @@ export function useComposeTradingData({
   if (!tradingHistoryAll?.length) {
     return []
   }
-  return tradingHistoryAll.map((th) => {
-    return {
-      action: th.status,
-      token: {
-        tokenId: th.item_id,
-        name: th.imageData.name,
-        image: th.imageData.image,
-      },
-      from: th.fromUserData.userid,
-      to: th.toUserData.userid,
-      date: th.created_at,
-      amount: th.bid_amount,
-      expDate: '',
-      etherscanLink: '',
-    }
-  })
+  return tradingHistoryAll
+    .map((th, index) => {
+      return {
+        action: th.status,
+        token: {
+          tokenId: th.item_id,
+          name: th.imageData.name,
+          image: th.imageData.image,
+        },
+        from: th.fromUserData.userid,
+        to: th.toUserData.userid,
+        date: th.created_at,
+        amount: th.bid_amount,
+        expDate: '',
+        etherscanLink: '',
+        item_id: th.item_id,
+      }
+    })
+    .reverse()
 }
 
 export function useTradingHistoryByFilter({

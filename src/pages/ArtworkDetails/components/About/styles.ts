@@ -3,7 +3,21 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      margin: theme.spacing(1, 0),
+      margin: theme.spacing(3, 0),
+      height: 248,
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        width: '0.4em',
+      },
+      '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        margin: theme.spacing(1, 0),
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.grey['400'],
+        borderRadius: 30,
+      },
     },
     header: {
       padding: theme.spacing(3, 4),
@@ -31,6 +45,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     footerText: {
       fontSize: 16,
       fontWeight: 'normal',
+      whiteSpace: 'pre',
     },
   })
 )

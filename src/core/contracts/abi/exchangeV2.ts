@@ -1,8 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-export const AUCTION_CONTRACT_ADDRESS = '0x1e1B6E13F0eB4C570628589e3c088BC92aD4dB45'
-
-export const ABI: AbiItem[] = [
+export const abiExchangeV2: AbiItem[] = [
   {
     anonymous: false,
     inputs: [{ indexed: false, internalType: 'bytes32', name: 'hash', type: 'bytes32' }],

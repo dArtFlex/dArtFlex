@@ -1,8 +1,8 @@
-import { IBaseManagementWorks, IBaseManagementUsers } from 'types'
+import { IBaseManagementWorks, IBaseManagementUsers, IError } from 'types'
 
 export interface ManagementStateType {
   fetching: boolean
-  error: string
+  error: IError
   works: IBaseManagementWorks[]
   users: IBaseManagementUsers[]
 }

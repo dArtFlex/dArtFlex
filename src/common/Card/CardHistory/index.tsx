@@ -2,16 +2,35 @@ import React from 'react'
 import moment from 'moment'
 import { Card, CardHeader, CardContent, Avatar, IconButton, Typography, Box, Link, Divider } from '@material-ui/core'
 import { ExternalLinkIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import { useStyles } from './styles'
 import { ICardHistoryProps, ICardContainerProps } from './types'
-import APP_CONFIG from 'config'
+import { shortCutName, getExplorerScanRootUrl } from 'utils'
+import { useTokenInfo } from 'hooks'
 
 export default function CardHistory(props: ICardHistoryProps) {
-  const { user_id, tx_hash, status, updated_at, userWalletId, bidAmountToToken, bidAmountUsd, userData } = props
+  const {
+    tx_hash,
+    status,
+    updated_at,
+    userWalletId,
+    bidAmountToToken,
+    bidAmountUsd,
+    userData,
+    expireDate,
+    sales_token_contract,
+    contract,
+  } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
-  const etherscanViewTx = `${APP_CONFIG.etherscanRinkeby}/tx/${tx_hash}`
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
+
+  const rootScanUrl = getExplorerScanRootUrl(contract)
+  const scanViewTx = `${rootScanUrl}/tx/${tx_hash}`
+
+  const token = useTokenInfo(sales_token_contract, contract)
+  const tokenName = token?.symbol || ''
 
   switch (status) {
     case 'owend':
@@ -24,7 +43,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={scanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -37,7 +56,7 @@ export default function CardHistory(props: ICardHistoryProps) {
               <Typography className={classes.subheader}>Artwork {status}</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {userData.id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -50,7 +69,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={scanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -61,11 +80,15 @@ export default function CardHistory(props: ICardHistoryProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                Bid{' '}
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {userData.id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -73,7 +96,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {'expDate'}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
             </Box>
           </CardContent>
         </CardContainer>
@@ -84,7 +107,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={scanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -96,13 +119,17 @@ export default function CardHistory(props: ICardHistoryProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
+                  Bid{' '}
+                  <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken}.. ${tokenName}`}</strong>
+                  </CustomTooltip>{' '}
+                  (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {userData.id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -114,7 +141,7 @@ export default function CardHistory(props: ICardHistoryProps) {
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
           action={
             tx_hash ? (
-              <Link href={etherscanViewTx} target="_blank">
+              <Link href={scanViewTx} target="_blank">
                 <IconButton className={classes.borderdIconButton}>
                   <ExternalLinkIcon />
                 </IconButton>
@@ -127,7 +154,7 @@ export default function CardHistory(props: ICardHistoryProps) {
               <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {userData.id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }

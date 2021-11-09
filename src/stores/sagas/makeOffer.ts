@@ -1,32 +1,46 @@
-//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
-import { makeOfferSuccess, makeOfferFailure } from 'stores/reducers/makeOffer'
+import {
+  makeOfferSuccess,
+  makeOfferFailure,
+  cancelOfferFailure,
+  cancelOfferSuccess,
+  acceptOfferSuccess,
+  acceptOfferFailure,
+} from 'stores/reducers/makeOffer'
 import { walletService } from 'services/wallet_service'
 import { placeBidService } from 'services/placebid_service'
 import APP_CONFIG from 'config'
 import { getIdFromString } from 'utils'
-import tokensAll from 'core/tokens'
-import { UserDataTypes } from 'types'
+import { UserDataTypes, AssetTypes, IOrderData, IAcceptBidTransaction } from 'types'
+import { acceptBidService } from 'services/accept_bid_service'
 
-export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ amount: string }>) {
+export function* makeOffer(
+  api: IApi,
+  { payload: { amount, salesTokenContract } }: PayloadAction<{ amount: string; salesTokenContract: string }>
+) {
   try {
-    const chainId: IChainId = walletService.getChainId()
-    const tokenContractWETH = tokensAll[chainId].find((t) => t.symbol === 'WETH').id
-    const { tokenData }: ReturnType<typeof selector> = yield select((state) => state.assets.assetDetails)
-    const { id: userId }: ReturnType<typeof selector> = yield select((state) => state.user.user)
-    const accounts = walletService.getAccoutns()
-    const endPrice = yield web3.utils.toWei(amount, 'ether') // offer amounnt
+    const tokenContract = salesTokenContract
 
-    // Todo: Should only be once, so we need to check if it's approved
-    yield placeBidService.approveToken(accounts[0])
+    const { tokenData }: { tokenData: AssetTypes } = yield select((state) => state.assets.assetDetails)
+    const { id: userId }: { id: number } = yield select((state) => state.user.user)
+    const accounts: string[] = walletService.getAccoutns()
+    const endPrice: string = yield window.web3.utils.toWei(amount, 'ether') // offer amounnt
+
+    const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContract)
+    if (!allowance) {
+      // Should only be once, so we need to check if it's approved
+      yield placeBidService.approveToken(accounts[0], tokenContract)
+    }
+
+    const lazymint = tokenData.lazymint
 
     const tokenCreatorData: UserDataTypes[] = yield call(api, {
-      url: APP_CONFIG.getUserProfileByUserId(tokenData.creator),
+      url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
     })
 
-    const order = yield placeBidService.generateOrder({
+    const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
         tokenId: tokenData.token_id,
@@ -34,12 +48,13 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
         taker: accounts[0],
         price: endPrice,
         uri: tokenData.uri,
-        erc20: tokenContractWETH,
+        erc20: tokenContract,
         signature: tokenData.signature,
+        lazymint,
       },
     })
 
-    const orderId = yield call(api, {
+    const orderId: string = yield call(api, {
       url: APP_CONFIG.createOrder,
       method: 'POST',
       data: {
@@ -71,8 +86,54 @@ export function* makeOffer(api: IApi, { payload: { amount } }: PayloadAction<{ a
       },
     })
 
-    yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) }))
+    yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) as number }))
   } catch (e) {
-    yield put(makeOfferFailure(e.message || e))
+    yield put(makeOfferFailure(e))
+  }
+}
+
+export function* cancelOffer(api: IApi, { payload }: PayloadAction<{ id: number }>) {
+  try {
+    const res: string = yield call(api, {
+      url: APP_CONFIG.cancelOffer,
+      method: 'POST',
+      data: payload,
+    })
+    yield put(cancelOfferSuccess(res))
+  } catch (e) {
+    yield put(cancelOfferFailure(e))
+  }
+}
+
+export function* acceptOffer(
+  api: IApi,
+  {
+    payload,
+  }: PayloadAction<{
+    buyerId: string
+    bid_id: string
+    assetOwnerId: string
+  }>
+) {
+  try {
+    const buyerOrder: IOrderData = yield call(api, {
+      url: APP_CONFIG.getOrderByOrderId(payload.buyerId),
+    })
+
+    const acceptOfferTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(buyerOrder, buyerOrder)
+
+    yield call(api, {
+      url: APP_CONFIG.acceptOffer,
+      method: 'POST',
+      data: {
+        id: payload.bid_id,
+        sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
+        txHash: acceptOfferTransaction.transactionHash,
+      },
+    })
+
+    yield put(acceptOfferSuccess({ acceptOfferTransaction }))
+  } catch (e) {
+    yield put(acceptOfferFailure(e))
   }
 }

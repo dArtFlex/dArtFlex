@@ -1,4 +1,4 @@
-//@ts-nocheck
+//ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select } from 'redux-saga/effects'
@@ -6,7 +6,7 @@ import { buyNowFailure, buyNowSuccess } from 'stores/reducers/buyNow'
 import { walletService } from 'services/wallet_service'
 import { buyNowService } from 'services/buynow_service'
 import APP_CONFIG from 'config'
-import { AssetTypes, IAssetMarketData, IAcceptBidTransaction } from 'types'
+import { AssetTypes, IAssetMarketData, IAcceptBidTransaction, IOrderData } from 'types'
 
 export function* buyNow(
   api: IApi,
@@ -17,16 +17,16 @@ export function* buyNow(
       (state) => state.assets.assetDetails
     )
     const { id: userId }: { id: number } = yield select((state) => state.user.user)
-    const accounts: string = walletService.getAccoutns()
+    const accounts: string[] = walletService.getAccoutns()
 
-    const creatorOrder = yield call(api, {
+    const creatorOrder: IOrderData = yield call(api, {
       url: APP_CONFIG.getOrderByOrderId(order_id),
     })
 
     const acceptBidTransaction: IAcceptBidTransaction = yield buyNowService.performMint(
       creatorOrder,
       accounts[0],
-      `${+amount + +amount * 0.05}` // need to add 5% to amount
+      `${+amount}`
     )
 
     yield call(api, {
@@ -36,14 +36,15 @@ export function* buyNow(
         orderId: '0',
         itemId: tokenData.id,
         userId,
+        sellerId: Number(tokenData.owner),
         marketId: Number(marketData.id),
         bidAmount: amount,
         txHash: acceptBidTransaction.transactionHash,
       },
     })
 
-    yield put(buyNowSuccess({ buyItemId: marketData.id }))
+    yield put(buyNowSuccess({ buyItemId: marketData.id, transactionHash: acceptBidTransaction.transactionHash }))
   } catch (e) {
-    yield put(buyNowFailure(e.message || e))
+    yield put(buyNowFailure({ message: e }))
   }
 }

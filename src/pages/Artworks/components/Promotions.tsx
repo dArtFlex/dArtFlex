@@ -8,11 +8,18 @@ import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Pagination, Navigation, Autoplay } from 'swiper/core'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
 import clsx from 'clsx'
 import routes from '../../../routes'
 import { ArrowLeftIcon, ArrowRightIcon } from 'common/icons'
 import { useHistory } from 'react-router-dom'
+import { useTokenInfo } from 'hooks'
+import image from 'common/icons/cover_photo.png'
+import appConst from 'config/consts'
+
+const {
+  TYPES: { AUCTION },
+} = appConst
 
 export default function Promotions(props: IPromotion) {
   const classes = useStyles()
@@ -26,7 +33,7 @@ export default function Promotions(props: IPromotion) {
     <React.Fragment>
       <Swiper
         autoplay={{
-          delay: 4000,
+          delay: 10000,
           disableOnInteraction: false,
         }}
         navigation={{
@@ -49,10 +56,14 @@ export default function Promotions(props: IPromotion) {
                 <Box className={classes.promotionInfoWrapper}>
                   <Box display="flex" alignItems="center" mb={2}>
                     <div
-                      style={{ backgroundImage: `url(${item.author.profilePhoto})` }}
+                      style={{
+                        backgroundImage: `url(${
+                          item.author.profilePhoto === 'blank' ? image : item.author.profilePhoto
+                        })`,
+                      }}
                       className={classes.promotionAuthorAva}
                     />
-                    <Typography variant={'h4'}>@{item.author.name}</Typography>
+                    <Typography variant={'h4'}>@{shortCutName(item.author.name)}</Typography>
                   </Box>
                   <Typography variant={'h2'} className={classes.promotionCardName}>
                     {item.name}
@@ -60,9 +71,12 @@ export default function Promotions(props: IPromotion) {
                   <Box className={classes.promotionInfo} mt={6}>
                     <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
-                        Current Bid
+                        {item.type === AUCTION ? 'Current Bid' : 'Current price'}
                       </Typography>
-                      <div className={classes.promotionInfoText}>{item.bid} ETH</div>
+                      <div className={clsx(classes.promotionInfoText, classes.promotionInfoBoxPrice)}>
+                        {`${item.bid} `}
+                        <TokenInfo tokenContractAddress={item.tokenContractAddress} contract={item.contract} />
+                      </div>
                     </Box>
                     <Box flexDirection="row" className={classes.promotionInfoBox}>
                       <Typography variant={'body1'} className={classes.promotionTextSecondary}>
@@ -83,7 +97,7 @@ export default function Promotions(props: IPromotion) {
                       classes={{ root: classes.promotionButtonContained }}
                       onClick={() => history.push(`${routes.artworks}/${item.id}`, 'auction')}
                     >
-                      Place a Bid
+                      {item.type === AUCTION ? 'Place a Bid' : 'Buy Now'}
                     </Button>
                     <Button
                       variant="outlined"
@@ -119,5 +133,14 @@ export default function Promotions(props: IPromotion) {
         </Box>
       )}
     </React.Fragment>
+  )
+}
+
+function TokenInfo({ tokenContractAddress, contract }: { tokenContractAddress: string; contract: string }) {
+  const tokenInfo = useTokenInfo(tokenContractAddress, contract)
+  return (
+    <Typography component={'span'} variant={'h3'} style={{ fontSize: 24, lineHeight: 'initial' }}>
+      {tokenInfo?.symbol}
+    </Typography>
   )
 }

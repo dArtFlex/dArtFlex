@@ -10,6 +10,11 @@ export interface IAccountSettings extends ISocials {
   updated_at: string
   role: string | null
   ban: boolean
+  notificationSettings?: INotificationSettings
+}
+
+export interface ICustomAccountSettings extends IAccountSettings {
+  userid: string
 }
 
 export interface ISocials {
@@ -21,4 +26,13 @@ export interface ISocials {
   youtube: string
   tiktok: string
   other_url: string
+}
+
+export interface INotificationSettings {
+  sold: boolean
+  bidActivity: boolean
+  priceChange: boolean
+  auctionExpiration: boolean
+  outbid: boolean
+  successfulPurchase: boolean
 }

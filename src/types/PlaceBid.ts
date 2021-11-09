@@ -1,17 +1,24 @@
 export interface IBidsHistory {
   bid_amount: string
-  created_at: Date | string
   id: number
   item_id: string
   market_id: string
   order_id: string
   bid_id: string
   status: HistoryStatusType
+  created_at: Date | string
   updated_at: Date | string
   user_id: string
   tx_hash: string
+  sales_token_contract: string
 }
 
+export interface IBidsMarketHistory extends Pick<IBidsHistory, 'item_id' | 'user_id' | 'market_id' | 'bid_amount'> {
+  status: HistoryStatusType
+  order_id: number
+}
+
+export type IOrderHistory = Omit<IBidsHistory, 'bid_id' & 'tx_hash'>
 export interface IBids extends Omit<IBidsHistory, 'tx_hash' | 'bid_id' | 'id'> {
   id: IBidsHistory['bid_id']
   user_id: string
@@ -29,6 +36,9 @@ export type HistoryStatusType =
   | 'bidded'
   | 'purchased'
   | 'offered'
+  | 'accepted'
+  | 'canceled offer'
+  | 'claiming'
 
 export interface IOrderData {
   data: string

@@ -4,8 +4,14 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     logo: {
       marginRight: theme.spacing(16),
-      [theme.breakpoints.down(840)]: {
+      [theme.breakpoints.between(1023, 1439)]: {
+        marginRight: theme.spacing(6),
+      },
+      [theme.breakpoints.down(1024)]: {
         marginRight: theme.spacing(4),
+      },
+      [theme.breakpoints.down(840)]: {
+        marginRight: theme.spacing(1.5),
       },
     },
     mobileToolBar: {
@@ -30,12 +36,26 @@ export const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.grey['100']}`,
-      [theme.breakpoints.down(680)]: {
-        marginTop: theme.spacing(6),
+      padding: theme.spacing(0, 10),
+      [theme.breakpoints.down(600)]: {
+        padding: theme.spacing(0, 8),
       },
+      [theme.breakpoints.down(425)]: {
+        padding: theme.spacing(0, 6),
+      },
+      [theme.breakpoints.down(320)]: {
+        padding: theme.spacing(0, 4),
+      },
+    },
+    banner: {
+      background: theme.palette.accentGradient,
+      textAlign: 'center',
+      padding: theme.spacing(1, 0),
+      color: theme.palette.white,
     },
     navTabs: {
       padding: theme.spacing(5, 0),
+      fontSize: 16,
       color: `${theme.palette.text.primary} !important`,
       [theme.breakpoints.down(740)]: {
         padding: theme.spacing(2, 0),
@@ -49,6 +69,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     navTabsContainer: {
       '&>div>div': {
         borderBottom: 'none',
+      },
+      [theme.breakpoints.down(840)]: {
+        margin: '0 auto',
       },
     },
     indicator: {
@@ -64,12 +87,18 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3, 0),
       '&>button+button': {
         marginLeft: theme.spacing(4),
-        [theme.breakpoints.down(780)]: {
-          marginLeft: theme.spacing(2),
+        [theme.breakpoints.down(1439)]: {
+          marginLeft: theme.spacing(1),
+        },
+        [theme.breakpoints.down(840)]: {
+          marginLeft: theme.spacing(1),
+          padding: theme.spacing(2),
+          minWidth: 32,
         },
       },
     },
     buttonWallet: {
+      position: 'relative',
       borderColor: theme.palette.grey['200'],
       backgroundColor: theme.palette.background.default,
       color: theme.palette.primary.contrastText,
@@ -158,8 +187,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: 32,
     },
     createButton: {
+      color: theme.palette.primary.contrastText,
       border: `2px solid ${theme.palette.grey.A100}`,
-      [theme.breakpoints.down(741)]: {
+      [theme.breakpoints.down(810)]: {
         padding: theme.spacing(2),
       },
     },
@@ -227,6 +257,32 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 14,
       fontWeight: 700,
       marginLeft: theme.spacing(4),
+    },
+
+    chainNetwork: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
+      left: 56,
+    },
+    chainNetworkActiveIcon: {
+      width: 3,
+      height: 3,
+      borderRadius: '50%',
+      background: theme.palette.green,
+    },
+    chainNetworkText: {
+      color: theme.palette.green,
+      paddingLeft: theme.spacing(1),
+      fontSize: '0.6rem',
+      letterSpacing: 2,
+    },
+    commingMenu: {
+      color: theme.palette.text.primary,
+      padding: theme.spacing(5, 0, 5, 5),
+      fontSize: 16,
     },
   })
 )

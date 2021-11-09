@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { Box, Typography, Divider, useMediaQuery } from '@material-ui/core'
-import { Field, InputAdornment } from 'common'
+import { Field, InputAdornment, SelectPaymentToken } from 'common'
 import { Instructions } from '../../components'
 import appConst from 'config/consts'
 import { ISellArtwork } from '../../types'
+import { IChaintIdHexFormat, IBaseTokens } from 'types'
+import tokensAll from 'core/tokens'
+import { walletService } from 'services/wallet_service'
 import { useStyles } from './styles'
-import { daysInMonth } from 'utils'
+import { daysInMonth, validatePrice, networkConvertor, supportedNetwork } from 'utils'
 import clsx from 'clsx'
 
 const {
@@ -47,6 +50,16 @@ export default function SetPriceForm() {
   const classes = useStyles()
   const { values, setFieldValue } = useFormikContext<ISellArtwork>()
   const days = daysInMonth(new Date().getDay(), new Date().getFullYear())
+
+  const chainId: number = walletService.getChainId()
+  const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+  const tokens: IBaseTokens[] =
+    supportedNetwork(convertChainId) && typeof convertChainId !== 'number' ? tokensAll[convertChainId] : []
+
+  useEffect(() => {
+    tokens && setFieldValue('salesTokenContract', tokens[0].id)
+  }, [])
 
   useEffect(() => {
     switch (values.futureTime) {
@@ -90,6 +103,7 @@ export default function SetPriceForm() {
                 />
               ),
             }}
+            typeValue="number"
           />
         </>
       ) : (
@@ -103,20 +117,27 @@ export default function SetPriceForm() {
           <Field
             type="input"
             name="price"
+            validate={validatePrice}
             variant="outlined"
             fullWidth={false}
             InputProps={{
               endAdornment: (
                 <InputAdornment
                   position="start"
-                  icon={
-                    <Typography className={classes.mainText} color={'textSecondary'}>
-                      ETH
-                    </Typography>
+                  placeholder={
+                    <SelectPaymentToken
+                      tokens={tokens}
+                      salesTokenContract={values.salesTokenContract}
+                      setSalesTokenContract={(contract) => {
+                        setFieldValue('salesTokenContract', contract)
+                      }}
+                      availableTokens={['0x']}
+                    />
                   }
                 />
               ),
             }}
+            typeValue="number"
           />
         </>
       )}

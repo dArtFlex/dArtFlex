@@ -4,7 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       background: theme.palette.grey['50'],
-      display: 'flex',
+      //will be returned after beta ends
+      // display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       padding: theme.spacing(8),

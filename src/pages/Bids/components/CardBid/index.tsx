@@ -1,54 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { useHistory } from 'react-router-dom'
 import { Card, Box, Typography, Button } from '@material-ui/core'
 import { Image, AvatarUser, Timer } from 'common'
-import { CupIcon, ExclamationCircleIcon } from 'common/icons'
-import { Informer } from '../../components'
+import { ExclamationCircleIcon } from 'common/icons'
 import { ICardBidProps, IBidsProps } from './types'
 import { useStyles } from './styles'
 import routes from '../../../../routes'
-import { normalizeDate } from 'utils'
+import { normalizeDate, shortCutName } from 'utils'
+import { useDispatch } from 'react-redux'
+import { cancelOfferRequest } from '../../../../stores/reducers/makeOffer'
+import { cancelBidRequest, claimBidRequest } from '../../../../stores/reducers/placeBid'
 
 export default function CardBid(props: ICardBidProps) {
   const { bid } = props
   const { image, creator, name, endDate, currentBid, currentBidUsd, yourBid, yourBidUsd, status, itemId } = bid
   const classes = useStyles()
+  const history = useHistory()
 
   const nowTime = new Date().getTime()
   const timeExpired = nowTime > normalizeDate(endDate).getTime()
 
   return (
     <Card classes={{ root: classes.cardBid }}>
-      <Box className={classes.cardBidImage}>
+      <Box className={classes.cardBidImage} onClick={() => history.push(`${routes.artworks}/${itemId}`)}>
         <Image src={image} className={classes.image} />
       </Box>
       <Box className={classes.cardBidInfo}>
         <Box>
           <AvatarUser image={creator.avatar} name={creator.name} fontSize={14} />
           <Typography variant={'h4'} noWrap>
-            {name}
+            {shortCutName(name)}
           </Typography>
         </Box>
         {!timeExpired ? <Timer endDate={normalizeDate(endDate).getTime()} className={classes.timer} /> : null}
       </Box>
       <Box className={classes.cardBidBids}>
-        {status !== 'winner' ? (
-          <>
-            <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
-            <Bids title="Your Bid" bidAmount={yourBid} bidAmountUsd={yourBidUsd} />
-          </>
-        ) : (
-          <Informer
-            iconTitle={<CupIcon />}
-            title={'You are the winner!'}
-            message={
-              'Congratulations, you won the auction for this artwork. Now claim your NFT and add it to your collection!'
-            }
-          />
+        {bid.status !== 'offered' && bid.status !== 'claiming' && (
+          <Bids title="Current Bid" bidAmount={currentBid} bidAmountUsd={currentBidUsd} />
         )}
+
+        <Bids
+          title={bid.status === 'offered' ? 'Your Offer' : 'Your Bid'}
+          bidAmount={yourBid}
+          bidAmountUsd={yourBidUsd}
+        />
       </Box>
-      <CardInfoBox status={status} timeExpired={timeExpired} itemId={itemId} />
+      <CardInfoBox
+        status={status}
+        timeExpired={timeExpired}
+        itemId={itemId}
+        id={bid.id}
+        buyerId={bid.user_id}
+        market_id={bid.market_id}
+        assetOwnerId={bid.assetOwnerId}
+      />
     </Card>
   )
 }
@@ -61,7 +67,7 @@ function Bids(props: IBidsProps) {
       <Typography variant={'body1'} color={'textSecondary'} noWrap>
         {title}
       </Typography>
-      <Typography className={classes.bidsAmount} noWrap>{`${bidAmount} ETH`}</Typography>
+      <Typography className={classes.bidsAmount} noWrap>{`${bidAmount} WETH`}</Typography>
       <Typography>{`$${bidAmountUsd}`}</Typography>
     </Box>
   )
@@ -69,27 +75,63 @@ function Bids(props: IBidsProps) {
 
 function CardInfoBox(props: ICardInfoBox) {
   const classes = useStyles()
-  const { status, timeExpired, itemId } = props
+  const { status, timeExpired, itemId, id, market_id, assetOwnerId, buyerId } = props
   const history = useHistory()
+  const dispatch = useDispatch()
+  const [isButtonShown, setButtonShown] = useState(true)
+
+  const handleCancelOffer = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(cancelOfferRequest({ id: id }))
+  }
+
+  const handleCancelBid = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(cancelBidRequest({ bid_id: id }))
+  }
+
+  const handleClaimBid = ({ id }: { id: number }) => {
+    setButtonShown(false)
+    dispatch(
+      claimBidRequest({
+        item_id: itemId,
+        market_id,
+        bid_id: String(id),
+        assetOwnerId,
+        buyerId,
+      })
+    )
+  }
+
   switch (status) {
-    case 'bid':
     case 'offered':
       return (
         <Box className={classes.cardBidAction}>
-          <Box className={classes.informerHead}>
-            <CupIcon />
-            <Typography variant={'body1'} noWrap>
-              You have a chance to win
-            </Typography>
-          </Box>
-          <Button
-            onClick={() => history.push(routes.artworkDetails.replace(':id', String(itemId)))}
-            className={clsx(classes.btnAction, classes.btnView)}
-            variant={'outlined'}
-            fullWidth
-          >
-            View Artwork
-          </Button>
+          {isButtonShown && (
+            <Button
+              onClick={() => handleCancelOffer({ id: id })}
+              className={clsx(classes.btnAction, classes.btnCancel)}
+              variant={'outlined'}
+              fullWidth
+            >
+              Cancel offer
+            </Button>
+          )}
+        </Box>
+      )
+    case 'bid':
+      return (
+        <Box className={classes.cardBidAction}>
+          {isButtonShown && (
+            <Button
+              className={clsx(classes.btnAction, classes.btnCancel)}
+              variant={'outlined'}
+              fullWidth
+              onClick={() => handleCancelBid({ id: id })}
+            >
+              Cancel bid
+            </Button>
+          )}
         </Box>
       )
     case 'outbid':
@@ -111,12 +153,19 @@ function CardInfoBox(props: ICardInfoBox) {
           </Button>
         </Box>
       )
-    case 'winner':
+    case 'claiming':
       return (
         <Box className={classes.cardBidAction}>
-          <Button className={clsx(classes.btnAction, classes.btnClaimNFT)} variant={'contained'}>
-            Claim your NFT
-          </Button>
+          {isButtonShown && (
+            <Button
+              className={clsx(classes.btnAction, classes.btnAccept)}
+              variant={'outlined'}
+              fullWidth
+              onClick={() => handleClaimBid({ id: id })}
+            >
+              Claim NFT
+            </Button>
+          )}
         </Box>
       )
     default:
@@ -125,7 +174,11 @@ function CardInfoBox(props: ICardInfoBox) {
 }
 
 export interface ICardInfoBox {
+  id: number
   status: ICardBidProps['bid']['status']
   timeExpired: boolean
   itemId: ICardBidProps['bid']['itemId']
+  market_id: string
+  assetOwnerId?: string
+  buyerId?: string
 }

@@ -1,11 +1,16 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
-import { STANDART_TOKEN_ABI } from 'core/contracts/standard_token_contract'
-import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
-import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
+import { walletService } from 'services/wallet_service'
+import { contractAddress } from 'core/contracts/addresses'
+import { abiStandardToken } from 'core/contracts/abi'
+import { ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'config/blockchain'
 import appConst from 'config/consts'
+import { IChainName } from 'types'
+import { getChainKeyByChainId } from 'utils'
 
 export class PlaceBidService extends CommonService {
+  keyChain!: IChainName
+
   random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
   }
@@ -16,7 +21,7 @@ export class PlaceBidService extends CommonService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY',
+          assetClass: lazymint ? 'ERC721_LAZY' : 'ERC721',
           contract: contract,
           tokenId: tokenId,
           uri,
@@ -45,7 +50,13 @@ export class PlaceBidService extends CommonService {
     if (form.assetClass == 'ERC721_LAZY')
       return this.web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
         form.contract,
-        [form.tokenId, form.uri, [[form.creator, '10000']], [], [form.signature]],
+        [
+          form.tokenId,
+          form.uri,
+          [[form.creator, '10000']],
+          [[this.royalty[0].account, this.royalty[0].value]], // Royalty Data
+          [form.signature],
+        ],
       ])
     if (form.assetClass == 'ERC721')
       return this.web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
@@ -70,7 +81,7 @@ export class PlaceBidService extends CommonService {
         },
         value: form.take.value,
       },
-      taker: ZERO,
+      taker: makeAsset.creator,
       takeAsset: {
         assetType: {
           assetClass: this.web3.utils.keccak256(form.make.assetType.assetClass).substring(0, 10),
@@ -101,16 +112,21 @@ export class PlaceBidService extends CommonService {
   // Maket is creater Nft
   // Taker is ZERO
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint } = request.body
+    const { contract, tokenId, uri, maker, taker, erc20, price, signature, lazymint, royalty } = request.body
+    this.royalty = royalty
 
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm, taker)
+
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
+    const contractAuction = chainName && contractAddress[chainName].exchangeV2
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
-        chainId: 4,
-        verifyingContract: AUCTION_CONTRACT_ADDRESS,
+        chainId,
+        verifyingContract: contractAuction,
       },
       'Order',
       order,
@@ -121,18 +137,24 @@ export class PlaceBidService extends CommonService {
     return [{ ...order, signatureOrder }]
   }
 
-  async approveToken(wallet) {
+  async approveToken(wallet: string, tokenAddress: string) {
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
     // Todo: Approve address contract shouldn't be WETH only
-    return await new this.web3.eth.Contract(STANDART_TOKEN_ABI, '0xc778417E063141139Fce010982780140Aa0cD5Ab').methods
-      .approve('0x2fce8435f0455edc702199741411dbcd1b7606ca', appConst.APPROVE_AMOUNT) // Todo: This address should be defined and need to dicuss with solidity dev.
+    return await new this.web3.eth.Contract(abiStandardToken, tokenAddress).methods // Should be Token Address
+      .approve(contractAddress[chainName].erc20TransferProxy, appConst.APPROVE_AMOUNT) // ERC20 transfer proxy address
       .send({
         from: wallet,
       })
   }
 
-  async checkAllowance(wallet, token, contractAddress) {
-    const tokenContract = new this.web3.eth.Contract(human_standard_token_abi, token)
-    const tokenResp = await tokenContract.methods.allowance(wallet, contractAddress).call()
+  async checkAllowance(wallet: string, token: string): boolean {
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
+    const tokenContract = new this.web3.eth.Contract(abiStandardToken, token)
+    const tokenResp = await tokenContract.methods
+      .allowance(wallet, contractAddress[chainName].erc20TransferProxy)
+      .call()
     return Number(tokenResp) > 0
   }
 }

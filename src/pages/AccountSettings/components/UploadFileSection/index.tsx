@@ -4,6 +4,8 @@ import { Box, Typography, Button } from '@material-ui/core'
 import { Image, Field } from 'common'
 import { IAccountSettings } from '../../types'
 import { useStyles } from './styles'
+import { useDispatch } from 'react-redux'
+import { deleteUserPhoto } from '../../../../stores/reducers/user'
 
 interface IUploadFileSectionProps {
   name: keyof IAccountSettings
@@ -18,7 +20,8 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
   const { name, label, description, variant, className, photoUrl } = props
   const classes = useStyles()
 
-  const { values, setFieldValue } = useFormikContext<IAccountSettings>()
+  const { values, setFieldValue, handleSubmit } = useFormikContext<IAccountSettings>()
+  const dispatch = useDispatch()
 
   return (
     <Box className={className} mb={10}>
@@ -35,7 +38,16 @@ export default function UploadFileSection(props: IUploadFileSectionProps) {
           <Typography className={classes.desctiption}>{description}</Typography>
           <Box className={classes.actions}>
             <Field type="upload" name={name} fullWidth={false} />
-            <Button onClick={() => setFieldValue(name, null)} variant={'text'} classes={{ root: classes.deleteBtn }}>
+            <Button
+              onClick={() => {
+                setFieldValue(name, 'blank')
+                dispatch(deleteUserPhoto(name))
+                handleSubmit()
+              }}
+              variant={'text'}
+              classes={{ root: classes.deleteBtn }}
+              disabled={photoUrl?.substring(1, 7) === 'static'}
+            >
               Delete
             </Button>
           </Box>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectAssets, selectWallet, selectPromotion, selectSearch, selectHashtags } from 'stores/selectors'
-import { getHashtagsAllRequest } from 'stores/reducers/assets'
+import { getHashtagsAllRequest, getAssetsAllRequest } from 'stores/reducers/assets'
+import { getPromotionRequest } from 'stores/reducers/user'
 import clsx from 'clsx'
 import {
   Box,
@@ -15,7 +16,7 @@ import {
   Checkbox,
 } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { CircularProgressLoader, PageWrapper, Select, CardAsset } from 'common'
+import { PageWrapper, Select, CardAsset, CardSkeleton } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
@@ -32,6 +33,9 @@ import { useSearchAssets } from 'hooks'
 import appConst from 'config/consts'
 import { IHashtag, IArtworksFiltes } from 'types'
 import { useStyles } from './styles'
+import { creatArrayFromNumber, getTokenSymbolByContracts } from 'utils'
+
+const { INTERVALS } = appConst
 
 const {
   SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
@@ -94,7 +98,7 @@ const allHashtag = {
 export default function Artworks() {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { assets, fetching } = useSelector(selectAssets())
+  const { assets, fetchingAll } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
   const { search } = useSelector(selectSearch())
@@ -144,9 +148,25 @@ export default function Artworks() {
     setHotOnly(false)
   }
 
+  const fetchAssets = () => {
+    dispatch(getAssetsAllRequest())
+    dispatch(getPromotionRequest())
+  }
+
   useEffect(() => {
+    fetchAssets()
     dispatch(getHashtagsAllRequest())
+    const iId = setInterval(() => fetchAssets(), INTERVALS.UPDATE_ASSETS)
+    return () => {
+      clearInterval(iId)
+    }
   }, [])
+
+  useEffect(() => {
+    if (search) {
+      setFilter(FEATURED_ARTWORKS)
+    }
+  }, [search])
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -168,6 +188,9 @@ export default function Artworks() {
                 }}
                 classes={{ select: classes.sortArtworksMenu }}
                 className={classes.sortArtworksMenu}
+                MenuProps={{
+                  classes: { paper: classes.menuList },
+                }}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:
@@ -296,28 +319,32 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {!assets?.length && fetching ? (
-            <CircularProgressLoader />
-          ) : (
-            sortedAssets?.map((asset, i) => (
-              <CardAsset
-                key={i}
-                asset={asset}
-                userWallet={wallet?.accounts[0]}
-                useCardStatus={
-                  filter === LIVE_AUCTION
-                    ? useCardStatusLiveAuction
-                    : filter === BUY_NOW
-                    ? useCardStatusBuyNow
-                    : filter === RESERVE_NOT_MET
-                    ? useCardStatusReserveNotMet
-                    : filter === SOLD
-                    ? useCardStatusSold
-                    : useCardStatusFeaturedArtworks
-                }
-              />
-            ))
-          )}
+          {!assets?.length && fetchingAll
+            ? creatArrayFromNumber(10).map((e, i) => <CardSkeleton key={i} />)
+            : sortedAssets?.map((asset, i) => (
+                <CardAsset
+                  key={i}
+                  asset={{
+                    ...asset,
+                    tokenSymbol: getTokenSymbolByContracts(
+                      asset.tokenData?.contract || asset.contract || '',
+                      asset.sales_token_contract || ''
+                    ),
+                  }}
+                  userWallet={wallet?.accounts[0]}
+                  useCardStatus={
+                    filter === LIVE_AUCTION
+                      ? useCardStatusLiveAuction
+                      : filter === BUY_NOW
+                      ? useCardStatusBuyNow
+                      : filter === RESERVE_NOT_MET
+                      ? useCardStatusReserveNotMet
+                      : filter === SOLD
+                      ? useCardStatusSold
+                      : useCardStatusFeaturedArtworks
+                  }
+                />
+              ))}
         </Box>
       </Box>
     </PageWrapper>

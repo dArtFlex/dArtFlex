@@ -9,20 +9,22 @@ import { useTimer } from 'hooks'
 import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
-import { normalizeDate } from 'utils'
-import ImageViewer from '../../ImageViewer'
+import { normalizeDate, shortCutName } from 'utils'
+import { useSelector } from 'react-redux'
+import { selectWallet } from '../../../stores/selectors'
+import BigNumber from 'bignumber.js'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, userWallet, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
+  const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
 
   const classes = useStyles()
   const history = useHistory()
 
   const { timer } = useTimer(normalizeDate(asset.end_time).getTime() || 0)
+  const { wallet } = useSelector(selectWallet())
   const burnTime = normalizeDate(`${new Date()}`).getTime() + 1000 * 60 * 60
 
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
-  const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   function cardActionEvent() {
     switch (history.location.pathname) {
@@ -30,15 +32,24 @@ export default function CardAsset(props: ICardAssetProps) {
         history.push(`${routes.artworks}/${asset.item_id}`)
         break
       case routes.dashboard:
-        asset.id ? history.push(`${routes.artworks}/${asset.item_id}`) : setIsZoomOpen(true)
+      case routes.sales:
+        asset.id
+          ? history.push(`${routes.artworks}/${asset.item_id}`)
+          : history.push(`${routes.artworks}/${asset.tokenData?.id}`)
     }
   }
 
+  const convertPrice = (price: string) =>
+    new BigNumber(price)
+      .dividedBy(`10e${18 - 1}`)
+      .toNumber()
+      .toFixed(4)
+
   return (
     <>
-      <Card onClick={cardActionEvent} key={asset.item_id} elevation={1} className={classes.root}>
+      <Card key={asset.item_id} elevation={1} className={classes.root} onClick={cardActionEvent}>
         <Box className={classes.artContainer}>
-          <img src={asset.imageData.image} className={classes.cardImage} />
+          {asset.imageData?.image && <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />}
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
         <Box className={classes.artInfoContainer}>
@@ -46,7 +57,9 @@ export default function CardAsset(props: ICardAssetProps) {
             {Boolean(asset.userData) && (
               <Box display={'flex'} mb={4} alignItems={'center'}>
                 <Avatar className={classes.avatar} alt="Avatar" src={asset.userData.profile_image} />
-                <Typography variant={'h4'}>{asset.userData.userid ? `@${asset.userData.userid}` : '@you'}</Typography>
+                <Typography variant={'h4'}>
+                  {asset.userData.userid ? `@${shortCutName(asset.userData.userid)}` : '@you'}
+                </Typography>
               </Box>
             )}
             {withAction && (
@@ -62,7 +75,17 @@ export default function CardAsset(props: ICardAssetProps) {
               </IconButton>
             )}
           </Box>
-          <Typography variant={'h4'}>{asset.imageData.name}</Typography>
+          <Typography variant={'h4'}>{asset.imageData?.name}</Typography>
+          {asset.highest_bid?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest bid {convertPrice(asset.highest_bid[0].bid_amount)} WETH
+            </Typography>
+          ) : null}
+          {asset.highest_offer?.length ? (
+            <Typography className={classes.highestBidInfo}>
+              Highest offer {convertPrice(asset.highest_offer[0].bid_amount)} ETH
+            </Typography>
+          ) : null}
         </Box>
         <CardActions
           status={asset.status}
@@ -70,15 +93,19 @@ export default function CardAsset(props: ICardAssetProps) {
           type={asset.type}
           startPrice={asset.start_price}
           endPrice={asset.end_price}
-          currentPrice={asset.current_price}
+          currentPrice={
+            asset.current_price || (asset.marketplace?.length ? asset.marketplace[0].bid_amount : undefined)
+          }
           sold={asset.sold}
           endTime={asset.end_time}
           burnTime={burnTime}
           timer={timer}
           button={button}
-          userWallet={userWallet}
-          ownerWallet={asset.userData?.wallet}
+          userWallet={wallet?.accounts[0]}
+          ownerWallet={asset.userData.wallet}
           emptyBottom={emptyBottom}
+          sales_token_contract={asset.sales_token_contract}
+          tokenSymbol={asset.tokenSymbol}
         />
       </Card>
 
@@ -88,13 +115,13 @@ export default function CardAsset(props: ICardAssetProps) {
         links={[
           {
             lable: 'Unlist Artwork',
-            onClick: () => menu?.onUnlisted && menu.onUnlisted(),
+            onClick: () => {
+              menu?.onUnlisted && menu.onUnlisted()
+              setAnchor(null)
+            },
           },
         ]}
       />
-      {isZoomOpen && (
-        <ImageViewer open={isZoomOpen} onClose={() => setIsZoomOpen(false)} images={[asset.imageData.image]} />
-      )}
     </>
   )
 }

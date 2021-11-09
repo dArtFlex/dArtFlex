@@ -2,8 +2,14 @@ import React from 'react'
 import moment from 'moment'
 import { Card, CardHeader, CardContent, Avatar, Typography, Box, Link, Divider, Button } from '@material-ui/core'
 import { SuccessIcon } from 'common/icons'
+import { CustomTooltip } from 'common'
 import { useStyles } from './styles'
 import { ICardHistoryBidsProps, ICardContainerProps } from './types'
+import { shortCutName } from '../../../utils'
+import CircularProgressLoader from '../../Loaders'
+import { useSelector } from 'react-redux'
+import { selectBid, selectMakeOffer } from '../../../stores/selectors'
+import { useTokenInfo } from 'hooks'
 
 export default function CardHistoryBids(props: ICardHistoryBidsProps) {
   const {
@@ -18,14 +24,29 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
     bidAmountUsd,
     userData,
     onCancel,
-    onAccept,
+    onAcceptBid,
+    onAcceptOffer,
+    onClaimBid,
+    expireDate,
+    salesTokenContract,
+    contract,
   } = props
   const classes = useStyles()
 
   const updatedDate = moment(updated_at).format('D MMMM YYYY') + ' at ' + moment(updated_at).format('HH:mm')
+  const expFormatDate = moment(expireDate).format('D MMMM YYYY') + ' at ' + moment(expireDate).format('HH:mm')
+
+  const { offer } = useSelector(selectMakeOffer())
+  const { bid } = useSelector(selectBid())
+
+  const token = useTokenInfo(salesTokenContract, contract)
+  const tokenName = token?.symbol || ''
 
   switch (status) {
+    case 'offered':
+    case 'accepted':
     case 'pending':
+    case 'claiming':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
@@ -34,11 +55,15 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           subheader={
             <Box>
               <Typography className={classes.subheader}>
-                Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd}) placed
+                {status === 'offered' ? 'Offer ' : 'Bid '}
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -46,31 +71,116 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
           <CardContent classes={{ root: classes.footer }}>
             <Divider />
             <Box className={classes.footerBox}>
-              <Typography className={classes.footerText}>Exp. Date: {''}</Typography>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
               {onCancel && (
                 <Button
                   classes={{ root: classes.cardBtn }}
                   disableRipple
                   onClick={() => onCancel({ id: Number(id), order_id, user_id, market_id })}
                 >
-                  Cancel Bid
+                  Cancel {status === 'offered' ? 'offer' : 'bid'}
                 </Button>
               )}
-              {onAccept && (
-                <Button
-                  classes={{ root: classes.cardAcceptBtn }}
-                  disableRipple
-                  onClick={onAccept}
-                  startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
-                >
-                  Accept Offer
-                </Button>
+              {onAcceptBid && (
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={onAcceptBid}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Accept Bid
+                    </Button>
+                  )}
+                </>
+              )}
+              {onAcceptOffer && (
+                <>
+                  {offer.fetching ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={onAcceptOffer}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Accept offer
+                    </Button>
+                  )}
+                </>
+              )}
+              {onClaimBid && (
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Claim NFT
+                    </Button>
+                  )}
+                </>
+              )}
+            </Box>
+          </CardContent>
+        </CardContainer>
+      )
+    case 'claiming':
+      return (
+        <CardContainer
+          avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
+          action={null}
+          title={updatedDate}
+          subheader={
+            <Box>
+              <Typography className={classes.subheader}>
+                Bid
+                <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                  <strong>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
+                </CustomTooltip>{' '}
+                (${bidAmountUsd}) placed
+              </Typography>
+              by{' '}
+              <Link underline="none" className={classes.linkText}>
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
+              </Link>
+            </Box>
+          }
+        >
+          <CardContent classes={{ root: classes.footer }}>
+            <Divider />
+            <Box className={classes.footerBox}>
+              <Typography className={classes.footerText}>Exp. Date: {expFormatDate}</Typography>
+              {onClaimBid && (
+                <>
+                  {bid.transacting ? (
+                    <CircularProgressLoader height={'20'} size={20} customWidth={120} />
+                  ) : (
+                    <Button
+                      classes={{ root: classes.cardAcceptBtn }}
+                      disableRipple
+                      onClick={() => onClaimBid({ id: Number(id), buyerId: user_id })}
+                      startIcon={<SuccessIcon className={classes.cardAcceptBtnIcon} />}
+                    >
+                      Claim NFT
+                    </Button>
+                  )}
+                </>
               )}
             </Box>
           </CardContent>
         </CardContainer>
       )
     case 'canceled':
+    case 'canceled offer':
       return (
         <CardContainer
           avatar={<Avatar aria-label={status} className={classes.avatar} src={userData?.profile_image || ''} />}
@@ -80,13 +190,17 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
             <Box>
               <Typography className={classes.subheader}>
                 <span className={classes.strike}>
-                  Bid <strong>{`${bidAmountToToken} ETH`}</strong> (${bidAmountUsd})
+                  Bid{' '}
+                  <CustomTooltip text={`${bidAmountToToken} ${tokenName}`}>
+                    <strong className={classes.strike}>{`${bidAmountToToken.toFixed(4)}.. ${tokenName}`}</strong>
+                  </CustomTooltip>{' '}
+                  (${bidAmountUsd})
                 </span>{' '}
                 canceled
               </Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }
@@ -103,7 +217,7 @@ export default function CardHistoryBids(props: ICardHistoryBidsProps) {
               <Typography className={classes.subheader}>Artwork owned</Typography>
               by{' '}
               <Link underline="none" className={classes.linkText}>
-                {+user_id === userWalletId ? 'you' : `@${userData?.userid || ''}`}
+                {+user_id === userWalletId ? '@you' : `@${shortCutName(userData?.userid) || ''}`}
               </Link>
             </Box>
           }

@@ -2,6 +2,8 @@ import React from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { useHistory } from 'react-router-dom'
+import routes from '../../../../routes'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,13 +11,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       margin: theme.spacing(17, 0),
-      alignItems: 'flex-start',
+      alignItems: 'center',
       textAlign: 'center',
       [theme.breakpoints.down(768)]: {
         margin: theme.spacing(10, 0),
-      },
-      [theme.breakpoints.down(640)]: {
-        width: 280,
       },
     },
     box: {
@@ -40,13 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Empty() {
   const classes = useStyles()
+  const history = useHistory()
   return (
     <Box className={classes.container}>
       <Box className={classes.box}>
         <Typography className={classes.text}>
           Your collection of artworks is empty. Start building your collection by placing bids on artwork.
         </Typography>
-        <Button variant={'outlined'} className={classes.btn}>
+        <Button variant={'outlined'} className={classes.btn} onClick={() => history.push(routes.artworks)}>
           Go to Artworks
         </Button>
       </Box>

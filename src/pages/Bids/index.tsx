@@ -22,6 +22,17 @@ export default function TradingHistory() {
   const { user, userBids, fetchingBids } = useSelector(selectUser())
   const { search } = useSelector(selectSearch())
 
+  function bidStatusToHide(status: string) {
+    switch (status) {
+      case 'winner':
+        return false
+      case 'none':
+        return false
+      default:
+        return true
+    }
+  }
+
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const rateETH = exchangeRates ? exchangeRates[0].rateUsd : 0
 
@@ -52,15 +63,13 @@ export default function TradingHistory() {
     <PageWrapper className={classes.container}>
       <Box>
         <Typography variant={'h1'} color={'textPrimary'}>
-          Bids
+          Bids & Offers
         </Typography>
         {fetchingBids && userBids.length === 0 ? (
           <CircularProgressLoader />
         ) : (
           <Box className={classes.cardBidContainer}>
-            {composeUserBidsData.map((bid, i) => (
-              <CardBid key={i} bid={bid} />
-            ))}
+            {composeUserBidsData.map((bid, i) => bidStatusToHide(bid.status) && <CardBid key={i} bid={bid} />)}
           </Box>
         )}
       </Box>

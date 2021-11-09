@@ -10,6 +10,7 @@ import { ArrowLeftIcon } from 'common/icons'
 import { useTokenInfo } from 'hooks'
 import { ApprovedFormState } from '../../../types'
 import { useStyles } from '../styles'
+import { validatePrice } from '../../../../../utils'
 
 interface IFormAuctionProps {
   onSubmit: () => void
@@ -34,13 +35,10 @@ export default function FormAuction(props: IFormAuctionProps) {
           .plus(new BigNumber(price).multipliedBy(0.1).toNumber())
           .dividedBy(`10e${18 - 1}`)
           .toNumber()
-          .toFixed(5)
-      : new BigNumber(marketData?.start_price)
-          .dividedBy(`10e${18 - 1}`)
-          .toNumber()
-          .toFixed(5)
+      : new BigNumber(marketData?.start_price).dividedBy(`10e${18 - 1}`).toNumber()
 
-  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
+  const tokenInfo = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
+  const tokenName = tokenInfo?.symbol || ''
 
   const tokenBalanceWETH = tokenInfo ? tokensBalances?.find((t) => t.id === tokenInfo.id)?.balance || 0 : 0
   const tokenRate = exchangeRates
@@ -80,7 +78,9 @@ export default function FormAuction(props: IFormAuctionProps) {
             <Typography variant="body1" color="textSecondary">
               You must bid at least
             </Typography>
-            <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${minBid} WETH`}</Typography>
+            <Typography
+              className={clsx(classes.boldText, classes.fontFamilyRoboto)}
+            >{`${minBid} ${tokenName}`}</Typography>
           </Box>
           <Box mb={8.5} className={classes.priceRow}>
             <Typography variant="body1" color="textSecondary">
@@ -88,12 +88,13 @@ export default function FormAuction(props: IFormAuctionProps) {
             </Typography>
             <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${Number(
               tokenBalanceWETH
-            ).toFixed(4)} WETH`}</Typography>
+            ).toFixed(4)} ${tokenName}`}</Typography>
           </Box>
           <Field
             type="input"
             name="bid"
             variant="outlined"
+            validate={validatePrice}
             className={classes.rootField}
             InputProps={{
               endAdornment: (
@@ -101,7 +102,7 @@ export default function FormAuction(props: IFormAuctionProps) {
                   position="start"
                   icon={
                     <Typography className={classes.inputAdorment} color={'textSecondary'}>
-                      WETH
+                      {tokenName}
                     </Typography>
                   }
                 />
@@ -143,7 +144,7 @@ export default function FormAuction(props: IFormAuctionProps) {
             disabled={!disabledBid}
           >
             {!isValidBidValueAmount ? (
-              <Typography className={classes.bitBtnDisabledText}>You don’t have enough WETH</Typography>
+              <Typography className={classes.bitBtnDisabledText}>{`You don’t have enough ${tokenName}`}</Typography>
             ) : (
               'Place a Bid'
             )}

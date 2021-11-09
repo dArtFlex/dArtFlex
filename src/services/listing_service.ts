@@ -1,7 +1,15 @@
 //@ts-nocheck
 import { CommonService } from 'services/common_service'
-import { ZERO, ORDER_TYPES, LAZY_MINT_NFT_ENCODE_PARAMETERS, NFT_ENCODE_PARAMETERS, DOMAIN_TYPE } from 'constant'
-import { AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
+import { walletService } from 'services/wallet_service'
+import {
+  ZERO,
+  ORDER_TYPES,
+  LAZY_MINT_NFT_ENCODE_PARAMETERS,
+  NFT_ENCODE_PARAMETERS,
+  DOMAIN_TYPE,
+} from 'config/blockchain'
+import { contractAddress } from 'core/contracts/addresses'
+import { getChainKeyByChainId } from 'utils'
 
 class ListingService extends CommonService {
   random(min, max) {
@@ -14,7 +22,7 @@ class ListingService extends CommonService {
       maker: maker,
       make: {
         assetType: {
-          assetClass: lazymint ? 'ERC721' : 'ERC721_LAZY', // If lazymint is false then ERC721 and if is true then ERC721_LAZY
+          assetClass: lazymint ? 'ERC721_LAZY' : 'ERC721', // If lazymint is false then ERC721 and if is true then ERC721_LAZY
           contract: contract,
           tokenId: tokenId,
           uri,
@@ -43,7 +51,13 @@ class ListingService extends CommonService {
     if (form.assetClass == 'ERC721_LAZY')
       return this.web3.eth.abi.encodeParameters(LAZY_MINT_NFT_ENCODE_PARAMETERS, [
         form.contract,
-        [form.tokenId, form.uri, [[form.creator, '10000']], [], [form.signature]],
+        [
+          form.tokenId,
+          form.uri,
+          [[form.creator, '10000']],
+          [[this.royalty[0].account, this.royalty[0].value]], // Royalty Data [{ account: creator, value: '1-100' }]
+          [form.signature],
+        ],
       ])
     if (form.assetClass == 'ERC721')
       return this.web3.eth.abi.encodeParameters(NFT_ENCODE_PARAMETERS, [form.contract, form.tokenId])
@@ -98,16 +112,21 @@ class ListingService extends CommonService {
   // Maket is creater Nft
   // Taker is ZERO
   async generateOrder(request) {
-    const { contract, tokenId, uri, maker, erc20, price, signature, lazymint } = request.body
+    const { contract, tokenId, uri, maker, erc20, price, signature, lazymint, royalty } = request.body
+    this.royalty = royalty
 
+    const chainId: number = walletService.getChainId()
+    const chainName = getChainKeyByChainId(chainId)
+    const contractAuction = chainName && contractAddress[chainName].exchangeV2
     const notSignedOrderForm = this.createOrder(maker, contract, tokenId, uri, erc20, price, signature, lazymint)
     const order = await this.encodeOrder(notSignedOrderForm)
+
     const data = this.createTypeData(
       {
         name: 'Exchange',
         version: '2',
-        chainId: 4,
-        verifyingContract: AUCTION_CONTRACT_ADDRESS,
+        chainId,
+        verifyingContract: contractAuction,
       },
       'Order',
       order,

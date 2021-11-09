@@ -2,10 +2,12 @@ import { IBids, UserDataTypes } from 'types'
 
 export interface ICardHistoryBidsProps extends IBids {
   userData: UserDataTypes
-  bidAmountToToken: string
+  bidAmountToToken: number
   bidAmountUsd: string
   userWalletId?: number
-  onAccept?: () => void
+  onAcceptBid?: () => void
+  onAcceptOffer?: () => void
+  onClaimBid?: ({ id, buyerId }: { id: number; buyerId: string }) => void
   onCancel?: ({
     id,
     order_id,
@@ -17,6 +19,9 @@ export interface ICardHistoryBidsProps extends IBids {
     user_id: string
     market_id: string
   }) => void
+  expireDate: Date
+  salesTokenContract?: string
+  contract: string
 }
 
 export interface ICardContainerProps {

@@ -7,7 +7,17 @@ import { modalBgUrl } from 'common/icons/bgUrl'
 import { useStyles } from './styles'
 
 export default function Modal(props: IModalProps) {
-  const { open, onClose = noop, classNames = {}, body, withAside = false, withoutCloseBtn = false, ...rest } = props
+  const {
+    open,
+    onClose = noop,
+    classNames = {},
+    body,
+    withAside = false,
+    withoutCloseBtn = false,
+    disableEscapeKeyDown,
+    disableBackdropClick,
+    ...rest
+  } = props
   const classes = useStyles()
 
   return (
@@ -19,6 +29,8 @@ export default function Modal(props: IModalProps) {
       open={open}
       onClose={onClose}
       {...rest}
+      disableEscapeKeyDown={disableEscapeKeyDown}
+      disableBackdropClick={disableBackdropClick}
     >
       <Box className={classes.paper}>
         {withAside && (

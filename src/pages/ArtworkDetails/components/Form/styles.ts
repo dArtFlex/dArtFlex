@@ -93,20 +93,42 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     bitBtn: {
       padding: theme.spacing(3.5, 5),
-      marginBottom: theme.spacing(6),
+      margin: theme.spacing(6, 0),
     },
     bitBtnDisabled: {
       background: theme.palette.greyMid,
       '&.Mui-disabled': {
         color: theme.palette.white,
+        pointerEvents: 'auto',
+        cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: theme.palette.greyMid,
+        },
       },
     },
     bitBtnDisabledText: {
       color: theme.palette.white,
       lineHeight: 1.75,
     },
-    tabContant: {
-      overflow: 'auto',
+    tabContent: {
+      margin: theme.spacing(3, 0),
+      height: 248,
+      overflowY: 'auto',
+      '&>p': {
+        whiteSpace: 'pre',
+      },
+      '&::-webkit-scrollbar': {
+        width: '0.4em',
+      },
+      '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+        margin: theme.spacing(1, 0),
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.grey['400'],
+        borderRadius: 30,
+      },
     },
     indicator: {
       backgroundColor: theme.palette.text.primary,
@@ -187,6 +209,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
       fontWeight: 'bold',
       color: theme.palette.text.primary,
+      height: 30,
+      margin: 0,
     },
     tokenAmount: {
       fontSize: 30,
@@ -226,7 +250,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     inputAdorment: {
       fontSize: '16px',
       fontWeight: 600,
-      color: theme.palette.greyMid,
+      // color: theme.palette.greyMid,
     },
     learnLink: {
       fontSize: 16,
@@ -246,6 +270,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
     },
     bitViewBtn: {
+      color: theme.palette.text.primary,
+      backgroundColor: theme.palette.background.paper,
       border: `2px solid ${theme.palette.text.primary}`,
       '&:hover': {
         border: `2px solid ${theme.palette.text.primary}`,
@@ -328,6 +354,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
         fontSize: 30,
       },
+      '& .Mui-error': {
+        fontSize: 14,
+        color: theme.palette.redMiddle,
+      },
+    },
+    placeholderText: {
+      fontFamily: ['Roboto Mono', 'Archivo', 'sans-serif'].join(','),
+      fontSize: 30,
     },
     tooltip: {
       '& > p': {
@@ -367,6 +401,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     bottomInfoText: {
       marginTop: theme.spacing(4),
       color: theme.palette.greyDark,
+    },
+    mb: {
+      marginBottom: theme.spacing(5.5),
+    },
+    shareLink: {
+      color: theme.palette.text.primary,
+    },
+    shareLinkDisable: {
+      color: 'rgba(0, 0, 0, 0.26)',
     },
   })
 )

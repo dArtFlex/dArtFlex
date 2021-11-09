@@ -1,15 +1,19 @@
-import React from 'react'
-import { useStyles } from '../styles'
+import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { ApprovedFormState } from '../../../types'
 import { useSelector } from 'react-redux'
-import { selectAssetTokenRates, selectWallet } from '../../../../../stores/selectors'
+import { selectAssetDetails, selectAssetTokenRates, selectUser, selectWallet } from 'stores/selectors'
 import { Box, Button, IconButton, Link, Typography } from '@material-ui/core'
 import { ArrowLeftIcon } from 'common/icons'
-import { Field, InputAdornment, Tooltip } from 'common'
+import { Field, InputAdornment, Tooltip, SelectPaymentToken } from 'common'
+import { IChaintIdHexFormat, IBaseTokens } from 'types'
+import tokensAll from 'core/tokens'
+import { walletService } from 'services/wallet_service'
 import clsx from 'clsx'
 import BigNumber from 'bignumber.js'
-import appConst from '../../../../../config/consts'
+import appConst from 'config/consts'
+import { validatePrice, networkConvertor, supportedNetwork } from 'utils'
+import { useStyles } from '../styles'
 
 const {
   SCHEDULE: { DAYS3, DAYS5, MONTH, SPECIFIC },
@@ -45,12 +49,31 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
   const { wallet } = useSelector(selectWallet())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
   const tokenInfo = exchangeRates ? exchangeRates.find((tR) => tR.id === '0x') : null
-  const tokenBalanceETH = tokenInfo ? wallet?.balance || 0 : 0
+  const tokenBalance = tokenInfo ? wallet?.balance || 0 : 0
   const tokenRate = tokenInfo ? tokenInfo?.rateUsd || 0 : 0
   const bidValueAmountUsd =
     values.bid && parseFloat(`${values.bid}`)
       ? new BigNumber(values.bid).multipliedBy(tokenRate).toNumber().toFixed(2)
       : 0
+
+  const { user } = useSelector(selectUser())
+
+  const {
+    assetDetails: { tokenData },
+  } = useSelector(selectAssetDetails())
+
+  const disabledButton =
+    values.bid > 0 && Boolean(values.acknowledge) && Boolean(values.agreeTerms) && Number(tokenData?.owner) !== user?.id
+
+  const chainId: number = walletService.getChainId()
+  const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+
+  const tokens: IBaseTokens[] =
+    supportedNetwork(convertChainId) && typeof convertChainId !== 'number' ? tokensAll[convertChainId] : []
+
+  useEffect(() => {
+    tokens && setFieldValue('salesTokenContract', tokens[1].id)
+  }, [])
 
   return (
     <Box className={classes.formContainer}>
@@ -74,7 +97,7 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           <Typography variant="body1" color="textSecondary">
             Your Balance
           </Typography>
-          <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalanceETH.toFixed(
+          <Typography className={clsx(classes.boldText, classes.fontFamilyRoboto)}>{`${tokenBalance.toFixed(
             4
           )} ETH`}</Typography>
         </Box>
@@ -83,14 +106,21 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           name="bid"
           variant="outlined"
           className={classes.rootField}
+          validate={validatePrice}
           InputProps={{
             endAdornment: (
               <InputAdornment
                 position="start"
-                icon={
-                  <Typography className={classes.inputAdorment} color={'textSecondary'}>
-                    ETH
-                  </Typography>
+                placeholder={
+                  <SelectPaymentToken
+                    tokens={tokens}
+                    salesTokenContract={values.salesTokenContract}
+                    setSalesTokenContract={(contract) => {
+                      setFieldValue('salesTokenContract', contract)
+                    }}
+                    unavailableTokens={['0x']}
+                    classNames={classes.placeholderText}
+                  />
                 }
               />
             ),
@@ -135,7 +165,8 @@ export default function FormMakeOffer(props: IFormMakeOffer) {
           color={'primary'}
           fullWidth
           disableElevation
-          className={classes.bitBtn}
+          disabled={!disabledButton}
+          className={clsx(classes.bitBtn, !disabledButton && classes.bitBtnDisabled)}
         >
           <Typography>Make offer</Typography>
         </Button>

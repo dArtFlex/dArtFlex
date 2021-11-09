@@ -6,7 +6,7 @@ export interface IModalProps {
   body: JSX.Element
   withAside?: boolean
   withoutCloseBtn?: boolean
-  classNames?: Partial<{
-    root: ModalProps['classes']
-  }>
+  disableEscapeKeyDown?: boolean
+  disableBackdropClick?: boolean
+  classNames?: ModalProps['classes']
 }

@@ -15,15 +15,17 @@ import {
   TableRow,
 } from '@material-ui/core'
 import WorksRow from './WorksRow'
+import WorksRowSkeleton from './WorksRowSkeleton'
 import { useStyles } from '../styles'
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../common/icons'
 import clsx from 'clsx'
 import { useFilterByWorks } from '../lib'
+import { creatArrayFromNumber } from 'utils'
 
 export default function ContentManagementWorks({ search }: { search: string }) {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { works } = useSelector(selectManagement())
+  const { works, fetching } = useSelector(selectManagement())
 
   useEffect(() => {
     dispatch(getAllWorksRequest())
@@ -55,9 +57,11 @@ export default function ContentManagementWorks({ search }: { search: string }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {worksContent.slice((page - 1) * 10, page * 10).map((item, index) => {
-              return <WorksRow row={item} key={index} />
-            })}
+            {fetching
+              ? creatArrayFromNumber(10).map((e, i) => <WorksRowSkeleton key={i} />)
+              : worksContent.slice((page - 1) * 10, page * 10).map((item, index) => {
+                  return <WorksRow row={item} key={index} />
+                })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -68,7 +72,7 @@ export default function ContentManagementWorks({ search }: { search: string }) {
               <ArrowLeftIcon />
             </IconButton>
             <span className={classes.paginationText}>
-              {page} / {worksContent.length / rowsPerPage}
+              {page} / {Math.ceil(worksContent.length / rowsPerPage)}
             </span>
             <IconButton
               onClick={handleNextPage}

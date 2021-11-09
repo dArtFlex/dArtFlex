@@ -1,6 +1,7 @@
 import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
 import appConst from 'config/consts'
 import { IHashtag } from 'types'
+import { IHighestBid, IMarketPlaceInfo } from '../stores/reducers/user/types'
 
 const { TYPES, STATUSES, FILTER_VALUES } = appConst
 export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTimeEntity, IPriceEntity {
@@ -8,7 +9,9 @@ export interface AssetMarketplaceTypes extends IEntity, IDatedEntity, IDatedTime
   type: IAssetType
   platform_fee: string
   sales_token_contract: string
+  contract: string
   sold: boolean
+  ban?: boolean
 }
 
 export interface AssetTypes extends IEntity, IDatedEntity {
@@ -17,22 +20,29 @@ export interface AssetTypes extends IEntity, IDatedEntity {
   uri: string
   creator: string
   owner: string
-  royalty: number
+  royalty: string
   royalty_fee: number
   signature: string
   lazymint: boolean
   ban: boolean
   hashtag: IHashtag[]
+  marketplace: IAssetMarketData[]
+  etherscan: string
 }
 
 export interface AssetDataTypes extends AssetMarketplaceTypes {
   imageData: IImageData
   userData: UserDataTypes
   tokenData?: AssetTypes
+  highest_bid?: IHighestBid[]
+  highest_offer?: IHighestBid[]
+  marketplace?: IMarketPlaceInfo[]
+  isBidded?: boolean
 }
 
 export interface AssetDataTypesWithStatus extends AssetDataTypes {
   status: IAssetStatus
+  tokenSymbol: string
 }
 
 export interface IImageData extends IImageEntity {
@@ -65,26 +75,18 @@ export interface ITokenBalances {
   symbol: string
 }
 
-export interface IBaseTokens {
-  name: string
-  id: string
-  erc20id?: string
-  symbol: string
-  decimals: number
-  logoURI: string
-}
-
 export interface IAssetMarketData {
   id: number
   item_id: string
-  type: string
+  type: IAssetStatus
   start_price: string
   end_price: string
   start_time: string
   end_time: string
   platform_fee: string
   sales_token_contract: string
-  sold: false
+  sold: boolean
   created_at: string
   updated_at: string
+  current_price: string
 }

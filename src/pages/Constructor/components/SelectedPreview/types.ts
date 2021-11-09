@@ -1,5 +1,5 @@
 export interface ISelectedPreview {
-  file0: string
-  file1: string
+  file0: File
+  file1: File
   onClick: () => void
 }

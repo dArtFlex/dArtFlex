@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IInputAdornmentProps {
   icon?: JSX.Element
-  placeholder?: string
+  placeholder?: string | React.ReactNode
   position?: 'start' | 'end'
 }
 

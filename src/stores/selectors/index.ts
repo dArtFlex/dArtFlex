@@ -4,127 +4,192 @@ import { stateType } from 'stores/reducers'
 // Assets
 export const selectAssets = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ assets: { assets, fetching } }: stateType) => ({ assets, fetching })
+    (store: stateType) => store.assets,
+    ({ assets, fetching, fetchingAll }) => ({ assets, fetching, fetchingAll })
   )
 export const selectAssetFromList = (id: string) =>
   createSelector(
-    (store: stateType) => store,
-    ({ assets: { assets } }: stateType) => ({ asset: assets?.find((a) => a.item_id === id) })
+    (store: stateType) => store.assets.assets,
+    (assets) => ({ asset: assets?.find((a) => a.item_id === id) })
   )
 export const selectAssetDetails = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ assets: { assetDetails, fetching } }: stateType) => ({ assetDetails, fetching })
+    (store: stateType) => store.assets,
+    ({ assetDetails, fetching }) => ({ assetDetails, fetching })
   )
 export const selectAssetTokenRates = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ assets: { exchangeRates } }: stateType) => ({ exchangeRates })
+    (store: stateType) => store.assets?.exchangeRates,
+    (exchangeRates) => ({ exchangeRates })
   )
 export const selectHashtags = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ assets: { hashtags } }: stateType) => ({ hashtags })
+    (store: stateType) => store.assets?.hashtags,
+    (hashtags) => ({ hashtags })
   )
 
 // User
 export const selectUser = () =>
   createSelector(
-    (store: stateType) => store,
+    (store: stateType) => store.user,
     ({
-      user: {
-        user,
-        userAssets,
-        userCollectedAssets,
-        userBids,
-        userSolddAssets,
-        fetching,
-        fetchingBids,
-        isId,
-        fetchingId,
-      },
-    }: stateType) => ({
       user,
       userAssets,
       userCollectedAssets,
-      userSolddAssets,
+      userBids,
+      userSoldAssets,
+      userCreatedAssets,
+      fetching,
+      fetchingBids,
+      fetchingTrading,
+      isId,
+      fetchingId,
+      userIdValid,
+      error,
+      activeBids,
+      biddedOfferedAssets,
+    }) => ({
+      user,
+      userAssets,
+      userCollectedAssets,
+      userSoldAssets,
+      userCreatedAssets,
       userBids,
       fetching,
       fetchingBids,
+      fetchingTrading,
       isId,
       fetchingId,
+      userIdValid,
+      error,
+      activeBids,
+      biddedOfferedAssets,
     })
   )
 export const selectUserRole = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ user: { role } }: stateType) => ({ role })
+    (store: stateType) => store.user?.role,
+    (role) => ({ role })
   )
 export const selectPromotion = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ user: { promotionIds, promotionAssets } }: stateType) => ({ promotionIds, promotionAssets })
+    (store: stateType) => store.user,
+    ({ promotionIds, promotionAssets, fetchingPromo }) => ({
+      promotionIds,
+      promotionAssets,
+      fetchingPromo,
+    })
   )
 export const selectSearch = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ user: { search } }: stateType) => ({ search })
+    (store: stateType) => store.user.search,
+    (search) => ({ search })
   )
 export const selectAllUsers = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ user: { userAll } }: stateType) => ({ userAll })
+    (store: stateType) => store.user?.userAll,
+    (userAll) => ({ userAll })
   )
 export const selectAllTradingHistory = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ user: { tradingHistoryAll } }: stateType) => ({ tradingHistoryAll })
+    (store: stateType) => store.user.tradingHistoryAll,
+    (tradingHistoryAll) => ({ tradingHistoryAll })
+  )
+
+export const selectUserSuccessMessage = () =>
+  createSelector(
+    (store: stateType) => store.user.success,
+    (success) => ({ success })
   )
 
 // Wallet
 export const selectWallet = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ wallet: { wallet, tokensBalances } }: stateType) => ({ wallet, tokensBalances })
+    (store: stateType) => store.wallet,
+    ({ wallet, tokensBalances, chainName }) => ({ wallet, tokensBalances, chainName })
   )
 export const selectWalletError = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ wallet: { error } }: stateType) => ({ error })
+    (store: stateType) => store.wallet.error,
+    (error) => ({ error })
+  )
+export const selectWalletChainError = () =>
+  createSelector(
+    (store: stateType) => store.wallet.chainError,
+    (chainError) => ({ chainError })
   )
 
 // Minting
 export const selectMinting = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ minting }: stateType) => ({ minting })
+    (store: stateType) => store.minting,
+    (minting) => ({ minting })
   )
 
 // Listing
 export const selectListing = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ listing }: stateType) => ({ listing })
+    (store: stateType) => store.listing,
+    (listing) => ({ listing })
   )
 
 // Bid
 export const selectBid = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ bid }: stateType) => ({ bid })
+    (store: stateType) => store.bid,
+    (bid) => ({ bid })
+  )
+
+// Buy
+export const selectBuy = () =>
+  createSelector(
+    (store: stateType) => store.buy,
+    (buy) => ({ buy })
+  )
+
+// MakeOffer
+export const selectMakeOffer = () =>
+  createSelector(
+    (store: stateType) => store.offer,
+    (offer) => ({ offer })
   )
 
 // Notifications
 export const selectNotifications = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ notifications: { notifications } }: stateType) => ({ notifications })
+    (store: stateType) => store.notifications.notifications,
+    (notifications) => ({ notifications })
   )
 
 // Management
 export const selectManagement = () =>
   createSelector(
-    (store: stateType) => store,
-    ({ management: { works, users } }: stateType) => ({ works, users })
+    (store: stateType) => store.management,
+    ({ works, users, error, fetching }) => ({ works, users, error, fetching })
+  )
+
+// Constructor
+export const selectConstructor = () =>
+  createSelector(
+    (store: stateType) => store.constructorAI,
+    ({ transfer, priority, endScale, error, fetching, imageUrl }) => ({
+      transfer,
+      priority,
+      endScale,
+      error,
+      fetching,
+      imageUrl,
+    })
+  )
+
+// Album
+export const selectAlbum = () =>
+  createSelector(
+    (store: stateType) => store.album,
+    ({ album, fetching, error, success }) => ({
+      album,
+      fetching,
+      error,
+      success,
+    })
   )

@@ -1,11 +1,13 @@
-import { IBidsHistory, UserDataTypes, IAcceptBidTransaction, IBids } from 'types'
+import { IBidsHistory, UserDataTypes, IAcceptBidTransaction, IBids, IError } from 'types'
 export interface PlaceBidStateType {
   fetching: boolean
   transacting: boolean
-  error: string
+  error: IError
   data: unknown | null
   bidAmount: number | null
   bidHistory: Array<IBidsHistory & { userData: UserDataTypes }>
   bids?: IBids[]
+  offers?: IBids[]
   acceptBidTransaction?: IAcceptBidTransaction
+  bidSuccess: string
 }

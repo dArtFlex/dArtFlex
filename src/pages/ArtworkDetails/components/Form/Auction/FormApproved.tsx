@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useFormikContext } from 'formik'
 import clsx from 'clsx'
-import { Box, Typography, Link, Button } from '@material-ui/core'
+import { Box, Typography, Button } from '@material-ui/core'
 import { CircularProgressLoader } from 'common'
-import { ExternalLinkIcon, SuccessfullyIcon } from 'common/icons'
+import { SuccessfullyIcon } from 'common/icons'
 import { selectBid } from 'stores/selectors'
 import { useStyles } from '../styles'
 import { ApprovedFormState } from '../../../types'
 
-export default function FormApproved() {
+interface IFormApproved {
+  onSubmit: () => void
+}
+
+export default function FormApproved(props: IFormApproved) {
+  const { onSubmit } = props
   const classes = useStyles()
   const {
-    bid: { transacting, error },
+    bid: { transacting, error, data },
   } = useSelector(selectBid())
 
-  if (error.length) {
+  if (!transacting && data === null && ((error as string).length || typeof error === 'object')) {
     return (
       <SubFormTransaction
         title={'Your bid was unplaced!'}
-        desc={`Your bid was unconfirmed on the Ethereum blockchain.`}
+        desc={`Your bid was unconfirmed on network blockchain.`}
         icon={null}
         linkEthescan=""
+        onSubmit={onSubmit}
       />
     )
   }
@@ -41,20 +47,17 @@ export default function FormApproved() {
           <Box className={classes.infoRowIcon}>
             <Typography
               className={classes.warningText}
-            >{`Your bid is being confirmed on the Ethereum blockchain. You are free to leave this page if you like`}</Typography>
+            >{`Your bid is being confirmed on network blockchain. You are free to leave this page if you like`}</Typography>
           </Box>
-        </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Typography className={classes.externalLinkText}>{`View on Ethescan`}</Typography>
         </Box>
       </Box>
     </Box>
   ) : (
     <SubFormTransaction
       title={'Your bid was placed successfully!'}
-      desc={`Your bid was confirmed on the Ethereum blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
+      desc={`Your bid was confirmed on network blockchain. Please keep an eye on this auction in case someone outbids you before it's over`}
       linkEthescan=""
+      onSubmit={onSubmit}
     />
   )
 }
@@ -64,13 +67,18 @@ interface ISubFormTransaction {
   desc: string
   icon?: React.ReactElement | null
   linkEthescan: string
+  onSubmit: () => void
 }
 
 function SubFormTransaction(props: ISubFormTransaction) {
   const classes = useStyles()
-  const { title, desc, icon = <SuccessfullyIcon />, linkEthescan } = props
+  const { title, desc, icon = <SuccessfullyIcon />, onSubmit } = props
 
   const { setFieldValue } = useFormikContext<ApprovedFormState>()
+
+  useEffect(() => {
+    setTimeout(() => onSubmit(), 5000)
+  }, [])
 
   return (
     <Box className={classes.formContainer}>
@@ -85,10 +93,6 @@ function SubFormTransaction(props: ISubFormTransaction) {
           <Box className={classes.infoRowIcon}>
             <Typography className={classes.warningText}>{desc}</Typography>
           </Box>
-        </Box>
-        <Box mb={5.5} className={classes.externalLink}>
-          <ExternalLinkIcon />
-          <Link href={linkEthescan} className={classes.externalLinkText}>{`View on Ethescan`}</Link>
         </Box>
         <Button
           onClick={() => setFieldValue('formProgress', 'details')}

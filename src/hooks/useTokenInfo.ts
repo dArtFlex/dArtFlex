@@ -1,32 +1,40 @@
 import { useState, useEffect, useCallback } from 'react'
 import { walletService } from 'services/wallet_service'
-import { IBaseTokens } from 'types'
+import { IBaseTokens, IChaintIdHexFormat } from 'types'
+import tokensAll from 'core/tokens'
+import { networkConvertor, supportedNetwork, getChainKeyByContract } from 'utils'
 
 interface ITokenInfoProps {
-  tokenContractAddress?: string
-  token?: Pick<IBaseTokens, 'id' | 'decimals' | 'name' | 'symbol'>
+  contract?: string
+  token?: Pick<IBaseTokens, 'id' | 'decimals' | 'name' | 'symbol'> & { tokenChain: IChaintIdHexFormat | number }
 }
 
-const useTokenInfo = (tokenContractAddress: ITokenInfoProps['tokenContractAddress']) => {
+const useTokenInfo = (tokenContractAddress: ITokenInfoProps['contract'], contract: ITokenInfoProps['contract']) => {
   const [token, setToken] = useState<ITokenInfoProps['token']>()
 
   const getTokenInfo = useCallback(async () => {
-    if (tokenContractAddress) {
-      const tokenContract = walletService.getTokenContract(tokenContractAddress)
-      const decimals = await tokenContract.methods.decimals().call()
-      const name = await tokenContract.methods.name().call()
-      const symbol = await tokenContract.methods.symbol().call()
-      setToken({
-        id: tokenContractAddress,
-        decimals,
-        name,
-        symbol,
-      })
+    const chainId: number = walletService.getChainId()
+    const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
+    const chainKey = contract && getChainKeyByContract(contract)
+
+    if (supportedNetwork(convertChainId) && typeof convertChainId !== 'number' && chainKey) {
+      const tokenContract: IBaseTokens | undefined = tokensAll[chainKey].find((t) => t.id === tokenContractAddress)
+      if (tokenContract) {
+        setToken({
+          id: tokenContract.id,
+          decimals: tokenContract.decimals,
+          name: tokenContract.name,
+          symbol: tokenContract.symbol,
+          tokenChain: chainKey,
+        })
+      }
     }
   }, [tokenContractAddress])
 
   useEffect(() => {
-    getTokenInfo()
+    if (tokenContractAddress && contract) {
+      getTokenInfo()
+    }
     return () => {
       getTokenInfo()
     }

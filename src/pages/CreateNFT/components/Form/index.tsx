@@ -7,12 +7,14 @@ import { Box, Card, Button, Avatar, Typography, useMediaQuery } from '@material-
 import { Image, ImageViewer } from 'common'
 import { EyeIcon } from 'common/icons'
 import { lazyMintingRequest, clearLazyMintingData } from 'stores/reducers/minting'
+import { clearListingData } from 'stores/reducers/listing'
 import MintingForm from './MintingForm'
 import ListingForm from './ListingForm'
 import routes from '../../../../routes'
 import { ICreateNFT } from '../../types'
 import { useStyles } from './styles'
 import clsx from 'clsx'
+import { shortCutName } from '../../../../utils'
 
 export default function Form() {
   const classes = useStyles()
@@ -47,6 +49,7 @@ export default function Form() {
 
   const handleViewArtwork = () => {
     dispatch(clearLazyMintingData())
+    dispatch(clearListingData())
   }
 
   return (
@@ -80,7 +83,7 @@ export default function Form() {
                   src={user ? user.profile_image : '/images/avatar/1.jpg'}
                 />
                 <Typography component={'span'} variant={'h4'}>
-                  {user ? `@${user.userid}` : '@'}
+                  {user ? `@${shortCutName(user.userid)}` : '@'}
                 </Typography>
               </Box>
               {values.name.length || data.name ? (

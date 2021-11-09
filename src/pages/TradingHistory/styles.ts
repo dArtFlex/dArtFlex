@@ -32,5 +32,20 @@ export const useStyles = makeStyles((theme: Theme) =>
     tradingHistorySelect: {
       margin: theme.spacing(4, 0),
     },
+    menuList: {
+      top: '260px !important',
+      [theme.breakpoints.down(681)]: {
+        top: '240px !important',
+      },
+      [theme.breakpoints.down(506)]: {
+        top: '320px !important',
+      },
+      [theme.breakpoints.down(358)]: {
+        top: '376px !important',
+      },
+      [theme.breakpoints.down(308)]: {
+        top: '420px !important',
+      },
+    },
   })
 )

@@ -20,25 +20,28 @@ import {
   Fade,
   Icon,
   Typography,
+  FormHelperText,
 } from '@material-ui/core'
-import { Modal, WalletConnect, Chip } from 'common'
-import { closeWarningModal, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch } from 'stores/reducers/user'
+import { Modal, WalletConnect, Chip, CustomTooltip } from 'common'
+import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
+import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
+import ChainMenu from './ChainMenu'
 import ProfileActionMenu from './ProfileActionMenu'
 import NotificationActionMenu from './NotificationActionMenu'
 import { HeaderType, IMenuItems } from './types'
+import { IChainName } from 'types'
 import {
   CurrentDownIcon,
   LogoIcon,
   CoolIcon,
-  SmileyFaceIcon,
   BellIcon,
   SearchIcon,
   BurgerMenuIcon,
   CloseIcon,
+  TimeLineIcon,
   ManIcon,
   ListIcon,
   BidsIcon,
@@ -49,28 +52,33 @@ import {
 } from 'common/icons'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
+import image from '../icons/cover_photo.png'
+import { convertChainName } from 'utils'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { path } = useRouteMatch()
 
-  const { wallet } = useSelector(selectWallet())
-  const { user } = useSelector(selectUser())
+  const { wallet, chainName } = useSelector(selectWallet())
+  const { user, activeBids } = useSelector(selectUser())
   const { notifications } = useSelector(selectNotifications())
 
   const { role } = useSelector(selectUserRole())
   const isUserSuperAdmin = Boolean(role && role === appConst.USER.ROLES.ROLE_SUPER_ADMIN)
 
-  const bids: Array<string> = []
-
   const [anchorElCreateLink, setAnchorElCreateLink] = useState<null | HTMLElement>(null)
+  const [anchorElChainLink, setAnchorElChainLink] = useState<null | HTMLElement>(null)
   const [anchorElProfileLink, setAnchorElProfileLink] = useState<null | HTMLElement>(null)
   const [anchorElNotification, setAnchorElNotification] = useState<null | HTMLElement>(null)
   const [isSearchFieldOpen, setSearchFieldOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileUserStatsOpen, setIsMobileUserStatsOpen] = useState(false)
   const history = useHistory()
+
+  useEffect(() => {
+    user?.id && dispatch(getActiveBidsByUserRequest())
+  }, [user?.id])
 
   const mainLinks = [
     {
@@ -84,7 +92,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       onClick: () => history.push(routes.tradingHistory),
     },
     {
-      lable: 'My Bids',
+      lable: 'My Bids and Offers',
       icon: <BidsIcon />,
       onClick: () => history.push(routes.bids),
     },
@@ -124,6 +132,8 @@ export default function Header({ toggleTheme }: HeaderType) {
   const [open, setOpen] = useState<boolean>(false)
 
   const isMobile = useMediaQuery('(max-width: 680px)')
+  const isLaptop = useMediaQuery('(max-width: 1024px)')
+  const showBidsMessage = useMediaQuery('(max-width: 850px)')
 
   const MenuItems: IMenuItems[] = [
     {
@@ -138,6 +148,17 @@ export default function Header({ toggleTheme }: HeaderType) {
     //   id: 1,
     // },
   ]
+
+  const ComminSoonItems = () => (
+    <>
+      <CustomTooltip text={'Coming soon'}>
+        <Typography className={classes.commingMenu}>Rarible</Typography>
+      </CustomTooltip>
+      <CustomTooltip text={'Coming soon'}>
+        <Typography className={classes.commingMenu}>OpenSea</Typography>
+      </CustomTooltip>
+    </>
+  )
 
   const defaultTabValue =
     MenuItems.find((t) => t.to === path) !== undefined ? MenuItems.find((t) => t.to === path)?.id || 0 : 0
@@ -161,6 +182,9 @@ export default function Header({ toggleTheme }: HeaderType) {
   return (
     <>
       <AppBar position="static" elevation={0} color={'transparent'}>
+        <Box className={classes.banner}>
+          <Typography variant="h4">This project is in beta. DYOR</Typography>
+        </Box>
         <Toolbar className={classes.toolbar}>
           <LogoIcon className={classes.logo} onClick={() => history.push(routes.artworks)} />
           {isMobile ? (
@@ -171,11 +195,10 @@ export default function Header({ toggleTheme }: HeaderType) {
                 <>
                   {wallet !== null && (
                     <IconButton className={classes.iconButton} onClick={() => setIsMobileUserStatsOpen(true)}>
-                      {user?.profile_image ? (
-                        <Avatar src={user?.profile_image} className={classes.avatar} />
-                      ) : (
-                        <SmileyFaceIcon />
-                      )}
+                      <Avatar
+                        src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                        className={classes.avatar}
+                      />
                     </IconButton>
                   )}
 
@@ -204,10 +227,11 @@ export default function Header({ toggleTheme }: HeaderType) {
                   <Tab key={title} label={title} component={NavLink} to={to} className={classes.navTabs} />
                 ))}
               </Tabs>
+              {!isLaptop && <ComminSoonItems />}
               <Box className={classes.buttonContainer}>
-                {Boolean(bids.length) && (
-                  <Chip avatar={`${bids.length}`} endIcon>
-                    Bids
+                {Boolean(activeBids.length) && (
+                  <Chip avatar={`${activeBids.length}`} endIcon>
+                    {showBidsMessage ? '' : 'Bids'}
                   </Chip>
                 )}
                 <SearchField onSearch={handleSearch} />
@@ -221,7 +245,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                   classes={{ root: classes.createButton }}
                   endIcon={<CurrentDownIcon />}
                 >
-                  Create
+                  {showBidsMessage ? '+' : 'Create'}
                 </Button>
                 {wallet === null ? (
                   <Button onClick={() => setOpen(true)} variant={'contained'} color={'primary'} disableElevation>
@@ -233,14 +257,14 @@ export default function Header({ toggleTheme }: HeaderType) {
                       aria-label="notification"
                       onClick={(event: React.SyntheticEvent<EventTarget>) => {
                         const target = event.currentTarget as HTMLElement
-                        notifications.length && setAnchorElNotification(target)
+                        setAnchorElNotification(target)
                       }}
                       className={classes.notificationButton}
                     >
                       <Badge
                         color={'primary'}
                         variant="dot"
-                        invisible={!notifications.length}
+                        invisible={!notifications.length || notifications.every((n) => n.read)}
                         className={classes.notification}
                         classes={{ badge: classes.notificationBadge }}
                       >
@@ -258,20 +282,29 @@ export default function Header({ toggleTheme }: HeaderType) {
                       color={'primary'}
                       disableElevation
                       startIcon={
-                        user?.profile_image ? (
-                          <Avatar src={user.profile_image} className={classes.avatar} />
-                        ) : (
-                          <SmileyFaceIcon />
-                        )
+                        <Avatar
+                          src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                          className={classes.avatar}
+                        />
                       }
                       endIcon={<CurrentDownIcon />}
                     >
                       {`${wallet.balance.toFixed(4)} ${wallet.meta.coinAbbr}`}
+                      <ChainNetwork chainName={chainName} />
                     </Button>
                   </>
                 )}
                 <IconButton onClick={toggleTheme} className={classes.themeIcon}>
                   <CoolIcon />
+                </IconButton>
+                <IconButton
+                  className={classes.borderedIcon}
+                  onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                    const target = event.currentTarget as HTMLElement
+                    setAnchorElChainLink(target)
+                  }}
+                >
+                  <TimeLineIcon />
                 </IconButton>
               </Box>
             </>
@@ -282,7 +315,7 @@ export default function Header({ toggleTheme }: HeaderType) {
       <Modal
         open={open}
         onClose={() => {
-          dispatch(closeWarningModal())
+          dispatch(walletError({ error: '' }))
           setOpen(false)
         }}
         body={
@@ -344,7 +377,6 @@ export default function Header({ toggleTheme }: HeaderType) {
           )}
         </Popper>
       )}
-
       {isMobileUserStatsOpen && (
         <Popper open={isMobileUserStatsOpen} transition className={classes.mobileMenuWrapper}>
           {({ TransitionProps }) => (
@@ -352,11 +384,10 @@ export default function Header({ toggleTheme }: HeaderType) {
               <Paper className={classes.mobileMenuUserInfo}>
                 <Box className={classes.mobileUserStatsWrapper}>
                   <Icon className={classes.profileIcon}>
-                    {user?.profile_image ? (
-                      <Avatar src={user?.profile_image} className={classes.avatar} />
-                    ) : (
-                      <SmileyFaceIcon />
-                    )}
+                    <Avatar
+                      src={user?.profile_image === 'blank' ? image : user?.profile_image}
+                      className={classes.avatar}
+                    />
                   </Icon>
                   <Typography>{`${wallet?.balance.toFixed(4)} ${wallet?.meta.coinAbbr}`}</Typography>
                   <IconButton
@@ -370,7 +401,7 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <Badge
                       color={'primary'}
                       variant="dot"
-                      invisible={false}
+                      invisible={!notifications.length || notifications.every((n) => n.read)}
                       className={classes.notification}
                       classes={{ badge: classes.notificationBadge }}
                     >
@@ -381,10 +412,10 @@ export default function Header({ toggleTheme }: HeaderType) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                {Boolean(bids.length) && (
+                {Boolean(activeBids.length) && (
                   <Box className={classes.mobileUserStatsWrapper}>
                     <Typography variant={'h4'}>Bids</Typography>
-                    <Box className={classes.bidsCount}>1</Box>
+                    <Box className={classes.bidsCount}>{activeBids.length}</Box>
                   </Box>
                 )}
                 <Box className={classes.mobileActionButtonsWrapper}>
@@ -398,6 +429,7 @@ export default function Header({ toggleTheme }: HeaderType) {
         </Popper>
       )}
       <CreateActionMenu anchor={anchorElCreateLink} setAnchor={setAnchorElCreateLink} />
+      <ChainMenu anchor={anchorElChainLink} setAnchor={setAnchorElChainLink} />
       <ProfileActionMenu
         anchor={anchorElProfileLink}
         setAnchor={setAnchorElProfileLink}
@@ -407,4 +439,14 @@ export default function Header({ toggleTheme }: HeaderType) {
       <NotificationActionMenu anchor={anchorElNotification} setAnchor={setAnchorElNotification} />
     </>
   )
+}
+
+function ChainNetwork({ chainName }: { chainName?: IChainName }) {
+  const classes = useStyles()
+  return chainName ? (
+    <Box className={classes.chainNetwork}>
+      <Box className={classes.chainNetworkActiveIcon}></Box>
+      <FormHelperText className={classes.chainNetworkText}>{convertChainName(chainName)}</FormHelperText>
+    </Box>
+  ) : null
 }

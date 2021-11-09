@@ -4,27 +4,21 @@ import { StepConnector } from '@material-ui/core'
 export const ColorlibConnector = withStyles({
   alternativeLabel: {
     top: 10,
-    left: '-50%',
-    '@media(max-width:680px)': {
-      left: '-70%',
+    left: '-60%',
+    '@media(max-width:767px)': {
+      left: '-100%',
     },
-    '@media(max-width:560px)': {
-      left: '-90%',
-    },
-    '@media(max-width:520px)': {
-      left: '-110%',
-    },
-    '@media(max-width:480px)': {
-      left: '-130%',
+    '@media(max-width:486px)': {
+      left: '-120%',
     },
     '@media(max-width:440px)': {
-      left: '-150%',
+      left: '-140%',
     },
-    '@media(max-width:410px)': {
+    '@media(max-width:420px)': {
       left: '-160%',
     },
-    '@media(max-width:380px)': {
-      left: '-155wv',
+    '@media(max-width:360px)': {
+      left: '-140%',
     },
     right: '50%',
   },

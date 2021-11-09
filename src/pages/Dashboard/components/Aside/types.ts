@@ -11,5 +11,7 @@ export interface IAsideProps {
 export interface ILink {
   link?: string
   icon: JSX.Element
-  href: string
+  href?: string
 }
+
+export type CopyType = 'Copy' | 'Copied'

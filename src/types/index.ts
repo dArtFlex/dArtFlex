@@ -6,6 +6,7 @@ export * from './Wallet'
 export * from './PlaceBid'
 export * from './Notifications'
 export * from './Management'
+export * from './Constructor'
 
 export interface IEntity {
   id: number
@@ -31,5 +32,18 @@ export interface IImageEntity extends IDatedEntity, IEntity {
   name: string
 }
 
-export type IChainId = '0x1' | '0x4'
-export type IPaymentToken = 'ETH' | 'WETH'
+export type IError =
+  | string
+  | {
+      message: string
+      code?: number
+    }
+
+export interface IBaseTokens {
+  name: string
+  id: string
+  erc20id?: string
+  symbol: string
+  decimals: number
+  logoURI: string
+}

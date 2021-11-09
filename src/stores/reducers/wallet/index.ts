@@ -36,10 +36,6 @@ const walletSlice = createSlice({
       state.fetching = false
     },
 
-    closeWarningModal: (state) => {
-      state.error = ''
-    },
-
     getTokensBalancesRequest: (state, i) => {
       state.fetching = true
       state.error = ''
@@ -76,6 +72,17 @@ const walletSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    setNetworkChain: (state, { payload }: PayloadAction<{ chainName: WalletsStateType['chainName'] }>) => {
+      state.chainName = payload.chainName
+    },
+
+    walletError: (state, { payload }: PayloadAction<{ error: string }>) => {
+      state.error = payload.error
+    },
+    chainErrorRequest: (state, { payload }: PayloadAction<WalletsStateType['chainError']>) => {
+      state.chainError = payload
+    },
   },
 })
 
@@ -88,8 +95,6 @@ export const {
   connnectWalletConnectSuccess,
   connnectWalletConnectFailure,
 
-  closeWarningModal,
-
   getTokensBalancesRequest,
   getTokensBalancesSuccess,
   getTokensBalancesFailure,
@@ -101,6 +106,11 @@ export const {
   walletsHistoryRequest,
   walletsHistorySuccess,
   walletsHistoryFailure,
+
+  setNetworkChain,
+  walletError,
+
+  chainErrorRequest,
 } = walletSlice.actions
 
 export const { reducer } = walletSlice

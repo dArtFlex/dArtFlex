@@ -6,14 +6,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.grey['100'],
       marginRight: 24,
       width: 262,
-      [theme.breakpoints.between(860, 940)]: {
+      [theme.breakpoints.between(890, 980)]: {
         width: 180,
       },
-      [theme.breakpoints.between(750, 860)]: {
+      [theme.breakpoints.between(750, 890)]: {
         width: 140,
       },
       [theme.breakpoints.between(680, 750)]: {
-        width: 120,
+        width: 110,
         marginRight: theme.spacing(2),
       },
       [theme.breakpoints.down(680)]: {

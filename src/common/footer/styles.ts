@@ -4,8 +4,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     footer: {
       backgroundColor: theme.palette.blackMain,
-      minHeight: '142px',
       padding: theme.spacing(0, 10),
+      minHeight: 142,
       display: 'flex',
       flexWrap: 'wrap',
       alignItems: 'center',
@@ -16,16 +16,34 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down(800)]: {
         flexWrap: 'wrap',
       },
-      [theme.breakpoints.down(910)]: {
-        justifyContent: 'center',
+      [theme.breakpoints.down(1000)]: {
+        justifyContent: 'space-between',
+        padding: theme.spacing(8, 10),
+        alignItems: 'unset',
+        minHeight: 'unset',
       },
-      [theme.breakpoints.down(641)]: {
-        padding: theme.spacing(0, 4),
+      [theme.breakpoints.down(600)]: {
+        padding: theme.spacing(8),
+      },
+      [theme.breakpoints.down(426)]: {
+        padding: theme.spacing(8, 6),
+      },
+      [theme.breakpoints.down(320)]: {
+        padding: theme.spacing(8, 3.5),
       },
     },
     logo: {
       [theme.breakpoints.up(640)]: {
         marginRight: theme.spacing(12),
+      },
+    },
+    socialWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      [theme.breakpoints.down(1000)]: {
+        flexDirection: 'column',
+        rowGap: 10,
+        alignItems: 'unset',
       },
     },
     social: {
@@ -41,17 +59,17 @@ export const useStyles = makeStyles((theme: Theme) =>
           marginRight: theme.spacing(12),
         },
       },
-      // '& a': {
-      //   marginRight: theme.spacing(12),
-      //   [theme.breakpoints.down('md')]: {
-      //     marginRight: theme.spacing(8),
-      //   },
-      // },
-      // [theme.breakpoints.down('md')]: {
-      //   '& a': {
-      //     marginLeft: theme.spacing(2),
-      //   },
-      // },
+      [theme.breakpoints.down(1000)]: {
+        alignItems: 'unset',
+      },
+      [theme.breakpoints.down(375)]: {
+        '& a': {
+          fontSize: 14,
+        },
+      },
+      [theme.breakpoints.down(320)]: {
+        fontSize: 12,
+      },
     },
     linksWrapper: {
       color: theme.palette.spanishGray,
@@ -66,6 +84,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         [theme.breakpoints.down(1280)]: {
           marginLeft: theme.spacing(4),
         },
+        [theme.breakpoints.down(375)]: {
+          fontSize: 14,
+        },
+        [theme.breakpoints.down(320)]: {
+          fontSize: 12,
+        },
         '&:hover': {
           textDecoration: 'underline',
         },
@@ -73,6 +97,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('md')]: {
         width: '100%',
         textAlign: 'center',
+      },
+      [theme.breakpoints.down(1000)]: {
+        flexDirection: 'column',
       },
     },
   })

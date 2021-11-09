@@ -22,7 +22,7 @@ export default function TradingHistory() {
   const [sortValue, setSortValue] = useState('recent')
   const [filterBy, setFilterBy] = useState<IFilterTypes[]>([])
 
-  const { user, fetching } = useSelector(selectUser())
+  const { user, fetchingTrading } = useSelector(selectUser())
   const { tradingHistoryAll } = useSelector(selectAllTradingHistory())
   const { search } = useSelector(selectSearch())
 
@@ -68,6 +68,9 @@ export default function TradingHistory() {
                 onChange={({ target }: React.ChangeEvent<{ value: unknown }>) => {
                   setSortValue(target.value as string)
                 }}
+                MenuProps={{
+                  classes: { paper: classes.menuList },
+                }}
               >
                 <Typography variant={'body1'} color={'textSecondary'} className={classes.menuTitle}>
                   Sort by:
@@ -81,7 +84,7 @@ export default function TradingHistory() {
             </FormControl>
           </Box>
         </Box>
-        {fetching ? <CircularProgressLoader /> : <TradingHistoryTable data={tradingHistoryByFilter} />}
+        {fetchingTrading ? <CircularProgressLoader /> : <TradingHistoryTable data={tradingHistoryByFilter} />}
       </Box>
     </PageWrapper>
   )

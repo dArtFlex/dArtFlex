@@ -6,16 +6,23 @@ import {
   AssetDataTypesWithStatus,
   IAssetStatus,
   IHashtag,
+  IError,
 } from 'types'
 export interface AssetsStateType {
   fetching: boolean
-  error: string
-  assets: null | Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }>
+  fetchingAll: boolean
+  error: IError
+  assets: IUserAssets[] | null
   assetDetails: IAssetDetails
   exchangeRates?: IExchangeRates[]
   hashtags?: IHashtag[]
+  isBidded?: boolean[]
 }
 
+export type IUserAssets = AssetDataTypesWithStatus & {
+  hashtag: IHashtag[]
+  _status?: IAssetStatus
+}
 export interface IAssetDetails {
   status?: IAssetStatus
   imageData: null | AssetDataTypes['imageData']

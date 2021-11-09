@@ -13,6 +13,7 @@ export function useComposeBidsData({
 }) {
   return userBids
     .filter((el) => el.status !== 'listed')
+    .sort((a: IUserBid, b: IUserBid) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
     .map((bid: IUserBid) => {
       const status = useStatus({
         status: bid.status,
@@ -26,18 +27,19 @@ export function useComposeBidsData({
       // When we use only ETH or WETH we know for sure token decimals
       // In this case the same for both is 18
       // If we add some new token to buying system we shold change this logic
-      const currentBidAmount = new BigNumber(bid.marketData?.end_price || '0')
+      const currentBidAmount = new BigNumber(bid.marketData?.current_price || '0')
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
+        .toFixed(5)
       const yourBidAmount = new BigNumber(bid.bid_amount)
         .dividedBy(`10e${18 - 1}`)
         .toNumber()
-        .toFixed(2)
-      const currentBidAmountUsd = new BigNumber(currentBidAmount).multipliedBy(rateETH).toNumber().toFixed(2)
-      const yourBidAmountUsd = new BigNumber(yourBidAmount).multipliedBy(rateETH).toNumber().toFixed(2)
+        .toFixed(5)
+      const currentBidAmountUsd = new BigNumber(currentBidAmount).multipliedBy(rateETH).toNumber().toFixed(5)
+      const yourBidAmountUsd = new BigNumber(yourBidAmount).multipliedBy(rateETH).toNumber().toFixed(5)
 
       return {
+        id: bid.id,
         itemId: bid.item_id,
         tokenId: bid.id,
         image: bid.imageData.image,
@@ -52,6 +54,9 @@ export function useComposeBidsData({
         currentBidUsd: currentBidAmountUsd,
         yourBid: yourBidAmount,
         yourBidUsd: yourBidAmountUsd,
+        market_id: bid.market_id,
+        assetOwnerId: bid.ownerData.user_id,
+        user_id: bid.user_id,
       }
     })
 }
@@ -75,12 +80,14 @@ function useStatus({ status }: IUseStatus): IBidStatus {
       return 'bid'
     case 'offered':
       return 'offered'
+    case 'claiming':
+      return 'claiming'
     default:
       return 'none'
   }
 }
 
-type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered'
+type IBidStatus = 'winner' | 'outbid' | 'bid' | 'none' | 'offered' | 'pending' | 'claiming'
 
 export function useSearchBids({ userBids, search }: { userBids: UserStateType['userBids']; search: string }) {
   if (!userBids) {

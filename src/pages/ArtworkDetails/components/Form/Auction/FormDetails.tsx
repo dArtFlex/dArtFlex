@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import {
   selectAssetDetails,
   selectWallet,
@@ -9,29 +9,38 @@ import {
   selectUserRole,
   selectUser,
   selectBid,
+  selectListing,
 } from 'stores/selectors'
 import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Grid, Divider } from '@material-ui/core'
-import { Popover, Modal, WalletConnect, Tooltip } from 'common'
+import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Modal, WalletConnect, ConfirmationModal } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
-import {
-  TwitterIcon,
-  LinkIcon,
-  EtherscanIcon,
-  OpenseaIcon,
-  IpfsIcon,
-  BurnIcon,
-  EyeIcon,
-  ReportIcon,
-  ArrowCurveIcon,
-  CancelIcon,
-} from 'common/icons'
+import { chainErrorRequest } from 'stores/reducers/wallet'
+import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
+import { BurnIcon, MoreHorizontalIcon } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
+import CTAPopover from '../CTAPopover'
+import PriceDropModal from '../PriceDropModal'
 import { useTimer, useTokenInfo } from 'hooks'
-import { normalizeDate } from 'utils'
+import {
+  normalizeDate,
+  shortCutName,
+  shareWithTwitter,
+  getTokenSymbolByContracts,
+  guardChain,
+  getChainKeyByContract,
+  getChainNameById,
+} from 'utils'
 import { useStyles } from '../styles'
 import routes from 'routes'
-import { IBids, UserDataTypes } from 'types'
+import { AssetTypes, IBids, UserDataTypes, IChainId } from 'types'
+import APP_CONSTS from 'config/consts'
+import APP_CONFIG from 'config'
+import { walletService } from 'services/wallet_service'
+
+const {
+  STATUSES: { MINTED, SOLD },
+} = APP_CONSTS
 
 interface IDetailsFormProps {
   onSubmit: (field: string, value: string) => void
@@ -39,16 +48,16 @@ interface IDetailsFormProps {
 
 const tabsItems = [
   {
-    title: 'Description',
-  },
-  {
     title: 'History',
   },
   {
-    title: 'Bids',
+    title: 'Bids and Offers',
   },
   {
     title: 'About Creator',
+  },
+  {
+    title: 'Description',
   },
 ]
 
@@ -56,18 +65,23 @@ export default function FormDetails(props: IDetailsFormProps) {
   const { onSubmit } = props
   const classes = useStyles()
   const history = useHistory()
+  const { url } = useRouteMatch()
   const dispatch = useDispatch()
   const { wallet } = useSelector(selectWallet())
   const { role } = useSelector(selectUserRole())
   const { user } = useSelector(selectUser())
+  const {
+    listing: { fetchingDropPrice, priceChanged, fetchingUnlist },
+  } = useSelector(selectListing())
 
   const {
-    bid: { bidHistory, bids },
+    bid: { bidHistory, bids, offers },
   } = useSelector(selectBid())
   const {
-    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData },
+    assetDetails: { creatorData, ownerData, marketData, imageData, tokenData, status },
   } = useSelector(selectAssetDetails())
   const { exchangeRates } = useSelector(selectAssetTokenRates())
+  const makeOfferStatus = status === SOLD || status === MINTED
 
   const isSamePerson = wallet?.accounts[0] === ownerData?.wallet
 
@@ -78,14 +92,17 @@ export default function FormDetails(props: IDetailsFormProps) {
   const [tab, setTab] = useState(0)
   const [open, setOpen] = useState<boolean>(false)
   const [anchorElExtLink, setAnchorElExtLink] = useState<null | HTMLElement>(null)
+  const [openPriceDropModal, setOpenPriceDropModal] = useState(false)
+  const [openUnlistModal, setOpenUnlistModal] = useState(false)
 
   const now_time = new Date().getTime()
   const isAuctionExpired = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time
   const isReserveNotMet =
     marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60 * 24
   const ifAuctionEnds = marketData?.end_time && normalizeDate(marketData.end_time).getTime() < now_time + 1000 * 60 * 60
+  const is24HourAction = isReserveNotMet
 
-  const tokenInfo = useTokenInfo(marketData?.sales_token_contract)
+  const tokenInfo = useTokenInfo(marketData?.sales_token_contract, marketData?.contract)
   const tokenRate = exchangeRates
     ? exchangeRates.find((tR) => tokenInfo?.id && tR.id === tokenInfo.id)?.rateUsd || 0
     : 0
@@ -127,23 +144,45 @@ export default function FormDetails(props: IDetailsFormProps) {
     history.push(routes.sellNFT)
   }
 
+  const isBidded = bids && bids.length > 1
+
+  const currentUrl = APP_CONFIG.appUrl + url
+  const shareTwitterLink = shareWithTwitter({ url: currentUrl, desc: imageData?.description })
+
+  const tokenSymbol = getTokenSymbolByContracts(tokenData?.contract || '', marketData?.sales_token_contract || '')
+
+  useEffect(() => {
+    if (priceChanged) {
+      dispatch(resetChangePrice())
+      setOpenPriceDropModal(false)
+    }
+  }, [priceChanged])
+
+  const chainId = walletService.getChainId()
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
+    if (guardChain(contract, chainId)) {
+      return true
+    }
+    const contractToChainId = getChainKeyByContract(contract)
+    contractToChainId !== undefined && dispatch(chainErrorRequest(getChainNameById(contractToChainId as IChainId)))
+    return false
+  }
+
   return (
     <>
       <Box pt={14}>
         <Box className={classes.title}>
           <Typography variant={'h2'}>{imageData?.name}</Typography>
           <Box className={classes.titleBtnCotainer}>
-            {/*Todo will be implemented in next version*/}
-            {/*<IconButton*/}
-            {/*  */}
-            {/*  onClick={(event: React.SyntheticEvent<EventTarget>) => {*/}
-            {/*    const target = event.currentTarget as HTMLElement*/}
-            {/*    setAnchorElExtLink(target)*/}
-            {/*  }}*/}
-            {/*  className={classes.borderdIconButton}*/}
-            {/*>*/}
-            {/*  <MoreHorizontalIcon />*/}
-            {/*</IconButton>*/}
+            <IconButton
+              onClick={(event: React.SyntheticEvent<EventTarget>) => {
+                const target = event.currentTarget as HTMLElement
+                setAnchorElExtLink(target)
+              }}
+              className={classes.borderdIconButton}
+            >
+              <MoreHorizontalIcon />
+            </IconButton>
           </Box>
         </Box>
         <Box className={classes.infoRow} mb={6}>
@@ -153,7 +192,7 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Typography>
             <Box className={classes.avatarBox}>
               <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>@{creatorData?.userid}</span>
+              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
             </Box>
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
@@ -163,7 +202,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               </Typography>
               <Box className={classes.avatarBox}>
                 <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.userid !== creatorData?.userid ? `@${ownerData?.userid}` : '@you'}</span>
+                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
               </Box>
             </Box>
           )}
@@ -174,18 +213,17 @@ export default function FormDetails(props: IDetailsFormProps) {
               <span>{isAuctionExpired && isReserveNotMet ? 'Reserve Price' : 'Current Bid'}</span>
             </Typography>
             <Typography variant={'h2'}>
-              {!isAuctionExpired ? `${priceToToken} ETH` : null}
-              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ETH` : '-') : ''}
+              {!isAuctionExpired ? `${priceToToken} ${tokenSymbol}` : null}
+              {isAuctionExpired ? (marketData?.end_price ? `${priceToToken} ${tokenSymbol}` : '-') : ''}
             </Typography>
             <span>
               {!isAuctionExpired
-                ? marketData?.end_price &&
-                  `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                ? marketData?.end_price && `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber()}`
                 : null}
 
               {isAuctionExpired && isReserveNotMet
                 ? marketData?.end_price
-                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber().toFixed(1)}`
+                  ? `$${new BigNumber(priceToToken).multipliedBy(tokenRate).toNumber()}`
                   : ''
                 : ''}
             </span>
@@ -195,7 +233,7 @@ export default function FormDetails(props: IDetailsFormProps) {
               <Typography variant={'body1'} className={classes.infoTitle}>
                 <span>Sold For</span>
               </Typography>
-              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ETH`}</Typography>
+              <Typography variant={'h2'}>{marketData?.sold && `${priceToToken} ${tokenSymbol}`}</Typography>
               <span>
                 {marketData?.sold &&
                   marketData?.end_price &&
@@ -203,10 +241,11 @@ export default function FormDetails(props: IDetailsFormProps) {
               </span>
             </Box>
           )}
-          {!isAuctionExpired && marketData?.end_time ? (
+          {!isAuctionExpired && marketData?.end_time && !marketData.sold ? (
             <Box>
-              <Tooltip text={`Auction Ending In`} desc={`...`} className={classes.tooltip} />
-
+              <Typography variant={'body1'} className={classes.infoTitle}>
+                <span>Auction Ending In</span>
+              </Typography>
               <Box
                 className={clsx(
                   classes.timerBox,
@@ -226,70 +265,98 @@ export default function FormDetails(props: IDetailsFormProps) {
             </Box>
           ) : null}
         </Box>
-        {isReserveNotMet &&
+        {!is24HourAction &&
+          !isAuctionExpired &&
+          marketData?.start_price &&
+          marketData?.end_price &&
+          marketData.start_price !== marketData.end_price &&
+          !isBidded && (
+            <Box className={classes.warningBox}>
+              <Typography component="span" className={classes.warningText}>
+                Once a bid has been placed and the reserve price has been met, this artwork will begin.
+              </Typography>
+            </Box>
+          )}
+        {is24HourAction &&
+          status !== SOLD &&
           !isAuctionExpired &&
           marketData?.start_price &&
           marketData?.end_price &&
           marketData.start_price !== marketData.end_price && (
             <Box className={classes.warningBox}>
               <Typography component="span" className={classes.warningText}>
-                Once a bid has been placed and the reserve price has been met, a 24 hour auction for this artwork will
-                begin.
+                The auction is ending very soon!
               </Typography>
             </Box>
           )}
-        {ifAuctionEnds && !isAuctionExpired ? (
+        {ifAuctionEnds && !isAuctionExpired && status !== SOLD ? (
           <Box className={classes.warningBox}>
             <Typography component="span" className={classes.warningText}>
-              This auction is ending very soon! If you were to place a bid at this time there is a high chance that it
-              would result in an error.
+              If you were to place a bid at this time there is a high chance that it would result in an error.
             </Typography>
           </Box>
         ) : null}
-        {!isAuctionExpired ? (
-          <Button
-            onClick={() => {
-              if (isSamePerson) {
-                // Secondary sell
-                return handleListed()
-              }
-              if (wallet) {
-                onSubmit('formProgress', 'auction')
-              } else {
-                setOpen(true)
-              }
-            }}
-            variant={ifAuctionEnds ? 'outlined' : 'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            className={classes.bitBtn}
-            classes={{ disabled: classes.bitBtnDisabled }}
-            disabled={!isSamePerson && Boolean(isAuctionExpired)}
+
+        {!makeOfferStatus ? (
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={!isSamePerson}
           >
-            {ifAuctionEnds && !isAuctionExpired
-              ? 'I understand, let me bid anyway'
-              : isSamePerson
-              ? 'Sell'
-              : 'Place a Bid'}
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (isSamePerson) {
+                      // Secondary sell
+                      return handleListed()
+                    }
+                    if (wallet) {
+                      onSubmit('formProgress', 'auction')
+                    } else {
+                      setOpen(true)
+                    }
+                  }
+                }}
+                variant={ifAuctionEnds ? 'outlined' : 'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+                disabled={isSamePerson || Boolean(isAuctionExpired)}
+              >
+                {ifAuctionEnds && !isAuctionExpired ? 'I understand, let me bid anyway' : 'Place a Bid'}
+              </Button>
+            </Box>
+          </MUITooltip>
         ) : (
-          <Button
-            onClick={() => {
-              if (wallet) {
-                onSubmit('formProgress', 'make offer')
-              }
-            }}
-            variant={'contained'}
-            color={'primary'}
-            fullWidth
-            disableElevation
-            className={classes.bitBtn}
-            classes={{ disabled: classes.bitBtnDisabled }}
-            disabled={isSamePerson}
+          <MUITooltip
+            title={'You own this item'}
+            classes={{ tooltip: classes.boldText }}
+            disableHoverListener={!isSamePerson}
           >
-            Make offer
-          </Button>
+            <Box>
+              <Button
+                onClick={() => {
+                  if (onGuardChain({ chainId, contract: tokenData?.contract || '' })) {
+                    if (wallet) {
+                      onSubmit('formProgress', 'make offer')
+                    }
+                  }
+                }}
+                variant={'contained'}
+                color={'primary'}
+                fullWidth
+                disableElevation
+                className={classes.bitBtn}
+                classes={{ disabled: classes.bitBtnDisabled }}
+                disabled={isSamePerson}
+              >
+                Make offer
+              </Button>
+            </Box>
+          </MUITooltip>
         )}
 
         <Tabs
@@ -304,14 +371,19 @@ export default function FormDetails(props: IDetailsFormProps) {
             <Tab key={title} label={title} classes={{ selected: classes.tabSelected }} />
           ))}
         </Tabs>
-        {tab === 0 && (
-          <div className={classes.tabContant}>
+        {tab === 0 && <TabHistory history={bidHistory} />}
+        {tab === 1 && (
+          <TabBids
+            bids={bids as Array<IBids & { userData: UserDataTypes }>}
+            offers={offers as Array<IBids & { userData: UserDataTypes }>}
+          />
+        )}
+        {tab === 2 && <About creator={creatorData} />}
+        {tab === 3 && (
+          <div className={classes.tabContent}>
             <p>{imageData?.description}</p>
           </div>
         )}
-        {tab === 1 && <TabHistory history={bidHistory} />}
-        {tab === 2 && <TabBids history={bids as Array<IBids & { userData: UserDataTypes }>} />}
-        {tab === 3 && <About creator={creatorData} />}
       </Box>
 
       <Modal
@@ -321,114 +393,55 @@ export default function FormDetails(props: IDetailsFormProps) {
         withAside
       />
 
-      <Popover anchorEl={anchorElExtLink} onClose={() => setAnchorElExtLink(null)}>
-        <Box>
-          <Grid container direction="column">
-            {user?.id === creatorData?.id && (
-              <>
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={classes.btnTitle}
-                  startIcon={<ArrowCurveIcon />}
-                >
-                  Price Drop
-                </Button>
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={clsx(classes.btnTitle, classes.btnTitleRed)}
-                  startIcon={<CancelIcon />}
-                >
-                  Cancel Listing
-                </Button>
-                <Divider />
-              </>
-            )}
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<TwitterIcon className={classes.linkIcon} />}
-            >
-              Share with Twitter
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<LinkIcon className={classes.linkIcon} />}
-            >
-              Copy link
-            </Button>
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<EtherscanIcon />}
-            >
-              View on Etherscan
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<IpfsIcon />}
-            >
-              View on IPFS
-            </Button>
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={classes.btnTitle}
-              startIcon={<OpenseaIcon />}
-            >
-              View on Opensea
-            </Button>
-            {role === 'ROLE_SUPER_ADMIN' && (
-              <>
-                <Divider />
-                <Button
-                  onClick={() => console.log('todo')}
-                  variant={'text'}
-                  color={'primary'}
-                  disableElevation
-                  className={clsx(classes.btnTitle, classes.btnTitleGreen)}
-                  startIcon={<EyeIcon className={classes.linkIconGreen} />}
-                >
-                  Unban Work
-                </Button>
-              </>
-            )}
-            <Divider />
-            <Button
-              onClick={() => console.log('todo')}
-              variant={'text'}
-              color={'primary'}
-              disableElevation
-              className={clsx(classes.btnTitle, classes.btnTitleRed)}
-              startIcon={<ReportIcon />}
-            >
-              Report
-            </Button>
-          </Grid>
-        </Box>
-      </Popover>
+      <ConfirmationModal
+        open={openUnlistModal}
+        onCancel={() => setOpenUnlistModal(false)}
+        onSubmit={() => {
+          marketData && dispatch(unlistingRequest({ market_id: marketData.id }))
+          setOpenUnlistModal(false)
+        }}
+        title={'Do you want to cancel artwork?'}
+        fetching={fetchingUnlist}
+        btnCancelText={'Nevermind'}
+        btnSubmitText={'Yes, I cancel'}
+      />
+
+      <PriceDropModal
+        open={openPriceDropModal}
+        onCancel={() => setOpenPriceDropModal(false)}
+        onSubmit={(value: string) => {
+          dispatch(changePriceRequest({ itemId: (tokenData as AssetTypes).id, newPrice: value }))
+        }}
+        tokenName={tokenSymbol}
+        fetching={fetchingDropPrice}
+      />
+
+      <CTAPopover
+        anchorEl={anchorElExtLink}
+        onClose={() => setAnchorElExtLink(null)}
+        twitterLink={shareTwitterLink}
+        etherscanLink={tokenData?.etherscan}
+        IPFSLink={imageData?.image}
+        url={currentUrl}
+        creator={user?.id === ownerData?.id}
+        superAdmin={role === 'ROLE_SUPER_ADMIN'}
+        onCancelListing={
+          user?.id === ownerData?.id && marketData?.id !== undefined
+            ? () => {
+                setOpenUnlistModal(true)
+                setAnchorElExtLink(null)
+              }
+            : undefined
+        }
+        onPriceDrop={
+          marketData
+            ? () => {
+                setOpenPriceDropModal(true)
+                setAnchorElExtLink(null)
+              }
+            : undefined
+        }
+      />
     </>
   )
 }

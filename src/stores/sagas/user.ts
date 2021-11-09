@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IApi } from '../../services/types'
 import { call, put, select, all } from 'redux-saga/effects'
@@ -25,9 +26,15 @@ import {
   checkAssetIdFailure,
   updatePromotionFailure,
   updatePromotionSuccess,
+  validateUserIdSuccess,
+  validateUserIdFailure,
+  getActiveBidsByUserSuccess,
+  getActiveBidsByUserFailure,
+  getSalesDataByOwnerSuccess,
+  getSalesDataByOwnerFailure,
 } from 'stores/reducers/user'
-import { getMarketplaceData, getMainAssetStatus } from 'stores/sagas/assets'
-import { UserStateType } from 'stores/reducers/user/types'
+import { getMainAssetStatus } from 'stores/sagas/assets'
+import { IActiveUserBids, IBiddedOfferedAsset, UserStateType } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -43,7 +50,7 @@ import {
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
-import { getIdFromString, createDummyMarketplaceData } from 'utils'
+import { getIdFromString, createDummyMarketplaceData, setDummyAccount } from 'utils'
 import { walletService } from 'services/wallet_service'
 
 export function* getUserData(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
@@ -71,7 +78,7 @@ export function* getUserDataByOwner(api: IApi, owner: string) {
     })
     return userData[0]
   } catch (e) {
-    yield put(getUserDataFailure(e.message || e))
+    yield put(getUserDataFailure(e))
   }
 }
 
@@ -82,38 +89,56 @@ export function* getUserDataById(api: IApi, id: string) {
     })
     return userData[0]
   } catch (e) {
-    throw new Error(e.message || e)
+    throw new Error(e)
   }
 }
 
 function* uploadImage(api: IApi, file: File) {
-  try {
-    const formData = new FormData()
-    formData.append('file', file as File)
-    const imageUrl: string = yield call(api, {
-      method: 'POST',
-      url: APP_CONFIG.uploadImage,
-      data: formData,
-      transform: false,
+  const formData = new FormData()
+  formData.append('file', file as File)
+  const imageUrl: string = yield call(api, {
+    method: 'POST',
+    url: APP_CONFIG.uploadImage,
+    data: formData,
+    transform: false,
+  })
+  return imageUrl
+}
+
+export function* initialConnection(api: IApi, { payload }: PayloadAction<{ accounts: string }>) {
+  const userData: UserDataTypes[] = yield call(api, {
+    url: APP_CONFIG.getUserByWallet(payload.accounts),
+  })
+
+  if (!userData.length) {
+    yield call(createNewUser, api, {
+      payload: {
+        accountSettings: { ...setDummyAccount(), userid: payload.accounts, wallet: payload.accounts },
+        wallet: payload.accounts,
+        isNewProfileImage: false,
+        isNewCoverImage: false,
+      },
     })
-    return imageUrl
-  } catch (e) {
-    throw new Error(e.message || e)
   }
 }
 
 export function* createNewUser(
   api: IApi,
-  { payload: { accountSettings, wallet } }: PayloadAction<{ accountSettings: IAccountSettings; wallet: string }>
+  {
+    payload: { accountSettings, wallet, isNewProfileImage, isNewCoverImage },
+  }: PayloadAction<{
+    accountSettings: IAccountSettings
+    wallet: string
+    isNewProfileImage: boolean
+    isNewCoverImage: boolean
+  }>
 ) {
   try {
-    const { profile_image, cover_image, fullname, id: userid, email, overview, ...socials } = accountSettings
+    const { profile_image, cover_image, fullname, userid, email, overview, ...socials } = accountSettings
     const { website, twitter, instagram, discord, facebook, youtube, tiktok, other_url: otherUrl } = socials
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const profileImageUrl: string = yield call(uploadImage as any, api, profile_image)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const coverImageUrl: string = yield call(uploadImage as any, api, cover_image)
+    const profileImageUrl: string = isNewProfileImage ? yield call(uploadImage, api, profile_image) : profile_image
+    const coverImageUrl: string = isNewCoverImage ? yield call(uploadImage, api, cover_image) : cover_image
 
     const formData = new FormData()
     formData.append('profile_image', profileImageUrl)
@@ -152,8 +177,13 @@ export function* createNewUser(
     })
 
     yield put(createNewUserSuccess({ userData: userData[0] }))
-  } catch ({ message = '' }) {
-    yield put(createNewUserFailure(message))
+  } catch (e) {
+    const code: number = getIdFromString(e)
+    if (code === 413) {
+      yield put(createNewUserFailure('User image or cover image is too large!'))
+      return
+    }
+    yield put(createNewUserFailure(e))
   }
 }
 
@@ -161,10 +191,10 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: asset.uri,
   })
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(asset.id))
 
+  const marketplaceData = asset.marketplace?.length ? asset.marketplace[0] : createDummyMarketplaceData()
   // We need to use dummy marketplace data in order to use common cards component
-  return { ...(marketplaceData || createDummyMarketplaceData()), imageData: imageData[0], userData, tokenData: asset }
+  return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
 
 export function* getUserAssets(api: IApi) {
@@ -185,6 +215,22 @@ export function* getUserAssets(api: IApi) {
         tokenData: AssetTypes
       }
     > = yield all(getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset)))
+
+    // Created Assets
+    const getAllItemByCreatorId: AssetTypes[] = yield call(api, {
+      url: APP_CONFIG.getItemsByCreatorId(user.id),
+    })
+    const getAssetsListCreatorData: Array<
+      AssetDataTypes & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAllItemByCreatorId.map((asset) => call(getOwnerAssetData, api, asset, user)))
+
+    const getAssetsListCreatorWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(getAssetsListCreatorData.map((asset) => call(getMainAssetStatus, api, asset)))
 
     // Purchased Assets
     const userCollectedAssets: IBidsHistory[] = yield call(api, {
@@ -238,11 +284,15 @@ export function* getUserAssets(api: IApi) {
       getUserAssetsSuccess({
         userAssets: getAssetsListAllWithStatuses,
         userCollectedAssets: getAssetsListCollectedWithStatuses,
-        userSolddAssets: getAssetsListSoldWithStatuses,
+        userSoldAssets: getAssetsListSoldWithStatuses.map((asset, i) => ({
+          ...asset,
+          marketplace: [userSolddAssets[i]],
+        })),
+        userCreatedAssets: getAssetsListCreatorWithStatuses,
       })
     )
   } catch (e) {
-    yield put(getUserAssetsFailure(e.message || e))
+    yield put(getUserAssetsFailure(e))
   }
 }
 
@@ -254,11 +304,23 @@ export function* getUserBids(api: IApi) {
     })
 
     const composeUserBidsData: UserStateType['userBids'] = yield all(
-      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid))
+      userBids.map((bid) => call(getUserBidAssetInfo, api, bid.market_id, bid.item_id, bid, bid.id))
     )
     yield put(getUserBidsSuccess({ userBids: composeUserBidsData }))
   } catch (e) {
-    yield put(getUserBidsFailure(e.message || e))
+    yield put(getUserBidsFailure(e))
+  }
+}
+
+export function* getActiveBidsByUser(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const activeBids: IActiveUserBids[] = yield call(api, {
+      url: APP_CONFIG.getActiveUserBidsById(user.id),
+    })
+    yield put(getActiveBidsByUserSuccess({ activeBids: activeBids }))
+  } catch (e) {
+    yield put(getActiveBidsByUserFailure(e))
   }
 }
 
@@ -294,18 +356,24 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
     const promotionData: IAddPromotionEntities = yield call(_addPromotion, api, Number(payload.promotionId))
     yield put(addPromotionSuccess({ promotionIdLastAdded: promotionData.id[0] }))
   } catch (e) {
-    yield put(addPromotionFailure(e.message || e))
+    yield put(addPromotionFailure(e))
   }
 }
 
-function* _addPromotion(api: IApi, promotionId: number) {
-  const signature: { data: string; signature: string } = yield walletService.generateSignature()
+function* _addPromotion(api: IApi, promotionId: number, signature?: { data: string; signature: string }) {
+  let signatureData: { data: string; signature: string }
+  if (signature) {
+    signatureData = signature
+  } else {
+    signatureData = yield walletService.generateSignature()
+  }
+
   const promotionData: IAddPromotionEntities = yield call(api, {
     url: APP_CONFIG.addPromotion,
     method: 'POST',
     data: {
       itemId: Number(promotionId),
-      ...signature,
+      ...signatureData,
     },
   })
   return promotionData
@@ -319,18 +387,24 @@ export function* deletePromotion(
     yield call(_deletePromotion, api, payload.promotionItemId)
     yield put(deletePromotionSuccess({ promotionIdLastDelete: payload.promotionId }))
   } catch (e) {
-    yield put(deletePromotionFailure(e.message || e))
+    yield put(deletePromotionFailure(e))
   }
 }
 
-function* _deletePromotion(api: IApi, promotionItemId: number) {
-  const signature: { data: string; signature: string } = yield walletService.generateSignature()
-  yield call(api, {
+function* _deletePromotion(api: IApi, promotionItemId: number, signature?: { data: string; signature: string }) {
+  let signatureData: { data: string; signature: string }
+  if (signature) {
+    signatureData = signature
+  } else {
+    signatureData = yield walletService.generateSignature()
+  }
+
+  return yield call(api, {
     url: APP_CONFIG.deletePromotion,
     method: 'POST',
     data: {
       itemId: Number(promotionItemId),
-      ...signature,
+      ...signatureData,
     },
   })
 }
@@ -344,12 +418,11 @@ export function* getPromotion(api: IApi) {
 
     yield put(getPromotionSuccess({ promotionAssets, promotionIds }))
   } catch (e) {
-    yield put(getPromotionFailure(e.message || e))
+    yield put(getPromotionFailure(e))
   }
 }
 
 function* getPromotionAssetById(api: IApi, assetId: number) {
-  const marketplaceData: AssetMarketplaceTypes | undefined = yield call(getMarketplaceData, api, Number(assetId))
   const assetById: AssetTypes[] = yield call(api, {
     url: APP_CONFIG.getItemByItemId(Number(assetId)),
   })
@@ -359,8 +432,10 @@ function* getPromotionAssetById(api: IApi, assetId: number) {
   const imageData: AssetDataTypes['imageData'][] = yield call(api, {
     url: assetById[0].uri,
   })
+
+  const marketplaceData = assetById[0].marketplace.length ? assetById[0].marketplace[0] : null
   return {
-    marketData: marketplaceData ? marketplaceData : null,
+    marketData: marketplaceData,
     ownerData: userByOwner[0],
     imageData: imageData[0],
     tokenData: assetById[0],
@@ -375,7 +450,7 @@ export function* getAllUsers(api: IApi) {
 
     yield put(getAllUsersSuccess({ userAll }))
   } catch (e) {
-    yield put(getAllUsersFailure(e.message || e))
+    yield put(getAllUsersFailure(e))
   }
 }
 
@@ -402,7 +477,7 @@ export function* tradingHistory(api: IApi, { payload }: PayloadAction<{ userId: 
     }))
     yield put(getTradingHistorySuccess({ tradingHistoryAll: composeData }))
   } catch (e) {
-    yield put(getTradingHistoryFailure(e.message || e))
+    yield put(getTradingHistoryFailure(e))
   }
 }
 
@@ -414,18 +489,48 @@ export function* checkAssetId(api: IApi, { payload }: PayloadAction<{ item_id: s
 
     yield put(checkAssetIdSuccess({ isId: Boolean(getAsset.length) }))
   } catch (e) {
-    yield put(checkAssetIdFailure(e.message || e))
+    yield put(checkAssetIdFailure(e))
   }
 }
 
 export function* updatePromotion(api: IApi, { payload }: PayloadAction<{ promotionIds: string[] }>) {
   try {
+    const signature = yield walletService.generateSignature()
     const currentPromotionIds: UserStateType['promotionIds'] = yield call(api, { url: APP_CONFIG.getPromotionAll })
-    yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id))))
-    yield all(payload.promotionIds.map((p: string) => call(_addPromotion, api, Number(p))))
 
+    yield all(currentPromotionIds.map((p: IPromotionId) => call(_deletePromotion, api, Number(p.item_id), signature)))
+    for (let i = 0; i < payload.promotionIds.length; i++) {
+      yield call(_addPromotion, api, Number(payload.promotionIds[i]), signature)
+    }
     yield put(updatePromotionSuccess())
   } catch (e) {
-    yield put(updatePromotionFailure(e.message || e))
+    yield put(updatePromotionFailure(e))
+  }
+}
+
+export function* validateUserId(api: IApi, { payload }: PayloadAction<{ userId: string }>) {
+  try {
+    yield call(api, {
+      url: APP_CONFIG.userValidation,
+      method: 'POST',
+      data: {
+        userId: payload.userId,
+      },
+    })
+    yield put(validateUserIdSuccess({ userIdValid: true }))
+  } catch (e) {
+    yield put(validateUserIdFailure())
+  }
+}
+
+export function* getSalesDataByOwner(api: IApi) {
+  try {
+    const { user }: { user: UserDataTypes } = yield select((state) => state.user)
+    const userSalesData: IBiddedOfferedAsset[] = yield call(api, {
+      url: APP_CONFIG.getUserSalesData(user.id),
+    })
+    yield put(getSalesDataByOwnerSuccess(userSalesData))
+  } catch (e) {
+    yield put(getSalesDataByOwnerFailure(e))
   }
 }
