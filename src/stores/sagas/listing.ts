@@ -18,6 +18,7 @@ import { IOrderData } from 'types'
 import { walletService } from 'services/wallet_service'
 import { listingService } from 'services/listing_service'
 import APP_CONFIG from 'config'
+import { ZERO } from 'config/blockchain'
 import { normalizeDate, getIdFromString } from 'utils'
 
 export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data: ListingStateType['data'] }>) {
@@ -48,13 +49,11 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
       body: {
         contract: lazyMintData?.contract,
         tokenId: lazyMintData?.tokenId,
-        // todo: check lm.maker, it should be address from lazyMintData.maker
         maker: accounts[0],
-        taker: '0x0000000000000000000000000000000000000000',
+        taker: ZERO,
         price: startPrice,
         uri: lazyMintData?.uri,
-        // erc20 - 0x only ETH
-        erc20: tokenContract,
+        erc20: tokenContract, // If the sales token is ETH or BNB or MATIC then erc20 should be '0x' otherwise, erc20 is the token id
         signature: lazyMintData?.signatures[0],
         lazymint,
         royalty,
@@ -68,17 +67,12 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         itemId: lazyMintItemId,
         type: data.type,
         startPrice: startPrice,
-        endPrice: data.type === 'instant_buy' ? '0' : endPrice,
-        // it's Reserve Price
-        // endPrice must be 0 if data.type is "instant_buy"
+        endPrice: data.type === 'instant_buy' ? '0' : endPrice, // endPrice must be 0 if data.type is "instant_buy"
 
-        // Todo: startTime and endTime in instant_buy should be new Date().getTime
+        // startTime and endTime in instant_buy should be new Date().getTime
         startTime: dateStartTime,
         endTime: dateEndTime,
-        // should be 0 if data.type is "instant_buy"
         salesTokenContract: tokenContract,
-        // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAFPage etc.
         platfromFee: data.platfromFee,
       },
     })
@@ -111,13 +105,9 @@ export function* listing(api: IApi, { payload: { data } }: PayloadAction<{ data:
         itemId: lazyMintItemId,
         orderId: getIdFromString(orderId),
         userId,
-        bidAmount: startPrice,
-        // bidAmount the same with startPrice
+        bidAmount: startPrice, // bidAmount is the same as startPrice
         marketId: getIdFromString(marketId),
         bidContract: tokenContract,
-        // Sells token contract
-        // for ETH don't have addresse that's why use 0x
-        // token contract address ETH, DAFPage etc.
       },
     })
 
