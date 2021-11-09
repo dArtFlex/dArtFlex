@@ -31,6 +31,7 @@ class BuyNowService {
         [
           creator.maker,
           [[creator.makeAsset.assetType.assetClass, creator.makeAsset.assetType.data], creator.makeAsset.value],
+
           creator.taker,
           [[creator.takeAsset.assetType.assetClass, creator.takeAsset.assetType.data], creator.takeAsset.value],
           creator.salt,
