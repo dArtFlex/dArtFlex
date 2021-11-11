@@ -267,3 +267,82 @@ function* allChainChannelListener() {
     }
   })
 }
+
+export function* switchChainSaga() {
+  try {
+    const chainId = yield select(getChainId)
+    const isEthereumChain = getChainName(chainId) === ETHEREUM
+    const activeWallet = yield select(getActiveWallet)
+    const { id: activeWalletId } = activeWallet.meta
+
+    if (activeWalletId === WALLETS.TRUST) {
+      throw Error("Trust Wallet doesn't support changing chain")
+    }
+
+    if (activeWalletId === WALLETS.META_MASK) {
+      if (isEthereumChain) {
+        yield window.web3.currentProvider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+            },
+          ],
+        })
+        yield put(setCurrentChainId('0x38'))
+      } else {
+        yield window.web3.currentProvider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId: '0x1',
+            },
+          ],
+        })
+        yield put(setCurrentChainId('0x1'))
+      }
+    }
+    if (activeWalletId === WALLETS.BINANCE_CHAIN) {
+      if (isEthereumChain) {
+        yield window.web3.currentProvider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+              chainName: 'Binance Smart Chain',
+              rpcUrls: ['https://bsc-dataseed1.binance.org/'],
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'BNB',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://bscscan.com'],
+            },
+          ],
+        })
+        yield put(setCurrentChainId('0x38'))
+      } else {
+        yield window.web3.currentProvider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x1',
+              chainName: 'Ethereum Mainnet',
+              rpcUrls: ['https://mainnet.infura.io/v3'],
+              nativeCurrency: {
+                name: 'ETH',
+                symbol: 'ETH',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://etherscan.io'],
+            },
+          ],
+        })
+        yield put(setCurrentChainId('0x1'))
+      }
+    }
+  } catch (e) {
+    console.log('switchChainSaga error:', e)
+    yield put(setRejectNetworkSwitch('Please, switch network in your wallet'))
+  }
+}

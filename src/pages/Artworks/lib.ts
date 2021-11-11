@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { AssetDataTypesWithStatus, IHashtag, IArtworksFiltes } from 'types'
+import { AssetDataTypesWithStatus, IHashtag, IArtworksFiltes, IMetaFilter } from 'types'
 import { IUseCardStatus } from 'common/Card/CardAsset/types'
 import { UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { normalizeDate } from 'utils'
@@ -22,7 +22,7 @@ export function useInnerAssetsFilter({
   activeHashTags,
 }: {
   assets: IAssetsBaseTypes
-  sortBy: 'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low'
+  sortBy: IMetaFilter
   price: { from: string; to: string }
   hotOnly: boolean
   activeHashTags: string[]

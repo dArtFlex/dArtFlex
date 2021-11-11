@@ -13,6 +13,19 @@ const initialState: AssetsStateType = {
     creatorData: null,
     marketData: null,
   },
+  meta: {
+    type: 'auction',
+    sold: false,
+    filter: 'ending_soon',
+    search: '',
+    hashtags: [],
+    fromPrice: 0,
+    toPrice: 0,
+    hotOnly: false,
+    limit: 20,
+    offset: 0,
+    order: 'DESC',
+  },
 }
 
 const assetsSlice = createSlice({
@@ -101,6 +114,23 @@ const assetsSlice = createSlice({
       state.error = payload
       state.fetching = false
     },
+
+    getAssetsAllMetaRequest: (state, { payload }: PayloadAction<Partial<AssetsStateType['meta']>>) => {
+      state.meta = { ...state.meta, ...payload }
+      state.fetchingAll = true
+    },
+    getAssetsAllMetaSuccess: (state, { payload }: PayloadAction<AssetsStateType['assets']>) => {
+      state.assets = payload
+      state.fetchingAll = false
+    },
+    getAssetsAllMetaFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingAll = false
+    },
+    setAssetsAllMetaSearch: (state, { payload }: PayloadAction<string>) => {
+      state.meta.search = payload
+    },
+    getAssetsAllMetaContextRequest: (state) => state,
   },
 })
 
@@ -126,6 +156,12 @@ export const {
   addHashtagsRequest,
   addHashtagsSuccess,
   addHashtagsFailure,
+
+  getAssetsAllMetaRequest,
+  getAssetsAllMetaSuccess,
+  getAssetsAllMetaFailure,
+  setAssetsAllMetaSearch,
+  getAssetsAllMetaContextRequest,
 } = assetsSlice.actions
 
 export const { reducer } = assetsSlice
