@@ -24,7 +24,8 @@ import {
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip, CustomTooltip } from 'common'
 import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
-import { setSearch, resetSearch, getActiveBidsByUserRequest } from 'stores/reducers/user'
+import { getActiveBidsByUserRequest } from 'stores/reducers/user'
+import { setAssetsAllMetaSearch } from 'stores/reducers/assets'
 import { selectWallet, selectUser, selectUserRole, selectNotifications } from 'stores/selectors'
 import SearchField from './SearchField'
 import CreateActionMenu from './CreateActionMenu'
@@ -166,7 +167,7 @@ export default function Header({ toggleTheme }: HeaderType) {
   const handleChangeTab = (_: React.ChangeEvent<unknown>, newValue: number) => setTabValue(newValue)
 
   const handleSearch = (value: string) => {
-    dispatch(setSearch(value))
+    dispatch(setAssetsAllMetaSearch(value))
   }
 
   const handleDisconnect = () => {
@@ -175,7 +176,7 @@ export default function Header({ toggleTheme }: HeaderType) {
 
   useEffect(() => {
     return () => {
-      dispatch(resetSearch())
+      dispatch(setAssetsAllMetaSearch(''))
     }
   }, [])
 

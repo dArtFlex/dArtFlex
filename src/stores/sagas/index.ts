@@ -23,6 +23,8 @@ import {
   getExchangeRateTokensRequest,
   getHashtagsAllRequest,
   addHashtagsRequest,
+  getAssetsAllMetaRequest,
+  getAssetsAllMetaContextRequest,
 } from '../reducers/assets'
 import {
   connectMetaMaskRequest,
@@ -76,7 +78,15 @@ import {
   getActiveBidsByUser,
   getSalesDataByOwner,
 } from '../sagas/user'
-import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
+import {
+  getAssetsAllData,
+  getAssetById,
+  getExchangeRateTokens,
+  getHashtagsAll,
+  addHashtags,
+  getAssetsAllMeta,
+  getAssetsAllMetaContext,
+} from '../sagas/assets'
 import {
   connectMetaMask,
   connectWalletConnect,
@@ -102,6 +112,8 @@ export default function* root() {
     takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
     takeLatest(getHashtagsAllRequest.type, getHashtagsAll, apiMiddleware),
     takeLatest(addHashtagsRequest.type, addHashtags, apiMiddleware),
+    takeLatest(getAssetsAllMetaRequest.type, getAssetsAllMeta, apiMiddleware),
+    takeLatest(getAssetsAllMetaContextRequest.type, getAssetsAllMetaContext, apiMiddleware),
 
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),

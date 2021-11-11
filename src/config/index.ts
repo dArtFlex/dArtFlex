@@ -69,6 +69,7 @@ const APP_CONFIG = {
   appUrl: `${APP_URL}`,
 
   // GET All
+  getItemAll_V2: `${API}/item/get`,
   getItemAll: `${API}/item/get_all`,
   getMarketplaceAll: `${API}/marketplace/get_all`,
   getUserAll: `${API}/user/getAll`,
