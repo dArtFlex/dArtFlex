@@ -27,6 +27,11 @@ export const selectHashtags = () =>
     (store: stateType) => store.assets?.hashtags,
     (hashtags) => ({ hashtags })
   )
+export const selectAssetsMeta = () =>
+  createSelector(
+    (store: stateType) => store.assets?.meta,
+    (meta) => ({ meta })
+  )
 
 // User
 export const selectUser = () =>
@@ -117,6 +122,11 @@ export const selectWalletChainError = () =>
   createSelector(
     (store: stateType) => store.wallet.chainError,
     (chainError) => ({ chainError })
+  )
+export const selectWalletChainName = () =>
+  createSelector(
+    (store: stateType) => store.wallet.chainName,
+    (chainName) => ({ chainName })
   )
 
 // Minting

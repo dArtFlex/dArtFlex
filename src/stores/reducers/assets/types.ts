@@ -7,6 +7,7 @@ import {
   IAssetStatus,
   IHashtag,
   IError,
+  IMeta,
 } from 'types'
 export interface AssetsStateType {
   fetching: boolean
@@ -17,6 +18,7 @@ export interface AssetsStateType {
   exchangeRates?: IExchangeRates[]
   hashtags?: IHashtag[]
   isBidded?: boolean[]
+  meta: IMeta
 }
 
 export type IUserAssets = AssetDataTypesWithStatus & {

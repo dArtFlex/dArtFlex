@@ -1,4 +1,4 @@
-import { put, call, all, select } from 'redux-saga/effects'
+import { put, call, all, select, delay } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import {
   getAssetsAllSuccess,
@@ -9,8 +9,11 @@ import {
   getExchangeRateTokensFailure,
   getHashtagsAllSuccess,
   getHashtagsAllFailure,
+  getAssetsAllMetaSuccess,
+  getAssetsAllMetaFailure,
 } from 'stores/reducers/assets'
 import { getUserDataById } from 'stores/sagas/user'
+import { setNetworkChain } from 'stores/reducers/wallet'
 import { IApi } from '../../services/types'
 import { walletService } from 'services/wallet_service'
 import {
@@ -23,13 +26,15 @@ import {
   IHashtagNew,
   IBids,
   IBaseTokens,
+  IMeta,
+  IItemGetEntities,
 } from 'types'
 import tokensAll from 'core/tokens'
 import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
-import { convertTokenSymbol, supportedNetwork } from 'utils'
+import { convertTokenSymbol, supportedNetwork, getChainKeyByChainId } from 'utils'
 
 const {
   STATUSES: { MINTED },
@@ -51,6 +56,74 @@ function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: 
   }
 }
 
+export function* getAssetsAllMetaContext(api: IApi) {
+  const { meta }: { meta: AssetsStateType['meta'] } = yield select((state) => state.assets)
+  yield call(getAssetsAllMeta, api, { payload: { ...meta } } as PayloadAction<Partial<AssetsStateType['meta']>>)
+}
+
+export function* getAssetsAllMeta(api: IApi, { payload }: PayloadAction<Partial<AssetsStateType['meta']>>) {
+  try {
+    const chainId: number = yield walletService.getChainIdAsync() || 1 // If chain isn't set then Ethereum chain is used
+    const { fromPrice, toPrice, search, ...rest } = payload
+    const metaData: Partial<IMeta> = { ...rest }
+    fromPrice && Object.assign(metaData, fromPrice)
+    toPrice && Object.assign(metaData, toPrice)
+    search && Object.assign(metaData, search)
+
+    let data = {}
+    if (payload.type === 'reserve_not_met') {
+      data = { ...metaData, status: 'listed', type: 'auction' }
+    } else if (payload.type === 'auction') {
+      data = { ...metaData, status: 'pending' }
+    } else if (payload.type === 'instant_buy') {
+      data = { ...metaData, sold: false }
+    } else if (payload.type === 'sold') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { type, ...filters } = metaData
+      data = { ...filters, sold: true }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { type, sold, ...filters } = metaData
+      data = { ...filters }
+    }
+
+    const response: IItemGetEntities[] = yield api({
+      method: 'GET',
+      url: APP_CONFIG.getItemAll_V2,
+      data: {
+        ...data,
+        chain_id: chainId,
+      },
+    })
+    yield delay(250)
+
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = response.map((asset) =>
+      asset.marketplace ? { ...asset.marketplace, contract: asset.contract } : createDummyMarketplaceData()
+    )
+    const getAssetsListAllData: AssetDataTypes[] = getMarketplactAssetsAll.map((asset, i) => {
+      return { ...asset, imageData: response[i].metadata, userData: response[i].user }
+    })
+    const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
+      getAssetsListAllData.map((asset, i) =>
+        call(getMainAssetStatus, api, asset, response[i].creator, response[i].owner)
+      )
+    )
+
+    const assets: AssetsStateType['assets'] = getAssetsListAllWithStatuses.map((a, i) => {
+      return {
+        ...a,
+        hashtag: response[i].hashtag,
+        ban: response[i].ban,
+        isBidded: response[i].bid.status === 'pending',
+      }
+    })
+    yield put(getAssetsAllMetaSuccess(assets))
+  } catch (e) {
+    yield put(getAssetsAllMetaFailure(e || e.message))
+  }
+}
+
+// !!!!!!!! Should be removed as outdated function !!!!!!!!
 export function* getAssetsAllData(api: IApi) {
   try {
     const getItemAssetsAll: AssetTypes[] = yield call(api, {
@@ -68,7 +141,7 @@ export function* getAssetsAllData(api: IApi) {
     )
 
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
-      getAssetsListAllData.map((asset) => call(getMainAssetStatus, api, asset))
+      getAssetsListAllData.map((asset, i) => call(getMainAssetStatus, api, asset))
     )
 
     const bidsHistory: boolean[] = yield all(getMarketplactAssetsAll.map((asset) => call(checkIsBidded, api, asset.id)))
@@ -162,7 +235,7 @@ export function* getMarketplaceData(api: IApi, itemId: number) {
   }
 }
 
-export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
+export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes, creator?: string, owner?: string) {
   try {
     // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
     if (asset?.item_id.length === 0) {
@@ -171,9 +244,14 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
         status: MINTED,
       }
     }
-    const assetById: AssetTypes[] = yield call(api, {
-      url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
-    })
+
+    let assetById: AssetTypes[] = []
+    if (!creator && !owner) {
+      const _assetById: AssetTypes[] = yield call(api, {
+        url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
+      })
+      assetById = [..._assetById]
+    }
 
     const status = getAssetStatus({
       type: asset.type,
@@ -182,8 +260,8 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes) {
       start_time: asset.start_time as string,
       end_time: asset.end_time,
       sold: asset.sold,
-      creator: assetById[0].creator,
-      owner: assetById[0].owner,
+      creator: creator || assetById[0].creator,
+      owner: owner || assetById[0].owner,
     })
 
     return {
@@ -208,7 +286,10 @@ function* getPrice(api: IApi, symbol: string) {
 
 export function* getExchangeRateTokens(api: IApi) {
   try {
-    const chainId: number = walletService.getChainId()
+    const chainId: number = yield walletService.getChainIdAsync()
+    const chainName = getChainKeyByChainId(chainId)
+    yield put(setNetworkChain({ chainName }))
+
     const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
     if (!supportedNetwork(convertChainId)) {
       return

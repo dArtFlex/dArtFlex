@@ -1,6 +1,5 @@
-import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity } from 'types'
+import { IEntity, IDatedEntity, IDatedTimeEntity, UserDataTypes, IPriceEntity, IImageEntity, IHashtag } from 'types'
 import appConst from 'config/consts'
-import { IHashtag } from 'types'
 import { IHighestBid, IMarketPlaceInfo } from '../stores/reducers/user/types'
 
 const { TYPES, STATUSES, FILTER_VALUES } = appConst
@@ -89,4 +88,62 @@ export interface IAssetMarketData {
   created_at: string
   updated_at: string
   current_price: string
+}
+
+export enum MetaFilter {
+  ENDING_SOON = 'ending_soon',
+  RECENT = 'recently_listed',
+  PRICE_LOW_HIGH = 'high_to_low',
+  PRICE_HIGH_LOW = 'low_to_high',
+}
+export type IMetaFilter = 'ending_soon' | 'recently_listed' | 'high_to_low' | 'low_to_high'
+export type IMetaOrder = 'DESC' | 'ASC'
+export type IMetaStatus = 'listed' | 'pending' | 'offer' | 'offered' | 'canceled' | 'accepted'
+
+export enum MetaType {
+  LIVE_AUCTION = 'auction',
+  BUY_NOW = 'instant_buy',
+  RESERVE_NOT_MET = 'reserve_not_met',
+  SOLD = 'sold',
+  FEATURED_ARTWORKS = 'featured_artworks',
+}
+export type IMetaType = 'auction' | 'instant_buy' | 'reserve_not_met' | 'sold' | 'featured_artworks'
+
+export interface IMeta {
+  type: IMetaType
+  sold: boolean
+  filter: IMetaFilter
+  search?: string
+  hashtags?: string[]
+  fromPrice: number
+  toPrice: number
+  hotOnly: boolean
+  limit: number
+  offset: number
+  order: IMetaOrder
+}
+
+export interface IItemGetEntities {
+  ban: boolean
+  bid: IHighestBid
+  chain_id: number
+  contract: string
+  created_at: string
+  creator: string
+  etherscan: string
+  hashtag: IHashtag[] // (!)
+  hashtags: IHashtag[]
+  id: number
+  lazymint: boolean
+  lock: boolean
+  marketplace: IAssetMarketData
+  metadata: IImageData
+  owner: string
+  royalty: string
+  royalty_fee: string
+  signature: string
+  token_id: string
+  updated_at: string
+  uri: string
+  user: UserDataTypes
 }

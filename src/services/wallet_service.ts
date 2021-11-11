@@ -78,6 +78,14 @@ export class WalletService extends Web3Service {
     return getChainKeyByChainId(this.chainId)
   }
 
+  async getChainIdAsync(): Promise<number> {
+    if (!this.chainId) {
+      this.chainId = await this.web3.eth.getChainId()
+      return this.chainId
+    }
+    return this.chainId
+  }
+
   getChainId(): number {
     return this.chainId
   }
