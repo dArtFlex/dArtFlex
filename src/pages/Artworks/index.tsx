@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectAssets, selectWallet, selectPromotion, selectHashtags, selectAssetsMeta } from 'stores/selectors'
+import {
+  selectAssets,
+  selectWallet,
+  selectPromotion,
+  selectHashtags,
+  selectAssetsMeta,
+  selectChain,
+} from 'stores/selectors'
 import { getHashtagsAllRequest, getAssetsAllMetaRequest, getAssetsAllMetaContextRequest } from 'stores/reducers/assets'
 import { getPromotionRequest } from 'stores/reducers/user'
 import clsx from 'clsx'
@@ -100,6 +107,7 @@ export default function Artworks() {
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
   const { hashtags } = useSelector(selectHashtags())
   const { meta } = useSelector(selectAssetsMeta())
+  const { chainId } = useSelector(selectChain())
   const [sortValue, setSortValue] = useState<IMetaFilter>(MetaFilter.ENDING_SOON)
 
   const [filter, setFilter] = useState<IMetaType>(meta.type)
@@ -135,7 +143,7 @@ export default function Artworks() {
     setPriceTo('')
     setHotOnly(false)
   }
-  console.log(limit, meta.offset)
+
   const fetchAssets = useCallback(() => {
     dispatch(
       getAssetsAllMetaRequest({
@@ -147,13 +155,14 @@ export default function Artworks() {
         limit,
         offset: meta.offset,
         search: meta.search,
+        chainId,
       })
     )
-  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, limit, meta.search])
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, limit, meta.search, chainId])
 
   useEffect(() => {
     fetchAssets()
-  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, meta.search])
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, meta.search, chainId])
 
   useEffect(() => {
     fetchAssets()

@@ -3,18 +3,22 @@ import { getProviderAddress } from 'utils'
 // PROD Instants
 const PROD_APP_URL = 'https://dartflex.art'
 const PROD_URL_API = 'https://api.dartflex.art/api'
+const PROD_WS_URL = 'wss://dartflex.art'
 
 // STAGE instants
 const STAGE_APP_URL = 'https://dartflex-stage.ml'
 const STAGE_URL_API = 'https://dartflex-stage.ml:8887/api'
+const STAGE_WS_URL = 'wss://dartflex-stage.ml:8887'
 
 // DEV Instants
 const DEV_APP_URL = 'https://dartflex-dev.ml'
 const DEV_URL_API = 'https://dartflex-dev.ml:8887/api'
+const DEV_WS_URL = 'wss://dartflex-dev.ml:8887'
 
 // LOCAL Instants
 const LOCAL_APP_URL = 'http://localhost:3000/'
 const LOCAL_URL_API = 'http://localhost:8888/api'
+const LOCAL_WS_URL = 'http://localhost:8888'
 
 // ************** SETUP API ENVIRIMENT **************
 const API =
@@ -34,6 +38,15 @@ const APP_URL =
     : process.env.REACT_APP_STAGE === 'local'
     ? LOCAL_APP_URL
     : DEV_APP_URL
+
+const WS_URL =
+  process.env.REACT_APP_STAGE === 'production'
+    ? PROD_WS_URL
+    : process.env.REACT_APP_STAGE === 'stage'
+    ? STAGE_WS_URL
+    : process.env.REACT_APP_STAGE === 'local'
+    ? LOCAL_WS_URL
+    : DEV_WS_URL
 // ************** ******************** **************
 
 const BASE_URL = API.replace('/api', '')
@@ -63,7 +76,7 @@ const APP_CONFIG = {
   bscscanMainnet: 'https://bscscan.com',
   polygonMainnet: 'https://polygonscan.com',
 
-  WSUrl: 'wss://dartflex-dev.ml:8887',
+  WSUrl: WS_URL,
   baseURL: `${BASE_URL}`,
   localURL: `${LOCAL_URL}`,
   appUrl: `${APP_URL}`,

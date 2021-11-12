@@ -17,7 +17,7 @@ import {
   walletError,
 } from '../reducers/wallet'
 import { initialConnection } from 'stores/sagas/user'
-import { ITokenBalances, IBaseTokens } from 'types'
+import { ITokenBalances, IBaseTokens, IChaintIdHexFormat } from 'types'
 import tokensAll from 'core/tokens'
 import APP_CONSTS from 'config/consts'
 import APP_CONFIG from 'config'

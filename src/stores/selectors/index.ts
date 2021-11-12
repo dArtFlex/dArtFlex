@@ -203,3 +203,13 @@ export const selectAlbum = () =>
       success,
     })
   )
+
+// Chain
+export const selectChain = () =>
+  createSelector(
+    (store: stateType) => store.chain,
+    ({ chainId, chainName }) => ({
+      chainId,
+      chainName,
+    })
+  )
