@@ -1,6 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { selectWalletChainName } from 'stores/selectors'
+import { useSelector, useDispatch } from 'react-redux'
+import { switchChain } from 'stores/reducers/chain'
+import { selectChain } from 'stores/selectors'
 import { PopoverLinks } from 'common'
 import { Check as CheckIcon } from '@material-ui/icons'
 import { IChainName } from 'types'
@@ -18,7 +19,8 @@ interface ILinks {
 
 export default function ChainMenu(props: IChainActionMenuProps) {
   const { anchor, setAnchor } = props
-  const { chainName } = useSelector(selectWalletChainName())
+  const { chainName } = useSelector(selectChain())
+  const dispatch = useDispatch()
 
   const getIcon = (active: boolean) => (
     <CheckIcon fill={'green'} style={{ display: active ? 'inline-block' : 'none' }} />
@@ -28,17 +30,27 @@ export default function ChainMenu(props: IChainActionMenuProps) {
     {
       chainNameKey: '__eth',
       lable: 'ETH',
-      onClick: () => console.log('ETH chain'),
+      onClick: () => dispatch(switchChain({ chainName: '__eth', chainId: 1 })),
     },
     {
       chainNameKey: '__bsc',
       lable: 'BSC',
-      onClick: () => console.log('BSK chain'),
+      onClick: () => dispatch(switchChain({ chainName: '__bsc', chainId: 56 })),
     },
     {
       chainNameKey: '__polygon',
       lable: 'Polygon',
-      onClick: () => console.log('Polygon chain'),
+      onClick: () => dispatch(switchChain({ chainName: '__polygon', chainId: 137 })),
+    },
+    {
+      chainNameKey: '__ethRinkeby',
+      lable: 'Rinkeby*',
+      onClick: () => dispatch(switchChain({ chainName: '__ethRinkeby', chainId: 4 })),
+    },
+    {
+      chainNameKey: '__bscTestnet',
+      lable: 'BSC*',
+      onClick: () => dispatch(switchChain({ chainName: '__bscTestnet', chainId: 97 })),
     },
   ]
   const linksData = links.map((link) => {

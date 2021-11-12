@@ -28,6 +28,7 @@ import {
   IBaseTokens,
   IMeta,
   IItemGetEntities,
+  IChainIdDecimalsFormat,
 } from 'types'
 import tokensAll from 'core/tokens'
 import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
@@ -61,10 +62,12 @@ export function* getAssetsAllMetaContext(api: IApi) {
   yield call(getAssetsAllMeta, api, { payload: { ...meta } } as PayloadAction<Partial<AssetsStateType['meta']>>)
 }
 
-export function* getAssetsAllMeta(api: IApi, { payload }: PayloadAction<Partial<AssetsStateType['meta']>>) {
+export function* getAssetsAllMeta(
+  api: IApi,
+  { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
+) {
   try {
-    const chainId: number = yield walletService.getChainIdAsync() || 1 // If chain isn't set then Ethereum chain is used
-    const { fromPrice, toPrice, search, ...rest } = payload
+    const { fromPrice, toPrice, search, chainId, ...rest } = payload
     const metaData: Partial<IMeta> = { ...rest }
     fromPrice && Object.assign(metaData, fromPrice)
     toPrice && Object.assign(metaData, toPrice)

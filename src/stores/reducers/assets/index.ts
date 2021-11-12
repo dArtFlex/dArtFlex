@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AssetsStateType } from './types'
+import { IChainIdDecimalsFormat } from 'types'
 
 const initialState: AssetsStateType = {
   fetching: false,
@@ -115,7 +116,10 @@ const assetsSlice = createSlice({
       state.fetching = false
     },
 
-    getAssetsAllMetaRequest: (state, { payload }: PayloadAction<Partial<AssetsStateType['meta']>>) => {
+    getAssetsAllMetaRequest: (
+      state,
+      { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
+    ) => {
       state.meta = { ...state.meta, ...payload }
       state.fetchingAll = true
     },
