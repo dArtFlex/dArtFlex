@@ -12,19 +12,19 @@ import {
   selectListing,
 } from 'stores/selectors'
 import clsx from 'clsx'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Box, Typography, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
 import { Modal, WalletConnect, ConfirmationModal } from 'common'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import { chainErrorRequest } from 'stores/reducers/wallet'
 import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { BurnIcon, MoreHorizontalIcon } from 'common/icons'
 import { TabHistory, TabBids, About } from '../../../components'
+import UserBox from '../UserBox'
 import CTAPopover from '../CTAPopover'
 import PriceDropModal from '../PriceDropModal'
 import { useTimer, useTokenInfo } from 'hooks'
 import {
   normalizeDate,
-  shortCutName,
   shareWithTwitter,
   getTokenSymbolByContracts,
   guardChain,
@@ -190,20 +190,26 @@ export default function FormDetails(props: IDetailsFormProps) {
             <Typography variant={'body1'} className={classes.infoTitle}>
               Creator
             </Typography>
-            <Box className={classes.avatarBox}>
-              <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
-            </Box>
+            {creatorData && (
+              <UserBox
+                wallet={creatorData.wallet}
+                userImage={creatorData.profile_image}
+                userId={creatorData?.wallet !== user?.wallet ? creatorData?.userid : 'you'}
+              />
+            )}
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
             <Box>
               <Typography variant={'body1'} className={classes.infoTitle}>
                 Owned by
               </Typography>
-              <Box className={classes.avatarBox}>
-                <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
-              </Box>
+              {ownerData && (
+                <UserBox
+                  wallet={ownerData.wallet}
+                  userImage={ownerData.profile_image}
+                  userId={ownerData?.wallet !== user?.wallet ? ownerData?.userid : 'you'}
+                />
+              )}
             </Box>
           )}
         </Box>

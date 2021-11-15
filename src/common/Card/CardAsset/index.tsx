@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { PopoverLinks } from 'common'
+import { PopoverLinks, UserBox } from 'common'
 import { MoreHorizontalIcon } from 'common/icons'
-import { Box, Typography, IconButton, Card, Avatar } from '@material-ui/core'
+import { Box, Typography, IconButton, Card } from '@material-ui/core'
 import { useStyles } from './styles'
 import { useHistory } from 'react-router-dom'
 import routes from 'routes'
@@ -9,7 +9,7 @@ import { useTimer } from 'hooks'
 import CardActions from './CardActions'
 import CardBadge from './CardBadge'
 import { ICardAssetProps } from './types'
-import { normalizeDate, shortCutName } from 'utils'
+import { normalizeDate } from 'utils'
 import { useSelector } from 'react-redux'
 import { selectWallet } from '../../../stores/selectors'
 import BigNumber from 'bignumber.js'
@@ -61,12 +61,11 @@ export default function CardAsset(props: ICardAssetProps) {
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
             {Boolean(asset.userData) && (
-              <Box display={'flex'} mb={4} alignItems={'center'}>
-                <Avatar className={classes.avatar} alt="Avatar" src={asset.userData.profile_image} />
-                <Typography variant={'h4'}>
-                  {asset.userData.userid ? `@${shortCutName(asset.userData.userid)}` : '@you'}
-                </Typography>
-              </Box>
+              <UserBox
+                userImage={asset.userData.profile_image}
+                wallet={asset.userData.wallet}
+                userId={asset.userData.userid ? asset.userData.userid : 'you'}
+              />
             )}
             {withAction && (
               <IconButton
