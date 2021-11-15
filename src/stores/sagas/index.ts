@@ -17,6 +17,7 @@ import {
   validateUserIdRequest,
   getActiveBidsByUserRequest,
   getSalesDataByOwnerRequest,
+  getUserProfileRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -79,6 +80,7 @@ import {
   validateUserId,
   getActiveBidsByUser,
   getSalesDataByOwner,
+  getUserProfile,
 } from '../sagas/user'
 import {
   getAssetsAllData,
@@ -133,6 +135,7 @@ export default function* root() {
     takeLatest(validateUserIdRequest.type, validateUserId, apiMiddleware),
     takeLatest(getActiveBidsByUserRequest.type, getActiveBidsByUser, apiMiddleware),
     takeLatest(getSalesDataByOwnerRequest.type, getSalesDataByOwner, apiMiddleware),
+    takeLatest(getUserProfileRequest.type, getUserProfile, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

@@ -54,6 +54,7 @@ export const selectUser = () =>
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     }) => ({
       user,
       userAssets,
@@ -71,6 +72,7 @@ export const selectUser = () =>
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     })
   )
 export const selectUserRole = () =>

@@ -15,7 +15,7 @@ import { selectWallet } from '../../../stores/selectors'
 import BigNumber from 'bignumber.js'
 
 export default function CardAsset(props: ICardAssetProps) {
-  const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu } = props
+  const { asset, withLabel, withAction, useCardStatus, button, emptyBottom, menu, viewOnly = false } = props
 
   const classes = useStyles()
   const history = useHistory()
@@ -27,6 +27,12 @@ export default function CardAsset(props: ICardAssetProps) {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null)
 
   function cardActionEvent() {
+    if (history.location.pathname.search('profile')) {
+      return asset.id
+        ? history.push(`${routes.artworks}/${asset.item_id}`)
+        : history.push(`${routes.artworks}/${asset.tokenData?.id}`)
+    }
+
     switch (history.location.pathname) {
       case routes.artworks:
         history.push(`${routes.artworks}/${asset.item_id}`)
@@ -106,6 +112,7 @@ export default function CardAsset(props: ICardAssetProps) {
           emptyBottom={emptyBottom}
           sales_token_contract={asset.sales_token_contract}
           tokenSymbol={asset.tokenSymbol}
+          viewOnly={viewOnly}
         />
       </Card>
 

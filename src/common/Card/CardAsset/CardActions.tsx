@@ -35,6 +35,7 @@ export default function CardActions(props: ICardActionsProps) {
     button,
     emptyBottom,
     tokenSymbol,
+    viewOnly,
   } = props
 
   const cardStatus = useCardStatus({ type, status, endPrice, startPrice, sold, endTime })
@@ -49,6 +50,24 @@ export default function CardActions(props: ICardActionsProps) {
   const expire_time = normalizeDate(endTime).getTime() < burnTime
 
   const tooltipProps = { background: '#141717', shiftY: -60 }
+
+  if (viewOnly) {
+    return (
+      <Box className={classes.actionBtnBox}>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation()
+            button?.onView && button.onView()
+          }}
+          variant={'contained'}
+          fullWidth
+          className={classes.listBtn}
+        >
+          View Artwork
+        </Button>
+      </Box>
+    )
+  }
 
   switch (cardStatus) {
     case MINTED:
