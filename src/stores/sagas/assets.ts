@@ -241,7 +241,10 @@ export function* getMarketplaceData(api: IApi, itemId: number) {
 export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes, creator?: string, owner?: string) {
   try {
     // When asset only minted then it doesn't have marked data and then item_id isn't be defined.
-    if (asset?.item_id.length === 0) {
+    if (
+      (asset.hasOwnProperty('item_id') && asset?.item_id.length === 0) ||
+      (asset.tokenData?.hasOwnProperty('marketplace') && asset.tokenData.marketplace?.length === 0)
+    ) {
       return {
         ...asset,
         status: MINTED,
@@ -254,6 +257,24 @@ export function* getMainAssetStatus(api: IApi, asset: AssetDataTypes, creator?: 
         url: APP_CONFIG.getItemByItemId(Number(asset.item_id)),
       })
       assetById = [..._assetById]
+    }
+
+    if (asset.tokenData?.marketplace?.length) {
+      const status = getAssetStatus({
+        type: asset.tokenData.marketplace[0].type,
+        start_price: asset.tokenData.marketplace[0].start_price,
+        end_price: asset.tokenData.marketplace[0].end_price,
+        start_time: asset.tokenData.marketplace[0].start_time as string,
+        end_time: asset.tokenData.marketplace[0].end_time,
+        sold: asset.tokenData.marketplace[0].sold,
+        creator: creator || assetById[0].creator,
+        owner: owner || assetById[0].owner,
+      })
+
+      return {
+        ...asset,
+        status,
+      }
     }
 
     const status = getAssetStatus({

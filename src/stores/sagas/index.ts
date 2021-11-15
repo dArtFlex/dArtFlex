@@ -4,6 +4,7 @@ import apiMiddleware from '../../services/api_middleware'
 import {
   getUserDataRequest,
   createNewUserRequest,
+  getUserAssetsMetaRequest,
   getUserAssetsRequest,
   getUserBidsRequest,
   getPromotionRequest,
@@ -65,6 +66,7 @@ import { getUserAlbumRequest, addImageToAlbumRequest, deleteImageFromAlbumReques
 import {
   getUserData,
   createNewUser,
+  getUserAssetsMeta,
   getUserAssets,
   getUserBids,
   getPromotion,
@@ -118,6 +120,7 @@ export default function* root() {
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
+    takeLatest(getUserAssetsMetaRequest.type, getUserAssetsMeta, apiMiddleware),
     takeLatest(getUserAssetsRequest.type, getUserAssets, apiMiddleware),
     takeLatest(getUserBidsRequest.type, getUserBids, apiMiddleware),
     takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
