@@ -4,6 +4,7 @@ import apiMiddleware from '../../services/api_middleware'
 import {
   getUserDataRequest,
   createNewUserRequest,
+  getUserAssetsMetaRequest,
   getUserAssetsRequest,
   getUserBidsRequest,
   getPromotionRequest,
@@ -16,6 +17,7 @@ import {
   validateUserIdRequest,
   getActiveBidsByUserRequest,
   getSalesDataByOwnerRequest,
+  getUserProfileRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -65,6 +67,7 @@ import { getUserAlbumRequest, addImageToAlbumRequest, deleteImageFromAlbumReques
 import {
   getUserData,
   createNewUser,
+  getUserAssetsMeta,
   getUserAssets,
   getUserBids,
   getPromotion,
@@ -77,6 +80,7 @@ import {
   validateUserId,
   getActiveBidsByUser,
   getSalesDataByOwner,
+  getUserProfile,
 } from '../sagas/user'
 import {
   getAssetsAllData,
@@ -118,6 +122,7 @@ export default function* root() {
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
+    takeLatest(getUserAssetsMetaRequest.type, getUserAssetsMeta, apiMiddleware),
     takeLatest(getUserAssetsRequest.type, getUserAssets, apiMiddleware),
     takeLatest(getUserBidsRequest.type, getUserBids, apiMiddleware),
     takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
@@ -130,6 +135,7 @@ export default function* root() {
     takeLatest(validateUserIdRequest.type, validateUserId, apiMiddleware),
     takeLatest(getActiveBidsByUserRequest.type, getActiveBidsByUser, apiMiddleware),
     takeLatest(getSalesDataByOwnerRequest.type, getSalesDataByOwner, apiMiddleware),
+    takeLatest(getUserProfileRequest.type, getUserProfile, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

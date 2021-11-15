@@ -15,6 +15,7 @@ import Constructor from '../pages/Constructor'
 import TradingHistory from '../pages/TradingHistory'
 import ArtworkDetails from '../pages/ArtworkDetails'
 import ContentManagement from '../pages/ContentManagement'
+import Profile from '../pages/Profile'
 import PrivacyPolicy from '../pages/AuxiliaryPages/components/PrivacyPolicy'
 import { CommunityGuidelines, DAFPage } from '../pages/AuxiliaryPages/components'
 import TermsOfService from '../pages/AuxiliaryPages/components/TermsOfService'
@@ -36,6 +37,14 @@ const MainNavigation = ({ toggleTheme }: { toggleTheme: () => void }) => {
     {
       path: routes.dashboard,
       component: <Dashboard />,
+    },
+    {
+      path: routes.dashboard,
+      component: <Dashboard />,
+    },
+    {
+      path: routes.profile,
+      component: <Profile />,
     },
     {
       path: routes.sellNFT,

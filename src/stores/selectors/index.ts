@@ -47,12 +47,14 @@ export const selectUser = () =>
       fetching,
       fetchingBids,
       fetchingTrading,
-      isId,
+      fetchingAssets,
       fetchingId,
+      isId,
       userIdValid,
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     }) => ({
       user,
       userAssets,
@@ -63,12 +65,14 @@ export const selectUser = () =>
       fetching,
       fetchingBids,
       fetchingTrading,
-      isId,
+      fetchingAssets,
       fetchingId,
+      isId,
       userIdValid,
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     })
   )
 export const selectUserRole = () =>

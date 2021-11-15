@@ -100,6 +100,7 @@ const APP_CONFIG = {
   getItemByItemId: (id: number) => `${API}/item/get/${id}`,
   getItemsByOwnerId: (owner_id: number) => `${API}/item/get_by_owner/${owner_id}`,
   getItemsByCreatorId: (owner_id: number) => `${API}/item/get_by_creator/${owner_id}`,
+  getItemsByProfile: `${API}/profile/get`,
   getMetadata: (id: number) => `${API}/metadata/get/${id}`,
   getMarketplaceItemById: (item_id: number) => `${API}/marketplace/get/${item_id}`,
   getOrderByOrderId: (order_id: string) => `${API}/order/get/${order_id}`,

@@ -17,10 +17,10 @@ import {
   WorldIcon,
   YouTubeIcon,
 } from 'common/icons'
-import { selectUser, selectSearch, selectListing } from 'stores/selectors'
+import { selectUser, selectSearch, selectListing, selectChain, selectWallet } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
-import { getUserAssetsRequest } from 'stores/reducers/user'
+import { getUserAssetsMetaRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import { chainErrorRequest } from 'stores/reducers/wallet'
 import appConst from 'config/consts'
@@ -34,7 +34,6 @@ import { unlistingRequest } from 'stores/reducers/listing'
 import { IUserSoldAssets } from 'stores/reducers/user/types'
 import BigNumber from 'bignumber.js'
 import image from 'common/icons/cover_photo.png'
-import { walletService } from 'services/wallet_service'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -62,13 +61,14 @@ export default function Dashboard() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
-  const { user, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetching } = useSelector(
+  const { user, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetchingAssets } = useSelector(
     selectUser()
   )
   const {
     listing: { fetchingUnlist },
   } = useSelector(selectListing())
-  const chainId = walletService.getChainId()
+  const { chainId } = useSelector(selectChain())
+  const { wallet } = useSelector(selectWallet())
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
@@ -105,8 +105,8 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
-    dispatch(getUserAssetsRequest())
-  }, [])
+    dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
+  }, [filter])
 
   const links = [
     {
@@ -172,7 +172,7 @@ export default function Dashboard() {
 
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
-    dispatch(getUserAssetsRequest())
+    dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
   }
 
   const totalSales = userSoldAssets
@@ -237,7 +237,7 @@ export default function Dashboard() {
             )}
 
             <Box className={classes.grid} mt={2}>
-              {fetching ? (
+              {fetchingAssets ? (
                 <CircularProgressLoader />
               ) : (
                 <>
