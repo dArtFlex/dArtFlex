@@ -21,6 +21,7 @@ import AvatarUser from './AvatarUser'
 import Timer from './Timer'
 import Slider from './Slider'
 import SelectPaymentToken from './SelectPaymentToken'
+import UserBox from './UserBox'
 
 export {
   Header,
@@ -58,4 +59,5 @@ export {
   CardSkeleton,
   ConfirmationModal,
   SelectPaymentToken,
+  UserBox,
 }

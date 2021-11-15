@@ -96,7 +96,7 @@ export default function Profile() {
   useEffect(() => {
     dispatch(getUserAssetsMetaRequest({ chainId, wallet: id, filter }))
     dispatch(getUserProfileRequest({ wallet: id }))
-  }, [filter])
+  }, [filter, chainId])
 
   const links = profile
     ? [
