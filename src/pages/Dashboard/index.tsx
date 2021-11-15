@@ -20,7 +20,7 @@ import {
 import { selectUser, selectSearch, selectListing, selectChain, selectWallet } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
 import { Aside, ValuesInfo, Empty } from './components'
-import { getUserAssetsMetaRequest, getUserAssetsRequest } from 'stores/reducers/user'
+import { getUserAssetsMetaRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import { chainErrorRequest } from 'stores/reducers/wallet'
 import appConst from 'config/consts'

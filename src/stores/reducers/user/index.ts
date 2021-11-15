@@ -14,6 +14,7 @@ const initialState: UserStateType = {
   search: '',
   error: '',
   user: null,
+  profile: null,
   fetching: false,
   fetchingBids: false,
   fetchingPromo: false,
@@ -91,6 +92,19 @@ const userSlice = createSlice({
       state.fetchingAssets = false
     },
 
+    getUserProfileRequest: (state, i) => {
+      state.fetching = true
+    },
+    getUserProfileSuccess: (state, { payload }: PayloadAction<{ profile: UserStateType['profile'] }>) => {
+      state.profile = payload.profile
+      state.fetching = false
+    },
+    getUserProfileFailure: (state, { payload }: PayloadAction<{ error: UserStateType['error'] }>) => {
+      state.error = payload.error
+      state.fetching = false
+    },
+
+    // !!!!!!!! getUserAssets.. Should be removed as outdated methods !!!!!!!!
     getUserAssetsRequest: (state) => {
       state.fetching = true
     },
@@ -317,6 +331,10 @@ export const {
   getUserAssetsMetaRequest,
   getUserAssetsMetaSuccess,
   getUserAssetsMetaFailure,
+
+  getUserProfileRequest,
+  getUserProfileSuccess,
+  getUserProfileFailure,
 
   getUserAssetsRequest,
   getUserAssetsSuccess,

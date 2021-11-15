@@ -34,6 +34,8 @@ import {
   getActiveBidsByUserFailure,
   getSalesDataByOwnerSuccess,
   getSalesDataByOwnerFailure,
+  getUserProfileSuccess,
+  getUserProfileFailure,
 } from 'stores/reducers/user'
 import { getMainAssetStatus } from 'stores/sagas/assets'
 import { IActiveUserBids, IBiddedOfferedAsset, UserStateType } from 'stores/reducers/user/types'
@@ -583,5 +585,16 @@ export function* getSalesDataByOwner(api: IApi) {
     yield put(getSalesDataByOwnerSuccess(userSalesData))
   } catch (e) {
     yield put(getSalesDataByOwnerFailure(e))
+  }
+}
+
+export function* getUserProfile(api: IApi, { payload }: PayloadAction<{ wallet: string }>) {
+  try {
+    const profile: UserStateType['profile'][] = yield call(api, {
+      url: APP_CONFIG.getUserByWallet(payload.wallet),
+    })
+    yield put(getUserProfileSuccess({ profile: profile[0] }))
+  } catch (e) {
+    yield put(getUserProfileFailure(e))
   }
 }

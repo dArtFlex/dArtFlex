@@ -26,6 +26,7 @@ export interface UserStateType {
   error: IError
   search: string
   user: UserDataTypes | null
+  profile: UserDataTypes | null
   role?: IUserRole
   userAssets: IUserAsset[] | []
   userCollectedAssets: IUserAsset[] | []

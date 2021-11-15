@@ -5,7 +5,7 @@ import { useStyles } from './styles'
 interface IProfileLayoutProps {
   children: React.ReactChild
   coverURL: string
-  aside: React.ReactElement
+  aside: React.ReactElement | null
 }
 
 export default function ProfileLayout(props: IProfileLayoutProps) {
