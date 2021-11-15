@@ -18,6 +18,7 @@ const initialState: UserStateType = {
   fetchingBids: false,
   fetchingPromo: false,
   fetchingTrading: false,
+  fetchingAssets: false,
   isId: false,
   fetchingId: false,
   activeBids: [],
@@ -61,6 +62,33 @@ const userSlice = createSlice({
     createNewUserFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetching = false
+    },
+
+    getUserAssetsMetaRequest: (state, i) => {
+      state.fetchingAssets = true
+    },
+    getUserAssetsMetaSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<
+        Partial<{
+          userAssets: UserStateType['userAssets']
+          userCollectedAssets: UserStateType['userCollectedAssets']
+          userSoldAssets: UserStateType['userSoldAssets']
+          userCreatedAssets: UserStateType['userCreatedAssets']
+        }>
+      >
+    ) => {
+      state.userAssets = payload.userAssets || state.userAssets
+      state.userCollectedAssets = payload.userCollectedAssets || state.userCollectedAssets
+      state.userSoldAssets = payload.userSoldAssets || state.userSoldAssets
+      state.userCreatedAssets = payload.userCreatedAssets || state.userCreatedAssets
+      state.fetchingAssets = false
+    },
+    getUserAssetsMetaFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingAssets = false
     },
 
     getUserAssetsRequest: (state) => {
@@ -285,6 +313,10 @@ export const {
   createNewUserRequest,
   createNewUserSuccess,
   createNewUserFailure,
+
+  getUserAssetsMetaRequest,
+  getUserAssetsMetaSuccess,
+  getUserAssetsMetaFailure,
 
   getUserAssetsRequest,
   getUserAssetsSuccess,

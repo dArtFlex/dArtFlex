@@ -131,8 +131,8 @@ export interface IItemGetEntities {
   created_at: string
   creator: string
   etherscan: string
-  hashtag: IHashtag[] // (!)
-  hashtags: IHashtag[]
+  hashtag: Array<IHashtag>
+  hashtags: Array<IHashtag>
   id: number
   lazymint: boolean
   lock: boolean
@@ -146,4 +146,90 @@ export interface IItemGetEntities {
   updated_at: string
   uri: string
   user: UserDataTypes
+}
+
+export interface IProfileGetEntities {
+  id: number
+  fullname: string
+  userid: string
+  email: string
+  wallet: string
+  overview: string
+  profile_image: string
+  cover_image: string
+  role: null | string
+  website: string
+  twitter: string
+  instagram: string
+  discord: string
+  facebook: string
+  youtube: string
+  tiktok: string
+  other_url: string
+  ban: boolean
+  created_at: string
+  updated_at: string
+  task_id: null | string
+  items: Array<IProfileItem>
+}
+
+interface IProfileItem {
+  id: number
+  contract: string
+  token_id: string
+  uri: string
+  creator: string
+  owner: string
+  royalty: string
+  royalty_fee: string
+  signature: string
+  ban: boolean
+  lock: boolean
+  lazymint: boolean
+  created_at: string
+  updated_at: string
+  chain_id: string
+  metadata: Array<IProfileMetadata>
+  hashtag: Array<IHashtag>
+  hashtags: Array<IHashtag>
+  marketplace: Array<IProfileMarketplace>
+  bid: Array<IProfileBid>
+}
+
+interface IProfileBid {
+  id: number
+  item_id: string
+  order_id: string
+  user_id: string
+  market_id: string
+  bid_amount: string
+  status: IMetaStatus
+  created_at: string
+  updated_at: string
+}
+
+interface IProfileMarketplace {
+  id: number
+  item_id: string
+  type: IMetaType
+  start_price: string
+  end_price: string
+  current_price: string
+  start_time: string
+  end_time: null | string
+  platform_fee: string
+  sales_token_contract: string
+  sold: boolean
+  created_at: string
+  updated_at: string
+}
+interface IProfileMetadata {
+  id: number
+  name: string
+  image: string
+  image_data: string
+  attribute: string
+  description: string
+  created_at: string
+  updated_at: string
 }

@@ -10,6 +10,8 @@ import {
   createNewUserFailure,
   getUserAssetsSuccess,
   getUserAssetsFailure,
+  getUserAssetsMetaSuccess,
+  getUserAssetsMetaFailure,
   getUserBidsSuccess,
   getUserBidsFailure,
   getPromotionSuccess,
@@ -47,6 +49,8 @@ import {
   IAddPromotionEntities,
   IPromotionId,
   ITradingHistory,
+  IProfileGetEntities,
+  IUserAssetsMeta,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
@@ -197,6 +201,53 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
   return { ...marketplaceData, imageData: imageData[0], userData, tokenData: asset }
 }
 
+export function* getUserAssetsMeta(api: IApi, { payload }: PayloadAction<IUserAssetsMeta>) {
+  try {
+    const { chainId, ...rest } = payload
+
+    const profile: IProfileGetEntities = yield call(api, {
+      url: APP_CONFIG.getItemsByProfile,
+      data: {
+        ...rest,
+        chain_id: chainId,
+      },
+    })
+    const { items, ...restProfile } = profile
+
+    const getAssetsListAllData: Array<
+      AssetDataTypes & {
+        tokenData: AssetTypes
+      }
+    > = items.map((asset) => {
+      const marketplaceData = asset.marketplace?.length ? asset.marketplace[0] : createDummyMarketplaceData()
+      return {
+        ...marketplaceData,
+        tokenData: asset,
+        imageData: { ...asset.metadata },
+        userData: { ...restProfile },
+      }
+    })
+
+    const getAssetsListAllWithStatuses: Array<
+      AssetDataTypesWithStatus & {
+        tokenData: AssetTypes
+      }
+    > = yield all(
+      getAssetsListAllData.map((asset, i) => call(getMainAssetStatus, api, asset, items[i].creator, items[i].owner))
+    )
+
+    const data = {}
+    rest.filter === 'in_wallet' && Object.assign(data, { userAssets: getAssetsListAllWithStatuses })
+    rest.filter === 'created' && Object.assign(data, { userCreatedAssets: getAssetsListAllWithStatuses })
+    rest.filter === 'sold' && Object.assign(data, { userSoldAssets: getAssetsListAllWithStatuses })
+    rest.filter === 'collected' && Object.assign(data, { userCollectedAssets: getAssetsListAllWithStatuses })
+    yield put(getUserAssetsMetaSuccess({ ...data }))
+  } catch (e) {
+    yield put(getUserAssetsMetaFailure(e))
+  }
+}
+
+// !!!!!!!! Should be removed as outdated function !!!!!!!!
 export function* getUserAssets(api: IApi) {
   try {
     const { user }: { user: UserDataTypes } = yield select((state) => state.user)

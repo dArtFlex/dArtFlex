@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
@@ -34,6 +34,7 @@ import { unlistingRequest } from 'stores/reducers/listing'
 import { IUserSoldAssets } from 'stores/reducers/user/types'
 import BigNumber from 'bignumber.js'
 import image from 'common/icons/cover_photo.png'
+import { walletService } from 'services/wallet_service'
 
 const { FILTER_VALUES, STATUSES } = appConst
 
@@ -56,9 +57,10 @@ const filterItems = [
   },
 ]
 
-export default function Dashboard() {
+export default function Profile() {
   const classes = useStyles()
   const history = useHistory()
+  const { id }: { id: string } = useParams()
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(FILTER_VALUES.IN_WALLET)
   const { user, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetchingAssets } = useSelector(
@@ -91,7 +93,7 @@ export default function Dashboard() {
     filter,
   })
 
-  if (!user) {
+  if (!id || !user) {
     history.push(routes.home)
     return null
   }
@@ -106,7 +108,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
-  }, [filter])
+    // dispatch(getUserAssetsRequest())
+  }, [])
 
   const links = [
     {
@@ -172,6 +175,7 @@ export default function Dashboard() {
 
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
+    // dispatch(getUserAssetsRequest())
     dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
   }
 

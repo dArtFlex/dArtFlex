@@ -1,4 +1,4 @@
-import { IEntity, IDatedEntity } from 'types'
+import { IEntity, IDatedEntity, IChainIdDecimalsFormat } from 'types'
 
 export interface UserDataTypes extends IEntity, IDatedEntity, ISocial {
   fullname: string
@@ -53,4 +53,12 @@ export interface ITradingHistory extends IDatedEntity, IEntity {
 export interface IComposeHistory {
   history: ITradingHistory[]
   type: 'owner' | 'buyer'
+}
+
+export type IUserProfileFilter = 'in_wallet' | 'created' | 'collected' | 'sold'
+
+export interface IUserAssetsMeta {
+  chainId: IChainIdDecimalsFormat
+  wallet: string
+  filter: IUserProfileFilter
 }
