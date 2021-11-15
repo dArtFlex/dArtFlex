@@ -106,7 +106,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
-  }, [filter])
+  }, [filter, chainId])
 
   const links = [
     {

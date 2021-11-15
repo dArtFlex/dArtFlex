@@ -178,5 +178,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderTopRightRadius: 10,
       borderTopLeftRadius: 10,
     },
+    hoverText: {
+      '&:hover': {
+        textDecoration: 'underline',
+      },
+    },
   })
 )
