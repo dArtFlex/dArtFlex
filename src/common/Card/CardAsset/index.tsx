@@ -28,6 +28,9 @@ export default function CardAsset(props: ICardAssetProps) {
 
   function cardActionEvent() {
     if (history.location.pathname.search('profile')) {
+      if (asset._minted_id) {
+        return history.push(`${routes.artworks}/${asset._minted_id}`)
+      }
       return asset.id
         ? history.push(`${routes.artworks}/${asset.item_id}`)
         : history.push(`${routes.artworks}/${asset.tokenData?.id}`)

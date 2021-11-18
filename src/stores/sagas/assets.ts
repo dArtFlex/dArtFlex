@@ -101,7 +101,7 @@ export function* getAssetsAllMeta(
     yield delay(250)
 
     const getMarketplactAssetsAll: AssetMarketplaceTypes[] = response.map((asset) =>
-      asset.marketplace ? { ...asset.marketplace, contract: asset.contract } : createDummyMarketplaceData()
+      asset.marketplace ? { ...asset.marketplace, contract: asset.contract } : createDummyMarketplaceData(asset.id)
     )
     const getAssetsListAllData: AssetDataTypes[] = getMarketplactAssetsAll.map((asset, i) => {
       return { ...asset, imageData: response[i].metadata, userData: response[i].user }
@@ -117,7 +117,7 @@ export function* getAssetsAllMeta(
         ...a,
         hashtag: response[i].hashtag,
         ban: response[i].ban,
-        isBidded: response[i].bid.status === 'pending',
+        isBidded: response[i].bid?.status === 'pending',
       }
     })
     yield put(getAssetsAllMetaSuccess(assets))
