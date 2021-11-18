@@ -94,8 +94,8 @@ export interface IAssetMarketData {
 export enum MetaFilter {
   ENDING_SOON = 'ending_soon',
   RECENT = 'recently_listed',
-  PRICE_LOW_HIGH = 'high_to_low',
-  PRICE_HIGH_LOW = 'low_to_high',
+  PRICE_LOW_HIGH = 'low_to_high',
+  PRICE_HIGH_LOW = 'high_to_low',
 }
 export type IMetaFilter = 'ending_soon' | 'recently_listed' | 'high_to_low' | 'low_to_high'
 export type IMetaOrder = 'DESC' | 'ASC'
