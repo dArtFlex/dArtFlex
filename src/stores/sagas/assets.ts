@@ -71,7 +71,7 @@ export function* getAssetsAllMeta(
     const metaData: Partial<IMeta> = { ...rest }
     fromPrice && Object.assign(metaData, fromPrice)
     toPrice && Object.assign(metaData, toPrice)
-    search && Object.assign(metaData, search)
+    search && Object.assign(metaData, { search })
 
     let data = {}
     if (payload.type === 'reserve_not_met') {
