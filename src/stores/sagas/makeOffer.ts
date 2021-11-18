@@ -40,6 +40,8 @@ export function* makeOffer(
       url: APP_CONFIG.getUserProfileByUserId(Number(tokenData.creator)),
     })
 
+    const royalty = JSON.parse(tokenData.royalty)
+
     const order: IOrderData[] = yield placeBidService.generateOrder({
       body: {
         contract: tokenData.contract,
@@ -51,6 +53,7 @@ export function* makeOffer(
         erc20: tokenContract,
         signature: tokenData.signature,
         lazymint,
+        royalty,
       },
     })
 
