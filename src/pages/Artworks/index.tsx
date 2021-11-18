@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectAssets, selectWallet, selectPromotion, selectSearch, selectHashtags } from 'stores/selectors'
-import { getHashtagsAllRequest, getAssetsAllRequest } from 'stores/reducers/assets'
+import {
+  selectAssets,
+  selectWallet,
+  selectPromotion,
+  selectHashtags,
+  selectAssetsMeta,
+  selectChain,
+} from 'stores/selectors'
+import { getHashtagsAllRequest, getAssetsAllMetaRequest, getAssetsAllMetaContextRequest } from 'stores/reducers/assets'
 import { getPromotionRequest } from 'stores/reducers/user'
 import clsx from 'clsx'
 import {
@@ -20,8 +27,6 @@ import { PageWrapper, Select, CardAsset, CardSkeleton } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
-  useInnerAssetsFilter,
-  useSortedAssets,
   useCardStatusLiveAuction,
   useCardStatusBuyNow,
   useCardStatusReserveNotMet,
@@ -29,58 +34,57 @@ import {
   useCardStatusFeaturedArtworks,
   usePromotionMultiplyData,
 } from './lib'
-import { useSearchAssets } from 'hooks'
 import appConst from 'config/consts'
-import { IHashtag, IArtworksFiltes } from 'types'
+import { IHashtag, IMetaFilter, MetaFilter, IMetaType, MetaType } from 'types'
 import { useStyles } from './styles'
 import { creatArrayFromNumber, getTokenSymbolByContracts } from 'utils'
 
 const { INTERVALS } = appConst
 
 const {
-  SORT_VALUES: { ENDING_SOON, RECENT, PRICE_LOW_HIGH, PRICE_HIGH_LOW },
-  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD, FEATURED_ARTWORKS },
+  FILTER_VALUES: { LIVE_AUCTION, BUY_NOW, RESERVE_NOT_MET, SOLD },
+  ASSETS_PRE_LOAD,
 } = appConst
 
 const sortItems = [
   {
     label: 'Ending soon',
-    value: ENDING_SOON,
+    value: MetaFilter.ENDING_SOON,
   },
   {
     label: 'Recently listed',
-    value: RECENT,
+    value: MetaFilter.RECENT,
   },
   {
     label: 'Price: Low to High',
-    value: PRICE_LOW_HIGH,
+    value: MetaFilter.PRICE_LOW_HIGH,
   },
   {
     label: 'Price: High to low',
-    value: PRICE_HIGH_LOW,
+    value: MetaFilter.PRICE_HIGH_LOW,
   },
 ]
 
 const filterItems = [
   {
     label: 'Live Auction',
-    value: LIVE_AUCTION,
+    value: MetaType.LIVE_AUCTION,
   },
   {
     label: 'Buy Now',
-    value: BUY_NOW,
+    value: MetaType.BUY_NOW,
   },
   {
     label: 'Reserve not met',
-    value: RESERVE_NOT_MET,
+    value: MetaType.RESERVE_NOT_MET,
   },
   {
     label: 'Sold',
-    value: SOLD,
+    value: MetaType.SOLD,
   },
   {
     label: 'Featured artworks',
-    value: FEATURED_ARTWORKS,
+    value: MetaType.FEATURED_ARTWORKS,
   },
 ]
 
@@ -101,29 +105,21 @@ export default function Artworks() {
   const { assets, fetchingAll } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
-  const { search } = useSelector(selectSearch())
   const { hashtags } = useSelector(selectHashtags())
+  const { meta } = useSelector(selectAssetsMeta())
+  const { chainId } = useSelector(selectChain())
+  const [sortValue, setSortValue] = useState<IMetaFilter>(MetaFilter.ENDING_SOON)
 
-  const [sortValue, setSortValue] = useState<'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low'>(
-    'ending_soon'
-  )
-  const [filter, setFilter] = useState<IArtworksFiltes>(LIVE_AUCTION)
+  const [filter, setFilter] = useState<IMetaType>(meta.type)
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
   const [priceFrom, setPriceFrom] = useState('')
   const [priceTo, setPriceTo] = useState('')
   const [hotOnly, setHotOnly] = useState(false)
+  const [offset, setOffset] = useState(meta.offset)
+  const [limit, setLimit] = useState(meta.limit)
 
-  const searchAssets = useSearchAssets({ assets, search })
-  const innerSearchAssets = useInnerAssetsFilter({
-    assets: searchAssets,
-    sortBy: sortValue,
-    price: { from: priceFrom, to: priceTo },
-    hotOnly,
-    activeHashTags,
-  })
-  const sortedAssets = useSortedAssets({ assets: innerSearchAssets, filter })
   const promotionMultiply = usePromotionMultiplyData({ promotionIds, promotionAssets })
 
   const handleSetPrice = (value: string, selector: 'from' | 'to') => {
@@ -142,31 +138,41 @@ export default function Artworks() {
   }
 
   const handleResetFilter = () => {
-    setSortValue('ending_soon')
+    setSortValue(MetaFilter.ENDING_SOON)
     setPriceFrom('')
     setPriceTo('')
     setHotOnly(false)
   }
 
-  const fetchAssets = () => {
-    dispatch(getAssetsAllRequest())
-    dispatch(getPromotionRequest())
-  }
+  const fetchAssets = useCallback(() => {
+    dispatch(
+      getAssetsAllMetaRequest({
+        type: filter,
+        filter: sortValue,
+        fromPrice: parseFloat(priceFrom) || 0,
+        toPrice: parseFloat(priceTo) || 0,
+        hotOnly,
+        limit,
+        offset: meta.offset,
+        search: meta.search,
+        chainId,
+      })
+    )
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, limit, meta.search, chainId])
+
+  useEffect(() => {
+    fetchAssets()
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, meta.search, chainId])
 
   useEffect(() => {
     fetchAssets()
     dispatch(getHashtagsAllRequest())
-    const iId = setInterval(() => fetchAssets(), INTERVALS.UPDATE_ASSETS)
+    dispatch(getPromotionRequest())
+    const iId = setInterval(() => dispatch(getAssetsAllMetaContextRequest()), INTERVALS.UPDATE_ASSETS)
     return () => {
       clearInterval(iId)
     }
   }, [])
-
-  useEffect(() => {
-    if (search) {
-      setFilter(FEATURED_ARTWORKS)
-    }
-  }, [search])
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -184,7 +190,7 @@ export default function Artworks() {
                 }: React.ChangeEvent<{
                   value: unknown
                 }>) => {
-                  setSortValue(target.value as 'ending_soon' | 'recently_listed' | 'price_low_high' | 'price_high_low')
+                  setSortValue(target.value as IMetaFilter)
                 }}
                 classes={{ select: classes.sortArtworksMenu }}
                 className={classes.sortArtworksMenu}
@@ -319,9 +325,9 @@ export default function Artworks() {
           </Box>
         )}
         <Box className={classes.grid} mt={2}>
-          {!assets?.length && fetchingAll
+          {fetchingAll
             ? creatArrayFromNumber(10).map((e, i) => <CardSkeleton key={i} />)
-            : sortedAssets?.map((asset, i) => (
+            : assets?.map((asset, i) => (
                 <CardAsset
                   key={i}
                   asset={{
@@ -345,6 +351,19 @@ export default function Artworks() {
                   }
                 />
               ))}
+        </Box>
+
+        <Box m={3} display={'flex'} justifyContent={'center'}>
+          <Button
+            onClick={() => {
+              setLimit(meta.limit + ASSETS_PRE_LOAD)
+              setOffset(offset + 1)
+            }}
+            variant={'outlined'}
+            color={'secondary'}
+          >
+            Load More
+          </Button>
         </Box>
       </Box>
     </PageWrapper>

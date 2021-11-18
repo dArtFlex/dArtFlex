@@ -10,6 +10,8 @@ import {
   IPromotionId,
   ITradingHistory,
   IError,
+  IChainIdDecimalsFormat,
+  IUserProfileFilter,
 } from 'types'
 
 export interface UserStateType {
@@ -18,11 +20,13 @@ export interface UserStateType {
   fetchingBids: boolean
   fetchingPromo: boolean
   fetchingTrading: boolean
-  isId: boolean
   fetchingId: boolean
+  fetchingAssets: boolean
+  isId: boolean
   error: IError
   search: string
   user: UserDataTypes | null
+  profile: UserDataTypes | null
   role?: IUserRole
   userAssets: IUserAsset[] | []
   userCollectedAssets: IUserAsset[] | []

@@ -4,6 +4,7 @@ import apiMiddleware from '../../services/api_middleware'
 import {
   getUserDataRequest,
   createNewUserRequest,
+  getUserAssetsMetaRequest,
   getUserAssetsRequest,
   getUserBidsRequest,
   getPromotionRequest,
@@ -16,6 +17,7 @@ import {
   validateUserIdRequest,
   getActiveBidsByUserRequest,
   getSalesDataByOwnerRequest,
+  getUserProfileRequest,
 } from '../reducers/user'
 import {
   getAssetsAllRequest,
@@ -23,6 +25,8 @@ import {
   getExchangeRateTokensRequest,
   getHashtagsAllRequest,
   addHashtagsRequest,
+  getAssetsAllMetaRequest,
+  getAssetsAllMetaContextRequest,
 } from '../reducers/assets'
 import {
   connectMetaMaskRequest,
@@ -63,6 +67,7 @@ import { getUserAlbumRequest, addImageToAlbumRequest, deleteImageFromAlbumReques
 import {
   getUserData,
   createNewUser,
+  getUserAssetsMeta,
   getUserAssets,
   getUserBids,
   getPromotion,
@@ -75,8 +80,17 @@ import {
   validateUserId,
   getActiveBidsByUser,
   getSalesDataByOwner,
+  getUserProfile,
 } from '../sagas/user'
-import { getAssetsAllData, getAssetById, getExchangeRateTokens, getHashtagsAll, addHashtags } from '../sagas/assets'
+import {
+  getAssetsAllData,
+  getAssetById,
+  getExchangeRateTokens,
+  getHashtagsAll,
+  addHashtags,
+  getAssetsAllMeta,
+  getAssetsAllMetaContext,
+} from '../sagas/assets'
 import {
   connectMetaMask,
   connectWalletConnect,
@@ -102,10 +116,13 @@ export default function* root() {
     takeLatest(getExchangeRateTokensRequest.type, getExchangeRateTokens, apiMiddleware),
     takeLatest(getHashtagsAllRequest.type, getHashtagsAll, apiMiddleware),
     takeLatest(addHashtagsRequest.type, addHashtags, apiMiddleware),
+    takeLatest(getAssetsAllMetaRequest.type, getAssetsAllMeta, apiMiddleware),
+    takeLatest(getAssetsAllMetaContextRequest.type, getAssetsAllMetaContext, apiMiddleware),
 
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
     takeLatest(createNewUserRequest.type, createNewUser, apiMiddleware),
+    takeLatest(getUserAssetsMetaRequest.type, getUserAssetsMeta, apiMiddleware),
     takeLatest(getUserAssetsRequest.type, getUserAssets, apiMiddleware),
     takeLatest(getUserBidsRequest.type, getUserBids, apiMiddleware),
     takeLatest(getPromotionRequest.type, getPromotion, apiMiddleware),
@@ -118,6 +135,7 @@ export default function* root() {
     takeLatest(validateUserIdRequest.type, validateUserId, apiMiddleware),
     takeLatest(getActiveBidsByUserRequest.type, getActiveBidsByUser, apiMiddleware),
     takeLatest(getSalesDataByOwnerRequest.type, getSalesDataByOwner, apiMiddleware),
+    takeLatest(getUserProfileRequest.type, getUserProfile, apiMiddleware),
 
     /** Wallet **/
     takeLatest(connectMetaMaskRequest.type, connectMetaMask, apiMiddleware),

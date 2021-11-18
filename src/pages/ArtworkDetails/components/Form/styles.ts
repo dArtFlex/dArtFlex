@@ -411,5 +411,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     shareLinkDisable: {
       color: 'rgba(0, 0, 0, 0.26)',
     },
+    hoverText: {
+      '&:hover': {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+      },
+    },
   })
 )

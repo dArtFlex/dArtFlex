@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectConstructor } from 'stores/selectors'
+import { selectConstructor, selectUser } from 'stores/selectors'
 import clsx from 'clsx'
 import { v4 as uuidv4 } from 'uuid'
 import { Box, Typography } from '@material-ui/core'
@@ -47,6 +47,7 @@ export default function Constructor() {
   const [data, setData] = useState<IConstructor>(initialData)
   const [filesSource, setFilesSource] = useState<ConstructorSource | null>(null)
   const { priority, endScale } = useSelector(selectConstructor())
+  const { user } = useSelector(selectUser())
 
   useEffect(() => {
     setData((state) => ({ ...state, images: GALLERY }))
@@ -59,6 +60,7 @@ export default function Constructor() {
         styleImage: values.file1,
         priority,
         endScale,
+        userId: user?.userid || '',
       })
     )
   }

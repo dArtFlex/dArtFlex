@@ -25,6 +25,11 @@ export class Web3Service {
   }
 
   static async initializeChainId(web3: Web3) {
+    if (!web3.currentProvider) {
+      Web3Service.prototype.chainId = 1 // Default chain Id
+      Web3Service.prototype.web3 = new Web3(APP_CONFIG.__eth) // Default chain
+      return
+    }
     const chainId: number = await web3.eth.getChainId()
     const chainName = getChainKeyByChainId(chainId)
     Web3Service.prototype.chainId = chainId

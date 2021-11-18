@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import BigNumber from 'bignumber.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
-import { Box, Typography, Avatar, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
+import { Box, Typography, Button, Tabs, Tab, Tooltip as MUITooltip, IconButton } from '@material-ui/core'
 import { Modal, WalletConnect, ConfirmationModal } from 'common'
 import { TabHistory, About, TabBids } from '../../../components'
+import UserBox from '../UserBox'
 import CTAPopover from '../CTAPopover'
 import PriceDropModal from '../PriceDropModal'
 import { MoreHorizontalIcon } from 'common/icons'
@@ -19,14 +20,7 @@ import {
 } from 'stores/selectors'
 import { unlistingRequest, changePriceRequest, resetChangePrice } from 'stores/reducers/listing'
 import { chainErrorRequest } from 'stores/reducers/wallet'
-import {
-  normalizeDate,
-  shortCutName,
-  shareWithTwitter,
-  guardChain,
-  getChainKeyByContract,
-  getChainNameById,
-} from 'utils'
+import { normalizeDate, shareWithTwitter, guardChain, getChainKeyByContract, getChainNameById } from 'utils'
 import { useStyles } from '../styles'
 import { IBids, UserDataTypes, AssetTypes, IChainId } from 'types'
 import appConst from '../../../../../config/consts'
@@ -151,20 +145,26 @@ export default function FormBuyDetails(props: IDetailsFormProps) {
             <Typography variant={'body1'} className={classes.infoTitle}>
               Creator
             </Typography>
-            <Box className={classes.avatarBox}>
-              <Avatar className={classes.avatar} alt="Avatar" src={creatorData?.profile_image} />
-              <span>{creatorData?.wallet !== user?.wallet ? `@${shortCutName(creatorData?.userid)}` : '@you'}</span>
-            </Box>
+            {creatorData && (
+              <UserBox
+                userImage={creatorData.profile_image}
+                wallet={creatorData.wallet}
+                userId={creatorData?.wallet !== user?.wallet ? creatorData?.userid : 'you'}
+              />
+            )}
           </Box>
           {tokenData && tokenData.creator !== tokenData.owner && (
             <Box>
               <Typography variant={'body1'} className={classes.infoTitle}>
                 Owned by
               </Typography>
-              <Box className={classes.avatarBox}>
-                <Avatar className={classes.avatar} alt="Avatar" src={ownerData?.profile_image} />
-                <span>{ownerData?.wallet !== user?.wallet ? `@${shortCutName(ownerData?.userid)}` : '@you'}</span>
-              </Box>
+              {ownerData && (
+                <UserBox
+                  userImage={ownerData.profile_image}
+                  wallet={ownerData.wallet}
+                  userId={ownerData?.wallet !== user?.wallet ? ownerData?.userid : 'you'}
+                />
+              )}
             </Box>
           )}
         </Box>

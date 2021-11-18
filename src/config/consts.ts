@@ -2,8 +2,8 @@ const appConst = {
   SORT_VALUES: {
     ENDING_SOON: 'ending_soon',
     RECENT: 'recently_listed',
-    PRICE_LOW_HIGH: 'price_low_high',
-    PRICE_HIGH_LOW: 'price_high_low',
+    PRICE_LOW_HIGH: 'high_to_low',
+    PRICE_HIGH_LOW: 'low_to_high',
   },
   FILTER_VALUES: {
     LIVE_AUCTION: 'auction',
@@ -46,6 +46,7 @@ const appConst = {
     UPDATE_ASSETS: 20000, // every 20 second
     UPDATE_BIDS_HISTORY: 5000, // every 5 seconds
   },
+  ASSETS_PRE_LOAD: 20,
 
   ACTIVE_WALLET_STORAGE: 'active.wallet',
   WALLET_CONNECT_STORAGE: {

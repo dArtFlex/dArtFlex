@@ -8,18 +8,20 @@ import { IApi } from '../../services/types'
 export function* createStyleTransfer(
   api: IApi,
   {
-    payload: { contentImage, styleImage },
+    payload: { contentImage, styleImage, userId },
   }: PayloadAction<{
     contentImage: ConstructorStateType['contentImage']
     styleImage: ConstructorStateType['styleImage']
     priority: ConstructorStateType['priority']
     endScale: ConstructorStateType['endScale']
+    userId: string
   }>
 ) {
   try {
     const formData = new FormData()
     formData.append('file1', contentImage as File)
     formData.append('file2', styleImage as File)
+    formData.append('userId', userId)
 
     const name: ConstructorStateType['imageUrl'] = yield call(api, {
       url: APP_CONFIG.constructorStyleTransferSafe,

@@ -27,6 +27,11 @@ export const selectHashtags = () =>
     (store: stateType) => store.assets?.hashtags,
     (hashtags) => ({ hashtags })
   )
+export const selectAssetsMeta = () =>
+  createSelector(
+    (store: stateType) => store.assets?.meta,
+    (meta) => ({ meta })
+  )
 
 // User
 export const selectUser = () =>
@@ -42,12 +47,14 @@ export const selectUser = () =>
       fetching,
       fetchingBids,
       fetchingTrading,
-      isId,
+      fetchingAssets,
       fetchingId,
+      isId,
       userIdValid,
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     }) => ({
       user,
       userAssets,
@@ -58,12 +65,14 @@ export const selectUser = () =>
       fetching,
       fetchingBids,
       fetchingTrading,
-      isId,
+      fetchingAssets,
       fetchingId,
+      isId,
       userIdValid,
       error,
       activeBids,
       biddedOfferedAssets,
+      profile,
     })
   )
 export const selectUserRole = () =>
@@ -117,6 +126,11 @@ export const selectWalletChainError = () =>
   createSelector(
     (store: stateType) => store.wallet.chainError,
     (chainError) => ({ chainError })
+  )
+export const selectWalletChainName = () =>
+  createSelector(
+    (store: stateType) => store.wallet.chainName,
+    (chainName) => ({ chainName })
   )
 
 // Minting
@@ -191,5 +205,15 @@ export const selectAlbum = () =>
       fetching,
       error,
       success,
+    })
+  )
+
+// Chain
+export const selectChain = () =>
+  createSelector(
+    (store: stateType) => store.chain,
+    ({ chainId, chainName }) => ({
+      chainId,
+      chainName,
     })
   )

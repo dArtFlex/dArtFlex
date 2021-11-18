@@ -5,6 +5,7 @@ export default {
   blog: '/blog',
   artworkAccountSettings: '/account-settings',
   dashboard: '/dashboard',
+  profile: '/profile/:id',
   sellNFT: '/sell',
   createNFT: '/create',
   constructor: '/constructor',

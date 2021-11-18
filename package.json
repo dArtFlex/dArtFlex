@@ -71,6 +71,7 @@
     "build-prod": "REACT_APP_STAGE=production react-scripts build",
     "build-stage": "REACT_APP_STAGE=stage react-scripts build",
     "build-develop": "REACT_APP_STAGE=development react-scripts build",
+    "lint": "eslint --ext .ts,.tsx src --fix",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
