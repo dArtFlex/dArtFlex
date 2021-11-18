@@ -10,6 +10,7 @@ import { reducer as managementReducer } from './management'
 import { reducer as makeOfferReducer } from './makeOffer'
 import { reducer as constructorReducer } from './constructor'
 import { reducer as albumReducer } from './album'
+import { reducer as chainReducer } from './chain'
 import { UserStateType } from './user/types'
 import { AssetsStateType } from './assets/types'
 import { WalletsStateType } from './wallet/types'
@@ -22,6 +23,7 @@ import { ManagementStateType } from './management/types'
 import { MakeOfferStateType } from './makeOffer/types'
 import { ConstructorStateType } from './constructor/types'
 import { AlbumStateType } from './album/types'
+import { ChainStateType } from './chain/types'
 
 const rootReducer = {
   user: userReducer,
@@ -36,6 +38,7 @@ const rootReducer = {
   management: managementReducer,
   constructorAI: constructorReducer,
   album: albumReducer,
+  chain: chainReducer,
 }
 
 export interface stateType {
@@ -51,6 +54,7 @@ export interface stateType {
   management: ManagementStateType
   constructorAI: ConstructorStateType
   album: AlbumStateType
+  chain: ChainStateType
 }
 
 export default rootReducer

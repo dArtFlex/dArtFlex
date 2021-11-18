@@ -48,9 +48,10 @@ export function* placeBid(
     const convertChainId: IChaintIdHexFormat | number = networkConvertor(chainId)
 
     if (supportedNetwork(convertChainId) && typeof convertChainId !== 'number') {
-      const tokenContract = walletService.getTokenContract(sales_token_contract)
-      const symbol: string = yield tokenContract.methods.symbol().call()
-      const tokenContractWETH = (tokensAll[convertChainId].find((t) => t.symbol === symbol) as IBaseTokens).id
+      const salesTokenContract = walletService.getTokenContract(sales_token_contract)
+      const symbol: string = yield salesTokenContract.methods.symbol().call()
+      const tokenContract = (tokensAll[convertChainId].find((t) => t.symbol === symbol) as IBaseTokens).id
+
       const { tokenData, marketData }: { tokenData: AssetTypes; marketData: AssetMarketplaceTypes } = yield select(
         (state) => state.assets.assetDetails
       )
@@ -60,7 +61,7 @@ export function* placeBid(
 
       const lazymint = tokenData.lazymint
 
-      const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContractWETH)
+      const allowance: boolean = yield placeBidService.checkAllowance(accounts[0], tokenContract)
       if (!allowance) {
         // Should only be once, so we need to check if it's approved
         yield placeBidService.approveToken(accounts[0], sales_token_contract)
@@ -79,7 +80,7 @@ export function* placeBid(
           taker: accounts[0],
           price: endPrice,
           uri: tokenData.uri,
-          erc20: tokenContractWETH,
+          erc20: tokenContract,
           signature: tokenData.signature,
           lazymint,
           royalty,

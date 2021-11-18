@@ -1,10 +1,9 @@
 import { web3Service } from 'services/web3_service'
 import { walletService } from 'services/wallet_service'
-import { ABI, AUCTION_CONTRACT_ADDRESS } from 'core/contracts/auction_contract'
 import { contractAddress } from 'core/contracts/addresses'
 import { abiExchangeV2 } from 'core/contracts/abi'
-import { IOrderData, IChaintIdHexFormat, IChainName } from 'types'
-import { setGasPriceByChainId, getChainKeyByChainId } from 'utils'
+import { IOrderData, IChainName } from 'types'
+import { getChainKeyByChainId } from 'utils'
 
 class MakeOfferService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

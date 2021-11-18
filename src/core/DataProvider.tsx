@@ -5,8 +5,10 @@ import { getExchangeRateTokensRequest } from 'stores/reducers/assets'
 import { getUserDataRequest } from 'stores/reducers/user'
 import { getTokensBalancesRequest, walletsHistoryRequest } from 'stores/reducers/wallet'
 import { listenForSocketMessagesRequest } from 'stores/reducers/notifications'
+import { switchChain } from 'stores/reducers/chain'
 import { CircularProgressLoader } from 'common'
 import appConst from 'config/consts'
+import { getChainKeyByChainId } from 'utils'
 
 const { INTERVALS } = appConst
 
@@ -31,6 +33,13 @@ export const DataProvider: React.FC = ({ children }) => {
     fetchRate()
     dispatch(getExchangeRateTokensRequest())
     dispatch(walletsHistoryRequest())
+
+    const chainIdData = localStorage.getItem('chainId')
+    if (chainIdData) {
+      const chainId = JSON.parse(chainIdData)
+      const chainName = getChainKeyByChainId(chainId)
+      if (chainName) dispatch(switchChain({ chainId, chainName }))
+    }
 
     const iId = setInterval(() => fetchRate(), INTERVALS.UPDATE_ASSETS)
     setReady(true)

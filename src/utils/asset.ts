@@ -54,7 +54,7 @@ export function getAssetStatus({
   }
 }
 
-export function createDummyMarketplaceData() {
+export function createDummyMarketplaceData(id?: number) {
   return {
     id: 0,
     item_id: '',
@@ -70,5 +70,6 @@ export function createDummyMarketplaceData() {
     sold: false,
     created_at: '',
     updated_at: '',
+    _minted_id: id,
   }
 }

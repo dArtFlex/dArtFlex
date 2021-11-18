@@ -14,10 +14,12 @@ const initialState: UserStateType = {
   search: '',
   error: '',
   user: null,
+  profile: null,
   fetching: false,
   fetchingBids: false,
   fetchingPromo: false,
   fetchingTrading: false,
+  fetchingAssets: false,
   isId: false,
   fetchingId: false,
   activeBids: [],
@@ -63,6 +65,46 @@ const userSlice = createSlice({
       state.fetching = false
     },
 
+    getUserAssetsMetaRequest: (state, i) => {
+      state.fetchingAssets = true
+    },
+    getUserAssetsMetaSuccess: (
+      state,
+      {
+        payload,
+      }: PayloadAction<
+        Partial<{
+          userAssets: UserStateType['userAssets']
+          userCollectedAssets: UserStateType['userCollectedAssets']
+          userSoldAssets: UserStateType['userSoldAssets']
+          userCreatedAssets: UserStateType['userCreatedAssets']
+        }>
+      >
+    ) => {
+      state.userAssets = payload.userAssets || state.userAssets
+      state.userCollectedAssets = payload.userCollectedAssets || state.userCollectedAssets
+      state.userSoldAssets = payload.userSoldAssets || state.userSoldAssets
+      state.userCreatedAssets = payload.userCreatedAssets || state.userCreatedAssets
+      state.fetchingAssets = false
+    },
+    getUserAssetsMetaFailure: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload
+      state.fetchingAssets = false
+    },
+
+    getUserProfileRequest: (state, i) => {
+      state.fetching = true
+    },
+    getUserProfileSuccess: (state, { payload }: PayloadAction<{ profile: UserStateType['profile'] }>) => {
+      state.profile = payload.profile
+      state.fetching = false
+    },
+    getUserProfileFailure: (state, { payload }: PayloadAction<{ error: UserStateType['error'] }>) => {
+      state.error = payload.error
+      state.fetching = false
+    },
+
+    // !!!!!!!! getUserAssets.. Should be removed as outdated methods !!!!!!!!
     getUserAssetsRequest: (state) => {
       state.fetching = true
     },
@@ -285,6 +327,14 @@ export const {
   createNewUserRequest,
   createNewUserSuccess,
   createNewUserFailure,
+
+  getUserAssetsMetaRequest,
+  getUserAssetsMetaSuccess,
+  getUserAssetsMetaFailure,
+
+  getUserProfileRequest,
+  getUserProfileSuccess,
+  getUserProfileFailure,
 
   getUserAssetsRequest,
   getUserAssetsSuccess,
