@@ -54,13 +54,14 @@ const LOCAL_URL = 'http://localhost:3000'
 
 const ETHEREUM_PROVIDER = 'https://mainnet.infura.io/v3/6c7fceaca1a3433dad73cb537f87644b'
 const RINKEBY_PROVIDER = 'https://rinkeby.infura.io/v3/2de4d25aeea745b181468b898cf4e899'
+const BSC_PROVIDER = 'https://bsc-dataseed.binance.org'
 const BSC_TESTNET_PROVIDER = 'https://data-seed-prebsc-1-s1.binance.org:8545'
 const POLYGON_PROVIDER = 'https://rpc-mainnet.maticvigil.com'
 
 const APP_CONFIG = {
   // CHAIN PROVIDERS
   __eth: ETHEREUM_PROVIDER,
-  __bsc: BSC_TESTNET_PROVIDER,
+  __bsc: BSC_PROVIDER,
   __polygon: POLYGON_PROVIDER,
   __ethRinkeby: RINKEBY_PROVIDER,
   __bscTestnet: BSC_TESTNET_PROVIDER,
