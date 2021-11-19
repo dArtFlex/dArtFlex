@@ -144,11 +144,9 @@ function* getBalance(api: IApi, token: IBaseTokens, acc: string) {
     if (acc && id) {
       const tokenContract = walletService.getTokenContract(id)
       const balance: string = yield tokenContract.methods.balanceOf(acc).call()
+
       if (balance !== '0') {
-        const _balance = new BigNumber(balance)
-          .div(`10e${decimals - 1}`)
-          .toNumber()
-          .toFixed(2)
+        const _balance = new BigNumber(balance).div(`10e${decimals - 1}`).toNumber()
 
         const price: number = yield call(api, {
           url: APP_CONFIG.exchangeRateSafe(convertTokenSymbol(symbol)),
