@@ -47,3 +47,10 @@ export interface IBaseTokens {
   decimals: number
   logoURI: string
 }
+
+export interface ILink {
+  lable: string
+  icon?: JSX.Element
+  onClick: () => void
+  disabled?: boolean
+}
