@@ -265,7 +265,7 @@ export default function CardActions(props: ICardActionsProps) {
 const Section = ({ text, value }: { text: string; value: JSX.Element | string }) => (
   <Box>
     <Typography component={'span'}>{text}</Typography>
-    <Typography color={'inherit'} variant={'h4'}>
+    <Typography color={'inherit'} variant={'h4'} style={{ fontSize: 16 }}>
       {value}
     </Typography>
   </Box>

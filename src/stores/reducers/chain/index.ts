@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ChainStateType } from './types'
 
 const initialState: ChainStateType = {
-  chainId: 1,
-  chainName: '__eth',
+  chainId: 137,
+  chainName: '__polygon',
 }
 
 const chainSlice = createSlice({
