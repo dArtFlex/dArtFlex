@@ -1,12 +1,12 @@
 import React from 'react'
 import { PopoverLinks } from 'common'
-import { ILinks } from '../Popover/PopoverLinks/types'
+import { ILink } from 'types'
 interface IProfileActionMenuProps {
   anchor?: null | HTMLElement
   setAnchor?: (target: null) => void
   isMobile?: boolean
-  links: ILinks[]
-  subLinks: ILinks[]
+  links: ILink[]
+  subLinks: ILink[]
 }
 
 export default function ProfileActionMenu(props: IProfileActionMenuProps) {

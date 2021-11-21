@@ -4,17 +4,15 @@ import { switchChain } from 'stores/reducers/chain'
 import { selectChain } from 'stores/selectors'
 import { PopoverLinks } from 'common'
 import { Check as CheckIcon } from '@material-ui/icons'
-import { IChainName } from 'types'
+import { IChainName, ILink } from 'types'
 
 interface IChainActionMenuProps {
   anchor: null | HTMLElement
   setAnchor: (target: null) => void
 }
 
-interface ILinks {
+interface ILinks extends ILink {
   chainNameKey: IChainName
-  lable: string
-  onClick: () => void
 }
 
 export default function ChainMenu(props: IChainActionMenuProps) {
@@ -31,6 +29,7 @@ export default function ChainMenu(props: IChainActionMenuProps) {
       chainNameKey: '__eth',
       lable: 'ETH',
       onClick: () => dispatch(switchChain({ chainName: '__eth', chainId: 1 })),
+      disabled: true,
     },
     {
       chainNameKey: '__bsc',
