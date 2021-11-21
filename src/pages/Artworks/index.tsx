@@ -228,7 +228,7 @@ export default function Artworks() {
                 >
                   {label}
                 </ToggleButton>
-              ) : value === LIVE_AUCTION || value === RESERVE_NOT_MET ? (
+              ) : value === LIVE_AUCTION || value === RESERVE_NOT_MET || value === BUY_NOW ? (
                 <ToggleButton
                   key={value}
                   value={value}

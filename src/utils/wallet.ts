@@ -36,7 +36,8 @@ export function supportedChainId(chainId: number) {
 }
 
 export function supportedNetwork(chainId: string | number) {
-  const allowedNetworks = ['0x1', '0x4', '0x38', '0x61', '0x137', 1, 4, 56, 97, 137]
+  // @todo Ethereum chain should be included after realization - 0x4, 1
+  const allowedNetworks = ['0x1', '0x38', '0x61', '0x137', 4, 56, 97, 137]
   return allowedNetworks.some((network) => network === chainId)
 }
 

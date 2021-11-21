@@ -1,20 +1,16 @@
+import { ILink } from 'types'
+
 export interface IPopoverLinksProps {
   anchor?: HTMLElement | null
   setAnchor?: (target: null) => void
-  links: ILinks[]
-  subLinks?: ILinks[]
+  links: ILink[]
+  subLinks?: ILink[]
   title?: JSX.Element | null
   subTitle?: JSX.Element | null
   isMobile?: boolean
 }
 
-export interface ILinks {
-  lable: string
-  icon?: JSX.Element
-  onClick: () => void
-}
-
-export interface IButtonLink extends ILinks {
+export interface IButtonLink extends ILink {
   subLinks?: boolean
   isMobile?: boolean
 }
