@@ -12,7 +12,7 @@ export default function WalletError() {
         Wrong network!
       </Typography>
       <Typography className={classes.walletErrorDesc}>
-        Your wallet is connected to the wrong network Please change your network to one of mainnet
+        Your wallet is connected to the wrong network Please change your network to one of mainnet Binance or Polygon
       </Typography>
 
       <Button

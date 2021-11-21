@@ -10,7 +10,7 @@ export default function PopoverLinks(props: IPopoverLinksProps) {
   const { anchor, setAnchor, title = null, subTitle = null, isMobile, links, subLinks } = props
 
   const ButtonLink = (props: IButtonLink) => {
-    const { onClick, lable, icon = null, subLinks, isMobile } = props
+    const { onClick, lable, icon = null, subLinks, isMobile, disabled = false } = props
     return (
       <Button
         key={lable}
@@ -20,6 +20,7 @@ export default function PopoverLinks(props: IPopoverLinksProps) {
         className={clsx(isMobile ? classes.btnTitleMobile : classes.btnTitle, subLinks && classes.btnSubTitle)}
         startIcon={icon}
         classes={{ startIcon: classes.btnIcon }}
+        disabled={disabled}
       >
         {lable}
       </Button>
