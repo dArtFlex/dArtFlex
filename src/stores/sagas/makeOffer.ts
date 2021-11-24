@@ -91,7 +91,7 @@ export function* makeOffer(
 
     yield put(makeOfferSuccess({ offerId: getIdFromString(offerId) as number }))
   } catch (e) {
-    yield put(makeOfferFailure(e))
+    yield put(makeOfferFailure({ code: 4001, message: (<Error>e).message }))
   }
 }
 
