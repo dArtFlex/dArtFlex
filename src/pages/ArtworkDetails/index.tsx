@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { PageWrapper, Form, CircularProgressLoader } from 'common'
+import { PageWrapper, Form, CircularProgressLoader, ErrorInterceptor } from 'common'
 import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
@@ -61,14 +61,16 @@ export default function ArtworkDetails() {
 
   return (
     <PageWrapper>
-      {assetDetails.tokenData === null ? (
-        <CircularProgressLoader />
-      ) : (
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        <Form initialValues={formData} onSubmit={() => {}} validationSchema={useValidationSchema()}>
-          <FormContainer />
-        </Form>
-      )}
+      <ErrorInterceptor reducers={['offer']}>
+        {assetDetails.tokenData === null ? (
+          <CircularProgressLoader />
+        ) : (
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          <Form initialValues={formData} onSubmit={() => {}} validationSchema={useValidationSchema()}>
+            <FormContainer />
+          </Form>
+        )}
+      </ErrorInterceptor>
     </PageWrapper>
   )
 }

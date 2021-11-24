@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MakeOfferStateType } from './types'
+import { IError } from 'types'
 
 const initialState: MakeOfferStateType = {
   fetching: false,
@@ -18,7 +19,7 @@ const makeOfferSlice = createSlice({
       state.fetching = false
       state.offerId = payload.offerId
     },
-    makeOfferFailure: (state, { payload }: PayloadAction<string>) => {
+    makeOfferFailure: (state, { payload }: PayloadAction<IError>) => {
       state.error = payload
       state.fetching = false
     },

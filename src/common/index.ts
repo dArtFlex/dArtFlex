@@ -22,6 +22,7 @@ import Timer from './Timer'
 import Slider from './Slider'
 import SelectPaymentToken from './SelectPaymentToken'
 import UserBox from './UserBox'
+import ErrorInterceptor from './ErrorInterceptor'
 
 export {
   Header,
@@ -60,4 +61,5 @@ export {
   ConfirmationModal,
   SelectPaymentToken,
   UserBox,
+  ErrorInterceptor,
 }
