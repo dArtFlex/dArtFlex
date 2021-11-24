@@ -1,7 +1,7 @@
 import APP_CONFIG from 'config'
 import { contractAddress } from 'core/contracts/addresses'
 import tokensAll from 'core/tokens'
-import { IChainName } from 'types'
+import { IChainName, IChainIdDecimalsFormat } from 'types'
 import { networkConvertor } from 'utils'
 
 export function convertChainName(chainName: IChainName) {
@@ -92,4 +92,19 @@ export function getChainKeyByContract(contract: string) {
 
 export function guardChain(contract: string, currentChain: number) {
   return getChainKeyByContract(contract) === networkConvertor(currentChain)
+}
+
+export function getNativeTokenByChainId(chainId: IChainIdDecimalsFormat) {
+  switch (chainId) {
+    case 1:
+    case 4:
+      return 'ETH'
+    case 56:
+    case 97:
+      return 'BNB'
+    case 137:
+      return 'MATIC'
+    default:
+      break
+  }
 }

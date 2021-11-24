@@ -67,11 +67,12 @@ export function* getAssetsAllMeta(
   { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
 ) {
   try {
-    const { fromPrice, toPrice, search, chainId, ...rest } = payload
+    const { fromPrice, toPrice, search, hashtags, chainId, ...rest } = payload
     const metaData: Partial<IMeta> = { ...rest }
     fromPrice && Object.assign(metaData, fromPrice)
     toPrice && Object.assign(metaData, toPrice)
     search && Object.assign(metaData, { search })
+    hashtags?.length && Object.assign(metaData, { hashtags })
 
     let data = {}
     if (payload.type === 'reserve_not_met') {
