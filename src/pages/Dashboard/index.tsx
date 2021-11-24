@@ -25,7 +25,14 @@ import { setLazyMintingData } from 'stores/reducers/minting'
 import { chainErrorRequest } from 'stores/reducers/wallet'
 import appConst from 'config/consts'
 import { useStyles } from './styles'
-import { shortCutName, getTokenSymbolByContracts, guardChain, getChainKeyByContract, getChainNameById } from 'utils'
+import {
+  shortCutName,
+  getTokenSymbolByContracts,
+  guardChain,
+  getChainKeyByContract,
+  getChainNameById,
+  getNativeTokenByChainId,
+} from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
 import { IUserAssets } from './types'
@@ -69,6 +76,8 @@ export default function Dashboard() {
   } = useSelector(selectListing())
   const { chainId } = useSelector(selectChain())
   const { wallet } = useSelector(selectWallet())
+
+  const tokenNameNative = getNativeTokenByChainId(chainId) || 'None'
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
@@ -176,13 +185,11 @@ export default function Dashboard() {
   }
 
   const totalSales = userSoldAssets
-    .map((a: IUserSoldAssets) => {
-      return a.marketplace ? a.marketplace[0].bid_amount : '0'
-    })
+    .map((a: IUserSoldAssets) => a.current_price)
     .reduce((acc, price) => new BigNumber(acc).plus(price).toString(), '0')
-  const totalSalesToEth = new BigNumber(totalSales).dividedBy(`10e${18 - 1}`).toString()
-  const totalRevenueToEth = new BigNumber(totalSalesToEth)
-    .minus(new BigNumber(totalSalesToEth).dividedBy(100).multipliedBy(2.5))
+  const totalSalesInToken = new BigNumber(totalSales).dividedBy(`10e${18 - 1}`).toString()
+  const totalRevenueInToken = new BigNumber(totalSalesInToken)
+    .minus(new BigNumber(totalSalesInToken).dividedBy(100).multipliedBy(2.5))
     .toString()
 
   const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
@@ -231,7 +238,11 @@ export default function Dashboard() {
             {filter === FILTER_VALUES.SOLD && (
               <Box className={classes.container}>
                 <Box className={classes.inlineFlex}>
-                  <ValuesInfo totalSalesToEth={totalSalesToEth} totalRevenueToEth={totalRevenueToEth} />
+                  <ValuesInfo
+                    totalSalesInToken={totalSalesInToken}
+                    totalRevenueInToken={totalRevenueInToken}
+                    tokenName={tokenNameNative}
+                  />
                 </Box>
               </Box>
             )}
