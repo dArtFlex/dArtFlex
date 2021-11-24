@@ -153,16 +153,17 @@ export default function Artworks() {
         toPrice: parseFloat(priceTo) || 0,
         hotOnly,
         limit,
+        hashtags: activeHashTags,
         offset: meta.offset,
         search: meta.search,
         chainId,
       })
     )
-  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, limit, meta.search, chainId])
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, activeHashTags, offset, limit, meta.search, chainId])
 
   useEffect(() => {
     fetchAssets()
-  }, [filter, sortValue, priceFrom, priceTo, hotOnly, offset, meta.search, chainId])
+  }, [filter, sortValue, priceFrom, priceTo, hotOnly, activeHashTags, offset, meta.search, chainId])
 
   useEffect(() => {
     fetchAssets()
