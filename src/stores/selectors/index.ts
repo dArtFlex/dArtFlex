@@ -167,6 +167,11 @@ export const selectMakeOffer = () =>
     (store: stateType) => store.offer,
     (offer) => ({ offer })
   )
+export const selectMakeOfferError = () =>
+  createSelector(
+    (store: stateType) => store.offer.error,
+    (error) => ({ error })
+  )
 
 // Notifications
 export const selectNotifications = () =>

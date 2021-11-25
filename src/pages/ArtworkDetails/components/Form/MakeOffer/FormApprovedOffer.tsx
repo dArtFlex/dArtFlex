@@ -44,7 +44,7 @@ export default function FormApprovedOffer(props: IFormApprovedOffer) {
       </Box>
     </Box>
   ) : error ? (
-    <SubFormTransaction title={'You rejected your offer'} onSubmit={onSubmit} icon={null}>
+    <SubFormTransaction title={'Your offer is been rejected'} onSubmit={onSubmit} icon={null}>
       <Box mt={4}>
         <Button variant={'outlined'} onClick={handleViewArtwork}>
           View artwork{' '}

@@ -1,5 +1,17 @@
 import APP_CONSTS from 'config/consts'
-import { IWallet, IChainId, IChaintIdHexFormat, IBaseTokens, IChainName, IChainIdDecimalsFormat } from 'types'
+import {
+  IWallet,
+  IChainId,
+  IChaintIdHexFormat,
+  IBaseTokens,
+  IChainName,
+  INetworkChains,
+  IEthereumChainIds,
+  IBinanceChainIds,
+  IPolygonChainIds,
+  IRinkebyChainIds,
+  IBinanceTestnetChainIds,
+} from 'types'
 import tokensAll from 'core/tokens'
 
 export function storageActiveWallet(wallet: IWallet, walletStorageKey: string) {
@@ -30,29 +42,38 @@ export function getWalletsFromHistory() {
   return { activeWallet, connectedMetaMask, connectedWalletConnect }
 }
 
-export function supportedChainId(chainId: number) {
-  const allowedChainId: IChainIdDecimalsFormat[] = [1, 4, 56, 97, 137]
-  return allowedChainId.some((id) => id === chainId)
-}
-
 export function supportedNetwork(chainId: string | number) {
-  // @todo Ethereum chain should be included after realization - 0x4, 1
-  const allowedNetworks = ['0x1', '0x38', '0x61', '0x137', 4, 56, 97, 137]
+  // @todo Ethereum chain should be included after realization - 0x1, 1
+  const allowedNetworks = [
+    INetworkChains.ID_0x4,
+    INetworkChains.ID_0x38,
+    INetworkChains.ID_0x61,
+    INetworkChains.ID_0x137,
+    INetworkChains.ID_0x89,
+    INetworkChains.ID_4,
+    INetworkChains.ID_56,
+    INetworkChains.ID_97,
+    INetworkChains.ID_137,
+  ]
   return allowedNetworks.some((network) => network === chainId)
 }
 
 export function networkConvertor(chainId: number): IChaintIdHexFormat | number {
   switch (chainId) {
-    case 1:
-      return '0x1'
-    case 4:
-      return '0x4'
-    case 56:
-      return '0x38'
-    case 97:
-      return '0x61'
-    case 137:
-      return '0x137'
+    case INetworkChains.ID_1:
+      return INetworkChains.ID_0x1
+
+    case INetworkChains.ID_4:
+      return INetworkChains.ID_0x4
+
+    case INetworkChains.ID_56:
+      return INetworkChains.ID_0x38
+
+    case INetworkChains.ID_97:
+      return INetworkChains.ID_0x61
+
+    case INetworkChains.ID_137:
+      return INetworkChains.ID_0x137
     default:
       return chainId
   }
@@ -85,15 +106,15 @@ export function convertTokenSymbol(symbol: string) {
 
 export function getChainKeyByChainId(chainId: number): IChainName | undefined {
   switch (chainId) {
-    case 1:
+    case INetworkChains.ID_1:
       return '__eth'
-    case 56:
+    case INetworkChains.ID_56:
       return '__bsc'
-    case 137:
+    case INetworkChains.ID_137:
       return '__polygon'
-    case 4:
+    case INetworkChains.ID_4:
       return '__ethRinkeby'
-    case 97:
+    case INetworkChains.ID_97:
       return '__bscTestnet'
     default:
       break
@@ -102,42 +123,23 @@ export function getChainKeyByChainId(chainId: number): IChainName | undefined {
 
 export function getChainNameById(chainId: IChainId): IChainName | undefined {
   switch (chainId) {
-    case '0x1':
-    case 1:
+    case IEthereumChainIds.ID_0x1:
+    case IEthereumChainIds.ID_1:
       return '__eth'
-    case '0x38':
-    case 56:
+    case IBinanceChainIds.ID_0x38:
+    case IBinanceChainIds.ID_56:
       return '__bsc'
-    case '0x137':
-    case 137:
+    case IPolygonChainIds.ID_0x137:
+    case IPolygonChainIds.ID_137:
+    case IPolygonChainIds.ID_0x89:
       return '__polygon'
-    case '0x4':
-    case 4:
+    case IRinkebyChainIds.ID_0x4:
+    case IRinkebyChainIds.ID_4:
       return '__ethRinkeby'
-    case '0x61':
-    case 97:
+    case IBinanceTestnetChainIds.ID_0x61:
+    case IBinanceTestnetChainIds.ID_97:
       return '__bscTestnet'
     default:
       throw new Error(`Unsupported chain ID: ${chainId}`)
-  }
-}
-
-export function setGasPriceByChainId(chainId: number) {
-  switch (chainId) {
-    case 56:
-    case 97:
-      return '5000000000'
-    default:
-      return '6000000000'
-  }
-}
-
-export function setGasPrice(chainId: IChaintIdHexFormat) {
-  switch (chainId) {
-    case '0x61':
-    case '0x38':
-      return '10000000000'
-    default:
-      return '6000000000'
   }
 }

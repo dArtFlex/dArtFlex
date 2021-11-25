@@ -7,6 +7,7 @@ export * from './PlaceBid'
 export * from './Notifications'
 export * from './Management'
 export * from './Constructor'
+export * from './Chain'
 
 export interface IEntity {
   id: number
