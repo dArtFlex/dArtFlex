@@ -34,7 +34,6 @@ export default function apiMiddleware({
         error.message = message || ''
         throw error
       }
-
       if (resp.status >= 400 || resp.status === 500) {
         throw new Error(resp.data)
       }
@@ -42,9 +41,7 @@ export default function apiMiddleware({
       return resp.data
     })
     .catch((er: AxiosError) => {
-      const _error = er?.response?.data?.message || er?.response?.data?.error || er?.message
-      // const isToken = localStorage.getItem('token')
-
+      const _error = er?.response?.data?.message || er?.response?.data?.error || er?.response?.data || er?.message
       if (!!er.message) {
         const error = new Error(_error)
         error.message = _error
