@@ -118,7 +118,7 @@ const assetsSlice = createSlice({
 
     getAssetsAllMetaRequest: (
       state,
-      { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
+      { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] }>>
     ) => {
       state.meta = { ...state.meta, ...payload }
       state.fetchingAll = true
