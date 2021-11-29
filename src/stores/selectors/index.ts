@@ -217,8 +217,8 @@ export const selectAlbum = () =>
 export const selectChain = () =>
   createSelector(
     (store: stateType) => store.chain,
-    ({ chainId, chainName }) => ({
-      chainId,
-      chainName,
+    ({ chainIds, chainNames }) => ({
+      chainIds,
+      chainNames,
     })
   )

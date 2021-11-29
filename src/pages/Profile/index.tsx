@@ -60,7 +60,7 @@ export default function Profile() {
   const { profile, userAssets, userCollectedAssets, userSoldAssets, userCreatedAssets, fetchingAssets } = useSelector(
     selectUser()
   )
-  const { chainId } = useSelector(selectChain())
+  const { chainIds } = useSelector(selectChain())
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
@@ -94,9 +94,9 @@ export default function Profile() {
   })
 
   useEffect(() => {
-    dispatch(getUserAssetsMetaRequest({ chainId, wallet: id, filter }))
+    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: id, filter }))
     dispatch(getUserProfileRequest({ wallet: id }))
-  }, [filter, chainId])
+  }, [filter, chainIds])
 
   const links = profile
     ? [

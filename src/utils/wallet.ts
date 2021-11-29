@@ -11,6 +11,7 @@ import {
   IPolygonChainIds,
   IRinkebyChainIds,
   IBinanceTestnetChainIds,
+  IChainIdDecimalsFormat,
 } from 'types'
 import tokensAll from 'core/tokens'
 
@@ -141,5 +142,22 @@ export function getChainNameById(chainId: IChainId): IChainName | undefined {
       return '__bscTestnet'
     default:
       throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+}
+
+export function getChainIdByChainName(chainName: IChainName): IChainIdDecimalsFormat {
+  switch (chainName) {
+    case '__eth':
+      return IEthereumChainIds.ID_1
+    case '__bsc':
+      return IBinanceChainIds.ID_56
+    case '__polygon':
+      return IBinanceChainIds.ID_56
+    case '__ethRinkeby':
+      return IRinkebyChainIds.ID_4
+    case '__bscTestnet':
+      return IBinanceTestnetChainIds.ID_97
+    default:
+      throw new Error(`Unsupported chain ID: ${chainName}`)
   }
 }
