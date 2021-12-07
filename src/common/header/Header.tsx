@@ -54,7 +54,7 @@ import {
 } from 'common/icons'
 import { useStyles } from './styles'
 import appConst from 'config/consts'
-import image from '../icons/cover_photo.png'
+import image from 'common/icons/cover_photo.png'
 import { convertChainName } from 'utils'
 import APP_CONFIG from 'config'
 

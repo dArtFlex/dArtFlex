@@ -29,19 +29,19 @@ export function* buyNow(
       `${+amount}`
     )
 
-    yield call(api, {
-      url: APP_CONFIG.buy,
-      method: 'POST',
-      data: {
-        orderId: '0',
-        itemId: tokenData.id,
-        userId,
-        sellerId: Number(tokenData.owner),
-        marketId: Number(marketData.id),
-        bidAmount: amount,
-        txHash: acceptBidTransaction.transactionHash,
-      },
-    })
+    // yield call(api, {
+    //   url: APP_CONFIG.buy,
+    //   method: 'POST',
+    //   data: {
+    //     orderId: '0',
+    //     itemId: tokenData.id,
+    //     userId,
+    //     sellerId: Number(tokenData.owner),
+    //     marketId: Number(marketData.id),
+    //     bidAmount: amount,
+    //     txHash: acceptBidTransaction.transactionHash,
+    //   },
+    // })
 
     yield put(buyNowSuccess({ buyItemId: marketData.id, transactionHash: acceptBidTransaction.transactionHash }))
   } catch (e) {
