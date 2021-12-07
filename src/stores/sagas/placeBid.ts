@@ -173,6 +173,16 @@ export function* acceptBid(
     })
     const acceptBidTransaction: IAcceptBidTransaction = yield acceptBidService.performMint(sellerOrder, buyerOrder)
 
+    // yield call(api, {
+    //   url: APP_CONFIG.acceptBid,
+    //   method: 'POST',
+    //   data: {
+    //     id: payload.bid_id,
+    //     sellerId: Number(payload.assetOwnerId), // SellerId is the user id who list the NFT to the marketplace
+    //     txHash: acceptBidTransaction.transactionHash,
+    //   },
+    // })
+
     yield put(acceptBidSuccess({ acceptBidTransaction }))
   } catch (e) {
     yield put(acceptBidFailure(e))
