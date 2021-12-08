@@ -21,6 +21,7 @@ import {
   Icon,
   Typography,
   FormHelperText,
+  Link,
 } from '@material-ui/core'
 import { Modal, WalletConnect, Chip, CustomTooltip } from 'common'
 import { walletError, walletsDisconetRequest } from 'stores/reducers/wallet'
@@ -55,6 +56,7 @@ import { useStyles } from './styles'
 import appConst from 'config/consts'
 import image from '../icons/cover_photo.png'
 import { convertChainName } from 'utils'
+import APP_CONFIG from 'config'
 
 export default function Header({ toggleTheme }: HeaderType) {
   const classes = useStyles()
@@ -158,6 +160,9 @@ export default function Header({ toggleTheme }: HeaderType) {
       <CustomTooltip text={'Coming soon'}>
         <Typography className={classes.commingMenu}>OpenSea</Typography>
       </CustomTooltip>
+      <Link href={APP_CONFIG.link_fatmen} target="_blank" underline={'none'}>
+        <Typography className={classes.commingMenu}>FatMen</Typography>
+      </Link>
     </>
   )
 
