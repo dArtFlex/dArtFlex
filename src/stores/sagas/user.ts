@@ -407,7 +407,21 @@ function* getUserBidAssetInfo(api: IApi, market_id: string, item_id: string, use
 export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionId: number }>) {
   try {
     const promotionData: IAddPromotionEntities = yield call(_addPromotion, api, Number(payload.promotionId))
-    yield put(addPromotionSuccess({ promotionIdLastAdded: promotionData.id[0] }))
+    const promotionIds: UserStateType['promotionIds'] = yield select((state) => state.user.promotionIds)
+    yield put(
+      addPromotionSuccess({
+        promotionIdLastAdded: promotionData.id[0],
+        promotionIds: [
+          ...promotionIds,
+          {
+            id: promotionIds.length + 1,
+            item_id: payload.promotionId,
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        ],
+      })
+    )
   } catch (e) {
     yield put(addPromotionFailure(e))
   }
@@ -438,7 +452,13 @@ export function* deletePromotion(
 ) {
   try {
     yield call(_deletePromotion, api, payload.promotionItemId)
-    yield put(deletePromotionSuccess({ promotionIdLastDelete: payload.promotionId }))
+    const promotionIds: UserStateType['promotionIds'] = yield select((state) => state.user.promotionIds)
+    yield put(
+      deletePromotionSuccess({
+        promotionIdLastDelete: payload.promotionId,
+        promotionIds: promotionIds.filter((pr) => pr.item_id !== payload.promotionItemId),
+      })
+    )
   } catch (e) {
     yield put(deletePromotionFailure(e))
   }
