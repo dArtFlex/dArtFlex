@@ -6,6 +6,7 @@ import { FormContainer } from './components'
 import { selectAssetDetails } from 'stores/selectors'
 import { getAssetByIdRequest, clearAssetDetails } from 'stores/reducers/assets'
 import { getBidsHistoryRequest, getBidsRequest, getOffersRequest } from 'stores/reducers/placeBid'
+import { getPromotionRequest } from 'stores/reducers/user'
 import { ApprovedFormState } from './types'
 import appConst from 'config/consts'
 import { useValidationSchema } from './lib'
@@ -43,6 +44,7 @@ export default function ArtworkDetails() {
     fetchAssetDetails()
     const iId0 = setInterval(() => fetchAssetDetails(), INTERVALS.UPDATE_BIDS_HISTORY)
     const iId1 = setInterval(() => fetchBidsHistory(), INTERVALS.UPDATE_BIDS_HISTORY)
+    dispatch(getPromotionRequest())
     return () => {
       clearInterval(iId0)
       clearInterval(iId1)
