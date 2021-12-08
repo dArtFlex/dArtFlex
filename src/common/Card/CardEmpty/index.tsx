@@ -3,7 +3,7 @@ import { Box, Typography, Button } from '@material-ui/core'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
-import routes from '../../../../routes'
+import routes from 'routes'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Empty() {
+export default function CardEmpty() {
   const classes = useStyles()
   const history = useHistory()
   return (
