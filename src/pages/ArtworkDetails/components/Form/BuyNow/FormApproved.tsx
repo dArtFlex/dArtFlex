@@ -45,7 +45,7 @@ export default function FormApproved(props: IFormApproved) {
             <Box className={classes.warningSubText}>
               <Box mb={4}>
                 <Typography className={classes.warningText}>
-                  {`The Ethereum network is processing your transaction, which can take a little while. We'll send you an e-mail when it goes through.`}
+                  {`The network is processing your transaction, which can take a little while. We'll send you an e-mail when it goes through.`}
                 </Typography>
               </Box>
               <Typography className={classes.warningText}>
