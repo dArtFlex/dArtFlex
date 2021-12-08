@@ -4,19 +4,24 @@ import { LogoIcon } from 'common/icons'
 import { useStyles } from './styles'
 import routes from '../../routes'
 import { NavLink } from 'react-router-dom'
+import APP_CONFIG from 'config'
 
 const social = [
   {
     title: 'Twitter',
-    href: 'https://twitter.com/dartflexart',
+    href: APP_CONFIG.link_twitter,
   },
   {
     title: 'Github',
-    href: 'https://github.com/dArtFlex',
+    href: APP_CONFIG.link_github,
   },
   {
     title: 'Medium',
-    href: 'https://medium.com/dartflex',
+    href: APP_CONFIG.link_medium,
+  },
+  {
+    title: 'FatMen',
+    href: APP_CONFIG.link_fatmen,
   },
 ]
 
