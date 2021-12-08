@@ -102,7 +102,7 @@ export default function FormContainer() {
     return () => {
       ckeckPromotion()
     }
-  }, [promotionIds, assetDetails, fetchingPromo])
+  }, [promotionIds, fetchingPromo])
 
   return (
     <Box className={classes.root}>
