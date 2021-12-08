@@ -5,7 +5,7 @@ import Modal, { ConfirmationModal } from './Modal'
 import { Popover, PopoverLinks } from './Popover'
 import { WalletConnect, WalletError, Form, Field, InputAdornment, ChainError } from './Form'
 import CircularProgressLoader from './Loaders'
-import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids, CardSkeleton } from './Card'
+import { CardHistory, CardAsset, CardUploadNew, CardHistoryBids, CardSkeleton, CardEmpty } from './Card'
 import { Chip } from './Chip'
 import { ButtonStartIcon } from './Button'
 import Tooltip, { CustomTooltip } from './Tooltip'
@@ -42,6 +42,7 @@ export {
   CardAsset,
   CardHistoryBids,
   CardUploadNew,
+  CardEmpty,
   Chip,
   ButtonStartIcon,
   Tooltip,

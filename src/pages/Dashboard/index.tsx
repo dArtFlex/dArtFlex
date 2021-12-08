@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import routes from 'routes'
 import { Box } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew, ConfirmationModal } from 'common'
+import { CircularProgressLoader, PageWrapper, CardAsset, CardUploadNew, ConfirmationModal, CardEmpty } from 'common'
 import {
   CodeIcon,
   FacebookIcon,
@@ -19,7 +19,7 @@ import {
 } from 'common/icons'
 import { selectUser, selectSearch, selectListing, selectChain, selectWallet } from 'stores/selectors'
 import ProfileLayout from 'layouts/ProfileLayout'
-import { Aside, ValuesInfo, Empty } from './components'
+import { Aside, ValuesInfo } from './components'
 import { getUserAssetsMetaRequest } from 'stores/reducers/user'
 import { setLazyMintingData } from 'stores/reducers/minting'
 import { chainErrorRequest } from 'stores/reducers/wallet'
@@ -253,7 +253,7 @@ export default function Dashboard() {
               ) : (
                 <>
                   {filter === FILTER_VALUES.CREATED && <CardUploadNew onClick={() => history.push(routes.createNFT)} />}
-                  {!userAssets?.length && <Empty />}
+                  {!sortedAssets?.length && <CardEmpty />}
                   {sortedAssets
                     ? sortedAssets.map((userAsset, i) => (
                         <CardAsset
