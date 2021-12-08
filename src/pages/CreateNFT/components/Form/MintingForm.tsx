@@ -59,7 +59,7 @@ export default function MintingForm(props: IMintingForm) {
             </Box>
             <Box pb={4}>
               <Typography variant={'body1'} color={'textSecondary'}>
-                Once your NFT is minted on the Ethereum blockchain, you will not be able to edit or update any of its
+                Once your NFT is minted on the blockchain, you will not be able to edit or update any of its
                 information.
               </Typography>
             </Box>
