@@ -50,16 +50,25 @@ export default function LibraryConstructorForm({
     }
   }
 
-  useEffect(() => {
+  const initialFiles = () => {
     setFieldValue('file0', null)
     setFieldValue('file1', null)
     setFieldValue(`tokenId0`, '')
     setFieldValue(`tokenId1`, '')
+    setFieldValue(
+      'images',
+      values.images.map((i) => ({ ...i, selected: false }))
+    )
+  }
+
+  useEffect(() => {
+    initialFiles()
     const iId = setInterval(() => {
       handleRouteChange()
     }, 250)
     return () => {
       clearInterval(iId)
+      initialFiles()
     }
   }, [])
 
