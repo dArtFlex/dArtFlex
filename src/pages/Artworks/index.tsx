@@ -215,6 +215,11 @@ export default function Artworks() {
             exclusive
             onChange={(_, value) => {
               if (value) setFilter(value)
+              if (value === MetaType.BUY_NOW) {
+                setSortValue(MetaFilter.RECENT)
+              } else {
+                setSortValue(MetaFilter.ENDING_SOON)
+              }
             }}
             classes={{ root: classes.sortArtworksMenu }}
           >
