@@ -68,7 +68,6 @@ export default function LibraryConstructorForm({
     }, 250)
     return () => {
       clearInterval(iId)
-      initialFiles()
     }
   }, [])
 

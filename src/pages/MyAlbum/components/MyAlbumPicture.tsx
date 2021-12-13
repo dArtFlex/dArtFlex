@@ -105,7 +105,7 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
         </Box>
       </Modal>
 
-      <Modal open={dialogType === 'zoom'} className={classes.modalWrapper}>
+      <Modal open={dialogType === 'zoom'} className={classes.modalWrapper} onBackdropClick={() => setDialogType('')}>
         <>
           <Box>
             <IconButton
