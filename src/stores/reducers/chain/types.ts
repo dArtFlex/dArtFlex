@@ -1,6 +1,6 @@
 import { IChainIdDecimalsFormat, IChainName } from 'types'
 
 export interface ChainStateType {
-  chainId: IChainIdDecimalsFormat
-  chainName: IChainName
+  chainIds: IChainIdDecimalsFormat[]
+  chainNames: IChainName[]
 }

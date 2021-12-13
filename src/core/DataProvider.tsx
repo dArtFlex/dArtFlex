@@ -8,6 +8,7 @@ import { listenForSocketMessagesRequest } from 'stores/reducers/notifications'
 import { switchChain } from 'stores/reducers/chain'
 import { CircularProgressLoader } from 'common'
 import appConst from 'config/consts'
+import { IChainIdDecimalsFormat } from 'types'
 import { getChainKeyByChainId } from 'utils'
 
 const { INTERVALS } = appConst
@@ -34,11 +35,21 @@ export const DataProvider: React.FC = ({ children }) => {
     dispatch(getExchangeRateTokensRequest())
     dispatch(walletsHistoryRequest())
 
-    const chainIdData = localStorage.getItem('chainId')
+    const chainIdData = localStorage.getItem('chainIds')
     if (chainIdData) {
-      const chainId = JSON.parse(chainIdData)
-      const chainName = getChainKeyByChainId(chainId)
-      if (chainName) dispatch(switchChain({ chainId, chainName }))
+      const chainIds = JSON.parse(chainIdData)
+      const chainNames =
+        chainIds &&
+        chainIds.length &&
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        chainIds.reduce((acc: IChainIdDecimalsFormat[], cID: any) => {
+          const chainId = getChainKeyByChainId(cID)
+
+          return chainId ? [...acc, chainId] : acc
+        }, [])
+      if (chainNames.length) {
+        dispatch(switchChain({ chainIds, chainNames }))
+      }
     }
 
     const iId = setInterval(() => fetchRate(), INTERVALS.UPDATE_ASSETS)

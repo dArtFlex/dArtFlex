@@ -118,7 +118,7 @@ const assetsSlice = createSlice({
 
     getAssetsAllMetaRequest: (
       state,
-      { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
+      { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] }>>
     ) => {
       state.meta = { ...state.meta, ...payload }
       state.fetchingAll = true
@@ -133,6 +133,7 @@ const assetsSlice = createSlice({
     },
     setAssetsAllMetaSearch: (state, { payload }: PayloadAction<string>) => {
       state.meta.search = payload
+      state.meta.type = 'featured_artworks'
     },
     getAssetsAllMetaContextRequest: (state) => state,
   },

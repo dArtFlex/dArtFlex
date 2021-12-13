@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ChainStateType } from './types'
 
 const initialState: ChainStateType = {
-  chainId: 137,
-  chainName: '__polygon',
+  chainIds: [56, 137, 4, 97], // @todo: Add 1
+  chainNames: ['__bsc', '__polygon', '__ethRinkeby', '__bscTestnet'], // @todo: Add _eth
 }
 
 const chainSlice = createSlice({
@@ -12,11 +12,11 @@ const chainSlice = createSlice({
   reducers: {
     switchChain: (
       state,
-      { payload }: PayloadAction<{ chainId: ChainStateType['chainId']; chainName: ChainStateType['chainName'] }>
+      { payload }: PayloadAction<{ chainIds: ChainStateType['chainIds']; chainNames: ChainStateType['chainNames'] }>
     ) => {
-      localStorage.setItem('chainId', JSON.stringify(payload.chainId))
-      state.chainId = payload.chainId
-      state.chainName = payload.chainName
+      localStorage.setItem('chainIds', JSON.stringify(payload.chainIds))
+      state.chainIds = payload.chainIds
+      state.chainNames = payload.chainNames
     },
   },
 })

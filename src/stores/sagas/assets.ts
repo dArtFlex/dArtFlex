@@ -64,10 +64,10 @@ export function* getAssetsAllMetaContext(api: IApi) {
 
 export function* getAssetsAllMeta(
   api: IApi,
-  { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainId: IChainIdDecimalsFormat }>>
+  { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] }>>
 ) {
   try {
-    const { fromPrice, toPrice, search, hashtags, chainId, ...rest } = payload
+    const { fromPrice, toPrice, search, hashtags, chainIds, ...rest } = payload
     const metaData: Partial<IMeta> = { ...rest }
     fromPrice && Object.assign(metaData, fromPrice)
     toPrice && Object.assign(metaData, toPrice)
@@ -96,7 +96,7 @@ export function* getAssetsAllMeta(
       url: APP_CONFIG.getItemAll_V2,
       data: {
         ...data,
-        chain_id: chainId,
+        chain_ids: chainIds,
       },
     })
     yield delay(250)

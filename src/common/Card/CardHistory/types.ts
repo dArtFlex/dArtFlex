@@ -10,6 +10,7 @@ export interface ICardHistoryProps extends IBidsHistory {
   expireDate: Date
   sales_token_contract: string
   contract: string
+  chain_id: number
 }
 
 export interface ICardContainerProps {

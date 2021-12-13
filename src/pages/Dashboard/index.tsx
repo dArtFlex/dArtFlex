@@ -31,7 +31,7 @@ import {
   guardChain,
   getChainKeyByContract,
   getChainNameById,
-  getNativeTokenByChainId,
+  getChainIdByChainName,
 } from 'utils'
 import { useSortedAssets } from './lib'
 import { useSearchAssets } from 'hooks'
@@ -74,10 +74,11 @@ export default function Dashboard() {
   const {
     listing: { fetchingUnlist },
   } = useSelector(selectListing())
-  const { chainId } = useSelector(selectChain())
-  const { wallet } = useSelector(selectWallet())
+  const { chainIds } = useSelector(selectChain())
+  const { wallet, chainName } = useSelector(selectWallet())
 
-  const tokenNameNative = getNativeTokenByChainId(chainId) || 'None'
+  // const tokenNameNative = getNativeTokenBys(chainIds) || 'None' // @todo: Should be shown all tokens
+  const tokenNameNative = 'None'
 
   const { search } = useSelector(selectSearch())
   const searchAssets = useSearchAssets({ assets: userAssets, search })
@@ -114,8 +115,8 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
-    dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
-  }, [filter, chainId])
+    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: wallet?.accounts[0], filter }))
+  }, [filter, chainIds])
 
   const links = [
     {
@@ -181,7 +182,7 @@ export default function Dashboard() {
 
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
-    dispatch(getUserAssetsMetaRequest({ chainId, wallet: wallet?.accounts[0], filter }))
+    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: wallet?.accounts[0], filter }))
   }
 
   const totalSales = userSoldAssets
@@ -192,8 +193,8 @@ export default function Dashboard() {
     .minus(new BigNumber(totalSalesInToken).dividedBy(100).multipliedBy(2.5))
     .toString()
 
-  const onGuardChain = ({ contract, chainId }: { contract: string; chainId: number }) => {
-    if (guardChain(contract, chainId)) {
+  const onGuardChain = ({ contract, chainId }: { contract: string; chainId?: number }) => {
+    if (chainId && guardChain(contract, chainId)) {
       return true
     }
     const contractToChainId = getChainKeyByContract(contract)
@@ -272,12 +273,16 @@ export default function Dashboard() {
                           )}
                           button={{
                             onListed: () =>
-                              onGuardChain({ chainId, contract: userAsset.tokenData.contract }) &&
-                              handleListed(userAsset),
+                              onGuardChain({
+                                chainId: chainName && getChainIdByChainName(chainName),
+                                contract: userAsset.tokenData.contract,
+                              }) && handleListed(userAsset),
                             onSell: () => {
                               if (Boolean(userAsset?._status !== STATUSES.LISTED))
-                                onGuardChain({ chainId, contract: userAsset.tokenData.contract }) &&
-                                  handleListed(userAsset)
+                                onGuardChain({
+                                  chainId: chainName && getChainIdByChainName(chainName),
+                                  contract: userAsset.tokenData.contract,
+                                }) && handleListed(userAsset)
                             },
                           }}
                           menu={{
