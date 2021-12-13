@@ -133,6 +133,7 @@ const assetsSlice = createSlice({
     },
     setAssetsAllMetaSearch: (state, { payload }: PayloadAction<string>) => {
       state.meta.search = payload
+      state.meta.type = 'featured_artworks'
     },
     getAssetsAllMetaContextRequest: (state) => state,
   },
