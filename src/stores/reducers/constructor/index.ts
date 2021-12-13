@@ -31,7 +31,7 @@ const constructorSlice = createSlice({
     },
     cancelledStyleTransfer: (state) => {
       state.cancelled = true
-      state.imageUrl = ''
+      // state.imageUrl = ''
       state.cancelled = false
       state.error = ''
     },
