@@ -169,10 +169,12 @@ const userSlice = createSlice({
         payload,
       }: PayloadAction<{
         promotionIdLastAdded: UserStateType['promotionIdLastAdded']
+        promotionIds: UserStateType['promotionIds']
       }>
     ) => {
       state.fetchingPromo = false
       state.promotionIdLastAdded = payload.promotionIdLastAdded
+      state.promotionIds = payload.promotionIds
     },
     addPromotionFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
@@ -188,10 +190,12 @@ const userSlice = createSlice({
         payload,
       }: PayloadAction<{
         promotionIdLastDelete: UserStateType['promotionIdLastDelete']
+        promotionIds: UserStateType['promotionIds']
       }>
     ) => {
       state.fetchingPromo = false
       state.promotionIdLastDelete = payload.promotionIdLastDelete
+      state.promotionIds = payload.promotionIds
     },
     deletePromotionFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload

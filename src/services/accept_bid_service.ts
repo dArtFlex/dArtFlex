@@ -63,8 +63,8 @@ class AcceptBidService {
         )
 
       const gasPrice: string = await this.web3.eth.getGasPrice()
-      // Cause this gas price from last block that why it doesn't guarantee that it would be same, then up to 10%
-      const gasPriceExtra = Math.round(+gasPrice + (+gasPrice / 100) * 10)
+      // Cause this gas price from last block that why it doesn't guarantee that it would be same, then up to 50%
+      const gasPriceExtra = Math.round(+gasPrice + (+gasPrice / 100) * 50)
       return await this.web3.eth.sendTransaction({
         data: invocation.encodeABI(),
         to: contractAddress[chainName].exchangeV2,

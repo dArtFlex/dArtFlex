@@ -111,6 +111,8 @@ export default function Artworks() {
   const [sortValue, setSortValue] = useState<IMetaFilter>(MetaFilter.ENDING_SOON)
 
   const [filter, setFilter] = useState<IMetaType>(meta.type)
+  const [prevSearch, setPrevSearch] = useState('')
+
   const [showCustomFilters, setShowCustomFilters] = useState(false)
   const [activeHashTags, setActiveHashTags] = useState<string[]>([])
 
@@ -145,9 +147,16 @@ export default function Artworks() {
   }
 
   const fetchAssets = useCallback(() => {
+    let type = filter
+    if (prevSearch !== meta.search) {
+      type = meta.type
+      setPrevSearch(meta.search as string)
+      setFilter(meta.type)
+    }
+
     dispatch(
       getAssetsAllMetaRequest({
-        type: filter,
+        type,
         filter: sortValue,
         fromPrice: parseFloat(priceFrom) || 0,
         toPrice: parseFloat(priceTo) || 0,
@@ -215,6 +224,11 @@ export default function Artworks() {
             exclusive
             onChange={(_, value) => {
               if (value) setFilter(value)
+              if (value === MetaType.BUY_NOW) {
+                setSortValue(MetaFilter.RECENT)
+              } else {
+                setSortValue(MetaFilter.ENDING_SOON)
+              }
             }}
             classes={{ root: classes.sortArtworksMenu }}
           >

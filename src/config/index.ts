@@ -3,7 +3,7 @@ import { getProviderAddress } from 'utils'
 // PROD Instants
 const PROD_APP_URL = 'https://dartflex.art'
 const PROD_URL_API = 'https://api.dartflex.art/api'
-const PROD_WS_URL = 'wss://dartflex.art'
+const PROD_WS_URL = 'wss://api.dartflex.art'
 
 // STAGE instants
 const STAGE_APP_URL = 'https://dartflex-stage.ml'
@@ -151,6 +151,11 @@ const APP_CONFIG = {
   changePrice: `${API}/bid/change_price`,
   constructorStyleTransferSafe: `${API}/album/create`,
   addImageToAlbum: `${API}/album/save`,
+
+  link_fatmen: `https://fatmen.dartflex.art/`,
+  link_medium: `https://medium.com/dartflex`,
+  link_github: `https://github.com/dArtFlex`,
+  link_twitter: `https://twitter.com/dartflexart`,
 } as const
 
 export default APP_CONFIG
