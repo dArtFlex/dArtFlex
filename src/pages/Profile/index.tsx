@@ -94,7 +94,7 @@ export default function Profile() {
   })
 
   useEffect(() => {
-    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: id, filter }))
+    dispatch(getUserAssetsMetaRequest({ wallet: id, filter }))
     dispatch(getUserProfileRequest({ wallet: id }))
   }, [filter, chainIds])
 

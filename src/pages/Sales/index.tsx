@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectUser, selectListing } from 'stores/selectors'
-import { getSalesDataByOwnerRequest, getUserAssetsRequest } from 'stores/reducers/user'
+import { selectUser, selectListing, selectWallet } from 'stores/selectors'
+import { getSalesDataByOwnerRequest, getUserAssetsMetaRequest } from 'stores/reducers/user'
 import { unlistingRequest } from 'stores/reducers/listing'
 import { Box, Typography } from '@material-ui/core'
 import { PageWrapper, CircularProgressLoader, CardAsset, ConfirmationModal } from 'common'
@@ -24,15 +24,16 @@ export default function Sales() {
   const {
     listing: { fetchingUnlist },
   } = useSelector(selectListing())
+  const { wallet } = useSelector(selectWallet())
 
   const [openUnlistModal, setOpenUnlistModal] = useState(false)
   const [selectedAssetId, setSelectedAssetId] = useState('')
 
   useEffect(() => {
-    dispatch(getUserAssetsRequest())
+    dispatch(getUserAssetsMetaRequest({ wallet: wallet?.accounts[0], filter: 'in_wallet' }))
     dispatch(getSalesDataByOwnerRequest())
     const iId = setInterval(() => {
-      dispatch(getUserAssetsRequest())
+      dispatch(getUserAssetsMetaRequest({ wallet: wallet?.accounts[0], filter: 'in_wallet' }))
       dispatch(getSalesDataByOwnerRequest())
     }, INTERVALS.UPDATE_BIDS_HISTORY)
     return () => {
@@ -83,39 +84,40 @@ export default function Sales() {
               <CircularProgressLoader />
             ) : (
               <Box className={classes.grid}>
-                {composeData
-                  .filter((item) => item.highest_bid?.length || item.highest_offer?.length)
-                  .map((userAsset, i) => {
-                    return (
-                      <CardAsset
-                        key={i}
-                        asset={{
-                          ...userAsset,
-                          tokenSymbol: getTokenSymbolByContracts(
-                            userAsset.tokenData?.contract || userAsset.contract || '',
-                            userAsset.sales_token_contract || ''
-                          ),
-                        }}
-                        withLabel
-                        button={{
-                          acceptOffer: () => {
-                            userAsset.highest_offer?.length &&
+                {composeData.map((userAsset, i) => {
+                  return (
+                    <CardAsset
+                      key={i}
+                      asset={{
+                        ...userAsset,
+                        tokenSymbol: getTokenSymbolByContracts(
+                          userAsset.tokenData?.contract || userAsset.contract || '',
+                          userAsset.sales_token_contract || ''
+                        ),
+                      }}
+                      withLabel
+                      button={{
+                        acceptOffer: userAsset.highest_offer?.length
+                          ? () =>
+                              userAsset.highest_offer?.length &&
                               handleAcceptOffer(userAsset.highest_offer[0].id, userAsset.highest_offer[0].order_id)
-                          },
-                          acceptBid: () =>
-                            userAsset.highest_bid?.length &&
-                            handleAcceptBid(userAsset.highest_bid[0].id, userAsset.highest_bid[0].market_id),
-                        }}
-                        withAction={Boolean(userAsset.status === STATUSES.LISTED)}
-                        menu={{
-                          onUnlisted: () => {
-                            setSelectedAssetId(String(userAsset.id))
-                            setOpenUnlistModal(true)
-                          },
-                        }}
-                      />
-                    )
-                  })}
+                          : undefined,
+                        acceptBid: userAsset.highest_bid?.length
+                          ? () =>
+                              userAsset.highest_bid?.length &&
+                              handleAcceptBid(userAsset.highest_bid[0].id, userAsset.highest_bid[0].market_id)
+                          : undefined,
+                      }}
+                      withAction={Boolean(userAsset.status === STATUSES.LISTED)}
+                      menu={{
+                        onUnlisted: () => {
+                          setSelectedAssetId(String(userAsset.id))
+                          setOpenUnlistModal(true)
+                        },
+                      }}
+                    />
+                  )
+                })}
               </Box>
             )}
           </Box>
