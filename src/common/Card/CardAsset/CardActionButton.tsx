@@ -45,6 +45,7 @@ export default function CardActionButton(props: ICardActionButton) {
           variant={'outlined'}
           fullWidth
           className={classes.acceptBtn}
+          disabled={acceptOffer !== undefined || acceptBid !== undefined ? false : true}
         >
           Accept {acceptOffer ? 'Offer' : 'Bid'}
         </Button>

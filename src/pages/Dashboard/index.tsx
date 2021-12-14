@@ -115,7 +115,7 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
-    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: wallet?.accounts[0], filter }))
+    dispatch(getUserAssetsMetaRequest({ wallet: wallet?.accounts[0], filter }))
   }, [filter, chainIds])
 
   const links = [
@@ -182,7 +182,7 @@ export default function Dashboard() {
 
   const handleUnlisted = (market_id: string) => {
     dispatch(unlistingRequest({ market_id }))
-    dispatch(getUserAssetsMetaRequest({ chainIds, wallet: wallet?.accounts[0], filter }))
+    dispatch(getUserAssetsMetaRequest({ wallet: wallet?.accounts[0], filter }))
   }
 
   const totalSales = userSoldAssets

@@ -142,6 +142,7 @@ export default function MyAlbumPicture(props: IMyAlbumPicture) {
                 className={classes.uploadButton}
                 onClick={(e) => {
                   e.stopPropagation()
+                  handleMinting()
                 }}
               >
                 Upload
