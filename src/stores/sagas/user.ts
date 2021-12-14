@@ -53,6 +53,7 @@ import {
   ITradingHistory,
   IProfileGetEntities,
   IUserAssetsMeta,
+  IChainIdDecimalsFormat,
 } from 'types'
 import APP_CONFIG from 'config'
 import appConst from 'config/consts'
@@ -205,13 +206,14 @@ function* getOwnerAssetData(api: IApi, asset: AssetTypes, userData: UserDataType
 
 export function* getUserAssetsMeta(api: IApi, { payload }: PayloadAction<IUserAssetsMeta>) {
   try {
-    const { chainId, ...rest } = payload
+    const { ...rest } = payload
+    const chain_id: IChainIdDecimalsFormat[] = yield select((state) => state.chain.chainIds)
 
     const profile: IProfileGetEntities = yield call(api, {
       url: APP_CONFIG.getItemsByProfile,
       data: {
-        ...rest,
-        chain_id: chainId,
+        ...payload,
+        chain_id,
       },
     })
     const { items, ...restProfile } = profile
