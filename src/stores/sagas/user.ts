@@ -38,7 +38,7 @@ import {
   getUserProfileFailure,
 } from 'stores/reducers/user'
 import { getMainAssetStatus } from 'stores/sagas/assets'
-import { IActiveUserBids, IBiddedOfferedAsset, UserStateType } from 'stores/reducers/user/types'
+import { IActiveUserBids, IBiddedOfferedAsset, UserStateType, IPromotionAsset } from 'stores/reducers/user/types'
 import { IAccountSettings } from 'pages/AccountSettings/types'
 import {
   UserDataTypes,
@@ -410,6 +410,9 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
   try {
     const promotionData: IAddPromotionEntities = yield call(_addPromotion, api, Number(payload.promotionId))
     const promotionIds: UserStateType['promotionIds'] = yield select((state) => state.user.promotionIds)
+    const promotionAssets: UserStateType['promotionAssets'] = yield select((state) => state.user.promotionAssets)
+    const promotionAsset: IPromotionAsset = yield call(getPromotionAssetById, api, Number(payload.promotionId))
+
     yield put(
       addPromotionSuccess({
         promotionIdLastAdded: promotionData.id[0],
@@ -422,10 +425,11 @@ export function* addPromotion(api: IApi, { payload }: PayloadAction<{ promotionI
             updated_at: new Date(),
           },
         ],
+        promotionAssets: [...promotionAssets, promotionAsset],
       })
     )
   } catch (e) {
-    yield put(addPromotionFailure(e))
+    yield put(addPromotionFailure({ code: 4001, message: e.message }))
   }
 }
 
@@ -455,10 +459,12 @@ export function* deletePromotion(
   try {
     yield call(_deletePromotion, api, payload.promotionItemId)
     const promotionIds: UserStateType['promotionIds'] = yield select((state) => state.user.promotionIds)
+    const promotionAssets: UserStateType['promotionAssets'] = yield select((state) => state.user.promotionAssets)
     yield put(
       deletePromotionSuccess({
         promotionIdLastDelete: payload.promotionId,
         promotionIds: promotionIds.filter((pr) => pr.item_id !== payload.promotionItemId),
+        promotionAssets: promotionAssets.filter((pr) => pr.marketData.item_id !== payload.promotionItemId),
       })
     )
   } catch (e) {
