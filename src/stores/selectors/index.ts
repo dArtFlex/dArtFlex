@@ -32,6 +32,11 @@ export const selectAssetsMeta = () =>
     (store: stateType) => store.assets?.meta,
     (meta) => ({ meta })
   )
+export const selectAssetsTotal = () =>
+  createSelector(
+    (store: stateType) => store.assets.total,
+    (total) => ({ total })
+  )
 
 // User
 export const selectUser = () =>
