@@ -7,6 +7,7 @@ import {
   selectHashtags,
   selectAssetsMeta,
   selectChain,
+  selectAssetsTotal,
 } from 'stores/selectors'
 import { getHashtagsAllRequest, getAssetsAllMetaRequest, getAssetsAllMetaContextRequest } from 'stores/reducers/assets'
 import { getPromotionRequest } from 'stores/reducers/user'
@@ -108,6 +109,8 @@ export default function Artworks() {
   const { hashtags } = useSelector(selectHashtags())
   const { meta } = useSelector(selectAssetsMeta())
   const { chainIds } = useSelector(selectChain())
+  const { total } = useSelector(selectAssetsTotal())
+
   const [sortValue, setSortValue] = useState<IMetaFilter>(MetaFilter.ENDING_SOON)
 
   const [filter, setFilter] = useState<IMetaType>(meta.type)
@@ -357,18 +360,20 @@ export default function Artworks() {
               ))}
         </Box>
 
-        <Box m={3} display={'flex'} justifyContent={'center'}>
-          <Button
-            onClick={() => {
-              setLimit(meta.limit + ASSETS_PRE_LOAD)
-              setOffset(offset + 1)
-            }}
-            variant={'outlined'}
-            color={'secondary'}
-          >
-            Load More
-          </Button>
-        </Box>
+        {meta.limit < total && (
+          <Box m={3} display={'flex'} justifyContent={'center'}>
+            <Button
+              onClick={() => {
+                setLimit(meta.limit + ASSETS_PRE_LOAD)
+                setOffset(offset + 1)
+              }}
+              variant={'outlined'}
+              color={'secondary'}
+            >
+              Load More
+            </Button>
+          </Box>
+        )}
       </Box>
     </PageWrapper>
   )

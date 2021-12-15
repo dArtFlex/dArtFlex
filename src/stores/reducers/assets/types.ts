@@ -19,6 +19,7 @@ export interface AssetsStateType {
   hashtags?: IHashtag[]
   isBidded?: boolean[]
   meta: IMeta
+  total: number
 }
 
 export type IUserAssets = AssetDataTypesWithStatus & {
