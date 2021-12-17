@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { InfiniteLoader, List, AutoSizer, ListRowProps } from 'react-virtualized'
 import {
   selectAssets,
   selectWallet,
@@ -9,7 +10,12 @@ import {
   selectChain,
   selectAssetsTotal,
 } from 'stores/selectors'
-import { getHashtagsAllRequest, getAssetsAllMetaRequest, getAssetsAllMetaContextRequest } from 'stores/reducers/assets'
+import {
+  getHashtagsAllRequest,
+  loadMoreAssetsRequest,
+  getAssetsAllMetaRequest,
+  getAssetsAllMetaContextRequest,
+} from 'stores/reducers/assets'
 import { getPromotionRequest } from 'stores/reducers/user'
 import clsx from 'clsx'
 import {
@@ -24,7 +30,7 @@ import {
   Checkbox,
 } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import { PageWrapper, Select, CardAsset, CardSkeleton } from 'common'
+import { PageWrapper, Select, CardAsset } from 'common'
 import { CloseIcon, BurnIcon, RefreshIcon } from 'common/icons'
 import Promotions from './components/Promotions'
 import {
@@ -38,7 +44,8 @@ import {
 import appConst from 'config/consts'
 import { IHashtag, IMetaFilter, MetaFilter, IMetaType, MetaType } from 'types'
 import { useStyles } from './styles'
-import { creatArrayFromNumber, getTokenSymbolByContracts } from 'utils'
+import { getTokenSymbolByContracts } from 'utils'
+import { useWindowSize } from 'hooks'
 
 const { INTERVALS } = appConst
 
@@ -103,7 +110,7 @@ const allHashtag = {
 export default function Artworks() {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { assets, fetchingAll } = useSelector(selectAssets())
+  const { assets } = useSelector(selectAssets())
   const { wallet } = useSelector(selectWallet())
   const { promotionAssets, promotionIds } = useSelector(selectPromotion())
   const { hashtags } = useSelector(selectHashtags())
@@ -186,6 +193,68 @@ export default function Artworks() {
       clearInterval(iId)
     }
   }, [])
+
+  const loadMoreAssets = async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }) => {
+    return dispatch(loadMoreAssetsRequest({ startIndex, stopIndex }))
+  }
+
+  const assetsCardRef = useRef<HTMLDivElement>(null)
+  const minCardWidth = 322
+  const cardHeight = 455
+  const gap = 25
+  const cardWidth = assetsCardRef?.current?.clientWidth || minCardWidth
+
+  const windowSize = useWindowSize()
+  const containerMargin = 80
+  const widthContainer = windowSize.width ? windowSize.width - containerMargin : 0
+  const assetsPreRow = widthContainer ? Math.round(widthContainer / (cardWidth + gap)) : 1
+  // console.log('cardWidth-->>', cardWidth, assetsCardRef)
+  // console.log('widthContainer>>>', widthContainer, 'assetsPreRow>>>', assetsPreRow)
+  // console.log('fetchingAll__<<', fetchingAll)
+  // console.log('total>>>>', total)
+
+  const rowCount = Math.ceil(total / assetsPreRow)
+  const rowHeight = cardHeight + gap
+  // console.log('rowCount>>>>', rowCount)
+
+  const isAssetsLoaded = ({ index }: { index: number }) => {
+    return assets ? !!assets[index * assetsPreRow] : true // index * assetsPreRow - as listener know only about row and each of the row has n assets
+  }
+
+  const assetsRenderer = ({ key, index, style }: ListRowProps) => {
+    // console.log('index>>', index * assetsPreRow, index * assetsPreRow + assetsPreRow)
+    return (
+      <div key={key} style={style}>
+        <Box className={classes.grid} mt={2}>
+          {assets?.slice(index * assetsPreRow, index * assetsPreRow + assetsPreRow).map((asset, i) => (
+            <div ref={assetsCardRef} key={key + '' + i}>
+              <CardAsset
+                asset={{
+                  ...asset,
+                  tokenSymbol: getTokenSymbolByContracts(
+                    asset.tokenData?.contract || asset.contract || '',
+                    asset.sales_token_contract || ''
+                  ),
+                }}
+                userWallet={wallet?.accounts[0]}
+                useCardStatus={
+                  filter === LIVE_AUCTION
+                    ? useCardStatusLiveAuction
+                    : filter === BUY_NOW
+                    ? useCardStatusBuyNow
+                    : filter === RESERVE_NOT_MET
+                    ? useCardStatusReserveNotMet
+                    : filter === SOLD
+                    ? useCardStatusSold
+                    : useCardStatusFeaturedArtworks
+                }
+              />
+            </div>
+          ))}
+        </Box>
+      </div>
+    )
+  }
 
   return (
     <PageWrapper className={classes.wrapper}>
@@ -331,34 +400,31 @@ export default function Artworks() {
             </Box>
           </Box>
         )}
-        <Box className={classes.grid} mt={2}>
-          {fetchingAll
-            ? creatArrayFromNumber(10).map((e, i) => <CardSkeleton key={i} />)
-            : assets?.map((asset, i) => (
-                <CardAsset
-                  key={i}
-                  asset={{
-                    ...asset,
-                    tokenSymbol: getTokenSymbolByContracts(
-                      asset.tokenData?.contract || asset.contract || '',
-                      asset.sales_token_contract || ''
-                    ),
+
+        <InfiniteLoader isRowLoaded={isAssetsLoaded} loadMoreRows={loadMoreAssets} rowCount={rowCount} threshold={2}>
+          {({ onRowsRendered, registerChild }) => (
+            <div style={{ display: 'flex' }}>
+              <div style={{ flex: '1 1 auto', height: '100vh' }}>
+                <AutoSizer>
+                  {({ width, height }) => {
+                    return (
+                      <List
+                        ref={registerChild}
+                        rowCount={rowCount}
+                        rowHeight={rowHeight}
+                        rowRenderer={assetsRenderer}
+                        onRowsRendered={onRowsRendered}
+                        width={width}
+                        height={height}
+                        overscanRowCount={3}
+                      />
+                    )
                   }}
-                  userWallet={wallet?.accounts[0]}
-                  useCardStatus={
-                    filter === LIVE_AUCTION
-                      ? useCardStatusLiveAuction
-                      : filter === BUY_NOW
-                      ? useCardStatusBuyNow
-                      : filter === RESERVE_NOT_MET
-                      ? useCardStatusReserveNotMet
-                      : filter === SOLD
-                      ? useCardStatusSold
-                      : useCardStatusFeaturedArtworks
-                  }
-                />
-              ))}
-        </Box>
+                </AutoSizer>
+              </div>
+            </div>
+          )}
+        </InfiniteLoader>
 
         {meta.limit < total && (
           <Box m={3} display={'flex'} justifyContent={'center'}>

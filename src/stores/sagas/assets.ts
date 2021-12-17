@@ -29,17 +29,18 @@ import {
   IMeta,
   IItemGetEntities,
   IChainIdDecimalsFormat,
+  IHashtag,
 } from 'types'
 import tokensAll from 'core/tokens'
 import { getAssetStatus, createDummyMarketplaceData, getIdFromString, networkConvertor } from 'utils'
 import APP_CONFIG from 'config'
-import appConst from 'config/consts'
+import APP_CONSTS from 'config/consts'
 import { AssetsStateType } from 'stores/reducers/assets/types'
 import { convertTokenSymbol, supportedNetwork, getChainKeyByChainId } from 'utils'
 
 const {
   STATUSES: { MINTED },
-} = appConst
+} = APP_CONSTS
 
 function* getAssetData(api: IApi, asset: AssetMarketplaceTypes, { owner, uri }: { owner: string; uri: string }) {
   try {
@@ -67,36 +68,14 @@ export function* getAssetsAllMeta(
   { payload }: PayloadAction<Partial<AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] }>>
 ) {
   try {
-    const { fromPrice, toPrice, search, hashtags, chainIds, ...rest } = payload
-    const metaData: Partial<IMeta> = { ...rest }
-    fromPrice && Object.assign(metaData, fromPrice)
-    toPrice && Object.assign(metaData, toPrice)
-    search && Object.assign(metaData, { search })
-    hashtags?.length && Object.assign(metaData, { hashtags })
-
-    let data = {}
-    if (payload.type === 'reserve_not_met') {
-      data = { ...metaData, status: 'listed', type: 'auction' }
-    } else if (payload.type === 'auction') {
-      data = { ...metaData, status: 'pending' }
-    } else if (payload.type === 'instant_buy') {
-      data = { ...metaData, sold: false }
-    } else if (payload.type === 'sold') {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { type, ...filters } = metaData
-      data = { ...filters, sold: true }
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { type, sold, ...filters } = metaData
-      data = { ...filters }
-    }
+    const data: Partial<IMeta> = generateMetaData(payload)
 
     const response: IItemGetEntities = yield api({
       method: 'GET',
       url: APP_CONFIG.getItemAll_V2,
       data: {
         ...data,
-        chain_ids: chainIds,
+        chain_ids: payload.chainIds,
       },
     })
     yield delay(250)
@@ -112,7 +91,6 @@ export function* getAssetsAllMeta(
         call(getMainAssetStatus, api, asset, response.data[i].creator, response.data[i].owner)
       )
     )
-
     const assets: AssetsStateType['assets'] = getAssetsListAllWithStatuses.map((a, i) => {
       return {
         ...a,
@@ -121,10 +99,40 @@ export function* getAssetsAllMeta(
         isBidded: response.data[i].bid?.status === 'pending',
       }
     })
+
     yield put(getAssetsAllMetaSuccess({ assets, total: response.meta.total }))
   } catch (e) {
     yield put(getAssetsAllMetaFailure(e || e.message))
   }
+}
+
+function generateMetaData(
+  meta: Partial<AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] }>
+): Partial<IMeta> {
+  const { fromPrice, toPrice, search, hashtags, ...rest } = meta
+  const metaData: Partial<IMeta> = { ...rest }
+  fromPrice && Object.assign(metaData, fromPrice)
+  toPrice && Object.assign(metaData, toPrice)
+  search && Object.assign(metaData, { search })
+  hashtags?.length && Object.assign(metaData, { hashtags })
+
+  let data = {}
+  if (meta.type === 'reserve_not_met') {
+    data = { ...metaData, status: 'listed', type: 'auction' }
+  } else if (meta.type === 'auction') {
+    data = { ...metaData, status: 'pending' }
+  } else if (meta.type === 'instant_buy') {
+    data = { ...metaData, sold: false }
+  } else if (meta.type === 'sold') {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { type, ...filters } = metaData
+    data = { ...filters, sold: true }
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { type, sold, ...filters } = metaData
+    data = { ...filters }
+  }
+  return data
 }
 
 // !!!!!!!! Should be removed as outdated function !!!!!!!!
@@ -359,4 +367,49 @@ export function* addHashtags(api: IApi, { payload }: PayloadAction<{ hashtags: I
   )
 
   return hashtagsIds.map((ht) => getIdFromString(ht))
+}
+
+export function* loadMoreAssets(api: IApi, { payload }: PayloadAction<{ startIndex: number; stopIndex: number }>) {
+  try {
+    const meta: AssetsStateType['meta'] & { chainIds: IChainIdDecimalsFormat[] } = yield select(
+      (state) => state.assets.meta
+    )
+    const data: Partial<IMeta> = generateMetaData(meta)
+
+    const response: IItemGetEntities = yield api({
+      method: 'GET',
+      url: APP_CONFIG.getItemAll_V2,
+      data: {
+        ...data,
+        limit: payload.startIndex,
+        offset: payload.stopIndex,
+        chain_ids: meta.chainIds,
+      },
+    })
+
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = response.data.map((asset) =>
+      asset.marketplace ? { ...asset.marketplace, contract: asset.contract } : createDummyMarketplaceData(asset.id)
+    )
+    const getAssetsListAllData: AssetDataTypes[] = getMarketplactAssetsAll.map((asset, i) => {
+      return { ...asset, imageData: response.data[i].metadata, userData: response.data[i].user }
+    })
+    const getAssetsListAllWithStatuses: Array<AssetDataTypesWithStatus & { hashtag: IHashtag[] }> = yield all(
+      getAssetsListAllData.map((asset, i) =>
+        call(getMainAssetStatus, api, asset, response.data[i].creator, response.data[i].owner)
+      )
+    )
+
+    const prevAssets: AssetsStateType['assets'] & { hashtag: IHashtag[] } = yield select((state) => state.assets.assets)
+
+    if (prevAssets !== null) {
+      yield put(
+        getAssetsAllMetaSuccess({
+          assets: [...prevAssets, ...getAssetsListAllWithStatuses],
+          total: response.meta.total,
+        })
+      )
+    }
+  } catch (e) {
+    yield put(getAssetsAllMetaFailure(e || e.message))
+  }
 }

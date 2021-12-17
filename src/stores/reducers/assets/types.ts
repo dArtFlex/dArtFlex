@@ -12,6 +12,7 @@ import {
 export interface AssetsStateType {
   fetching: boolean
   fetchingAll: boolean
+  fetchingMore: boolean
   error: IError
   assets: IUserAssets[] | null
   assetDetails: IAssetDetails

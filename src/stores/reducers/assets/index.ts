@@ -6,6 +6,7 @@ import APP_CONSTS from 'config/consts'
 const initialState: AssetsStateType = {
   fetching: false,
   fetchingAll: false,
+  fetchingMore: false,
   error: '',
   assets: null,
   assetDetails: {
@@ -45,6 +46,10 @@ const assetsSlice = createSlice({
     getAssetsAllFailure: (state, { payload }: PayloadAction<string>) => {
       state.error = payload
       state.fetchingAll = false
+    },
+
+    loadMoreAssetsRequest: (state, i) => {
+      state.fetchingMore = true
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -149,6 +154,8 @@ export const {
   getAssetsAllRequest,
   getAssetsAllSuccess,
   getAssetsAllFailure,
+
+  loadMoreAssetsRequest,
 
   getAssetByIdRequest,
   getAssetByIdSuccess,

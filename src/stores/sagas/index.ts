@@ -27,6 +27,7 @@ import {
   addHashtagsRequest,
   getAssetsAllMetaRequest,
   getAssetsAllMetaContextRequest,
+  loadMoreAssetsRequest,
 } from '../reducers/assets'
 import {
   connectMetaMaskRequest,
@@ -90,6 +91,7 @@ import {
   addHashtags,
   getAssetsAllMeta,
   getAssetsAllMetaContext,
+  loadMoreAssets,
 } from '../sagas/assets'
 import {
   connectMetaMask,
@@ -118,6 +120,7 @@ export default function* root() {
     takeLatest(addHashtagsRequest.type, addHashtags, apiMiddleware),
     takeLatest(getAssetsAllMetaRequest.type, getAssetsAllMeta, apiMiddleware),
     takeLatest(getAssetsAllMetaContextRequest.type, getAssetsAllMetaContext, apiMiddleware),
+    takeLatest(loadMoreAssetsRequest.type, loadMoreAssets, apiMiddleware),
 
     /** User **/
     takeLatest(getUserDataRequest.type, getUserData, apiMiddleware),
