@@ -119,6 +119,7 @@ export function* getAssetsAllMeta(
         hashtag: response.data[i].hashtag,
         ban: response.data[i].ban,
         isBidded: response.data[i].bid?.status === 'pending',
+        chain_id: response.data[i].chain_id,
       }
     })
     yield put(getAssetsAllMetaSuccess({ assets, total: response.meta.total }))
