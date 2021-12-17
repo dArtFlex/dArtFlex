@@ -208,21 +208,15 @@ export default function Artworks() {
   const containerMargin = 80
   const widthContainer = windowSize.width ? windowSize.width - containerMargin : 0
   const assetsPreRow = widthContainer ? Math.round(widthContainer / (cardWidth + gap)) : 1
-  // console.log('cardWidth-->>', cardWidth, assetsCardRef)
-  // console.log('widthContainer>>>', widthContainer, 'assetsPreRow>>>', assetsPreRow)
-  // console.log('fetchingAll__<<', fetchingAll)
-  // console.log('total>>>>', total)
 
   const rowCount = Math.ceil(total / assetsPreRow)
   const rowHeight = cardHeight + gap
-  // console.log('rowCount>>>>', rowCount)
 
   const isAssetsLoaded = ({ index }: { index: number }) => {
     return assets ? !!assets[index * assetsPreRow] : true // index * assetsPreRow - as listener know only about row and each of the row has n assets
   }
 
   const assetsRenderer = ({ key, index, style }: ListRowProps) => {
-    // console.log('index>>', index * assetsPreRow, index * assetsPreRow + assetsPreRow)
     return (
       <div key={key} style={style}>
         <Box className={classes.grid} mt={2}>
