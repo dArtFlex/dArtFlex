@@ -56,7 +56,7 @@ export class WalletService extends Web3Service {
       if (chainName) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const provider: any = new WalletConnectProvider({
-          rpc: APP_CONFIG[this.keyChain],
+          rpc: APP_CONFIG[this.keyChain || chainName],
         })
         await provider.enable()
         this.web3 = new Web3(provider)
