@@ -32,6 +32,7 @@ export default function BidDetails() {
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
         tokenSymbol,
+        chain_id: assetDetails.chain_id,
       }
     : null
 

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AssetsStateType } from './types'
 import { IChainIdDecimalsFormat } from 'types'
+import APP_CONSTS from 'config/consts'
 
 const initialState: AssetsStateType = {
   fetching: false,
@@ -13,6 +14,7 @@ const initialState: AssetsStateType = {
     ownerData: null,
     creatorData: null,
     marketData: null,
+    chain_id: 0,
   },
   meta: {
     type: 'auction',
@@ -23,10 +25,11 @@ const initialState: AssetsStateType = {
     fromPrice: 0,
     toPrice: 0,
     hotOnly: false,
-    limit: 20,
+    limit: APP_CONSTS.ASSETS_PRE_LOAD,
     offset: 0,
     order: 'DESC',
   },
+  total: 0,
 }
 
 const assetsSlice = createSlice({
@@ -123,8 +126,12 @@ const assetsSlice = createSlice({
       state.meta = { ...state.meta, ...payload }
       state.fetchingAll = true
     },
-    getAssetsAllMetaSuccess: (state, { payload }: PayloadAction<AssetsStateType['assets']>) => {
-      state.assets = payload
+    getAssetsAllMetaSuccess: (
+      state,
+      { payload }: PayloadAction<{ assets: AssetsStateType['assets']; total: AssetsStateType['total'] }>
+    ) => {
+      state.assets = payload.assets
+      state.total = payload.total
       state.fetchingAll = false
     },
     getAssetsAllMetaFailure: (state, { payload }: PayloadAction<string>) => {

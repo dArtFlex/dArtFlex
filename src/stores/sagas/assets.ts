@@ -91,7 +91,7 @@ export function* getAssetsAllMeta(
       data = { ...filters }
     }
 
-    const response: IItemGetEntities[] = yield api({
+    const response: IItemGetEntities = yield api({
       method: 'GET',
       url: APP_CONFIG.getItemAll_V2,
       data: {
@@ -101,27 +101,28 @@ export function* getAssetsAllMeta(
     })
     yield delay(250)
 
-    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = response.map((asset) =>
+    const getMarketplactAssetsAll: AssetMarketplaceTypes[] = response.data.map((asset) =>
       asset.marketplace ? { ...asset.marketplace, contract: asset.contract } : createDummyMarketplaceData(asset.id)
     )
     const getAssetsListAllData: AssetDataTypes[] = getMarketplactAssetsAll.map((asset, i) => {
-      return { ...asset, imageData: response[i].metadata, userData: response[i].user }
+      return { ...asset, imageData: response.data[i].metadata, userData: response.data[i].user }
     })
     const getAssetsListAllWithStatuses: AssetDataTypesWithStatus[] = yield all(
       getAssetsListAllData.map((asset, i) =>
-        call(getMainAssetStatus, api, asset, response[i].creator, response[i].owner)
+        call(getMainAssetStatus, api, asset, response.data[i].creator, response.data[i].owner)
       )
     )
 
     const assets: AssetsStateType['assets'] = getAssetsListAllWithStatuses.map((a, i) => {
       return {
         ...a,
-        hashtag: response[i].hashtag,
-        ban: response[i].ban,
-        isBidded: response[i].bid?.status === 'pending',
+        hashtag: response.data[i].hashtag,
+        ban: response.data[i].ban,
+        isBidded: response.data[i].bid?.status === 'pending',
+        chain_id: response.data[i].chain_id,
       }
     })
-    yield put(getAssetsAllMetaSuccess(assets))
+    yield put(getAssetsAllMetaSuccess({ assets, total: response.meta.total }))
   } catch (e) {
     yield put(getAssetsAllMetaFailure(e || e.message))
   }

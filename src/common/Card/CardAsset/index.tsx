@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PopoverLinks, UserBox } from 'common'
+import { PopoverLinks, UserBox, ImageChain } from 'common'
 import { MoreHorizontalIcon } from 'common/icons'
 import { Box, Typography, IconButton, Card } from '@material-ui/core'
 import { useStyles } from './styles'
@@ -61,6 +61,7 @@ export default function CardAsset(props: ICardAssetProps) {
           {asset.imageData?.image && <img src={asset.imageData.image} className={classes.cardImage} alt="card_image" />}
           {withLabel && <CardBadge status={asset.status} sold={asset.sold} />}
         </Box>
+
         <Box className={classes.artInfoContainer}>
           <Box display={'flex'} justifyContent={'space-between'}>
             {Boolean(asset.userData) && (
@@ -70,6 +71,7 @@ export default function CardAsset(props: ICardAssetProps) {
                 userId={asset.userData.userid ? asset.userData.userid : 'you'}
               />
             )}
+            <ImageChain chainId={asset.chain_id} />
             {withAction && (
               <IconButton
                 className={classes.borderdIconButton}

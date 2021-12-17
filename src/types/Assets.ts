@@ -43,6 +43,7 @@ export interface AssetDataTypesWithStatus extends AssetDataTypes {
   status: IAssetStatus
   tokenSymbol: string
   _minted_id?: number
+  chain_id: number
 }
 
 export interface IImageData extends IImageEntity {
@@ -125,28 +126,33 @@ export interface IMeta {
 }
 
 export interface IItemGetEntities {
-  ban: boolean
-  bid: IHighestBid
-  chain_id: number
-  contract: string
-  created_at: string
-  creator: string
-  etherscan: string
-  hashtag: Array<IHashtag>
-  hashtags: Array<IHashtag>
-  id: number
-  lazymint: boolean
-  lock: boolean
-  marketplace: IAssetMarketData
-  metadata: IImageData
-  owner: string
-  royalty: string
-  royalty_fee: string
-  signature: string
-  token_id: string
-  updated_at: string
-  uri: string
-  user: UserDataTypes
+  data: {
+    ban: boolean
+    bid: IHighestBid
+    chain_id: number
+    contract: string
+    created_at: string
+    creator: string
+    etherscan: string
+    hashtag: Array<IHashtag>
+    hashtags: Array<IHashtag>
+    id: number
+    lazymint: boolean
+    lock: boolean
+    marketplace: IAssetMarketData
+    metadata: IImageData
+    owner: string
+    royalty: string
+    royalty_fee: string
+    signature: string
+    token_id: string
+    updated_at: string
+    uri: string
+    user: UserDataTypes
+  }[]
+  meta: {
+    total: number
+  }
 }
 
 export interface IProfileGetEntities {
