@@ -14,6 +14,7 @@ const initialState: AssetsStateType = {
     ownerData: null,
     creatorData: null,
     marketData: null,
+    chain_id: 0,
   },
   meta: {
     type: 'auction',

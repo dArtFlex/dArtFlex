@@ -8,6 +8,7 @@ import {
   IHashtag,
   IError,
   IMeta,
+  IChainIdDecimalsFormat,
 } from 'types'
 export interface AssetsStateType {
   fetching: boolean
@@ -25,6 +26,7 @@ export interface AssetsStateType {
 export type IUserAssets = AssetDataTypesWithStatus & {
   hashtag: IHashtag[]
   _status?: IAssetStatus
+  chain_id: number
 }
 export interface IAssetDetails {
   status?: IAssetStatus
@@ -33,6 +35,7 @@ export interface IAssetDetails {
   ownerData: null | UserDataTypes
   creatorData: null | UserDataTypes
   marketData: null | AssetMarketplaceTypes
+  chain_id: number
 }
 
 export interface IExchangeRates {

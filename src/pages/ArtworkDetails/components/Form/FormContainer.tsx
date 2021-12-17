@@ -40,6 +40,7 @@ export default function FormContainer() {
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
         tokenSymbol,
+        chain_id: assetDetails.chain_id,
       }
     : {
         current_price: '',
@@ -60,6 +61,7 @@ export default function FormContainer() {
         userData: assetDetails.ownerData as AssetDataTypesWithStatus['userData'],
         imageData: assetDetails.imageData as AssetDataTypesWithStatus['imageData'],
         tokenSymbol,
+        chain_id: assetDetails.chain_id,
       }
 
   const { role } = useSelector(selectUserRole())

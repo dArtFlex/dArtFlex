@@ -23,6 +23,7 @@ import Slider from './Slider'
 import SelectPaymentToken from './SelectPaymentToken'
 import UserBox from './UserBox'
 import ErrorInterceptor from './ErrorInterceptor'
+import ImageChain from './ImageChain'
 
 export {
   Header,
@@ -63,4 +64,5 @@ export {
   SelectPaymentToken,
   UserBox,
   ErrorInterceptor,
+  ImageChain,
 }

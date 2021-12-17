@@ -43,6 +43,7 @@ export interface AssetDataTypesWithStatus extends AssetDataTypes {
   status: IAssetStatus
   tokenSymbol: string
   _minted_id?: number
+  chain_id: number
 }
 
 export interface IImageData extends IImageEntity {
